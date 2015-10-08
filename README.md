@@ -12,7 +12,7 @@ $ go get github.com/meinside/telegram-bot-go
 
 Generate self-signed certificate & private key with following script:
 
-```
+```bash
 #!/bin/bash
 #
 # Generate self-signed certificates for Telegram Bot API
