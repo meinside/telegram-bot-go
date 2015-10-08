@@ -63,18 +63,18 @@ const (
 )
 
 func main() {
-	botapi := bot.NewClient(ApiToken)
-	botapi.Verbose = true
+	client := bot.NewClient(ApiToken)
+	client.Verbose = true
 
 	// set webhook url
-	botapi.SetWebhookUrl(WebhookHost, WebhookPort, CertFilename, func(success bool, err error, description *string) {
+	client.SetWebhookUrl(WebhookHost, WebhookPort, CertFilename, func(success bool, err error, description *string) {
 		if success {
 			fmt.Printf("SetWebhookUrl was successful: %s\n", *description)
 
 			// on success, start webhook server
-			botapi.StartWebhookServerAndWait(CertFilename, KeyFilename, func(success bool, err error, writer http.ResponseWriter, reqBody string) {
+			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(success bool, err error, writer http.ResponseWriter, webhook bot.Webhook) {
 				if success {
-					fmt.Printf(">>> %s\n", reqBody)
+					fmt.Printf(">>> %+v\n", webhook)
 				}
 			})
 		} else {
@@ -82,7 +82,7 @@ func main() {
 		}
 	})
 
-	botapi.Wait()
+	client.Wait()
 }
 ```
 
