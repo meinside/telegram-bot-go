@@ -3,7 +3,6 @@
 // referenced: https://core.telegram.org/bots/api
 //
 // created on : 2015.10.06.
-// last update: 2015.10.08.
 //
 // by meinside@gmail.com
 
@@ -34,7 +33,7 @@ type Bot struct {
 	WebhookHost     string
 	WebhookPort     int
 	WebhookUrl      string
-	WebhookHandler  func(success bool, err error, writer http.ResponseWriter, reqBody string)
+	WebhookHandler  func(success bool, err error, writer http.ResponseWriter, webhook Webhook)
 	Verbose         bool
 	WaitGroup       sync.WaitGroup
 }
@@ -43,6 +42,12 @@ type ApiResult struct {
 	Ok          bool        `json:"ok"`
 	Description string      `json:"description,omitempty"`
 	Result      interface{} `json:"result,omitempty"`
+}
+
+type Webhook struct {
+	UpdateId int         `json:"update_id"`
+	Chat     interface{} `json:"chat"`
+	Message  Message     `json:"message"`
 }
 
 // Get new bot API client
@@ -258,11 +263,16 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 	b.verbose("received webhook request: %+v", req)
 
 	if body, err := ioutil.ReadAll(req.Body); err == nil {
-		b.WebhookHandler(true, nil, writer, string(body))
+		var webhook Webhook
+		if err := json.Unmarshal(body, &webhook); err != nil {
+			b.error("error while parsing json (%s)", err.Error())
+		} else {
+			b.WebhookHandler(true, nil, writer, webhook)
+		}
 	} else {
 		b.error("error while reading webhook request (%s)", err.Error())
 
-		b.WebhookHandler(false, err, writer, "")
+		b.WebhookHandler(false, err, writer, Webhook{})
 	}
 }
 
@@ -273,7 +283,7 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 // @param certFilepath [string] certification file's path (.pem)
 // @param keyFilepath [string] private key file's path
 // @param webhookHandler [func] webhook handler function
-func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(success bool, err error, writer http.ResponseWriter, reqBody string)) {
+func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(success bool, err error, writer http.ResponseWriter, webhook Webhook)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.WebhookPort)
 
 	// routing
