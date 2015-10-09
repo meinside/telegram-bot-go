@@ -18,13 +18,12 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
-	"sync"
 )
 
 const (
-	ApiBaseUrl  = "https://api.telegram.org/bot"
-	DefaultPort = 443
-	WebhookPath = "/telegram/bot/webhook"
+	ApiBaseUrl         = "https://api.telegram.org/bot"
+	DefaultWebhookPort = 443
+	WebhookPath        = "/telegram/bot/webhook"
 )
 
 type Bot struct {
@@ -35,26 +34,13 @@ type Bot struct {
 	WebhookUrl      string
 	WebhookHandler  func(success bool, err error, writer http.ResponseWriter, webhook Webhook)
 	Verbose         bool
-	WaitGroup       sync.WaitGroup
-}
-
-type ApiResult struct {
-	Ok          bool        `json:"ok"`
-	Description string      `json:"description,omitempty"`
-	Result      interface{} `json:"result,omitempty"`
-}
-
-type Webhook struct {
-	UpdateId int         `json:"update_id"`
-	Chat     interface{} `json:"chat"`
-	Message  Message     `json:"message"`
 }
 
 // Get new bot API client
 func NewClient(token string) *Bot {
 	return &Bot{
 		Token:       token,
-		WebhookPort: DefaultPort,
+		WebhookPort: DefaultWebhookPort,
 	}
 }
 
@@ -78,8 +64,11 @@ func (b *Bot) error(str string, args ...interface{}) {
 	fmt.Printf("* %s\n", fmt.Sprintf(str, args...))
 }
 
-// Send request to API server and callback its response
-func (b *Bot) sendRequest(method string, params map[string]interface{}, callback func(res *http.Response)) {
+// Send request to API server and return the response (synchronous)
+//
+// @param method [string] HTTP method
+// @param params [map[string]interface{}] request parameters
+func (b *Bot) sendRequest(method string, params map[string]interface{}) (success bool, resp *http.Response) {
 	client := &http.Client{}
 	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.Token, method)
 
@@ -126,7 +115,7 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}, callback
 		}
 
 		if resp, err := client.Do(req); err == nil {
-			callback(resp)
+			return true, resp
 		} else {
 			b.error("request error: %s", err.Error())
 		}
@@ -134,8 +123,7 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}, callback
 		b.error("building request error: %s", err.Error())
 	}
 
-	// wait group
-	b.WaitGroup.Done()
+	return false, nil
 }
 
 // Set webhook url for receiving incoming updates
@@ -145,11 +133,7 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}, callback
 // @param host [string] webhook server host
 // @param port [int] webhook server port (443, 80, 88, or 8443)
 // @param certFilepath [string] certification file's path
-// @param callback [func] callback function
-func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string, callback func(success bool, err error, description *string)) {
-	// wait group
-	b.WaitGroup.Add(1)
-
+func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string) (success bool, description *string) {
 	b.WebhookHost = host
 	b.WebhookPort = port
 	b.WebhookUrl = b.getWebhookUrl()
@@ -166,94 +150,79 @@ func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string, callback
 
 	b.verbose("setting webhook url to: %s", b.WebhookUrl)
 
-	go b.sendRequest("setWebhook", params, func(resp *http.Response) {
+	if success, resp := b.sendRequest("setWebhook", params); success {
 		defer resp.Body.Close()
 
 		if body, err := ioutil.ReadAll(resp.Body); err == nil {
 			var jsonResponse ApiResult
 			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				callback(true, nil, &jsonResponse.Description)
+				return true, &jsonResponse.Description
 			} else {
 				b.error("json parse error: %s (%s)", err.Error(), string(body))
-
-				callback(false, err, nil)
 			}
 		} else {
 			b.error("response read error: %s", err.Error())
-
-			callback(false, err, nil)
 		}
-	})
+	}
+
+	return false, nil
 }
 
 // Delete webhook url
 //
 // https://core.telegram.org/bots/api#setwebhook
 //
-// @param callback [func] callback function
-func (b *Bot) DeleteWebhookUrl(callback func(success bool, err error, description *string)) {
-	// wait group
-	b.WaitGroup.Add(1)
-
+func (b *Bot) DeleteWebhookUrl() (success bool, description *string) {
 	b.WebhookHost = ""
 	b.WebhookUrl = ""
 
-	params := map[string]interface{}{}
+	params := map[string]interface{}{
+		"url": "",
+	}
 
-	go b.sendRequest("setWebhook", params, func(resp *http.Response) {
+	if success, resp := b.sendRequest("setWebhook", params); success {
 		defer resp.Body.Close()
+
 		if body, err := ioutil.ReadAll(resp.Body); err == nil {
 			var jsonResponse ApiResult
 			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				callback(true, nil, &jsonResponse.Description)
+				return true, &jsonResponse.Description
 			} else {
 				b.error("json parse error: %s (%s)", err.Error(), string(body))
-
-				callback(false, err, nil)
 			}
 		} else {
 			b.error("response read error: %s", err.Error())
-
-			callback(false, err, nil)
 		}
-	})
+	}
+
+	return false, nil
 }
 
 // Get info of this bot
 //
 // https://core.telegram.org/bots/api#getme
 //
-// @param callback [func] callback function
-func (b *Bot) GetMe(callback func(success bool, err error, result map[string]interface{})) {
-	// wait group
-	b.WaitGroup.Add(1)
-
+func (b *Bot) GetMe() (success bool, result map[string]interface{}) {
 	params := map[string]interface{}{} // no parameters
 
-	go b.sendRequest("getMe", params, func(resp *http.Response) {
+	if success, resp := b.sendRequest("getMe", params); success {
 		defer resp.Body.Close()
+
 		if body, err := ioutil.ReadAll(resp.Body); err == nil {
 			var jsonResponse ApiResult
 			if err := json.Unmarshal(body, &jsonResponse); err == nil {
 				if resultMap, ok := jsonResponse.Result.(map[string]interface{}); ok {
-					callback(true, nil, resultMap)
+					return true, resultMap
 				}
 			} else {
 				b.error("json parse error: %s (%s)", err.Error(), string(body))
-
-				callback(false, err, nil)
 			}
 		} else {
 			b.error("response read error: %s", err.Error())
-
-			callback(false, err, nil)
 		}
-	})
-}
+	}
 
-// Wait for this bot until all requests & responses are finished
-func (b *Bot) Wait() {
-	b.WaitGroup.Wait()
+	return false, nil
 }
 
 // Webhook request handler

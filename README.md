@@ -66,23 +66,36 @@ func main() {
 	client := bot.NewClient(ApiToken)
 	client.Verbose = true
 
-	// set webhook url
-	client.SetWebhookUrl(WebhookHost, WebhookPort, CertFilename, func(success bool, err error, description *string) {
-		if success {
+	// get info about this bot
+	if ok, result := client.GetMe(); ok {
+		fmt.Printf("Bot information: @%s (%s)\n", result["username"], result["first_name"])
+
+		// set webhook url
+		if ok, description := client.SetWebhookUrl(WebhookHost, WebhookPort, CertFilename); ok {
 			fmt.Printf("SetWebhookUrl was successful: %s\n", *description)
 
 			// on success, start webhook server
 			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(success bool, err error, writer http.ResponseWriter, webhook bot.Webhook) {
 				if success {
 					fmt.Printf(">>> %+v\n", webhook)
+				} else {
+					fmt.Printf("*** error while receiving webhook (%s)\n", err.Error)
 				}
 			})
 		} else {
-			panic(fmt.Sprintf("failed to set webhook url (%s)\n", err.Error()))
+			panic("failed to set webhook url")
 		}
-	})
-
-	client.Wait()
+	} else {
+		panic("failed to get info of the bot")
+	}
+	/*
+		// delete webhook url
+		if ok, description := client.DeleteWebhookUrl(); ok {
+			fmt.Printf("DeleteWebhookUrl was successful: %s\n", *description)
+		} else {
+			panic("failed to delete webhook url")
+		}
+	*/
 }
 ```
 
