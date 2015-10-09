@@ -51,7 +51,6 @@ package main
 import (
 	"fmt"
 	bot "github.com/meinside/telegram-bot-go"
-	"net/http"
 )
 
 const (
@@ -75,7 +74,7 @@ func main() {
 			fmt.Printf("SetWebhookUrl was successful: %s\n", *description)
 
 			// on success, start webhook server
-			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(success bool, err error, writer http.ResponseWriter, webhook bot.Webhook) {
+			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(success bool, err error, webhook bot.Webhook) {
 				if success {
 					fmt.Printf(">>> %+v\n", webhook)
 				} else {

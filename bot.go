@@ -32,7 +32,7 @@ type Bot struct {
 	WebhookHost     string
 	WebhookPort     int
 	WebhookUrl      string
-	WebhookHandler  func(success bool, err error, writer http.ResponseWriter, webhook Webhook)
+	WebhookHandler  func(success bool, err error, webhook Webhook)
 	Verbose         bool
 }
 
@@ -236,12 +236,12 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 		if err := json.Unmarshal(body, &webhook); err != nil {
 			b.error("error while parsing json (%s)", err.Error())
 		} else {
-			b.WebhookHandler(true, nil, writer, webhook)
+			b.WebhookHandler(true, nil, webhook)
 		}
 	} else {
 		b.error("error while reading webhook request (%s)", err.Error())
 
-		b.WebhookHandler(false, err, writer, Webhook{})
+		b.WebhookHandler(false, err, Webhook{})
 	}
 }
 
@@ -252,7 +252,7 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 // @param certFilepath [string] certification file's path (.pem)
 // @param keyFilepath [string] private key file's path
 // @param webhookHandler [func] webhook handler function
-func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(success bool, err error, writer http.ResponseWriter, webhook Webhook)) {
+func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(success bool, err error, webhook Webhook)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.WebhookPort)
 
 	// routing
