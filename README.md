@@ -19,11 +19,11 @@ Generate self-signed certificate & private key with following script:
 # (https://core.telegram.org/bots/self-signed)
 # 
 # created on : 2015.10.08.
-# last update: 2015.10.08.
+# last update: 2015.10.11.
 # 
 # by meinside@gmail.com
 
-DOMAIN="some.where.in.the.galaxy"	# XXX - edit
+DOMAIN="my.host.com"	# XXX - edit
 EXPIRE_IN=3650	# XXX - edit
 
 NUM_BITS=2048	# 2048 bits
