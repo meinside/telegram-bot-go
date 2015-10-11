@@ -198,33 +198,6 @@ func (b *Bot) DeleteWebhookUrl() (success bool, description *string) {
 	return false, nil
 }
 
-// Get info of this bot
-//
-// https://core.telegram.org/bots/api#getme
-//
-func (b *Bot) GetMe() (success bool, result map[string]interface{}) {
-	params := map[string]interface{}{} // no parameters
-
-	if success, resp := b.sendRequest("getMe", params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResult
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				if resultMap, ok := jsonResponse.Result.(map[string]interface{}); ok {
-					return true, resultMap
-				}
-			} else {
-				b.error("json parse error: %s (%s)", err.Error(), string(body))
-			}
-		} else {
-			b.error("response read error: %s", err.Error())
-		}
-	}
-
-	return false, nil
-}
-
 // Webhook request handler
 func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
@@ -266,3 +239,98 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 		panic(err.Error())
 	}
 }
+
+// (Request methods)
+// https://core.telegram.org/bots/api#available-methods
+
+// Get info of this bot
+//
+// https://core.telegram.org/bots/api#getme
+//
+func (b *Bot) GetMe() (success bool, result map[string]interface{}) {
+	params := map[string]interface{}{} // no parameters
+
+	if success, resp := b.sendRequest("getMe", params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResult
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				if resultMap, ok := jsonResponse.Result.(map[string]interface{}); ok {
+					return true, resultMap
+				}
+			} else {
+				b.error("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			b.error("response read error: %s", err.Error())
+		}
+	}
+
+	return false, nil
+}
+
+// Send a message
+//
+// https://core.telegram.org/bots/api#sendmessage
+// TODO
+
+// Forward a message
+//
+// https://core.telegram.org/bots/api#forwardmessage
+// TODO
+
+// Send photos
+//
+// https://core.telegram.org/bots/api#sendphoto
+// TODO
+
+// Send audio files (will be played with external players)
+//
+// https://core.telegram.org/bots/api#sendaudio
+// TODO
+
+// Send general files
+//
+// https://core.telegram.org/bots/api#senddocument
+// TODO
+
+// Send stickers
+//
+// https://core.telegram.org/bots/api#sendsticker
+// TODO
+
+// Send video files
+//
+// https://core.telegram.org/bots/api#sendvideo
+// TODO
+
+// Send voice files (.ogg format only, will be played with Telegram itself))
+//
+// https://core.telegram.org/bots/api#sendvoice
+// TODO
+
+// Send locations
+//
+// https://core.telegram.org/bots/api#sendlocation
+// TODO
+
+// Send chat action
+//
+// https://core.telegram.org/bots/api#sendchataction
+// TODO
+
+// Get user profile photos
+//
+// https://core.telegram.org/bots/api#getuserprofilephotos
+// TODO
+
+// Get updates
+//
+// https://core.telegram.org/bots/api#getupdates
+// TODO
+
+// Get file info and prepare for download
+//
+// https://core.telegram.org/bots/api#getfile
+// TODO
