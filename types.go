@@ -1,4 +1,6 @@
 // https://core.telegram.org/bots/api#available-types
+//
+// following changes on 2015.10.08.
 
 package telegrambot
 
@@ -9,23 +11,26 @@ type ApiResult struct {
 }
 
 type Webhook struct {
-	UpdateId int         `json:"update_id"`
-	Chat     interface{} `json:"chat"`
-	Message  Message     `json:"message"`
+	UpdateId int     `json:"update_id"`
+	Message  Message `json:"message"`
 }
 
 // https://core.telegram.org/bots/api#user
-// https://core.telegram.org/bots/api#groupchat
 type User struct {
 	Id        int    `json:"id"`
 	FirstName string `json:"first_name,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
 	Username  string `json:"username,omitempty"`
-	Title     string `json:"title,omitempty"`
 }
 
-func (u *User) IsGroupChat() bool {
-	return u.Title != ""
+// https://core.telegram.org/bots/api#chat
+type Chat struct {
+	Id        int    `json:"id"`
+	Type      string `json:"type"` // 'private', 'group', or 'channel'
+	Title     string `json:"title,omitempty"`
+	Username  string `json:"username,omitempty"`
+	FirstName string `json:"first_name,omitempty"`
+	LastName  string `json:"last_name,omitempty"`
 }
 
 // https://core.telegram.org/bots/api#audio
@@ -135,7 +140,7 @@ type Message struct {
 	MessageId           int         `json:"message_id"`
 	From                User        `json:"from"`
 	Date                int         `json:"date"`
-	Chat                User        `json:"chat"`
+	Chat                Chat        `json:"chat"`
 	ForwardFrom         User        `json:"forward_from,omitempty"`
 	ForwardDate         int         `json:"forward_date,omitempty"`
 	ReplyToMessage      *Message    `json:"reply_to_message,omitempty"`

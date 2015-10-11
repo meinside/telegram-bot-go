@@ -236,6 +236,8 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 		if err := json.Unmarshal(body, &webhook); err != nil {
 			b.error("error while parsing json (%s)", err.Error())
 		} else {
+			b.verbose("received webhook body = %s", string(body))
+
 			b.WebhookHandler(true, nil, webhook)
 		}
 	} else {

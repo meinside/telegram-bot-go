@@ -76,7 +76,7 @@ func main() {
 			// on success, start webhook server
 			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(success bool, err error, webhook bot.Webhook) {
 				if success {
-					fmt.Printf(">>> %+v\n", webhook)
+					fmt.Printf(">>> %#v\n", webhook)
 				} else {
 					fmt.Printf("*** error while receiving webhook (%s)\n", err.Error)
 				}
