@@ -4,15 +4,27 @@
 
 package telegrambot
 
+type Webhook struct {
+	UpdateId int     `json:"update_id"`
+	Message  Message `json:"message"`
+}
+
 type ApiResult struct {
 	Ok          bool        `json:"ok"`
 	Description string      `json:"description,omitempty"`
 	Result      interface{} `json:"result,omitempty"`
 }
 
-type Webhook struct {
-	UpdateId int     `json:"update_id"`
-	Message  Message `json:"message"`
+type ApiResultUser struct {
+	Ok          bool   `json:"ok"`
+	Description string `json:"description,omitempty"`
+	Result      User   `json:"result,omitempty"`
+}
+
+type ApiResultMessage struct {
+	Ok          bool    `json:"ok"`
+	Description string  `json:"description,omitempty"`
+	Result      Message `json:"result,omitempty"`
 }
 
 // https://core.telegram.org/bots/api#user

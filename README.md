@@ -66,17 +66,21 @@ func main() {
 	client.Verbose = true
 
 	// get info about this bot
-	if ok, result := client.GetMe(); ok {
-		fmt.Printf("Bot information: @%s (%s)\n", result["username"], result["first_name"])
+	if me := client.GetMe(); me.Ok {
+		fmt.Printf("Bot information: @%s (%s)\n", me.Result.Username, me.Result.FirstName)
 
 		// set webhook url
-		if ok, description := client.SetWebhookUrl(WebhookHost, WebhookPort, CertFilename); ok {
-			fmt.Printf("SetWebhookUrl was successful: %s\n", *description)
+		if hooked := client.SetWebhookUrl(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
+			fmt.Printf("SetWebhookUrl was successful: %s\n", hooked.Description)
 
 			// on success, start webhook server
-			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(success bool, err error, webhook bot.Webhook) {
+			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
 				if success {
-					fmt.Printf(">>> %#v\n", webhook)
+					botMessage := fmt.Sprintf("I received @%s's message: %s", webhook.Message.From.Username, webhook.Message.Text)
+
+					if sent := client.SendMessage(webhook.Message.Chat.Id, &botMessage, nil, nil, &webhook.Message.MessageId, nil); !sent.Ok {
+						fmt.Printf("*** failed to send message: %s\n", sent.Description)
+					}
 				} else {
 					fmt.Printf("*** error while receiving webhook (%s)\n", err.Error)
 				}
@@ -89,8 +93,8 @@ func main() {
 	}
 	/*
 		// delete webhook url
-		if ok, description := client.DeleteWebhookUrl(); ok {
-			fmt.Printf("DeleteWebhookUrl was successful: %s\n", *description)
+		if unhooked := client.DeleteWebhookUrl(); unhooked.Ok {
+			fmt.Printf("DeleteWebhookUrl was successful: %s\n", unhooked.Description)
 		} else {
 			panic("failed to delete webhook url")
 		}
