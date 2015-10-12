@@ -144,8 +144,7 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 //
 // @param text [*string] message
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]interface{}) (result ApiResultMessage) {
@@ -236,8 +235,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 //
 // @param photoFilepath [string] photo file's path
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = caption, reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (caption, reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
@@ -289,8 +287,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[s
 //
 // @param audioFilepath [string] audio file's path
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = duration, performer, title, reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (duration, performer, title, reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
@@ -342,8 +339,7 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[s
 //
 // @param documentFilepath [string] document file's path
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
@@ -395,8 +391,7 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options 
 //
 // @param stickerFilepath [string] sticker file's path
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
@@ -448,8 +443,7 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *m
 //
 // @param videoFilepath [string] video file's path
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = duration, caption, reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (duration, caption, reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
@@ -501,8 +495,7 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options *map[s
 //
 // @param voiceFilepath [string] voice file's path
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = duration, reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (duration, reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
@@ -556,8 +549,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[s
 //
 // @param longitude [float32] longitude
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = reply_to_message_id, reply_markup)
+// @param options [*map[string]interface{}] optional parameters (reply_to_message_id, reply_markup)
 //
 // @return [ApiResultMessage]
 func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float32, options *map[string]interface{}) (result ApiResultMessage) {
@@ -645,8 +637,7 @@ func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResul
 //
 // @param userId [int] user id
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = offset, limit)
+// @param options [*map[string]interface{}] optional parameters (offset, limit)
 //
 // @return [ApiResultUserProfilePhotos]
 func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) (result ApiResultUserProfilePhotos) {
@@ -689,8 +680,7 @@ func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) 
 //
 // https://core.telegram.org/bots/api#getupdates
 //
-// @param options [*map[string]interface{}] optional parameters
-//        ( = offset, limit, timeout)
+// @param options [*map[string]interface{}] optional parameters (offset, limit, timeout)
 //
 // @return [ApiResultUpdates]
 func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdates) {
