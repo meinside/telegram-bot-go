@@ -26,6 +26,7 @@ const (
 	RedactedString = "<REDACTED>"
 )
 
+// Bot
 type Bot struct {
 	Token           string
 	WebhookProtocol string
@@ -36,7 +37,7 @@ type Bot struct {
 	Verbose         bool
 }
 
-// Get new bot API client
+// Get a new bot API client.
 //
 // @param token [string] Telegram bot API token
 //
@@ -48,7 +49,7 @@ func NewClient(token string) *Bot {
 	}
 }
 
-// Start Webhook server and wait forever
+// Start Webhook server and wait forever.
 //
 // (https://core.telegram.org/bots/self-signed)
 //
@@ -70,36 +71,36 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	}
 }
 
-// Generate hash from token
+// Generate hash from token.
 func (b *Bot) getHashedToken() string {
 	return fmt.Sprintf("%x", md5.Sum([]byte(b.Token)))
 }
 
-// Get webhook path generated with hash
+// Get webhook path generated with hash.
 func (b *Bot) getWebhookPath() string {
 	return fmt.Sprintf("%s/%s", WebhookPath, b.getHashedToken())
 }
 
-// Get full URL of webhook interface
+// Get full URL of webhook interface.
 func (b *Bot) getWebhookUrl() string {
 	return fmt.Sprintf("https://%s:%d%s", b.WebhookHost, b.WebhookPort, b.getWebhookPath())
 }
 
-// Remove confidential info from given string
+// Remove confidential info from given string.
 func (b *Bot) redact(str string) string {
 	tokenRemoved := strings.Replace(str, b.Token, RedactedString, -1)
 	redacted := strings.Replace(tokenRemoved, b.getHashedToken(), RedactedString, -1)
 	return redacted
 }
 
-// Print formatted log message (only when Bot.Verbose == true)
+// Print formatted log message. (only when Bot.Verbose == true)
 func (b *Bot) verbose(str string, args ...interface{}) {
 	if b.Verbose {
 		fmt.Printf("> %s\n", b.redact(fmt.Sprintf(str, args...)))
 	}
 }
 
-// Print formatted error message
+// Print formatted error message.
 func (b *Bot) error(str string, args ...interface{}) {
 	fmt.Printf("* %s\n", b.redact(fmt.Sprintf(str, args...)))
 }

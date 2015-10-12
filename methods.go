@@ -15,7 +15,7 @@ import (
 	"strconv"
 )
 
-// Set webhook url for receiving incoming updates
+// Set webhook url for receiving incoming updates.
 //
 // https://core.telegram.org/bots/api#setwebhook
 //
@@ -67,7 +67,7 @@ func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string) (result 
 	return ApiResult{Ok: false, Description: errStr}
 }
 
-// Delete webhook url
+// Delete webhook url.
 //
 // https://core.telegram.org/bots/api#setwebhook
 //
@@ -104,7 +104,7 @@ func (b *Bot) DeleteWebhookUrl() (result ApiResult) {
 	return ApiResult{Ok: false, Description: errStr}
 }
 
-// Get info of this bot
+// Get info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
 //
@@ -136,7 +136,7 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 	return ApiResultUser{Ok: false, Description: errStr}
 }
 
-// Send a message
+// Send a message.
 //
 // https://core.telegram.org/bots/api#sendmessage
 //
@@ -185,7 +185,7 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Forward a message
+// Forward a message.
 //
 // https://core.telegram.org/bots/api#forwardmessage
 //
@@ -228,7 +228,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send photos
+// Send photos.
 //
 // https://core.telegram.org/bots/api#sendphoto
 //
@@ -281,7 +281,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[s
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send audio files (.mp3 format only, will be played with external players)
+// Send audio files. (.mp3 format only, will be played with external players)
 //
 // https://core.telegram.org/bots/api#sendaudio
 //
@@ -334,7 +334,7 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[s
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send general files
+// Send general files.
 //
 // https://core.telegram.org/bots/api#senddocument
 //
@@ -387,7 +387,7 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options 
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send stickers
+// Send stickers.
 //
 // https://core.telegram.org/bots/api#sendsticker
 //
@@ -440,7 +440,7 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *m
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send video files
+// Send video files.
 //
 // https://core.telegram.org/bots/api#sendvideo
 //
@@ -493,7 +493,7 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options *map[s
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send voice files (.ogg format only, will be played with Telegram itself))
+// Send voice files. (.ogg format only, will be played with Telegram itself))
 //
 // https://core.telegram.org/bots/api#sendvoice
 //
@@ -546,7 +546,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[s
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send locations
+// Send locations.
 //
 // https://core.telegram.org/bots/api#sendlocation
 //
@@ -598,7 +598,7 @@ func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send chat action
+// Send chat action.
 //
 // https://core.telegram.org/bots/api#sendchataction
 //
@@ -639,7 +639,7 @@ func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResul
 	return ApiResult{Ok: false, Result: false, Description: errStr}
 }
 
-// Get user profile photos
+// Get user profile photos.
 //
 // https://core.telegram.org/bots/api#getuserprofilephotos
 //
@@ -685,7 +685,7 @@ func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) 
 	return ApiResultUserProfilePhotos{Ok: false, Description: errStr}
 }
 
-// Get updates
+// Get updates.
 //
 // https://core.telegram.org/bots/api#getupdates
 //
@@ -726,7 +726,7 @@ func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdat
 	return ApiResultUpdates{Ok: false, Description: errStr}
 }
 
-// Get file info and prepare for download
+// Get file info and prepare for download.
 //
 // https://core.telegram.org/bots/api#getfile
 //
@@ -763,7 +763,7 @@ func (b *Bot) GetFile(fileId string) (result ApiResultFile) {
 	return ApiResultFile{Ok: false, Description: errStr}
 }
 
-// Get download link from given File
+// Get download link from given File.
 //
 // @param file [File] file
 //
@@ -772,7 +772,7 @@ func (b *Bot) GetFileUrl(file File) string {
 	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.Token, file.FilePath)
 }
 
-// Check if given http params contain file or not
+// Check if given http params contain file or not.
 func checkIfFileParamExists(params map[string]interface{}) bool {
 	for _, value := range params {
 		switch value.(type) {
@@ -784,7 +784,7 @@ func checkIfFileParamExists(params map[string]interface{}) bool {
 	return false
 }
 
-// Convert given interface to string (for HTTP params)
+// Convert given interface to string. (for HTTP params)
 func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 	switch param.(type) {
 	case int:
@@ -848,7 +848,8 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 	return "", true
 }
 
-// Send request to API server and return the response (synchronous)
+// Send request to API server and return the response.
+// (synchronous)
 //
 // @param method [string] HTTP method
 //
@@ -931,7 +932,7 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 	return nil, false
 }
 
-// Webhook request handler
+// Handle Webhook request.
 func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
 

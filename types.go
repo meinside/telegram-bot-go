@@ -241,87 +241,87 @@ type Message struct {
 	GroupChatCreated    bool        `json:"group_chat_created,omitempty"`
 }
 
-// Check if Message has Forward
+// Check if Message has Forward.
 func (m *Message) HasForward() bool {
 	return m.ForwardDate > 0
 }
 
-// Check if Message has ReplyTo
+// Check if Message has ReplyTo.
 func (m *Message) HasReplyTo() bool {
 	return m.ReplyToMessage != nil
 }
 
-// Check if Message has Text
+// Check if Message has Text.
 func (m *Message) HasText() bool {
 	return m.Text != ""
 }
 
-// Check if Message has Audio
+// Check if Message has Audio.
 func (m *Message) HasAudio() bool {
 	return m.Audio.FileId != ""
 }
 
-// Check if Message has Document
+// Check if Message has Document.
 func (m *Message) HasDocument() bool {
 	return m.Document.FileId != ""
 }
 
-// Check if Message has Photo
+// Check if Message has Photo.
 func (m *Message) HasPhoto() bool {
 	return len(m.Photo) > 0
 }
 
-// Check if Message has Sticker
+// Check if Message has Sticker.
 func (m *Message) HasSticker() bool {
 	return m.Sticker.FileId != ""
 }
 
-// Check if Message has Video
+// Check if Message has Video.
 func (m *Message) HasVideo() bool {
 	return m.Video.FileId != ""
 }
 
-// Check if Message has Caption
+// Check if Message has Caption.
 func (m *Message) HasCaption() bool {
 	return m.Caption != ""
 }
 
-// Check if Message has Contact
+// Check if Message has Contact.
 func (m *Message) HasContact() bool {
 	return m.Contact.FirstName != ""
 }
 
-// Check if Message has Location
+// Check if Message has Location.
 func (m *Message) HasLocation() bool {
 	return m.Location.Longitude > 0 && m.Location.Latitude > 0
 }
 
-// Check if Message has NewChatParticipant
+// Check if Message has NewChatParticipant.
 func (m *Message) HasNewChatParticipant() bool {
 	return m.NewChatParticipant.Id > 0
 }
 
-// Check if Message has LeftChatParticipant
+// Check if Message has LeftChatParticipant.
 func (m *Message) HasLeftChatParticipant() bool {
 	return m.LeftChatParticipant.Id > 0
 }
 
-// Check if Message has NewChatTitle
+// Check if Message has NewChatTitle.
 func (m *Message) HasNewChatTitle() bool {
 	return m.NewChatTitle != ""
 }
 
-// Check if Message has NewChatPhoto
+// Check if Message has NewChatPhoto.
 func (m *Message) HasNewChatPhoto() bool {
 	return len(m.NewChatPhoto) > 0
 }
 
-// Check if Message has DeleteChatPhoto
+// Check if Message has DeleteChatPhoto.
 func (m *Message) HasDeleteChatPhoto() bool {
 	return m.DeleteChatPhoto
 }
 
-// Check if Message has GroupChatCreated
+// Check if Message has GroupChatCreated.
 func (m *Message) HasGroupChatCreated() bool {
 	return m.GroupChatCreated
 }
