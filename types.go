@@ -48,6 +48,19 @@ type ApiResultFile struct {
 	Result      File   `json:"result,omitempty"`
 }
 
+// API result (Update)
+type ApiResultUpdates struct {
+	Ok          bool     `json:"ok"`
+	Description string   `json:"description,omitempty"`
+	Result      []Update `json:"result,omitempty"`
+}
+
+// https://core.telegram.org/bots/api#update
+type Update struct {
+	UpdateId int     `json:"update_id"`
+	Message  Message `json:"message,omitempty"`
+}
+
 // https://core.telegram.org/bots/api#user
 type User struct {
 	Id        int    `json:"id"`

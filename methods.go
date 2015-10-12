@@ -674,8 +674,45 @@ func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) 
 
 // Get updates
 //
+// @param options [*map[string]interface{}] optional parameters
+//        ( = offset, limit, timeout)
+//
+// @return [ApiResultUpdates]
+//
 // https://core.telegram.org/bots/api#getupdates
-// TODO
+//
+func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdates) {
+	var errStr string
+
+	// optional params
+	params := map[string]interface{}{}
+	for key, val := range *options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	if resp, success := b.sendRequest("getUpdates", params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResultUpdates
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("GetUpdates failed")
+	}
+
+	b.error(errStr)
+
+	return ApiResultUpdates{Ok: false, Description: errStr}
+}
 
 // Get file info and prepare for download
 //
