@@ -1,13 +1,12 @@
 // https://core.telegram.org/bots/api#available-types
-//
-// following changes on 2015.10.08.
 
 package telegrambot
 
 const (
-	ParseModeMarkdown = "Markdown"
+	ParseModeMarkdown = "Markdown" // parse_mode: Markdown
 )
 
+// Webhook
 type Webhook struct {
 	UpdateId int     `json:"update_id"`
 	Message  Message `json:"message"`
@@ -20,47 +19,51 @@ type ApiResult struct {
 	Result      interface{} `json:"result,omitempty"`
 }
 
-// API result (User)
+// API result for User
 type ApiResultUser struct {
 	Ok          bool   `json:"ok"`
 	Description string `json:"description,omitempty"`
 	Result      User   `json:"result,omitempty"`
 }
 
-// API result (Message)
+// API result for Message
 type ApiResultMessage struct {
 	Ok          bool    `json:"ok"`
 	Description string  `json:"description,omitempty"`
 	Result      Message `json:"result,omitempty"`
 }
 
-// API result (UserProfilePhotos)
+// API result for UserProfilePhotos
 type ApiResultUserProfilePhotos struct {
 	Ok          bool              `json:"ok"`
 	Description string            `json:"description,omitempty"`
 	Result      UserProfilePhotos `json:"result,omitempty"`
 }
 
-// API result (File)
+// API result for File
 type ApiResultFile struct {
 	Ok          bool   `json:"ok"`
 	Description string `json:"description,omitempty"`
 	Result      File   `json:"result,omitempty"`
 }
 
-// API result (Update)
+// API result for Update
 type ApiResultUpdates struct {
 	Ok          bool     `json:"ok"`
 	Description string   `json:"description,omitempty"`
 	Result      []Update `json:"result,omitempty"`
 }
 
+// Update
+//
 // https://core.telegram.org/bots/api#update
 type Update struct {
 	UpdateId int     `json:"update_id"`
 	Message  Message `json:"message,omitempty"`
 }
 
+// User
+//
 // https://core.telegram.org/bots/api#user
 type User struct {
 	Id        int    `json:"id"`
@@ -69,6 +72,8 @@ type User struct {
 	Username  string `json:"username,omitempty"`
 }
 
+// Chat
+//
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
 	Id        int    `json:"id"`
@@ -79,6 +84,8 @@ type Chat struct {
 	LastName  string `json:"last_name,omitempty"`
 }
 
+// Audio
+//
 // https://core.telegram.org/bots/api#audio
 type Audio struct {
 	FileId    string `json:"file_id"`
@@ -89,6 +96,8 @@ type Audio struct {
 	FileSize  int    `json:"file_size,omitempty"`
 }
 
+// PhotoSize
+//
 // https://core.telegram.org/bots/api#photosize
 type PhotoSize struct {
 	FileId   string `json:"file_id"`
@@ -97,6 +106,8 @@ type PhotoSize struct {
 	FileSize int    `json:"file_size,omitempty"`
 }
 
+// Document
+//
 // https://core.telegram.org/bots/api#document
 type Document struct {
 	FileId   string    `json:"file_id"`
@@ -106,6 +117,8 @@ type Document struct {
 	FileSize int       `json:"file_size,omitempty"`
 }
 
+// Sticker
+//
 // https://core.telegram.org/bots/api#sticker
 type Sticker struct {
 	FileId   string    `json:"file_id"`
@@ -115,6 +128,8 @@ type Sticker struct {
 	FileSize int       `json:"file_size,omitempty"`
 }
 
+// Video
+//
 // https://core.telegram.org/bots/api#video
 type Video struct {
 	FileId   string    `json:"file_id"`
@@ -126,6 +141,8 @@ type Video struct {
 	FileSize int       `json:"file_size,omitempty"`
 }
 
+// Voice
+//
 // https://core.telegram.org/bots/api#voice
 type Voice struct {
 	FileId   string `json:"file_id"`
@@ -134,6 +151,8 @@ type Voice struct {
 	FileSize int    `json:"file_size,omitempty"`
 }
 
+// Contact
+//
 // https://core.telegram.org/bots/api#contact
 type Contact struct {
 	PhoneNumber string `json:"phone_number"`
@@ -142,18 +161,24 @@ type Contact struct {
 	UserId      int    `json:"user_id,omitempty"`
 }
 
+// Location
+//
 // https://core.telegram.org/bots/api#location
 type Location struct {
 	Longitude float32 `json:"longitude"`
 	Latitude  float32 `json:"latitude"`
 }
 
+// UserProfilePhotos
+//
 // https://core.telegram.org/bots/api#userprofilephotos
 type UserProfilePhotos struct {
 	TotalCount int           `json:"total_count"`
 	Photos     [][]PhotoSize `json:"photos"`
 }
 
+// File
+//
 // https://core.telegram.org/bots/api#file
 type File struct {
 	FileId   string `json:"file_id"`
@@ -161,6 +186,8 @@ type File struct {
 	FilePath string `json:"file_path,omitempty"`
 }
 
+// ReplyKeyboardMarkup
+//
 // https://core.telegram.org/bots/api#replykeyboardmarkup
 type ReplyKeyboardMarkup struct {
 	Keyboard        [][]string `json:"keyboard"`
@@ -169,18 +196,24 @@ type ReplyKeyboardMarkup struct {
 	Selective       bool       `json:"selective,omitempty"`
 }
 
+// ReplyKeyboardHide
+//
 // https://core.telegram.org/bots/api#replykeyboardhide
 type ReplyKeyboardHide struct {
 	HideKeyboard bool `json:"hide_keyboard"`
 	Selective    bool `json:"selective,omitempty"`
 }
 
+// ForceReply
+//
 // https://core.telegram.org/bots/api#forcereply
 type ForceReply struct {
 	ForceReply bool `json:"force_reply"`
 	Selective  bool `json:"selective,omitempty"`
 }
 
+// Message
+//
 // https://core.telegram.org/bots/api#message
 type Message struct {
 	MessageId           int         `json:"message_id"`
@@ -208,70 +241,87 @@ type Message struct {
 	GroupChatCreated    bool        `json:"group_chat_created,omitempty"`
 }
 
+// Check if Message has Forward
 func (m *Message) HasForward() bool {
 	return m.ForwardDate > 0
 }
 
+// Check if Message has ReplyTo
 func (m *Message) HasReplyTo() bool {
 	return m.ReplyToMessage != nil
 }
 
+// Check if Message has Text
 func (m *Message) HasText() bool {
 	return m.Text != ""
 }
 
+// Check if Message has Audio
 func (m *Message) HasAudio() bool {
 	return m.Audio.FileId != ""
 }
 
+// Check if Message has Document
 func (m *Message) HasDocument() bool {
 	return m.Document.FileId != ""
 }
 
+// Check if Message has Photo
 func (m *Message) HasPhoto() bool {
 	return len(m.Photo) > 0
 }
 
+// Check if Message has Sticker
 func (m *Message) HasSticker() bool {
 	return m.Sticker.FileId != ""
 }
 
+// Check if Message has Video
 func (m *Message) HasVideo() bool {
 	return m.Video.FileId != ""
 }
 
+// Check if Message has Caption
 func (m *Message) HasCaption() bool {
 	return m.Caption != ""
 }
 
+// Check if Message has Contact
 func (m *Message) HasContact() bool {
 	return m.Contact.FirstName != ""
 }
 
+// Check if Message has Location
 func (m *Message) HasLocation() bool {
 	return m.Location.Longitude > 0 && m.Location.Latitude > 0
 }
 
+// Check if Message has NewChatParticipant
 func (m *Message) HasNewChatParticipant() bool {
 	return m.NewChatParticipant.Id > 0
 }
 
+// Check if Message has LeftChatParticipant
 func (m *Message) HasLeftChatParticipant() bool {
 	return m.LeftChatParticipant.Id > 0
 }
 
+// Check if Message has NewChatTitle
 func (m *Message) HasNewChatTitle() bool {
 	return m.NewChatTitle != ""
 }
 
+// Check if Message has NewChatPhoto
 func (m *Message) HasNewChatPhoto() bool {
 	return len(m.NewChatPhoto) > 0
 }
 
+// Check if Message has DeleteChatPhoto
 func (m *Message) HasDeleteChatPhoto() bool {
 	return m.DeleteChatPhoto
 }
 
+// Check if Message has GroupChatCreated
 func (m *Message) HasGroupChatCreated() bool {
 	return m.GroupChatCreated
 }
