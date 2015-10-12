@@ -623,13 +623,54 @@ func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResul
 
 	b.error(errStr)
 
-	return ApiResult{Ok: false, Result: false}
+	return ApiResult{Ok: false, Result: false, Description: errStr}
 }
 
 // Get user profile photos
 //
+// @param userId [int] user id
+// @param options [*map[string]interface{}] optional parameters
+//        ( = offset, limit)
+//
+// @return [ApiResultUserProfilePhotos]
+//
 // https://core.telegram.org/bots/api#getuserprofilephotos
-// TODO
+//
+func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) (result ApiResultUserProfilePhotos) {
+	var errStr string
+
+	// essential params
+	params := map[string]interface{}{
+		"user_id": userId,
+	}
+	// optional params
+	for key, val := range *options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	if resp, success := b.sendRequest("getUserProfilePhotos", params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResultUserProfilePhotos
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("GetUserProfilePhotos failed")
+	}
+
+	b.error(errStr)
+
+	return ApiResultUserProfilePhotos{Ok: false, Description: errStr}
+}
 
 // Get updates
 //
@@ -638,8 +679,51 @@ func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResul
 
 // Get file info and prepare for download
 //
+// @param fileId [string] file id
+//
+// @return [ApiResultFile]
+//
 // https://core.telegram.org/bots/api#getfile
-// TODO
+//
+func (b *Bot) GetFile(fileId string) (result ApiResultFile) {
+	var errStr string
+
+	// essential params
+	params := map[string]interface{}{
+		"file_id": fileId,
+	}
+
+	if resp, success := b.sendRequest("getFile", params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResultFile
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("GetFile failed")
+	}
+
+	b.error(errStr)
+
+	return ApiResultFile{Ok: false, Description: errStr}
+}
+
+// Get download link from given File
+//
+// @param file [File] file
+//
+// @return [string]
+//
+func (b *Bot) GetFileUrl(file File) string {
+	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.Token, file.FilePath)
+}
 
 // Check if given http params contain file or not
 func checkIfFileParamExists(params map[string]interface{}) bool {

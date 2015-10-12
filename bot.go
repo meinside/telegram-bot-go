@@ -17,6 +17,7 @@ import (
 
 const (
 	ApiBaseUrl         = "https://api.telegram.org/bot"
+	FileBaseUrl        = "https://api.telegram.org/file/bot"
 	DefaultWebhookPort = 443
 	WebhookPath        = "/telegram/bot/webhook"
 )

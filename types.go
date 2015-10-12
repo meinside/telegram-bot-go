@@ -13,22 +13,39 @@ type Webhook struct {
 	Message  Message `json:"message"`
 }
 
+// API result
 type ApiResult struct {
 	Ok          bool        `json:"ok"`
 	Description string      `json:"description,omitempty"`
 	Result      interface{} `json:"result,omitempty"`
 }
 
+// API result (User)
 type ApiResultUser struct {
 	Ok          bool   `json:"ok"`
 	Description string `json:"description,omitempty"`
 	Result      User   `json:"result,omitempty"`
 }
 
+// API result (Message)
 type ApiResultMessage struct {
 	Ok          bool    `json:"ok"`
 	Description string  `json:"description,omitempty"`
 	Result      Message `json:"result,omitempty"`
+}
+
+// API result (UserProfilePhotos)
+type ApiResultUserProfilePhotos struct {
+	Ok          bool              `json:"ok"`
+	Description string            `json:"description,omitempty"`
+	Result      UserProfilePhotos `json:"result,omitempty"`
+}
+
+// API result (File)
+type ApiResultFile struct {
+	Ok          bool   `json:"ok"`
+	Description string `json:"description,omitempty"`
+	Result      File   `json:"result,omitempty"`
 }
 
 // https://core.telegram.org/bots/api#user
