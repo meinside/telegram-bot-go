@@ -373,6 +373,7 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 // @return [ApiResultMessage]
 //
 // https://core.telegram.org/bots/api#sendmessage
+//
 func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -412,8 +413,45 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]
 
 // Forward a message
 //
+// @param chatId [int,string] chat id
+// @param fromChatId [int,string] original message's chat id
+// @param messageId [int] message id
+//
+// @return [ApiResultMessage]
+//
 // https://core.telegram.org/bots/api#forwardmessage
-// TODO
+//
+func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, messageId int) (result ApiResultMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":      chatId,
+		"from_chat_id": fromChatId,
+		"message_id":   messageId,
+	}
+
+	var errStr string
+
+	if resp, success := b.sendRequest("forwardMessage", params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResultMessage
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				b.error("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("ForwardMessage failed")
+	}
+
+	b.error(errStr)
+
+	return ApiResultMessage{Ok: false, Description: errStr}
+}
 
 // Send photos
 //
