@@ -6,6 +6,17 @@ const (
 	ParseModeMarkdown = "Markdown" // parse_mode: Markdown
 )
 
+const (
+	ChatActionTyping         = "typing"
+	ChatActionUploadPhoto    = "upload_photo"
+	ChatActionRecordVideo    = "record_video"
+	ChatActionUploadVideo    = "upload_video"
+	ChatActionRecordAudio    = "record_audio"
+	ChatActionUploadAudio    = "upload_audio"
+	ChatActionUploadDocument = "upload_document"
+	ChatActionFindLocation   = "find_location"
+)
+
 // Webhook
 type Webhook struct {
 	UpdateId int     `json:"update_id"`
