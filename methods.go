@@ -587,8 +587,44 @@ func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float
 
 // Send chat action
 //
+// @param chatId [int,string] chat id
+// @param action [string] action
+//        (typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location)
+//
+// @return [ApiResult]
+//
 // https://core.telegram.org/bots/api#sendchataction
-// TODO
+//
+func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResult) {
+	var errStr string
+
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"action":  action,
+	}
+
+	if resp, success := b.sendRequest("sendChatAction", params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResult
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("SendChatAction failed")
+	}
+
+	b.error(errStr)
+
+	return ApiResult{Ok: false, Result: false}
+}
 
 // Get user profile photos
 //
