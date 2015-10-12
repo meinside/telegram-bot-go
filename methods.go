@@ -537,8 +537,53 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[s
 
 // Send locations
 //
+// @param chatId [int,string] chat id
+// @param latitude [float32] latitude
+// @param longitude [float32] longitude
+// @param options [*map[string]interface{}] optional parameters
+//        ( = reply_to_message_id, reply_markup)
+//
+// @return [ApiResultMessage]
+//
 // https://core.telegram.org/bots/api#sendlocation
-// TODO
+//
+func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float32, options *map[string]interface{}) (result ApiResultMessage) {
+	var errStr string
+
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":   chatId,
+		"latitude":  latitude,
+		"longitude": longitude,
+	}
+	// optional params
+	for key, val := range *options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	if resp, success := b.sendRequest("sendLocation", params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResultMessage
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("SendLocation failed")
+	}
+
+	b.error(errStr)
+
+	return ApiResultMessage{Ok: false, Description: errStr}
+}
 
 // Send chat action
 //
@@ -581,17 +626,23 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to int value", param)
 		}
-	case string:
-		if strValue, ok := param.(string); ok {
-			return strValue, ok
+	case float32:
+		if floatValue, ok := param.(float32); ok {
+			return fmt.Sprintf("%.8f", floatValue), ok
 		} else {
-			b.error("parameter '%+v' could not be cast to string value", param)
+			b.error("parameter '%+v' could not be cast to float32 value", param)
 		}
 	case bool:
 		if boolValue, ok := param.(bool); ok {
 			return strconv.FormatBool(boolValue), ok
 		} else {
 			b.error("parameter '%+v' could not be cast to bool value", param)
+		}
+	case string:
+		if strValue, ok := param.(string); ok {
+			return strValue, ok
+		} else {
+			b.error("parameter '%+v' could not be cast to string value", param)
 		}
 	case ReplyKeyboardMarkup:
 		if value, ok := param.(ReplyKeyboardMarkup); ok {
