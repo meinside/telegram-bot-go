@@ -122,7 +122,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // Send request to API server and return the response (synchronous)
 //
 // @param method [string] HTTP method
-// @param params [map[string]interface{}] request parameters
+// @param params [map[string]interface{}] request parameters (if *os.File is given, it will be closed automatically)
 func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *http.Response, success bool) {
 	client := &http.Client{}
 	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.Token, method)
@@ -138,13 +138,13 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 		for key, value := range params {
 			switch value.(type) {
 			case *os.File:
-				if fileValue, ok := value.(*os.File); ok {
-					if part, err := writer.CreateFormFile(key, fileValue.Name()); err == nil {
-						if _, err = io.Copy(part, fileValue); err != nil {
+				if file, ok := value.(*os.File); ok {
+					defer file.Close()
+
+					if part, err := writer.CreateFormFile(key, file.Name()); err == nil {
+						if _, err = io.Copy(part, file); err != nil {
 							b.error("could now write to multipart: %s", key)
 						}
-
-						defer fileValue.Close()
 					} else {
 						b.error("could not create form file for parameter '%s' (%v)", key, value)
 					}
