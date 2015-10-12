@@ -264,7 +264,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[s
 				errStr = fmt.Sprintf("response read error: %s", err.Error())
 			}
 		} else {
-			errStr = fmt.Sprintf("SendMessage failed")
+			errStr = fmt.Sprintf("SendPhoto failed")
 		}
 	} else {
 		errStr = err.Error()
@@ -275,10 +275,57 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[s
 	return ApiResultMessage{Ok: false, Description: errStr}
 }
 
-// Send audio files (will be played with external players)
+// Send audio files (.mp3 format only, will be played with external players)
+//
+// @param chatId [int,string] chat id
+// @param audioFilepath [string] audio file's path
+// @param options [*map[string]interface{}] optional parameters
+//        ( = duration, performer, title, reply_to_message_id, reply_markup)
+//
+// @return [ApiResultMessage]
 //
 // https://core.telegram.org/bots/api#sendaudio
-// TODO
+//
+func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+	var errStr string
+
+	if file, err := os.Open(audioFilepath); err == nil {
+		// essential params
+		params := map[string]interface{}{
+			"chat_id": chatId,
+			"audio":   file,
+		}
+		// optional params
+		for key, val := range *options {
+			if val != nil {
+				params[key] = val
+			}
+		}
+
+		if resp, success := b.sendRequest("sendAudio", params); success {
+			defer resp.Body.Close()
+
+			if body, err := ioutil.ReadAll(resp.Body); err == nil {
+				var jsonResponse ApiResultMessage
+				if err := json.Unmarshal(body, &jsonResponse); err == nil {
+					return jsonResponse
+				} else {
+					errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+				}
+			} else {
+				errStr = fmt.Sprintf("response read error: %s", err.Error())
+			}
+		} else {
+			errStr = fmt.Sprintf("SendAudio failed")
+		}
+	} else {
+		errStr = err.Error()
+	}
+
+	b.error(errStr)
+
+	return ApiResultMessage{Ok: false, Description: errStr}
+}
 
 // Send general files
 //
