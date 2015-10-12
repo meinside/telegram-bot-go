@@ -41,7 +41,6 @@ type Bot struct {
 // @param token [string] Telegram bot API token
 //
 // @return [*Bot]
-//
 func NewClient(token string) *Bot {
 	return &Bot{
 		Token:       token,
@@ -54,7 +53,9 @@ func NewClient(token string) *Bot {
 // (https://core.telegram.org/bots/self-signed)
 //
 // @param certFilepath [string] certification file's path (.pem)
+//
 // @param keyFilepath [string] private key file's path
+//
 // @param webhookHandler [func] webhook handler function
 func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(webhook Webhook, success bool, err error)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.WebhookPort)
