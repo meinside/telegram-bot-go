@@ -55,6 +55,8 @@ func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string) (result 
 		} else {
 			errStr = fmt.Sprintf("response read error: %s", err.Error())
 		}
+	} else {
+		errStr = fmt.Sprintf("SetWebhookUrl failed")
 	}
 
 	b.error(errStr)
@@ -89,6 +91,8 @@ func (b *Bot) DeleteWebhookUrl() (result ApiResult) {
 		} else {
 			errStr = fmt.Sprintf("response read error: %s", err.Error())
 		}
+	} else {
+		errStr = fmt.Sprintf("DeleteWebhookUrl failed")
 	}
 
 	b.error(errStr)
@@ -120,6 +124,8 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 		} else {
 			errStr = fmt.Sprintf("response read error: %s", err.Error())
 		}
+	} else {
+		errStr = fmt.Sprintf("GetMe failed")
 	}
 
 	b.error(errStr)
@@ -161,7 +167,7 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]
 			if err := json.Unmarshal(body, &jsonResponse); err == nil {
 				return jsonResponse
 			} else {
-				b.error("json parse error: %s (%s)", err.Error(), string(body))
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
 			}
 		} else {
 			errStr = fmt.Sprintf("response read error: %s", err.Error())
@@ -203,7 +209,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 			if err := json.Unmarshal(body, &jsonResponse); err == nil {
 				return jsonResponse
 			} else {
-				b.error("json parse error: %s (%s)", err.Error(), string(body))
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
 			}
 		} else {
 			errStr = fmt.Sprintf("response read error: %s", err.Error())
@@ -219,8 +225,55 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 
 // Send photos
 //
+// @param chatId [int,string] chat id
+// @param photoFilepath [string] photo file's path
+// @param options [*map[string]interface{}] optional parameters
+//        ( = caption, reply_to_message_id, reply_markup)
+//
+// @return [ApiResultMessage]
+//
 // https://core.telegram.org/bots/api#sendphoto
-// TODO
+//
+func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+	var errStr string
+
+	if file, err := os.Open(photoFilepath); err == nil {
+		// essential params
+		params := map[string]interface{}{
+			"chat_id": chatId,
+			"photo":   file,
+		}
+		// optional params
+		for key, val := range *options {
+			if val != nil {
+				params[key] = val
+			}
+		}
+
+		if resp, success := b.sendRequest("sendPhoto", params); success {
+			defer resp.Body.Close()
+
+			if body, err := ioutil.ReadAll(resp.Body); err == nil {
+				var jsonResponse ApiResultMessage
+				if err := json.Unmarshal(body, &jsonResponse); err == nil {
+					return jsonResponse
+				} else {
+					errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+				}
+			} else {
+				errStr = fmt.Sprintf("response read error: %s", err.Error())
+			}
+		} else {
+			errStr = fmt.Sprintf("SendMessage failed")
+		}
+	} else {
+		errStr = err.Error()
+	}
+
+	b.error(errStr)
+
+	return ApiResultMessage{Ok: false, Description: errStr}
+}
 
 // Send audio files (will be played with external players)
 //
