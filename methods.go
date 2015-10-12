@@ -381,8 +381,55 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options 
 
 // Send stickers
 //
+// @param chatId [int,string] chat id
+// @param stickerFilepath [string] sticker file's path
+// @param options [*map[string]interface{}] optional parameters
+//        ( = reply_to_message_id, reply_markup)
+//
+// @return [ApiResultMessage]
+//
 // https://core.telegram.org/bots/api#sendsticker
-// TODO
+//
+func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+	var errStr string
+
+	if file, err := os.Open(stickerFilepath); err == nil {
+		// essential params
+		params := map[string]interface{}{
+			"chat_id": chatId,
+			"sticker": file,
+		}
+		// optional params
+		for key, val := range *options {
+			if val != nil {
+				params[key] = val
+			}
+		}
+
+		if resp, success := b.sendRequest("sendSticker", params); success {
+			defer resp.Body.Close()
+
+			if body, err := ioutil.ReadAll(resp.Body); err == nil {
+				var jsonResponse ApiResultMessage
+				if err := json.Unmarshal(body, &jsonResponse); err == nil {
+					return jsonResponse
+				} else {
+					errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+				}
+			} else {
+				errStr = fmt.Sprintf("response read error: %s", err.Error())
+			}
+		} else {
+			errStr = fmt.Sprintf("SendSticker failed")
+		}
+	} else {
+		errStr = err.Error()
+	}
+
+	b.error(errStr)
+
+	return ApiResultMessage{Ok: false, Description: errStr}
+}
 
 // Send video files
 //
