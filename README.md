@@ -77,8 +77,14 @@ func main() {
 			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
 				if success {
 					botMessage := fmt.Sprintf("I received @%s's message: %s", webhook.Message.From.Username, webhook.Message.Text)
+					options := map[string]interface{}{
+						"parse_mode":               bot.ParseModeMarkdown,
+						"disable_web_page_preview": true,
+						"reply_to_message_id":      webhook.Message.MessageId,
+						"reply_markup":             nil,
+					}
 
-					if sent := client.SendMessage(webhook.Message.Chat.Id, &botMessage, nil, nil, &webhook.Message.MessageId, nil); !sent.Ok {
+					if sent := client.SendMessage(webhook.Message.Chat.Id, &botMessage, &options); !sent.Ok {
 						fmt.Printf("*** failed to send message: %s\n", sent.Description)
 					}
 				} else {

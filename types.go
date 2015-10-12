@@ -4,6 +4,10 @@
 
 package telegrambot
 
+const (
+	ParseModeMarkdown = "Markdown"
+)
+
 type Webhook struct {
 	UpdateId int     `json:"update_id"`
 	Message  Message `json:"message"`

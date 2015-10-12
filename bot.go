@@ -112,6 +112,12 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
+	case bool:
+		if boolValue, ok := param.(bool); ok {
+			return strconv.FormatBool(boolValue), ok
+		} else {
+			b.error("parameter '%+v' could not be cast to bool value", param)
+		}
 	default:
 		b.error("unexpected type: '%+v' (%T)", param, param)
 	}
@@ -328,6 +334,8 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 
 // Get info of this bot
 //
+// @return [ApiResultUser]
+//
 // https://core.telegram.org/bots/api#getme
 //
 func (b *Bot) GetMe() (result ApiResultUser) {
@@ -357,23 +365,25 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 
 // Send a message
 //
+// @param chatId [int,string] chat id
+// @param text [*string] message
+// @param options [*map[string]interface{}] optional parameters
+//        ( = parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup)
+//
+// @return [ApiResultMessage]
+//
 // https://core.telegram.org/bots/api#sendmessage
-func (b *Bot) SendMessage(chatId interface{}, text *string, parseMode *string, disableWebPagePreview *bool, replyToMessageId *int, replyMarkup *interface{}) (result ApiResultMessage) {
+func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]interface{}) (result ApiResultMessage) {
+	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
 		"text":    *text,
 	}
-	if parseMode != nil {
-		params["parse_mode"] = *parseMode
-	}
-	if disableWebPagePreview != nil {
-		params["disable_web_preview"] = *disableWebPagePreview
-	}
-	if replyToMessageId != nil {
-		params["reply_to_message_id"] = *replyToMessageId
-	}
-	if replyMarkup != nil {
-		params["reply_markup"] = &replyMarkup
+	// optional params
+	for key, val := range *options {
+		if val != nil {
+			params[key] = val
+		}
 	}
 
 	var errStr string
