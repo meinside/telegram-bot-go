@@ -329,8 +329,55 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[s
 
 // Send general files
 //
+// @param chatId [int,string] chat id
+// @param documentFilepath [string] document file's path
+// @param options [*map[string]interface{}] optional parameters
+//        ( = reply_to_message_id, reply_markup)
+//
+// @return [ApiResultMessage]
+//
 // https://core.telegram.org/bots/api#senddocument
-// TODO
+//
+func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+	var errStr string
+
+	if file, err := os.Open(documentFilepath); err == nil {
+		// essential params
+		params := map[string]interface{}{
+			"chat_id":  chatId,
+			"document": file,
+		}
+		// optional params
+		for key, val := range *options {
+			if val != nil {
+				params[key] = val
+			}
+		}
+
+		if resp, success := b.sendRequest("sendDocument", params); success {
+			defer resp.Body.Close()
+
+			if body, err := ioutil.ReadAll(resp.Body); err == nil {
+				var jsonResponse ApiResultMessage
+				if err := json.Unmarshal(body, &jsonResponse); err == nil {
+					return jsonResponse
+				} else {
+					errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+				}
+			} else {
+				errStr = fmt.Sprintf("response read error: %s", err.Error())
+			}
+		} else {
+			errStr = fmt.Sprintf("SendDocument failed")
+		}
+	} else {
+		errStr = err.Error()
+	}
+
+	b.error(errStr)
+
+	return ApiResultMessage{Ok: false, Description: errStr}
+}
 
 // Send stickers
 //
