@@ -118,6 +118,36 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to bool value", param)
 		}
+	case ReplyKeyboardMarkup:
+		if value, ok := param.(ReplyKeyboardMarkup); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to ReplyKeyboardMarkup value", param)
+		}
+	case ReplyKeyboardHide:
+		if value, ok := param.(ReplyKeyboardHide); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to ReplyKeyboardHide value", param)
+		}
+	case ForceReply:
+		if value, ok := param.(ForceReply); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to ForceReply value", param)
+		}
 	default:
 		b.error("unexpected type: '%+v' (%T)", param, param)
 	}
