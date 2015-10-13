@@ -19,45 +19,46 @@ const (
 	ApiBaseUrl         = "https://api.telegram.org/bot"
 	FileBaseUrl        = "https://api.telegram.org/file/bot"
 	DefaultWebhookPort = 443
-	WebhookPath        = "/telegram/bot/webhook"
+
+	WebhookPath = "/telegram/bot/webhook"
 )
 
 const (
-	RedactedString = "<REDACTED>"
+	RedactedString = "<REDACTED>" // confidential info will be displayed as this
 )
 
 // Bot
 type Bot struct {
-	Token           string
+	// Telegram bot API's token
+	Token string
+
+	// Webhook related stuffs
 	WebhookProtocol string
 	WebhookHost     string
 	WebhookPort     int
 	WebhookUrl      string
 	WebhookHandler  func(webhook Webhook, success bool, err error)
-	Verbose         bool
+
+	// print verbose log messages or not
+	Verbose bool
 }
 
-// Get a new bot API client.
-//
-// @param token [string] Telegram bot API token
-//
-// @return [*Bot]
+// Get a new bot API client with given token string.
 func NewClient(token string) *Bot {
 	return &Bot{
-		Token:       token,
-		WebhookPort: DefaultWebhookPort,
+		Token: token,
 	}
 }
 
-// Start Webhook server and wait forever.
+// Start Webhook server(and wait forever).
+//
+// Function SetWebhook(host, port, certFilepath) should be called priorly to setup host, port, and certification file.
+//
+// Certification file(.pem) and a private key is needed.
 //
 // (https://core.telegram.org/bots/self-signed)
 //
-// @param certFilepath [string] certification file's path (.pem)
-//
-// @param keyFilepath [string] private key file's path
-//
-// @param webhookHandler [func] webhook handler function
+// Incoming webhooks will be received through webhookHandler function.
 func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(webhook Webhook, success bool, err error)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.WebhookPort)
 

@@ -72,8 +72,8 @@ func main() {
 		fmt.Printf("Bot information: @%s (%s)\n", me.Result.Username, me.Result.FirstName)
 
 		// set webhook url
-		if hooked := client.SetWebhookUrl(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
-			fmt.Printf("SetWebhookUrl was successful: %s\n", hooked.Description)
+		if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
+			fmt.Printf("SetWebhook was successful: %s\n", hooked.Description)
 
 			// on success, start webhook server
 			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
@@ -94,17 +94,17 @@ func main() {
 				}
 			})
 		} else {
-			panic("failed to set webhook url")
+			panic("failed to set webhook")
 		}
 	} else {
 		panic("failed to get info of the bot")
 	}
 	/*
 		// delete webhook url
-		if unhooked := client.DeleteWebhookUrl(); unhooked.Ok {
-			fmt.Printf("DeleteWebhookUrl was successful: %s\n", unhooked.Description)
+		if unhooked := client.DeleteWebhook(); unhooked.Ok {
+			fmt.Printf("DeleteWebhook was successful: %s\n", unhooked.Description)
 		} else {
-			panic("failed to delete webhook url")
+			panic("failed to delete webhook")
 		}
 	*/
 }

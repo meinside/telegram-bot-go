@@ -15,18 +15,12 @@ import (
 	"strconv"
 )
 
-// Set webhook url for receiving incoming updates.
+// Set webhook url and certificate for receiving incoming updates.
 //
 // https://core.telegram.org/bots/api#setwebhook
 //
-// @param host [string] webhook server host
-//
-// @param port [int] webhook server port (443, 80, 88, or 8443)
-//
-// @param certFilepath [string] certification file's path
-//
-// @return [ApiResult]
-func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string) (result ApiResult) {
+// port should be one of: 443, 80, 88, or 8443.
+func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResult) {
 	b.WebhookHost = host
 	b.WebhookPort = port
 	b.WebhookUrl = b.getWebhookUrl()
@@ -59,7 +53,7 @@ func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string) (result 
 			errStr = fmt.Sprintf("response read error: %s", err.Error())
 		}
 	} else {
-		errStr = fmt.Sprintf("SetWebhookUrl failed")
+		errStr = fmt.Sprintf("SetWebhook failed")
 	}
 
 	b.error(errStr)
@@ -67,11 +61,11 @@ func (b *Bot) SetWebhookUrl(host string, port int, certFilepath string) (result 
 	return ApiResult{Ok: false, Description: errStr}
 }
 
-// Delete webhook url.
+// Delete webhook.
 //
 // https://core.telegram.org/bots/api#setwebhook
 //
-// @return [ApiResult]
+// (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 func (b *Bot) DeleteWebhookUrl() (result ApiResult) {
 	b.WebhookHost = ""
 	b.WebhookUrl = ""
@@ -107,8 +101,6 @@ func (b *Bot) DeleteWebhookUrl() (result ApiResult) {
 // Get info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
-//
-// @return [ApiResultUser]
 func (b *Bot) GetMe() (result ApiResultUser) {
 	params := map[string]interface{}{} // no parameters
 
@@ -140,13 +132,9 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 //
 // https://core.telegram.org/bots/api#sendmessage
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param text [*string] message
-//
-// @param options [*map[string]interface{}] optional parameters (parse_mode, disable_web_page_preview, reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include parse_mode, disable_web_page_preview, reply_to_message_id, and reply_markup.
 func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -188,13 +176,7 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]
 //
 // https://core.telegram.org/bots/api#forwardmessage
 //
-// @param chatId [int,string] chat id
-//
-// @param fromChatId [int,string] original message's chat id
-//
-// @param messageId [int] message id
-//
-// @return [ApiResultMessage]
+// chatId and fromChatId can be Message.Chat.Id or target channel(eg. @channelusername).
 func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, messageId int) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -231,13 +213,9 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 //
 // https://core.telegram.org/bots/api#sendphoto
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param photoFilepath [string] photo file's path
-//
-// @param options [*map[string]interface{}] optional parameters (caption, reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include caption, reply_to_message_id, and reply_markup.
 func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -283,13 +261,9 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[s
 //
 // https://core.telegram.org/bots/api#sendaudio
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param audioFilepath [string] audio file's path
-//
-// @param options [*map[string]interface{}] optional parameters (duration, performer, title, reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include duration, performer, title, reply_to_message_id, and reply_markup.
 func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -335,13 +309,9 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[s
 //
 // https://core.telegram.org/bots/api#senddocument
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param documentFilepath [string] document file's path
-//
-// @param options [*map[string]interface{}] optional parameters (reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include reply_to_message_id, and reply_markup.
 func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -387,13 +357,9 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options 
 //
 // https://core.telegram.org/bots/api#sendsticker
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param stickerFilepath [string] sticker file's path
-//
-// @param options [*map[string]interface{}] optional parameters (reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include reply_to_message_id, and reply_markup.
 func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -439,13 +405,9 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *m
 //
 // https://core.telegram.org/bots/api#sendvideo
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param videoFilepath [string] video file's path
-//
-// @param options [*map[string]interface{}] optional parameters (duration, caption, reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include duration, caption, reply_to_message_id, and reply_markup.
 func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -491,13 +453,9 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options *map[s
 //
 // https://core.telegram.org/bots/api#sendvoice
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param voiceFilepath [string] voice file's path
-//
-// @param options [*map[string]interface{}] optional parameters (duration, reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include duration, reply_to_message_id, and reply_markup.
 func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -543,15 +501,9 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[s
 //
 // https://core.telegram.org/bots/api#sendlocation
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param latitude [float32] latitude
-//
-// @param longitude [float32] longitude
-//
-// @param options [*map[string]interface{}] optional parameters (reply_to_message_id, reply_markup)
-//
-// @return [ApiResultMessage]
+// options include reply_to_message_id, and reply_markup.
 func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float32, options *map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -594,11 +546,9 @@ func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float
 //
 // https://core.telegram.org/bots/api#sendchataction
 //
-// @param chatId [int,string] chat id
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// @param action [string] action (typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location)
-//
-// @return [ApiResult]
+// action can be one of: typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, or find_location
 func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResult) {
 	var errStr string
 
@@ -634,11 +584,7 @@ func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResul
 //
 // https://core.telegram.org/bots/api#getuserprofilephotos
 //
-// @param userId [int] user id
-//
-// @param options [*map[string]interface{}] optional parameters (offset, limit)
-//
-// @return [ApiResultUserProfilePhotos]
+// options include offset and limit.
 func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) (result ApiResultUserProfilePhotos) {
 	var errStr string
 
@@ -679,9 +625,7 @@ func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) 
 //
 // https://core.telegram.org/bots/api#getupdates
 //
-// @param options [*map[string]interface{}] optional parameters (offset, limit, timeout)
-//
-// @return [ApiResultUpdates]
+// options include offset, limit, and timeout.
 func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdates) {
 	var errStr string
 
@@ -718,10 +662,6 @@ func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdat
 // Get file info and prepare for download.
 //
 // https://core.telegram.org/bots/api#getfile
-//
-// @param fileId [string] file id
-//
-// @return [ApiResultFile]
 func (b *Bot) GetFile(fileId string) (result ApiResultFile) {
 	var errStr string
 
@@ -753,10 +693,6 @@ func (b *Bot) GetFile(fileId string) (result ApiResultFile) {
 }
 
 // Get download link from given File.
-//
-// @param file [File] file
-//
-// @return [string]
 func (b *Bot) GetFileUrl(file File) string {
 	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.Token, file.FilePath)
 }
@@ -840,9 +776,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // Send request to API server and return the response.
 // (synchronous)
 //
-// @param method [string] HTTP method
-//
-// @param params [map[string]interface{}] request parameters (if *os.File is given, it will be closed automatically)
+// If *os.File is included in the params, it will be closed automatically.
 func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *http.Response, success bool) {
 	client := &http.Client{}
 	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.Token, method)
