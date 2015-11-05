@@ -101,8 +101,8 @@ func main() {
 	}
 	/*
 		// delete webhook url
-		if unhooked := client.DeleteWebhook(); unhooked.Ok {
-			fmt.Printf("DeleteWebhook was successful: %s\n", unhooked.Description)
+		if unhooked := client.DeleteWebhookUrl(); unhooked.Ok {
+			fmt.Printf("DeleteWebhookUrl was successful: %s\n", unhooked.Description)
 		} else {
 			panic("failed to delete webhook")
 		}
