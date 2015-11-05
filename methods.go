@@ -66,7 +66,7 @@ func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result Api
 // https://core.telegram.org/bots/api#setwebhook
 //
 // (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
-func (b *Bot) DeleteWebhookUrl() (result ApiResult) {
+func (b *Bot) DeleteWebhook() (result ApiResult) {
 	b.WebhookHost = ""
 	b.WebhookUrl = ""
 
@@ -90,7 +90,7 @@ func (b *Bot) DeleteWebhookUrl() (result ApiResult) {
 			errStr = fmt.Sprintf("response read error: %s", err.Error())
 		}
 	} else {
-		errStr = fmt.Sprintf("DeleteWebhookUrl failed")
+		errStr = fmt.Sprintf("DeleteWebhook failed")
 	}
 
 	b.error(errStr)
