@@ -73,7 +73,7 @@ func main() {
 
 		// set webhook url
 		if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
-			fmt.Printf("SetWebhook was successful: %s\n", hooked.Description)
+			fmt.Printf("SetWebhook was successful: %s\n", *hooked.Description)
 
 			// on success, start webhook server
 			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
