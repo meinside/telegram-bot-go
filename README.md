@@ -78,7 +78,7 @@ func main() {
 			// on success, start webhook server
 			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
 				if success {
-					botMessage := fmt.Sprintf("I received @%s's message: %s", webhook.Message.From.Username, webhook.Message.Text)
+					botMessage := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
 					options := map[string]interface{}{
 						"parse_mode":               bot.ParseModeMarkdown,
 						"disable_web_page_preview": true,
@@ -87,7 +87,7 @@ func main() {
 					}
 
 					if sent := client.SendMessage(webhook.Message.Chat.Id, &botMessage, options); !sent.Ok {
-						fmt.Printf("*** failed to send message: %s\n", sent.Description)
+						fmt.Printf("*** failed to send message: %s\n", *sent.Description)
 					}
 				} else {
 					fmt.Printf("*** error while receiving webhook (%s)\n", err.Error)
