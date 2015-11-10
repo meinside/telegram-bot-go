@@ -69,7 +69,7 @@ func main() {
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
-		fmt.Printf("Bot information: @%s (%s)\n", me.Result.Username, me.Result.FirstName)
+		fmt.Printf("Bot information: @%s (%s)\n", *me.Result.Username, *me.Result.FirstName)
 
 		// set webhook url
 		if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
