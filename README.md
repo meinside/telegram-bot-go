@@ -86,7 +86,7 @@ func main() {
 						"reply_markup":             nil,
 					}
 
-					if sent := client.SendMessage(webhook.Message.Chat.Id, &botMessage, &options); !sent.Ok {
+					if sent := client.SendMessage(webhook.Message.Chat.Id, &botMessage, options); !sent.Ok {
 						fmt.Printf("*** failed to send message: %s\n", sent.Description)
 					}
 				} else {

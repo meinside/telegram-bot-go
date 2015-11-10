@@ -58,7 +58,7 @@ func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result Api
 
 	b.error(errStr)
 
-	return ApiResult{Ok: false, Description: errStr}
+	return ApiResult{Ok: false, Description: &errStr}
 }
 
 // Delete webhook.
@@ -95,7 +95,7 @@ func (b *Bot) DeleteWebhook() (result ApiResult) {
 
 	b.error(errStr)
 
-	return ApiResult{Ok: false, Description: errStr}
+	return ApiResult{Ok: false, Description: &errStr}
 }
 
 // Get info of this bot.
@@ -125,7 +125,7 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 
 	b.error(errStr)
 
-	return ApiResultUser{Ok: false, Description: errStr}
+	return ApiResultUser{Ok: false, Description: &errStr}
 }
 
 // Send a message.
@@ -135,14 +135,14 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include parse_mode, disable_web_page_preview, reply_to_message_id, and reply_markup.
-func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendMessage(chatId interface{}, text *string, options map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
 		"text":    *text,
 	}
 	// optional params
-	for key, val := range *options {
+	for key, val := range options {
 		if val != nil {
 			params[key] = val
 		}
@@ -169,7 +169,7 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options *map[string]
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Forward a message.
@@ -206,7 +206,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send photos.
@@ -216,17 +216,17 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include caption, reply_to_message_id, and reply_markup.
-func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
-	if file, err := os.Open(photoFilepath); err == nil {
+	if file, err := os.Open(*photoFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
 			"chat_id": chatId,
 			"photo":   file,
 		}
 		// optional params
-		for key, val := range *options {
+		for key, val := range options {
 			if val != nil {
 				params[key] = val
 			}
@@ -254,7 +254,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[s
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send audio files. (.mp3 format only, will be played with external players)
@@ -264,17 +264,17 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options *map[s
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include duration, performer, title, reply_to_message_id, and reply_markup.
-func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
-	if file, err := os.Open(audioFilepath); err == nil {
+	if file, err := os.Open(*audioFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
 			"chat_id": chatId,
 			"audio":   file,
 		}
 		// optional params
-		for key, val := range *options {
+		for key, val := range options {
 			if val != nil {
 				params[key] = val
 			}
@@ -302,7 +302,7 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[s
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send general files.
@@ -312,17 +312,17 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options *map[s
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include reply_to_message_id, and reply_markup.
-func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
-	if file, err := os.Open(documentFilepath); err == nil {
+	if file, err := os.Open(*documentFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
 			"chat_id":  chatId,
 			"document": file,
 		}
 		// optional params
-		for key, val := range *options {
+		for key, val := range options {
 			if val != nil {
 				params[key] = val
 			}
@@ -350,7 +350,7 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options 
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send stickers.
@@ -398,7 +398,7 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *m
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send video files.
@@ -408,17 +408,17 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *m
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include duration, caption, reply_to_message_id, and reply_markup.
-func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
-	if file, err := os.Open(videoFilepath); err == nil {
+	if file, err := os.Open(*videoFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
 			"chat_id": chatId,
 			"video":   file,
 		}
 		// optional params
-		for key, val := range *options {
+		for key, val := range options {
 			if val != nil {
 				params[key] = val
 			}
@@ -446,7 +446,7 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options *map[s
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send voice files. (.ogg format only, will be played with Telegram itself))
@@ -494,7 +494,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[s
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send locations.
@@ -539,7 +539,7 @@ func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float
 
 	b.error(errStr)
 
-	return ApiResultMessage{Ok: false, Description: errStr}
+	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
 // Send chat action.
@@ -577,7 +577,7 @@ func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResul
 
 	b.error(errStr)
 
-	return ApiResult{Ok: false, Result: false, Description: errStr}
+	return ApiResult{Ok: false, Result: false, Description: &errStr}
 }
 
 // Get user profile photos.
@@ -618,7 +618,7 @@ func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) 
 
 	b.error(errStr)
 
-	return ApiResultUserProfilePhotos{Ok: false, Description: errStr}
+	return ApiResultUserProfilePhotos{Ok: false, Description: &errStr}
 }
 
 // Get updates.
@@ -656,7 +656,7 @@ func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdat
 
 	b.error(errStr)
 
-	return ApiResultUpdates{Ok: false, Description: errStr}
+	return ApiResultUpdates{Ok: false, Description: &errStr}
 }
 
 // Get file info and prepare for download.
@@ -689,7 +689,7 @@ func (b *Bot) GetFile(fileId string) (result ApiResultFile) {
 
 	b.error(errStr)
 
-	return ApiResultFile{Ok: false, Description: errStr}
+	return ApiResultFile{Ok: false, Description: &errStr}
 }
 
 // Get download link from given File.
