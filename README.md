@@ -78,15 +78,12 @@ func main() {
 			// on success, start webhook server
 			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
 				if success {
-					botMessage := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
+					message := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
 					options := map[string]interface{}{
-						"parse_mode":               bot.ParseModeMarkdown,
-						"disable_web_page_preview": true,
-						"reply_to_message_id":      webhook.Message.MessageId,
-						"reply_markup":             nil,
+						"reply_to_message_id": webhook.Message.MessageId,
 					}
 
-					if sent := client.SendMessage(webhook.Message.Chat.Id, &botMessage, options); !sent.Ok {
+					if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
 						fmt.Printf("*** failed to send message: %s\n", *sent.Description)
 					}
 				} else {
@@ -102,7 +99,7 @@ func main() {
 	/*
 		// delete webhook url
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
-			fmt.Printf("DeleteWebhook was successful: %s\n", unhooked.Description)
+			fmt.Printf("DeleteWebhook was successful: %s\n", *unhooked.Description)
 		} else {
 			panic("failed to delete webhook")
 		}
