@@ -662,12 +662,12 @@ func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdat
 // Get file info and prepare for download.
 //
 // https://core.telegram.org/bots/api#getfile
-func (b *Bot) GetFile(fileId string) (result ApiResultFile) {
+func (b *Bot) GetFile(fileId *string) (result ApiResultFile) {
 	var errStr string
 
 	// essential params
 	params := map[string]interface{}{
-		"file_id": fileId,
+		"file_id": *fileId,
 	}
 
 	if resp, success := b.sendRequest("getFile", params); success {
@@ -694,7 +694,7 @@ func (b *Bot) GetFile(fileId string) (result ApiResultFile) {
 
 // Get download link from given File.
 func (b *Bot) GetFileUrl(file File) string {
-	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.Token, file.FilePath)
+	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.Token, *file.FilePath)
 }
 
 // Check if given http params contain file or not.
