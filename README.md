@@ -48,6 +48,7 @@ Generated *cert.key* and *cert.pem* file will be used in **telegrambot.StartWebh
 ## Usage
 
 ```go
+// sample code for telegram-bot-go, last update: 2015.11.17.
 package main
 
 import (
@@ -87,7 +88,7 @@ func main() {
 						fmt.Printf("*** failed to send message: %s\n", *sent.Description)
 					}
 				} else {
-					fmt.Printf("*** error while receiving webhook (%s)\n", err.Error)
+					fmt.Printf("*** error while receiving webhook (%s)\n", err.Error())
 				}
 			})
 		} else {
