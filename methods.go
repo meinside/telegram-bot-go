@@ -204,7 +204,7 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include reply_to_message_id, and reply_markup.
-func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(stickerFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
@@ -212,7 +212,7 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options *m
 			"sticker": file,
 		}
 		// optional params
-		for key, val := range *options {
+		for key, val := range options {
 			if val != nil {
 				params[key] = val
 			}
@@ -266,7 +266,7 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[s
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include duration, reply_to_message_id, and reply_markup.
-func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(voiceFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
@@ -274,7 +274,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[s
 			"voice":   file,
 		}
 		// optional params
-		for key, val := range *options {
+		for key, val := range options {
 			if val != nil {
 				params[key] = val
 			}
@@ -297,7 +297,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options *map[s
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include reply_to_message_id, and reply_markup.
-func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float32, options *map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float32, options map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":   chatId,
@@ -305,7 +305,7 @@ func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float
 		"longitude": longitude,
 	}
 	// optional params
-	for key, val := range *options {
+	for key, val := range options {
 		if val != nil {
 			params[key] = val
 		}
@@ -336,13 +336,13 @@ func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResul
 // https://core.telegram.org/bots/api#getuserprofilephotos
 //
 // options include offset and limit.
-func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) (result ApiResultUserProfilePhotos) {
+func (b *Bot) GetUserProfilePhotos(userId int, options map[string]interface{}) (result ApiResultUserProfilePhotos) {
 	// essential params
 	params := map[string]interface{}{
 		"user_id": userId,
 	}
 	// optional params
-	for key, val := range *options {
+	for key, val := range options {
 		if val != nil {
 			params[key] = val
 		}
@@ -356,10 +356,10 @@ func (b *Bot) GetUserProfilePhotos(userId int, options *map[string]interface{}) 
 // https://core.telegram.org/bots/api#getupdates
 //
 // options include offset, limit, and timeout.
-func (b *Bot) GetUpdates(options *map[string]interface{}) (result ApiResultUpdates) {
+func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResultUpdates) {
 	// optional params
 	params := map[string]interface{}{}
-	for key, val := range *options {
+	for key, val := range options {
 		if val != nil {
 			params[key] = val
 		}
