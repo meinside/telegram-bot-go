@@ -48,7 +48,7 @@ Generated *cert.key* and *cert.pem* file will be used in **telegrambot.StartWebh
 ## Usage
 
 ```go
-// sample code for telegram-bot-go, last update: 2015.11.17.
+// sample code for telegram-bot-go, last update: 2015.12.02.
 package main
 
 import (
@@ -62,6 +62,8 @@ const (
 	WebhookPort  = 8443
 	CertFilename = "cert.pem"
 	KeyFilename  = "cert.key"
+
+	TypingDelaySeconds = 3
 )
 
 func main() {
@@ -72,39 +74,38 @@ func main() {
 	if me := client.GetMe(); me.Ok {
 		fmt.Printf("Bot information: @%s (%s)\n", *me.Result.Username, *me.Result.FirstName)
 
-		// set webhook url
-		if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
-			fmt.Printf("SetWebhook was successful: %s\n", *hooked.Description)
+		// delete webhook
+		if unhooked := client.DeleteWebhook(); unhooked.Ok {
+			// set webhook
+			if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
+				// on success, start webhook server
+				client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
+					if success {
+						// 'is typing...'
+						client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
+						time.Sleep(TypingDelaySeconds * time.Second)
 
-			// on success, start webhook server
-			client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
-				if success {
-					message := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
-					options := map[string]interface{}{
-						"reply_to_message_id": webhook.Message.MessageId,
+						// send message
+						message := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
+						options := map[string]interface{}{
+							"reply_to_message_id": webhook.Message.MessageId,
+						}
+						if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
+							fmt.Printf("*** failed to send message: %s\n", *sent.Description)
+						}
+					} else {
+						fmt.Printf("*** error while receiving webhook (%s)\n", err.Error())
 					}
-
-					if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
-						fmt.Printf("*** failed to send message: %s\n", *sent.Description)
-					}
-				} else {
-					fmt.Printf("*** error while receiving webhook (%s)\n", err.Error())
-				}
-			})
+				})
+			} else {
+				panic("failed to set webhook")
+			}
 		} else {
-			panic("failed to set webhook")
+			panic("failed to delete webhook")
 		}
 	} else {
 		panic("failed to get info of the bot")
 	}
-	/*
-		// delete webhook url
-		if unhooked := client.DeleteWebhook(); unhooked.Ok {
-			fmt.Printf("DeleteWebhook was successful: %s\n", *unhooked.Description)
-		} else {
-			panic("failed to delete webhook")
-		}
-	*/
 }
 ```
 
