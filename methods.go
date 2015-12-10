@@ -161,8 +161,8 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include reply_to_message_id, and reply_markup.
-func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options map[string]interface{}) (result ApiResultMessage) {
-	if file, err := os.Open(stickerFilepath); err == nil {
+func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
+	if file, err := os.Open(*stickerFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
 			"chat_id": chatId,
@@ -223,8 +223,8 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[s
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include duration, reply_to_message_id, and reply_markup.
-func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options map[string]interface{}) (result ApiResultMessage) {
-	if file, err := os.Open(voiceFilepath); err == nil {
+func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
+	if file, err := os.Open(*voiceFilepath); err == nil {
 		// essential params
 		params := map[string]interface{}{
 			"chat_id": chatId,
