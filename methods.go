@@ -15,49 +15,6 @@ import (
 	"strconv"
 )
 
-// Set webhook url and certificate for receiving incoming updates.
-//
-// https://core.telegram.org/bots/api#setwebhook
-//
-// port should be one of: 443, 80, 88, or 8443.
-func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResult) {
-	b.WebhookHost = host
-	b.WebhookPort = port
-	b.WebhookUrl = b.getWebhookUrl()
-
-	file, err := os.Open(certFilepath)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	params := map[string]interface{}{
-		"url":         b.WebhookUrl,
-		"certificate": file,
-	}
-
-	b.verbose("setting webhook url to: %s", b.WebhookUrl)
-
-	return b.requestResult("setWebhook", params)
-}
-
-// Delete webhook.
-//
-// https://core.telegram.org/bots/api#setwebhook
-//
-// (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
-func (b *Bot) DeleteWebhook() (result ApiResult) {
-	b.WebhookHost = ""
-	b.WebhookUrl = ""
-
-	params := map[string]interface{}{
-		"url": "",
-	}
-
-	b.verbose("deleting webhook url")
-
-	return b.requestResult("setWebhook", params)
-}
-
 // Get info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
@@ -382,7 +339,7 @@ func (b *Bot) GetFile(fileId *string) (result ApiResultFile) {
 
 // Get download link from given File.
 func (b *Bot) GetFileUrl(file File) string {
-	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.Token, *file.FilePath)
+	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.token, *file.FilePath)
 }
 
 // Check if given http params contain file or not.
@@ -467,7 +424,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // If *os.File is included in the params, it will be closed automatically.
 func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *http.Response, success bool) {
 	client := &http.Client{}
-	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.Token, method)
+	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiUrl, params)
 
@@ -712,11 +669,11 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 		} else {
 			b.verbose("received webhook body: %s", string(body))
 
-			b.WebhookHandler(webhook, true, nil)
+			b.webhookHandler(webhook, true, nil)
 		}
 	} else {
 		b.error("error while reading webhook request (%s)", err.Error())
 
-		b.WebhookHandler(Webhook{}, false, err)
+		b.webhookHandler(Webhook{}, false, err)
 	}
 }

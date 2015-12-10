@@ -12,6 +12,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -30,14 +31,14 @@ const (
 // Bot
 type Bot struct {
 	// Telegram bot API's token
-	Token string
+	token       string
+	tokenHashed string
 
 	// Webhook related stuffs
-	WebhookProtocol string
-	WebhookHost     string
-	WebhookPort     int
-	WebhookUrl      string
-	WebhookHandler  func(webhook Webhook, success bool, err error)
+	webhookHost    string
+	webhookPort    int
+	webhookUrl     string
+	webhookHandler func(webhook Webhook, success bool, err error)
 
 	// print verbose log messages or not
 	Verbose bool
@@ -46,8 +47,53 @@ type Bot struct {
 // Get a new bot API client with given token string.
 func NewClient(token string) *Bot {
 	return &Bot{
-		Token: token,
+		token:       token,
+		tokenHashed: fmt.Sprintf("%x", md5.Sum([]byte(token))),
 	}
+}
+
+// Set webhook url and certificate for receiving incoming updates.
+//
+// https://core.telegram.org/bots/api#setwebhook
+//
+// port should be one of: 443, 80, 88, or 8443.
+func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResult) {
+	b.webhookHost = host
+	b.webhookPort = port
+	b.webhookUrl = b.getWebhookUrl()
+
+	file, err := os.Open(certFilepath)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	params := map[string]interface{}{
+		"url":         b.webhookUrl,
+		"certificate": file,
+	}
+
+	b.verbose("setting webhook url to: %s", b.webhookUrl)
+
+	return b.requestResult("setWebhook", params)
+}
+
+// Delete webhook.
+//
+// https://core.telegram.org/bots/api#setwebhook
+//
+// (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
+func (b *Bot) DeleteWebhook() (result ApiResult) {
+	b.webhookHost = ""
+	b.webhookPort = 0
+	b.webhookUrl = ""
+
+	params := map[string]interface{}{
+		"url": "",
+	}
+
+	b.verbose("deleting webhook url")
+
+	return b.requestResult("setWebhook", params)
 }
 
 // Start Webhook server(and wait forever).
@@ -60,37 +106,32 @@ func NewClient(token string) *Bot {
 //
 // Incoming webhooks will be received through webhookHandler function.
 func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(webhook Webhook, success bool, err error)) {
-	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.WebhookPort)
+	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.webhookPort)
 
 	// routing
-	b.WebhookHandler = webhookHandler
+	b.webhookHandler = webhookHandler
 	http.HandleFunc(b.getWebhookPath(), b.handleWebhook)
 
 	// start server
-	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", b.WebhookPort), certFilepath, keyFilepath, nil); err != nil {
+	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", b.webhookPort), certFilepath, keyFilepath, nil); err != nil {
 		panic(err.Error())
 	}
 }
 
-// Generate hash from token.
-func (b *Bot) getHashedToken() string {
-	return fmt.Sprintf("%x", md5.Sum([]byte(b.Token)))
-}
-
 // Get webhook path generated with hash.
 func (b *Bot) getWebhookPath() string {
-	return fmt.Sprintf("%s/%s", WebhookPath, b.getHashedToken())
+	return fmt.Sprintf("%s/%s", WebhookPath, b.tokenHashed)
 }
 
 // Get full URL of webhook interface.
 func (b *Bot) getWebhookUrl() string {
-	return fmt.Sprintf("https://%s:%d%s", b.WebhookHost, b.WebhookPort, b.getWebhookPath())
+	return fmt.Sprintf("https://%s:%d%s", b.webhookHost, b.webhookPort, b.getWebhookPath())
 }
 
 // Remove confidential info from given string.
 func (b *Bot) redact(str string) string {
-	tokenRemoved := strings.Replace(str, b.Token, RedactedString, -1)
-	redacted := strings.Replace(tokenRemoved, b.getHashedToken(), RedactedString, -1)
+	tokenRemoved := strings.Replace(str, b.token, RedactedString, -1)
+	redacted := strings.Replace(tokenRemoved, b.tokenHashed, RedactedString, -1)
 	return redacted
 }
 
