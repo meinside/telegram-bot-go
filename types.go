@@ -2,8 +2,10 @@
 
 package telegrambot
 
+type ParseMode string // parse_mode
+
 const (
-	ParseModeMarkdown = "Markdown" // parse_mode: Markdown
+	ParseModeMarkdown ParseMode = "Markdown"
 )
 
 type ChatAction string
