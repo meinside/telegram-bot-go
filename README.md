@@ -48,7 +48,7 @@ Generated *cert.key* and *cert.pem* file will be used in **telegrambot.StartWebh
 ## Usage
 
 ```go
-// sample code for telegram-bot-go, last update: 2015.12.02.
+// sample code for telegram-bot-go, last update: 2015.12.17.
 package main
 
 import (

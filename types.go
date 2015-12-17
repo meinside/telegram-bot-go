@@ -6,15 +6,17 @@ const (
 	ParseModeMarkdown = "Markdown" // parse_mode: Markdown
 )
 
+type ChatAction string
+
 const (
-	ChatActionTyping         = "typing"
-	ChatActionUploadPhoto    = "upload_photo"
-	ChatActionRecordVideo    = "record_video"
-	ChatActionUploadVideo    = "upload_video"
-	ChatActionRecordAudio    = "record_audio"
-	ChatActionUploadAudio    = "upload_audio"
-	ChatActionUploadDocument = "upload_document"
-	ChatActionFindLocation   = "find_location"
+	ChatActionTyping         ChatAction = "typing"
+	ChatActionUploadPhoto    ChatAction = "upload_photo"
+	ChatActionRecordVideo    ChatAction = "record_video"
+	ChatActionUploadVideo    ChatAction = "upload_video"
+	ChatActionRecordAudio    ChatAction = "record_audio"
+	ChatActionUploadAudio    ChatAction = "upload_audio"
+	ChatActionUploadDocument ChatAction = "upload_document"
+	ChatActionFindLocation   ChatAction = "find_location"
 )
 
 // Webhook

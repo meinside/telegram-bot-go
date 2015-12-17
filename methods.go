@@ -278,7 +278,7 @@ func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // action can be one of: typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, or find_location
-func (b *Bot) SendChatAction(chatId interface{}, action string) (result ApiResult) {
+func (b *Bot) SendChatAction(chatId interface{}, action ChatAction) (result ApiResult) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
