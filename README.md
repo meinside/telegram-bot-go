@@ -81,8 +81,8 @@ func main() {
 			// set webhook
 			if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
 				// on success, start webhook server
-				client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, success bool, err error) {
-					if success {
+				client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, err error) {
+					if err == nil {
 						// 'is typing...'
 						client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
 						time.Sleep(TypingDelaySeconds * time.Second)
