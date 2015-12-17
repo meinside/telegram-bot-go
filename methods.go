@@ -669,11 +669,11 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 		} else {
 			b.verbose("received webhook body: %s", string(body))
 
-			b.webhookHandler(webhook, true, nil)
+			b.webhookHandler(webhook, nil)
 		}
 	} else {
 		b.error("error while reading webhook request (%s)", err.Error())
 
-		b.webhookHandler(Webhook{}, false, err)
+		b.webhookHandler(Webhook{}, err)
 	}
 }
