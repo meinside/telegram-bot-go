@@ -82,7 +82,7 @@ type Update struct {
 // https://core.telegram.org/bots/api#user
 type User struct {
 	Id        int     `json:"id"`
-	FirstName *string `json:"first_name,omitempty"`
+	FirstName *string `json:"first_name"`
 	LastName  *string `json:"last_name,omitempty"`
 	Username  *string `json:"username,omitempty"`
 }
@@ -231,29 +231,33 @@ type ForceReply struct {
 //
 // https://core.telegram.org/bots/api#message
 type Message struct {
-	MessageId           int         `json:"message_id"`
-	From                *User       `json:"from"`
-	Date                int         `json:"date"`
-	Chat                *Chat       `json:"chat"`
-	ForwardFrom         *User       `json:"forward_from,omitempty"`
-	ForwardDate         int         `json:"forward_date,omitempty"`
-	ReplyToMessage      *Message    `json:"reply_to_message,omitempty"`
-	Text                *string     `json:"text,omitempty"`
-	Audio               *Audio      `json:"audio,omitempty"`
-	Document            *Document   `json:"document,omitempty"`
-	Photo               []PhotoSize `json:"photo,omitempty"`
-	Sticker             *Sticker    `json:"sticker,omitempty"`
-	Video               *Video      `json:"video,omitempty"`
-	Voice               *Voice      `json:"voice,omitempty"`
-	Caption             *string     `json:"caption,omitempty"`
-	Contact             *Contact    `json:"contact,omitempty"`
-	Location            *Location   `json:"location,omitempty"`
-	NewChatParticipant  *User       `json:"new_chat_participant,omitempty"`
-	LeftChatParticipant *User       `json:"left_chat_participant,omitempty"`
-	NewChatTitle        *string     `json:"new_chat_title,omitempty"`
-	NewChatPhoto        []PhotoSize `json:"new_chat_photo,omitempty"`
-	DeleteChatPhoto     bool        `json:"delete_chat_photo,omitempty"`
-	GroupChatCreated    bool        `json:"group_chat_created,omitempty"`
+	MessageId             int         `json:"message_id"`
+	From                  *User       `json:"from,omitempty"`
+	Date                  int         `json:"date"`
+	Chat                  *Chat       `json:"chat"`
+	ForwardFrom           *User       `json:"forward_from,omitempty"`
+	ForwardDate           int         `json:"forward_date,omitempty"`
+	ReplyToMessage        *Message    `json:"reply_to_message,omitempty"`
+	Text                  *string     `json:"text,omitempty"`
+	Audio                 *Audio      `json:"audio,omitempty"`
+	Document              *Document   `json:"document,omitempty"`
+	Photo                 []PhotoSize `json:"photo,omitempty"`
+	Sticker               *Sticker    `json:"sticker,omitempty"`
+	Video                 *Video      `json:"video,omitempty"`
+	Voice                 *Voice      `json:"voice,omitempty"`
+	Caption               *string     `json:"caption,omitempty"`
+	Contact               *Contact    `json:"contact,omitempty"`
+	Location              *Location   `json:"location,omitempty"`
+	NewChatParticipant    *User       `json:"new_chat_participant,omitempty"`
+	LeftChatParticipant   *User       `json:"left_chat_participant,omitempty"`
+	NewChatTitle          *string     `json:"new_chat_title,omitempty"`
+	NewChatPhoto          []PhotoSize `json:"new_chat_photo,omitempty"`
+	DeleteChatPhoto       bool        `json:"delete_chat_photo,omitempty"`
+	GroupChatCreated      bool        `json:"group_chat_created,omitempty"`
+	SupergroupChatCreated bool        `json:"supergroup_chat_created,omitempty"`
+	ChannelChatCreated    bool        `json:"channel_chat_created,omitempty"`
+	MigrateToChatId       int         `json:"migrate_to_chat_id,omitempty"`
+	MigrateFromChatId     int         `json:"migrate_from_chat_id,omitempty"`
 }
 
 // Check if Message has Forward.
