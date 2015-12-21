@@ -11,6 +11,7 @@ package telegrambot
 import (
 	"crypto/md5"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -138,11 +139,11 @@ func (b *Bot) redact(str string) string {
 // Print formatted log message. (only when Bot.Verbose == true)
 func (b *Bot) verbose(str string, args ...interface{}) {
 	if b.Verbose {
-		fmt.Printf("> %s\n", b.redact(fmt.Sprintf(str, args...)))
+		log.Printf("> %s\n", b.redact(fmt.Sprintf(str, args...)))
 	}
 }
 
 // Print formatted error message.
 func (b *Bot) error(str string, args ...interface{}) {
-	fmt.Printf("* %s\n", b.redact(fmt.Sprintf(str, args...)))
+	log.Printf("* %s\n", b.redact(fmt.Sprintf(str, args...)))
 }
