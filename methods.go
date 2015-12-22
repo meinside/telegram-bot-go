@@ -381,6 +381,18 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
+	case ChatAction:
+		if value, ok := param.(ChatAction); ok {
+			return string(value), ok
+		} else {
+			b.error("parameter '%+v' could not be cast to string value", param)
+		}
+	case ParseMode:
+		if value, ok := param.(ParseMode); ok {
+			return string(value), ok
+		} else {
+			b.error("parameter '%+v' could not be cast to string value", param)
+		}
 	case ReplyKeyboardMarkup:
 		if value, ok := param.(ReplyKeyboardMarkup); ok {
 			if json, err := json.Marshal(value); err == nil {
@@ -415,7 +427,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		b.error("unexpected type: '%+v' (%T)", param, param)
 	}
 
-	return "", true
+	return "", false
 }
 
 // Send request to API server and return the response.
