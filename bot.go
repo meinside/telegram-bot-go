@@ -14,6 +14,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -51,6 +53,23 @@ func NewClient(token string) *Bot {
 		token:       token,
 		tokenHashed: fmt.Sprintf("%x", md5.Sum([]byte(token))),
 	}
+}
+
+// Generate certificate and private key file with given domain. (for testing/development)
+//
+// OpenSSL is needed.
+func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string, expiresInDays int) error {
+	numBits := 2048
+	country := "US"
+	state := "New York"
+	local := "Brooklyn"
+	org := "Example Company"
+
+	if _, err := exec.Command("openssl", "req", "-newkey", fmt.Sprintf("rsa:%d", numBits), "-sha256", "-nodes", "-keyout", outKeyFilepath, "-x509", "-days", strconv.Itoa(expiresInDays), "-out", outCertFilepath, "-subj", fmt.Sprintf("/C=%s/ST=%s/L=%s/O=%s/CN=%s", country, state, local, org, domain)).Output(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Set webhook url and certificate for receiving incoming updates.

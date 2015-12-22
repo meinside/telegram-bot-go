@@ -45,6 +45,8 @@ echo "> finished - certificate: $CERT_PEM / private key: $PRIVATE_KEY"
 
 Generated *cert.key* and *cert.pem* file will be used in **telegrambot.StartWebhookServerAndWait()** function.
 
+Also, you can generate certificate and private key using **telegrambot.GenCertAndKey()** function.
+
 ## Usage
 
 ```go
@@ -63,8 +65,8 @@ const (
 	ApiToken     = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
 	WebhookHost  = "my.host.com"
 	WebhookPort  = 8443
-	CertFilename = "cert.pem"
-	KeyFilename  = "cert.key"
+	CertFilepath = "./cert.pem"
+	KeyFilepath  = "./cert.key"
 
 	TypingDelaySeconds = 3
 )
@@ -79,29 +81,34 @@ func main() {
 
 		// delete webhook
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
-			// set webhook
-			if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilename); hooked.Ok {
-				// on success, start webhook server
-				client.StartWebhookServerAndWait(CertFilename, KeyFilename, func(webhook bot.Webhook, err error) {
-					if err == nil {
-						// 'is typing...'
-						client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
-						time.Sleep(TypingDelaySeconds * time.Second)
+			// generate certificate and private key for testing
+			if err := bot.GenCertAndKey(WebhookHost, CertFilepath, KeyFilepath, 10 * 365); err == nil {
+				// set webhook
+				if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilepath); hooked.Ok {
+					// on success, start webhook server
+					client.StartWebhookServerAndWait(CertFilepath, KeyFilepath, func(webhook bot.Webhook, err error) {
+						if err == nil {
+							// 'is typing...'
+							client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
+							time.Sleep(TypingDelaySeconds * time.Second)
 
-						// send message
-						message := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
-						options := map[string]interface{}{
-							"reply_to_message_id": webhook.Message.MessageId,
+							// send message
+							message := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
+							options := map[string]interface{}{
+								"reply_to_message_id": webhook.Message.MessageId,
+							}
+							if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
+								log.Printf("*** failed to send message: %s\n", *sent.Description)
+							}
+						} else {
+							log.Printf("*** error while receiving webhook (%s)\n", err.Error())
 						}
-						if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
-							log.Printf("*** failed to send message: %s\n", *sent.Description)
-						}
-					} else {
-						log.Printf("*** error while receiving webhook (%s)\n", err.Error())
-					}
-				})
+					})
+				} else {
+					panic("failed to set webhook")
+				}
 			} else {
-				panic("failed to set webhook")
+				panic("failed to generate cert/key: " + err)
 			}
 		} else {
 			panic("failed to delete webhook")
