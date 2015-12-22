@@ -48,11 +48,12 @@ Generated *cert.key* and *cert.pem* file will be used in **telegrambot.StartWebh
 ## Usage
 
 ```go
-// sample code for telegram-bot-go, last update: 2015.12.17.
+// sample code for telegram-bot-go, last update: 2015.12.22.
 package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	bot "github.com/meinside/telegram-bot-go"
@@ -74,7 +75,7 @@ func main() {
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
-		fmt.Printf("Bot information: @%s (%s)\n", *me.Result.Username, *me.Result.FirstName)
+		log.Printf("Bot information: @%s (%s)\n", *me.Result.Username, *me.Result.FirstName)
 
 		// delete webhook
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
@@ -93,10 +94,10 @@ func main() {
 							"reply_to_message_id": webhook.Message.MessageId,
 						}
 						if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
-							fmt.Printf("*** failed to send message: %s\n", *sent.Description)
+							log.Printf("*** failed to send message: %s\n", *sent.Description)
 						}
 					} else {
-						fmt.Printf("*** error while receiving webhook (%s)\n", err.Error())
+						log.Printf("*** error while receiving webhook (%s)\n", err.Error())
 					}
 				})
 			} else {
