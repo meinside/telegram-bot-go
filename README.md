@@ -82,7 +82,7 @@ func main() {
 		// delete webhook
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
 			// generate certificate and private key for testing
-			if err := bot.GenCertAndKey(WebhookHost, CertFilepath, KeyFilepath, 10 * 365); err == nil {
+			if err := bot.GenCertAndKey(WebhookHost, CertFilepath, KeyFilepath, 10*365); err == nil {
 				// set webhook
 				if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilepath); hooked.Ok {
 					// on success, start webhook server
@@ -93,7 +93,12 @@ func main() {
 							time.Sleep(TypingDelaySeconds * time.Second)
 
 							// send message
-							message := fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
+							var message string
+							if webhook.Message.HasText() {
+								message = fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
+							} else {
+								message = fmt.Sprintf("I received @%s's message", *webhook.Message.From.Username)
+							}
 							options := map[string]interface{}{
 								"reply_to_message_id": webhook.Message.MessageId,
 							}
