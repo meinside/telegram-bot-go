@@ -108,7 +108,7 @@ func main() {
 					panic("failed to set webhook")
 				}
 			} else {
-				panic("failed to generate cert/key: " + err)
+				panic("failed to generate cert/key: " + err.Error())
 			}
 		} else {
 			panic("failed to delete webhook")
