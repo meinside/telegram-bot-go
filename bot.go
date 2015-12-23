@@ -17,6 +17,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -135,6 +136,29 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	// start server
 	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", b.webhookPort), certFilepath, keyFilepath, nil); err != nil {
 		panic(err.Error())
+	}
+}
+
+func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(update Update, err error)) {
+	options := map[string]interface{}{}
+	options["offset"] = updateOffset
+
+	var updates ApiResultUpdates
+	for {
+		if updates = b.GetUpdates(options); updates.Ok {
+			for _, update := range updates.Result {
+				updateHandler(update, nil)
+
+				// update offset (max + 1)
+				if options["offset"].(int) <= update.UpdateId {
+					options["offset"] = update.UpdateId + 1
+				}
+			}
+		} else {
+			updateHandler(Update{}, fmt.Errorf("error while retrieving updates - %s", updates.Description))
+		}
+
+		time.Sleep(time.Duration(interval) * time.Second)
 	}
 }
 
