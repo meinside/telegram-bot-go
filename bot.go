@@ -140,8 +140,9 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 }
 
 func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(update Update, err error)) {
-	options := map[string]interface{}{}
-	options["offset"] = updateOffset
+	options := map[string]interface{}{
+		"offset": updateOffset,
+	}
 
 	var updates ApiResultUpdates
 	for {
