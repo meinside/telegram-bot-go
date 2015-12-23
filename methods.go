@@ -675,7 +675,7 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 	b.verbose("received webhook request: %+v", req)
 
 	if body, err := ioutil.ReadAll(req.Body); err == nil {
-		var webhook Webhook
+		var webhook Update
 		if err := json.Unmarshal(body, &webhook); err != nil {
 			b.error("error while parsing json (%s)", err.Error())
 		} else {
@@ -686,6 +686,6 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 	} else {
 		b.error("error while reading webhook request (%s)", err.Error())
 
-		b.webhookHandler(Webhook{}, err)
+		b.webhookHandler(Update{}, err)
 	}
 }

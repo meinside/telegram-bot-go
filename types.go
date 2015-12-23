@@ -21,12 +21,6 @@ const (
 	ChatActionFindLocation   ChatAction = "find_location"
 )
 
-// Webhook
-type Webhook struct {
-	UpdateId int      `json:"update_id"`
-	Message  *Message `json:"message"`
-}
-
 // API result
 type ApiResult struct {
 	Ok          bool        `json:"ok"`

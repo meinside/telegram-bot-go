@@ -41,7 +41,7 @@ type Bot struct {
 	webhookHost    string
 	webhookPort    int
 	webhookUrl     string
-	webhookHandler func(webhook Webhook, err error)
+	webhookHandler func(webhook Update, err error)
 
 	// print verbose log messages or not
 	Verbose bool
@@ -125,7 +125,7 @@ func (b *Bot) DeleteWebhook() (result ApiResult) {
 // (https://core.telegram.org/bots/self-signed)
 //
 // Incoming webhooks will be received through webhookHandler function.
-func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(webhook Webhook, err error)) {
+func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(webhook Update, err error)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.webhookPort)
 
 	// routing

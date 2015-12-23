@@ -50,7 +50,7 @@ Also, you can generate certificate and private key using **telegrambot.GenCertAn
 ## Usage
 
 ```go
-// sample code for telegram-bot-go, last update: 2015.12.22.
+// sample code for telegram-bot-go, last update: 2015.12.23.
 package main
 
 import (
@@ -86,24 +86,26 @@ func main() {
 				// set webhook
 				if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilepath); hooked.Ok {
 					// on success, start webhook server
-					client.StartWebhookServerAndWait(CertFilepath, KeyFilepath, func(webhook bot.Webhook, err error) {
+					client.StartWebhookServerAndWait(CertFilepath, KeyFilepath, func(webhook bot.Update, err error) {
 						if err == nil {
-							// 'is typing...'
-							client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
-							time.Sleep(TypingDelaySeconds * time.Second)
+							if webhook.Message != nil {
+								// 'is typing...'
+								client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
+								time.Sleep(TypingDelaySeconds * time.Second)
 
-							// send message
-							var message string
-							if webhook.Message.HasText() {
-								message = fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
-							} else {
-								message = fmt.Sprintf("I received @%s's message", *webhook.Message.From.Username)
-							}
-							options := map[string]interface{}{
-								"reply_to_message_id": webhook.Message.MessageId,
-							}
-							if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
-								log.Printf("*** failed to send message: %s\n", *sent.Description)
+								// send message
+								var message string
+								if webhook.Message.HasText() {
+									message = fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
+								} else {
+									message = fmt.Sprintf("I received @%s's message", *webhook.Message.From.Username)
+								}
+								options := map[string]interface{}{
+									"reply_to_message_id": webhook.Message.MessageId,
+								}
+								if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
+									log.Printf("*** failed to send message: %s\n", *sent.Description)
+								}
 							}
 						} else {
 							log.Printf("*** error while receiving webhook (%s)\n", err.Error())
