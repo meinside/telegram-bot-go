@@ -139,6 +139,9 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	}
 }
 
+// Retrieve updates from API server constantly.
+//
+// If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
 func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(update Update, err error)) {
 	options := map[string]interface{}{
 		"offset": updateOffset,
