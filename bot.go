@@ -151,15 +151,15 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 	for {
 		if updates = b.GetUpdates(options); updates.Ok {
 			for _, update := range updates.Result {
-				updateHandler(update, nil)
-
 				// update offset (max + 1)
 				if options["offset"].(int) <= update.UpdateId {
 					options["offset"] = update.UpdateId + 1
 				}
+
+				go updateHandler(update, nil)
 			}
 		} else {
-			updateHandler(Update{}, fmt.Errorf("error while retrieving updates - %s", updates.Description))
+			go updateHandler(Update{}, fmt.Errorf("error while retrieving updates - %s", updates.Description))
 		}
 
 		time.Sleep(time.Duration(interval) * time.Second)
