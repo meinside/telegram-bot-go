@@ -10,7 +10,7 @@ View the [documentation here](https://godoc.org/github.com/meinside/telegram-bot
 $ go get github.com/meinside/telegram-bot-go
 ```
 
-## Generate a self-signed certificate
+## Generate a self-signed certificate (when using incoming webhook)
 
 Generate self-signed certificate & private key with following script:
 
@@ -47,10 +47,10 @@ Generated *cert.key* and *cert.pem* file will be used in **telegrambot.StartWebh
 
 Also, you can generate certificate and private key using **telegrambot.GenCertAndKey()** function.
 
-## Usage
+## Usage: with incoming webhook
 
 ```go
-// sample code for telegram-bot-go, last update: 2015.12.23.
+// sample code for telegram-bot-go (receive webhooks), last update: 2015.12.23.
 package main
 
 import (
@@ -117,6 +117,74 @@ func main() {
 			} else {
 				panic("failed to generate cert/key: " + err.Error())
 			}
+		} else {
+			panic("failed to delete webhook")
+		}
+	} else {
+		panic("failed to get info of the bot")
+	}
+}
+```
+
+## Usage: without webhook
+
+It would be useful when you're behind a firewall or something.
+
+```go
+// sample code for telegram-bot-go (get updates), last update: 2015.12.23.
+package main
+
+import (
+	"fmt"
+	"log"
+	"time"
+
+	bot "github.com/meinside/telegram-bot-go"
+)
+
+const (
+	ApiToken = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
+
+	MonitorIntervalSeconds = 3
+	TypingDelaySeconds     = 3
+)
+
+func main() {
+	client := bot.NewClient(ApiToken)
+	client.Verbose = true
+
+	// get info about this bot
+	if me := client.GetMe(); me.Ok {
+		log.Printf("Bot information: @%s (%s)\n", *me.Result.Username, *me.Result.FirstName)
+
+		// delete webhook (getting updates will not work when wehbook is set up)
+		if unhooked := client.DeleteWebhook(); unhooked.Ok {
+			// wait for new updates
+			client.StartMonitoringUpdates(0, MonitorIntervalSeconds, func(update bot.Update, err error) {
+				if err == nil {
+					if update.Message != nil {
+						// 'is typing...'
+						client.SendChatAction(update.Message.Chat.Id, bot.ChatActionTyping)
+						time.Sleep(TypingDelaySeconds * time.Second)
+
+						// send message
+						var message string
+						if update.Message.HasText() {
+							message = fmt.Sprintf("I received @%s's message: %s", *update.Message.From.Username, *update.Message.Text)
+						} else {
+							message = fmt.Sprintf("I received @%s's message", *update.Message.From.Username)
+						}
+						options := map[string]interface{}{
+							"reply_to_message_id": update.Message.MessageId,
+						}
+						if sent := client.SendMessage(update.Message.Chat.Id, &message, options); !sent.Ok {
+							log.Printf("*** failed to send message: %s\n", *sent.Description)
+						}
+					}
+				} else {
+					log.Printf("*** error while receiving update (%s)\n", err.Error())
+				}
+			})
 		} else {
 			panic("failed to delete webhook")
 		}
