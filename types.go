@@ -67,8 +67,10 @@ type ApiResultUpdates struct {
 //
 // https://core.telegram.org/bots/api#update
 type Update struct {
-	UpdateId int      `json:"update_id"`
-	Message  *Message `json:"message,omitempty"`
+	UpdateId           int                 `json:"update_id"`
+	Message            *Message            `json:"message,omitempty"`
+	InlineQuery        *InlineQuery        `json:"inline_query,omitempty"`
+	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
 }
 
 // User
@@ -332,4 +334,19 @@ func (m *Message) HasDeleteChatPhoto() bool {
 // Check if Message has GroupChatCreated.
 func (m *Message) HasGroupChatCreated() bool {
 	return m.GroupChatCreated
+}
+
+// https://core.telegram.org/bots/api#inlinequery
+type InlineQuery struct {
+	Id     string  `json:"id"`
+	From   *User   `json:"from"`
+	Query  *string `json:"query"`
+	Offset *string `json:"offset"`
+}
+
+// https://core.telegram.org/bots/api#choseninlineresult
+type ChosenInlineResult struct {
+	ResultId *string `json:"result_id"`
+	From     *User   `json:"from"`
+	Query    *string `json:"query"`
 }
