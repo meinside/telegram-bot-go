@@ -114,6 +114,11 @@ func (u *Update) HasInlineQuery() bool {
 	return u.InlineQuery != nil
 }
 
+// Check if Update has ChosenInlineResult
+func (u *Update) HasChosenInlineResult() bool {
+	return u.ChosenInlineResult != nil
+}
+
 // User
 //
 // https://core.telegram.org/bots/api#user
