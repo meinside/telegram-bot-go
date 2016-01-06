@@ -4,6 +4,7 @@ package telegrambot
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"io"
 )
@@ -104,6 +105,13 @@ type Update struct {
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
 }
 
+func (u Update) String() string {
+	if json, err := json.Marshal(u); err == nil {
+		return fmt.Sprintf("%T%s", u, string(json))
+	}
+	return fmt.Sprintf("%+v", u)
+}
+
 // Check if Update has Message.
 func (u *Update) HasMessage() bool {
 	return u.Message != nil
@@ -129,6 +137,13 @@ type User struct {
 	Username  *string `json:"username,omitempty"`
 }
 
+func (u User) String() string {
+	if json, err := json.Marshal(u); err == nil {
+		return fmt.Sprintf("%T%s", u, string(json))
+	}
+	return fmt.Sprintf("%+v", u)
+}
+
 // Chat
 //
 // https://core.telegram.org/bots/api#chat
@@ -139,6 +154,13 @@ type Chat struct {
 	Username  *string   `json:"username,omitempty"`
 	FirstName *string   `json:"first_name,omitempty"`
 	LastName  *string   `json:"last_name,omitempty"`
+}
+
+func (c Chat) String() string {
+	if json, err := json.Marshal(c); err == nil {
+		return fmt.Sprintf("%T%s", c, string(json))
+	}
+	return fmt.Sprintf("%+v", c)
 }
 
 // Audio
@@ -302,6 +324,13 @@ type Message struct {
 	MigrateFromChatId     int         `json:"migrate_from_chat_id,omitempty"`
 }
 
+func (m Message) String() string {
+	if json, err := json.Marshal(m); err == nil {
+		return fmt.Sprintf("%T%s", m, string(json))
+	}
+	return fmt.Sprintf("%+v", m)
+}
+
 // Check if Message has Forward.
 func (m *Message) HasForward() bool {
 	return m.ForwardDate > 0
@@ -390,11 +419,25 @@ type InlineQuery struct {
 	Offset *string `json:"offset"`
 }
 
+func (i InlineQuery) String() string {
+	if json, err := json.Marshal(i); err == nil {
+		return fmt.Sprintf("%T%s", i, string(json))
+	}
+	return fmt.Sprintf("%+v", i)
+}
+
 // https://core.telegram.org/bots/api#choseninlineresult
 type ChosenInlineResult struct {
 	ResultId *string `json:"result_id"`
 	From     *User   `json:"from"`
 	Query    *string `json:"query"`
+}
+
+func (c ChosenInlineResult) String() string {
+	if json, err := json.Marshal(c); err == nil {
+		return fmt.Sprintf("%T%s", c, string(json))
+	}
+	return fmt.Sprintf("%+v", c)
 }
 
 // https://core.telegram.org/bots/api#inlinequeryresult
