@@ -8,6 +8,14 @@ import (
 	"io"
 )
 
+type ChatType string
+
+const (
+	ChatTypePrivate ChatType = "private"
+	ChatTypeGroup   ChatType = "group"
+	ChatTypeChannel ChatType = "channel"
+)
+
 type ParseMode string // parse_mode
 
 const (
@@ -120,12 +128,12 @@ type User struct {
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
-	Id        int     `json:"id"`
-	Type      *string `json:"type"` // 'private', 'group', or 'channel'
-	Title     *string `json:"title,omitempty"`
-	Username  *string `json:"username,omitempty"`
-	FirstName *string `json:"first_name,omitempty"`
-	LastName  *string `json:"last_name,omitempty"`
+	Id        int       `json:"id"`
+	Type      *ChatType `json:"type"`
+	Title     *string   `json:"title,omitempty"`
+	Username  *string   `json:"username,omitempty"`
+	FirstName *string   `json:"first_name,omitempty"`
+	LastName  *string   `json:"last_name,omitempty"`
 }
 
 // Audio
