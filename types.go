@@ -2,6 +2,12 @@
 
 package telegrambot
 
+import (
+	"crypto/rand"
+	"fmt"
+	"io"
+)
+
 type ParseMode string // parse_mode
 
 const (
@@ -19,6 +25,23 @@ const (
 	ChatActionUploadAudio    ChatAction = "upload_audio"
 	ChatActionUploadDocument ChatAction = "upload_document"
 	ChatActionFindLocation   ChatAction = "find_location"
+)
+
+type InlineQueryResultType string
+
+const (
+	InlineQueryResultTypeArticle  InlineQueryResultType = "article"
+	InlineQueryResultTypePhoto    InlineQueryResultType = "photo"
+	InlineQueryResultTypeGif      InlineQueryResultType = "gif"
+	InlineQueryResultTypeMpeg4Gif InlineQueryResultType = "mpeg4_gif"
+	InlineQueryResultTypeVideo    InlineQueryResultType = "video"
+)
+
+type VideoMimeType string
+
+const (
+	VideoMimeTypeHtml VideoMimeType = "text/html"
+	VideoMimeTypeMp4  VideoMimeType = "video/mp4"
 )
 
 // API result
@@ -71,6 +94,16 @@ type Update struct {
 	Message            *Message            `json:"message,omitempty"`
 	InlineQuery        *InlineQuery        `json:"inline_query,omitempty"`
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
+}
+
+// Check if Update has Message.
+func (u *Update) HasMessage() bool {
+	return u.Message != nil
+}
+
+// Check if Update has InlineQuery
+func (u *Update) HasInlineQuery() bool {
+	return u.InlineQuery != nil
 }
 
 // User
@@ -338,7 +371,7 @@ func (m *Message) HasGroupChatCreated() bool {
 
 // https://core.telegram.org/bots/api#inlinequery
 type InlineQuery struct {
-	Id     string  `json:"id"`
+	Id     *string `json:"id"`
 	From   *User   `json:"from"`
 	Query  *string `json:"query"`
 	Offset *string `json:"offset"`
@@ -349,4 +382,192 @@ type ChosenInlineResult struct {
 	ResultId *string `json:"result_id"`
 	From     *User   `json:"from"`
 	Query    *string `json:"query"`
+}
+
+// https://core.telegram.org/bots/api#inlinequeryresult
+type InlineQueryResult struct {
+	Type InlineQueryResultType `json:"type"`
+	Id   *string               `json:"id"`
+}
+type InlineQueryResultArticle struct {
+	InlineQueryResult
+	Title                 *string    `json:"title"`
+	MessageText           *string    `json:"message_text"`
+	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
+	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
+	Url                   *string    `json:"url,omitempty"`
+	HideUrl               bool       `json:"hide_url,omitempty"`
+	Description           *string    `json:"description,omitempty"`
+	ThumbUrl              *string    `json:"thumb_url,omitempty"`
+	ThumbWidth            int        `json:"thumb_width,omitempty"`
+	ThumbHeight           int        `json:"thumb_height,omitempty"`
+}
+type InlineQueryResultPhoto struct {
+	InlineQueryResult
+	PhotoUrl              *string    `json:"photo_url"`
+	PhotoWidth            int        `json:"photo_width,omitempty"`
+	PhotoHeight           int        `json:"photo_height,omitempty"`
+	ThumbUrl              *string    `json:"thumb_url"`
+	Title                 *string    `json:"title,omitempty"`
+	Description           *string    `json:"description,omitempty"`
+	Caption               *string    `json:"caption,omitempty"`
+	MessageText           *string    `json:"message_text,omitempty"`
+	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
+	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
+}
+type InlineQueryResultGif struct {
+	InlineQueryResult
+	GifUrl                *string    `json:"gif_url"`
+	GifWidth              int        `json:"gif_width,omitempty"`
+	GifHeight             int        `json:"gif_height,omitempty"`
+	ThumbUrl              *string    `json:"thumb_url"`
+	Title                 *string    `json:"title,omitempty"`
+	Caption               *string    `json:"caption,omitempty"`
+	MessageText           *string    `json:"message_text,omitempty"`
+	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
+	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
+}
+type InlineQueryResultMpeg4Gif struct {
+	InlineQueryResult
+	Mpeg4Url              *string    `json:"mpeg4_url"`
+	Mpeg4Width            int        `json:"mpeg4_width,omitempty"`
+	Mpeg4Height           int        `json:"mpeg4_height,omitempty"`
+	ThumbUrl              *string    `json:"thumb_url"`
+	Title                 *string    `json:"title,omitempty"`
+	Caption               *string    `json:"caption,omitempty"`
+	MessageText           *string    `json:"message_text,omitempty"`
+	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
+	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
+}
+type InlineQueryResultVideo struct {
+	InlineQueryResult
+	VideoUrl              *string        `json:"video_url"`
+	MimeType              *VideoMimeType `json:"mime_type"`
+	MessageText           *string        `json:"message_text"`
+	ParseMode             *ParseMode     `json:"parse_mode,omitempty"`
+	DisableWebPagePreview bool           `json:"disable_web_page_preview,omitempty"`
+	VideoWidth            int            `json:"video_width,omitempty"`
+	VideoHeight           int            `json:"video_height,omitempty"`
+	VideoDuration         int            `json:"video_duration,omitempty"`
+	ThumbUrl              *string        `json:"thumb_url"`
+	Title                 *string        `json:"title"`
+	Description           *string        `json:"description,omitempty"`
+}
+
+// Generate a random UUID according to RFC-4122
+//
+// http://play.golang.org/p/4FkNSiUDMg
+func newUUID() (string, error) {
+	uuid := make([]byte, 16)
+	n, err := io.ReadFull(rand.Reader, uuid)
+	if n != len(uuid) || err != nil {
+		return "", err
+	}
+
+	// variant bits; see section 4.1.1
+	uuid[8] = uuid[8]&^0xc0 | 0x80
+	// version 4 (pseudo-random); see section 4.1.3
+	uuid[6] = uuid[6]&^0xf0 | 0x40
+
+	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
+}
+
+// Helper function for generating a new InlineQueryResultArticle
+//
+// https://core.telegram.org/bots/api#inlinequeryresultarticle
+func NewInlineQueryResultArticle(title, messageText, description string) (newArticle *InlineQueryResultArticle, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultArticle{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeArticle,
+				Id:   &id,
+			},
+			Title:       &title,
+			MessageText: &messageText,
+			Description: &description,
+		}, &id
+	}
+
+	return &InlineQueryResultArticle{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultPhoto
+//
+// https://core.telegram.org/bots/api#inlinequeryresultphoto
+//
+// Photo must be in jpeg format, < 5MB.
+func NewInlineQueryResultPhoto(photoUrl, thumbUrl string) (newPhoto *InlineQueryResultPhoto, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultPhoto{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypePhoto,
+				Id:   &id,
+			},
+			PhotoUrl: &photoUrl,
+			ThumbUrl: &thumbUrl,
+		}, &id
+	}
+
+	return &InlineQueryResultPhoto{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultGif
+//
+// https://core.telegram.org/bots/api#inlinequeryresultgif
+//
+// Gif must be in gif format, < 1MB.
+func NewInlineQueryResultGif(gifUrl, thumbUrl string) (newGif *InlineQueryResultGif, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultGif{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeGif,
+				Id:   &id,
+			},
+			GifUrl:   &gifUrl,
+			ThumbUrl: &thumbUrl,
+		}, &id
+	}
+
+	return &InlineQueryResultGif{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultMpeg4Gif
+//
+// https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
+//
+// Mpeg4 must be in H.264/MPEG-4 AVC video(wihout sound) format, < 1MB.
+func NewInlineQueryResultMpeg4Gif(mpeg4Url, thumbUrl string) (newMpeg4Gif *InlineQueryResultMpeg4Gif, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultMpeg4Gif{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeMpeg4Gif,
+				Id:   &id,
+			},
+			Mpeg4Url: &mpeg4Url,
+			ThumbUrl: &thumbUrl,
+		}, &id
+	}
+
+	return &InlineQueryResultMpeg4Gif{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultVideo
+//
+// https://core.telegram.org/bots/api#inlinequeryresultvideo
+func NewInlineQueryResultVideo(videoUrl, thumbUrl, title, messageText string, mimeType VideoMimeType) (newVideo *InlineQueryResultVideo, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultVideo{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeVideo,
+				Id:   &id,
+			},
+			VideoUrl:    &videoUrl,
+			MimeType:    &mimeType,
+			MessageText: &messageText,
+			ThumbUrl:    &thumbUrl,
+			Title:       &title,
+		}, &id
+	}
+
+	return &InlineQueryResultVideo{}, nil
 }

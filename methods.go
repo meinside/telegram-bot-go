@@ -254,7 +254,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[s
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // options include reply_to_message_id, and reply_markup.
-func (b *Bot) SendLocation(chatId interface{}, latitude float32, longitude float32, options map[string]interface{}) (result ApiResultMessage) {
+func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, options map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":   chatId,
@@ -342,6 +342,30 @@ func (b *Bot) GetFileUrl(file File) string {
 	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.token, *file.FilePath)
 }
 
+// Send answers to an inline query.
+//
+// https://core.telegram.org/bots/api#answerinlinequery
+//
+// results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif,
+//     InlineQueryResultMpeg4Gif, or InlineQueryResultVideo
+//
+// options include cache_time, is_personal, and next_offset.
+func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, options map[string]interface{}) (result ApiResult) {
+	// essential params
+	params := map[string]interface{}{
+		"inline_query_id": inlineQueryId,
+		"results":         results,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResult("answerInlineQuery", params)
+}
+
 // Check if given http params contain file or not.
 func checkIfFileParamExists(params map[string]interface{}) bool {
 	for _, value := range params {
@@ -356,7 +380,7 @@ func checkIfFileParamExists(params map[string]interface{}) bool {
 
 // Convert given interface to string. (for HTTP params)
 func (b *Bot) paramToString(param interface{}) (result string, success bool) {
-	switch param.(type) {
+	switch t := param.(type) {
 	case int:
 		if intValue, ok := param.(int); ok {
 			return strconv.Itoa(intValue), ok
@@ -381,6 +405,12 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
+	case []interface{}:
+		if json, err := json.Marshal(param); err == nil {
+			return string(json), true
+		} else {
+			b.error(err.Error())
+		}
 	case ChatAction:
 		if value, ok := param.(ChatAction); ok {
 			return string(value), ok
@@ -401,7 +431,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 				b.error(err.Error())
 			}
 		} else {
-			b.error("parameter '%+v' could not be cast to ReplyKeyboardMarkup value", param)
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
 		}
 	case ReplyKeyboardHide:
 		if value, ok := param.(ReplyKeyboardHide); ok {
@@ -411,7 +441,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 				b.error(err.Error())
 			}
 		} else {
-			b.error("parameter '%+v' could not be cast to ReplyKeyboardHide value", param)
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
 		}
 	case ForceReply:
 		if value, ok := param.(ForceReply); ok {
@@ -421,7 +451,57 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 				b.error(err.Error())
 			}
 		} else {
-			b.error("parameter '%+v' could not be cast to ForceReply value", param)
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
+		}
+	case InlineQueryResultArticle:
+		if value, ok := param.(InlineQueryResultArticle); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
+		}
+	case InlineQueryResultPhoto:
+		if value, ok := param.(InlineQueryResultPhoto); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
+		}
+	case InlineQueryResultGif:
+		if value, ok := param.(InlineQueryResultGif); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
+		}
+	case InlineQueryResultMpeg4Gif:
+		if value, ok := param.(InlineQueryResultMpeg4Gif); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
+		}
+	case InlineQueryResultVideo:
+		if value, ok := param.(InlineQueryResultVideo); ok {
+			if json, err := json.Marshal(value); err == nil {
+				return string(json), true
+			} else {
+				b.error(err.Error())
+			}
+		} else {
+			b.error("parameter '%+v' could not be cast to %T value", param, t)
 		}
 	default:
 		b.error("unexpected type: '%+v' (%T)", param, param)
