@@ -50,7 +50,7 @@ Also, you can generate certificate and private key using **telegrambot.GenCertAn
 ## Usage: with incoming webhook
 
 ```go
-// sample code for telegram-bot-go (receive webhooks), last update: 2015.12.23.
+// sample code for telegram-bot-go (receive webhooks), last update: 2016.01.06.
 package main
 
 import (
@@ -69,11 +69,13 @@ const (
 	KeyFilepath  = "./cert.key"
 
 	TypingDelaySeconds = 3
+
+	Verbose = true
 )
 
 func main() {
 	client := bot.NewClient(ApiToken)
-	client.Verbose = true
+	client.Verbose = Verbose
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
@@ -88,7 +90,7 @@ func main() {
 					// on success, start webhook server
 					client.StartWebhookServerAndWait(CertFilepath, KeyFilepath, func(webhook bot.Update, err error) {
 						if err == nil {
-							if webhook.Message != nil {
+							if webhook.HasMessage() {
 								// 'is typing...'
 								client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
 								time.Sleep(TypingDelaySeconds * time.Second)
@@ -105,6 +107,24 @@ func main() {
 								}
 								if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
 									log.Printf("*** failed to send message: %s\n", *sent.Description)
+								}
+							} else if webhook.HasInlineQuery() {
+								// articles for test
+								article1, _ := bot.NewInlineQueryResultArticle(
+									"Star Wars quotes",
+									"I am your father.",
+									"Darth Vader")
+								article2, _ := bot.NewInlineQueryResultArticle(
+									"Star Wars quotes",
+									"I know.",
+									"Han Solo")
+
+								results := []interface{}{
+									article1,
+									article2,
+								}
+								if sent := client.AnswerInlineQuery(*webhook.InlineQuery.Id, results, nil); !sent.Ok {
+									log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 								}
 							}
 						} else {
@@ -131,7 +151,7 @@ func main() {
 It would be useful when you're behind a firewall or something.
 
 ```go
-// sample code for telegram-bot-go (get updates), last update: 2015.12.23.
+// sample code for telegram-bot-go (get updates), last update: 2016.01.06.
 package main
 
 import (
@@ -147,11 +167,13 @@ const (
 
 	MonitorIntervalSeconds = 3
 	TypingDelaySeconds     = 3
+
+	Verbose = true
 )
 
 func main() {
 	client := bot.NewClient(ApiToken)
-	client.Verbose = true
+	client.Verbose = Verbose
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
@@ -162,7 +184,7 @@ func main() {
 			// wait for new updates
 			client.StartMonitoringUpdates(0, MonitorIntervalSeconds, func(update bot.Update, err error) {
 				if err == nil {
-					if update.Message != nil {
+					if update.HasMessage() {
 						// 'is typing...'
 						client.SendChatAction(update.Message.Chat.Id, bot.ChatActionTyping)
 						time.Sleep(TypingDelaySeconds * time.Second)
@@ -179,6 +201,24 @@ func main() {
 						}
 						if sent := client.SendMessage(update.Message.Chat.Id, &message, options); !sent.Ok {
 							log.Printf("*** failed to send message: %s\n", *sent.Description)
+						}
+					} else if update.HasInlineQuery() {
+						// articles for test
+						article1, _ := bot.NewInlineQueryResultArticle(
+							"Star Wars quotes",
+							"I am your father.",
+							"Darth Vader")
+						article2, _ := bot.NewInlineQueryResultArticle(
+							"Star Wars quotes",
+							"I know.",
+							"Han Solo")
+
+						results := []interface{}{
+							article1,
+							article2,
+						}
+						if sent := client.AnswerInlineQuery(*update.InlineQuery.Id, results, nil); !sent.Ok {
+							log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 						}
 					}
 				} else {
