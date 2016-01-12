@@ -50,7 +50,7 @@ Also, you can generate certificate and private key using **telegrambot.GenCertAn
 ## Usage: with incoming webhook
 
 ```go
-// sample code for telegram-bot-go (receive webhooks), last update: 2016.01.06.
+// sample code for telegram-bot-go (receive webhooks), last update: 2016.01.12.
 package main
 
 import (
@@ -88,11 +88,11 @@ func main() {
 				// set webhook
 				if hooked := client.SetWebhook(WebhookHost, WebhookPort, CertFilepath); hooked.Ok {
 					// on success, start webhook server
-					client.StartWebhookServerAndWait(CertFilepath, KeyFilepath, func(webhook bot.Update, err error) {
+					client.StartWebhookServerAndWait(CertFilepath, KeyFilepath, func(b *bot.Bot, webhook bot.Update, err error) {
 						if err == nil {
 							if webhook.HasMessage() {
 								// 'is typing...'
-								client.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
+								b.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
 								time.Sleep(TypingDelaySeconds * time.Second)
 
 								// send message
@@ -105,7 +105,7 @@ func main() {
 								options := map[string]interface{}{
 									"reply_to_message_id": webhook.Message.MessageId,
 								}
-								if sent := client.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
+								if sent := b.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
 									log.Printf("*** failed to send message: %s\n", *sent.Description)
 								}
 							} else if webhook.HasInlineQuery() {
@@ -123,7 +123,7 @@ func main() {
 									article1,
 									article2,
 								}
-								if sent := client.AnswerInlineQuery(*webhook.InlineQuery.Id, results, nil); !sent.Ok {
+								if sent := b.AnswerInlineQuery(*webhook.InlineQuery.Id, results, nil); !sent.Ok {
 									log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 								}
 							}
@@ -151,7 +151,7 @@ func main() {
 It would be useful when you're behind a firewall or something.
 
 ```go
-// sample code for telegram-bot-go (get updates), last update: 2016.01.06.
+// sample code for telegram-bot-go (get updates), last update: 2016.01.12.
 package main
 
 import (
@@ -182,11 +182,11 @@ func main() {
 		// delete webhook (getting updates will not work when wehbook is set up)
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
 			// wait for new updates
-			client.StartMonitoringUpdates(0, MonitorIntervalSeconds, func(update bot.Update, err error) {
+			client.StartMonitoringUpdates(0, MonitorIntervalSeconds, func(b *bot.Bot, update bot.Update, err error) {
 				if err == nil {
 					if update.HasMessage() {
 						// 'is typing...'
-						client.SendChatAction(update.Message.Chat.Id, bot.ChatActionTyping)
+						b.SendChatAction(update.Message.Chat.Id, bot.ChatActionTyping)
 						time.Sleep(TypingDelaySeconds * time.Second)
 
 						// send message
@@ -199,7 +199,7 @@ func main() {
 						options := map[string]interface{}{
 							"reply_to_message_id": update.Message.MessageId,
 						}
-						if sent := client.SendMessage(update.Message.Chat.Id, &message, options); !sent.Ok {
+						if sent := b.SendMessage(update.Message.Chat.Id, &message, options); !sent.Ok {
 							log.Printf("*** failed to send message: %s\n", *sent.Description)
 						}
 					} else if update.HasInlineQuery() {
@@ -217,7 +217,7 @@ func main() {
 							article1,
 							article2,
 						}
-						if sent := client.AnswerInlineQuery(*update.InlineQuery.Id, results, nil); !sent.Ok {
+						if sent := b.AnswerInlineQuery(*update.InlineQuery.Id, results, nil); !sent.Ok {
 							log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 						}
 					}
@@ -236,7 +236,7 @@ func main() {
 
 ## License
 
-Copyright (c) 2015 Sungjin Han
+Copyright (c) 2016 Sungjin Han
 
 MIT License
 

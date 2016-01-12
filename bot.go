@@ -42,7 +42,7 @@ type Bot struct {
 	webhookHost    string
 	webhookPort    int
 	webhookUrl     string
-	webhookHandler func(webhook Update, err error)
+	webhookHandler func(b *Bot, webhook Update, err error)
 
 	// print verbose log messages or not
 	Verbose bool
@@ -126,7 +126,7 @@ func (b *Bot) DeleteWebhook() (result ApiResult) {
 // (https://core.telegram.org/bots/self-signed)
 //
 // Incoming webhooks will be received through webhookHandler function.
-func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(webhook Update, err error)) {
+func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(b *Bot, webhook Update, err error)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.webhookPort)
 
 	// routing
@@ -142,7 +142,7 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 // Retrieve updates from API server constantly.
 //
 // If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
-func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(update Update, err error)) {
+func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(b *Bot, update Update, err error)) {
 	options := map[string]interface{}{
 		"offset": updateOffset,
 	}
@@ -156,10 +156,10 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 					options["offset"] = update.UpdateId + 1
 				}
 
-				go updateHandler(update, nil)
+				go updateHandler(b, update, nil)
 			}
 		} else {
-			go updateHandler(Update{}, fmt.Errorf("error while retrieving updates - %s", updates.Description))
+			go updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", updates.Description))
 		}
 
 		time.Sleep(time.Duration(interval) * time.Second)
