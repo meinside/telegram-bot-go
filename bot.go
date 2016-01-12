@@ -159,7 +159,7 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 				go updateHandler(b, update, nil)
 			}
 		} else {
-			go updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", updates.Description))
+			go updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", *updates.Description))
 		}
 
 		time.Sleep(time.Duration(interval) * time.Second)
