@@ -39,10 +39,12 @@ type Bot struct {
 	tokenHashed string
 
 	// Webhook related stuffs
-	webhookHost    string
-	webhookPort    int
-	webhookUrl     string
-	webhookHandler func(b *Bot, webhook Update, err error)
+	webhookHost string
+	webhookPort int
+	webhookUrl  string
+
+	// update(webhook) handler function
+	updateHandler func(b *Bot, update Update, err error)
 
 	// print verbose log messages or not
 	Verbose bool
@@ -129,8 +131,10 @@ func (b *Bot) DeleteWebhook() (result ApiResult) {
 func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(b *Bot, webhook Update, err error)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.webhookPort)
 
+	// set update handler
+	b.updateHandler = webhookHandler
+
 	// routing
-	b.webhookHandler = webhookHandler
 	http.HandleFunc(b.getWebhookPath(), b.handleWebhook)
 
 	// start server
@@ -143,9 +147,14 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 //
 // If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
 func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(b *Bot, update Update, err error)) {
+	b.verbose("starting monitoring updates (interval seconds: %d) ...", interval)
+
 	options := map[string]interface{}{
 		"offset": updateOffset,
 	}
+
+	// set update handler
+	b.updateHandler = updateHandler
 
 	var updates ApiResultUpdates
 	for {
@@ -156,10 +165,10 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 					options["offset"] = update.UpdateId + 1
 				}
 
-				go updateHandler(b, update, nil)
+				go b.updateHandler(b, update, nil)
 			}
 		} else {
-			go updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", *updates.Description))
+			go b.updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", *updates.Description))
 		}
 
 		time.Sleep(time.Duration(interval) * time.Second)
