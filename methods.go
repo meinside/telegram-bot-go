@@ -23,11 +23,11 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 
 // Send a message.
 //
-// https://core.telegram.org/bots/api#sendmessage
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include parse_mode, disable_web_page_preview, reply_to_message_id, and reply_markup.
+// options include: parse_mode, disable_web_page_preview, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendmessage
 func (b *Bot) SendMessage(chatId interface{}, text *string, options map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -46,9 +46,9 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options map[string]i
 
 // Forward a message.
 //
-// https://core.telegram.org/bots/api#forwardmessage
-//
 // chatId and fromChatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// https://core.telegram.org/bots/api#forwardmessage
 func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, messageId int) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -62,11 +62,11 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 
 // Send photos.
 //
-// https://core.telegram.org/bots/api#sendphoto
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include caption, reply_to_message_id, and reply_markup.
+// options include: caption, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(*photoFilepath); err == nil {
 		// essential params
@@ -93,11 +93,11 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[s
 
 // Send audio files. (.mp3 format only, will be played with external players)
 //
-// https://core.telegram.org/bots/api#sendaudio
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include duration, performer, title, reply_to_message_id, and reply_markup.
+// options include: duration, performer, title, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(*audioFilepath); err == nil {
 		// essential params
@@ -124,11 +124,11 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[s
 
 // Send general files.
 //
-// https://core.telegram.org/bots/api#senddocument
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include reply_to_message_id, and reply_markup.
+// options include: reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(*documentFilepath); err == nil {
 		// essential params
@@ -155,11 +155,11 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options
 
 // Send stickers.
 //
-// https://core.telegram.org/bots/api#sendsticker
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include reply_to_message_id, and reply_markup.
+// options include: reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(*stickerFilepath); err == nil {
 		// essential params
@@ -186,11 +186,11 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options m
 
 // Send video files.
 //
-// https://core.telegram.org/bots/api#sendvideo
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include duration, caption, reply_to_message_id, and reply_markup.
+// options include: duration, caption, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(*videoFilepath); err == nil {
 		// essential params
@@ -217,11 +217,11 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[s
 
 // Send voice files. (.ogg format only, will be played with Telegram itself))
 //
-// https://core.telegram.org/bots/api#sendvoice
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include duration, reply_to_message_id, and reply_markup.
+// options include: duration, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
 	if file, err := os.Open(*voiceFilepath); err == nil {
 		// essential params
@@ -248,11 +248,11 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[s
 
 // Send locations.
 //
-// https://core.telegram.org/bots/api#sendlocation
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include reply_to_message_id, and reply_markup.
+// options include: reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendlocation
 func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, options map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -272,11 +272,11 @@ func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, opti
 
 // Send chat action.
 //
-// https://core.telegram.org/bots/api#sendchataction
-//
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // action can be one of: typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, or find_location
+//
+// https://core.telegram.org/bots/api#sendchataction
 func (b *Bot) SendChatAction(chatId interface{}, action ChatAction) (result ApiResult) {
 	// essential params
 	params := map[string]interface{}{
@@ -289,9 +289,9 @@ func (b *Bot) SendChatAction(chatId interface{}, action ChatAction) (result ApiR
 
 // Get user profile photos.
 //
-// https://core.telegram.org/bots/api#getuserprofilephotos
+// options include: offset and limit.
 //
-// options include offset and limit.
+// https://core.telegram.org/bots/api#getuserprofilephotos
 func (b *Bot) GetUserProfilePhotos(userId int, options map[string]interface{}) (result ApiResultUserProfilePhotos) {
 	// essential params
 	params := map[string]interface{}{
@@ -309,9 +309,9 @@ func (b *Bot) GetUserProfilePhotos(userId int, options map[string]interface{}) (
 
 // Get updates.
 //
-// https://core.telegram.org/bots/api#getupdates
+// options include: offset, limit, and timeout.
 //
-// options include offset, limit, and timeout.
+// https://core.telegram.org/bots/api#getupdates
 func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResultUpdates) {
 	// optional params
 	params := map[string]interface{}{}
@@ -343,12 +343,11 @@ func (b *Bot) GetFileUrl(file File) string {
 
 // Send answers to an inline query.
 //
+// results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, or InlineQueryResultVideo.
+//
+// options include: cache_time, is_personal, and next_offset.
+//
 // https://core.telegram.org/bots/api#answerinlinequery
-//
-// results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif,
-//     InlineQueryResultMpeg4Gif, or InlineQueryResultVideo
-//
-// options include cache_time, is_personal, and next_offset.
 func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, options map[string]interface{}) (result ApiResult) {
 	// essential params
 	params := map[string]interface{}{
@@ -509,8 +508,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 	return "", false
 }
 
-// Send request to API server and return the response.
-// (synchronous)
+// Send request to API server and return the response synchronously.
 //
 // If *os.File is included in the params, it will be closed automatically.
 func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *http.Response, success bool) {
@@ -591,7 +589,7 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 	return nil, false
 }
 
-// send request for ApiResult and fetch its result
+// Send request for ApiResult and fetch its result.
 func (b *Bot) requestResult(method string, params map[string]interface{}) (result ApiResult) {
 	var errStr string
 
@@ -617,7 +615,7 @@ func (b *Bot) requestResult(method string, params map[string]interface{}) (resul
 	return ApiResult{Ok: false, Description: &errStr}
 }
 
-// send request for ApiResultUser and fetch its result
+// Send request for ApiResultUser and fetch its result.
 func (b *Bot) requestResultUser(method string, params map[string]interface{}) (result ApiResultUser) {
 	var errStr string
 
@@ -643,7 +641,7 @@ func (b *Bot) requestResultUser(method string, params map[string]interface{}) (r
 	return ApiResultUser{Ok: false, Description: &errStr}
 }
 
-// send request for ApiResultMessage and fetch its result
+// Send request for ApiResultMessage and fetch its result.
 func (b *Bot) requestResultMessage(method string, params map[string]interface{}) (result ApiResultMessage) {
 	var errStr string
 
@@ -669,7 +667,7 @@ func (b *Bot) requestResultMessage(method string, params map[string]interface{})
 	return ApiResultMessage{Ok: false, Description: &errStr}
 }
 
-// send request for ApiResultUserProfilePhotos and fetch its result
+// Send request for ApiResultUserProfilePhotos and fetch its result.
 func (b *Bot) requestResultUserProfilePhotos(method string, params map[string]interface{}) (result ApiResultUserProfilePhotos) {
 	var errStr string
 
@@ -695,7 +693,7 @@ func (b *Bot) requestResultUserProfilePhotos(method string, params map[string]in
 	return ApiResultUserProfilePhotos{Ok: false, Description: &errStr}
 }
 
-// send request for ApiResultUpdates and fetch its result
+// Send request for ApiResultUpdates and fetch its result.
 func (b *Bot) requestResultUpdates(method string, params map[string]interface{}) (result ApiResultUpdates) {
 	var errStr string
 
@@ -721,7 +719,7 @@ func (b *Bot) requestResultUpdates(method string, params map[string]interface{})
 	return ApiResultUpdates{Ok: false, Description: &errStr}
 }
 
-// send request for ApiResultFile and fetch its result
+// Send request for ApiResultFile and fetch its result.
 func (b *Bot) requestResultFile(method string, params map[string]interface{}) (result ApiResultFile) {
 	var errStr string
 

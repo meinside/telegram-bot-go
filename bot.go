@@ -1,10 +1,6 @@
-// Telegram Bot API helper
+// Telegram Bot API helper (https://core.telegram.org/bots/api)
 //
-// referenced: https://core.telegram.org/bots/api
-//
-// created on : 2015.10.06.
-//
-// by meinside@gmail.com
+// Created on : 2015.10.06, meinside@gmail.com
 package telegrambot
 
 import (
@@ -33,20 +29,16 @@ const (
 
 // Bot
 type Bot struct {
-	// Telegram bot API's token
-	token       string
-	tokenHashed string
+	token       string // Telegram bot API's token
+	tokenHashed string // hashed token
 
-	// Webhook related stuffs
-	webhookHost string
-	webhookPort int
-	webhookUrl  string
+	webhookHost string // webhook hostname
+	webhookPort int    // webhook port number
+	webhookUrl  string // webhook url
 
-	// update(webhook) handler function
-	updateHandler func(b *Bot, update Update, err error)
+	updateHandler func(b *Bot, update Update, err error) // update(webhook) handler function
 
-	// print verbose log messages or not
-	Verbose bool
+	Verbose bool // print verbose log messages or not
 }
 
 // Get a new bot API client with given token string.
@@ -57,8 +49,7 @@ func NewClient(token string) *Bot {
 	}
 }
 
-// Generate certificate and private key file with given domain. (for testing/development)
-//
+// Generate certificate and private key file with given domain.
 // OpenSSL is needed.
 func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string, expiresInDays int) error {
 	numBits := 2048
@@ -75,10 +66,9 @@ func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string,
 }
 
 // Set webhook url and certificate for receiving incoming updates.
+// port should be one of: 443, 80, 88, or 8443.
 //
 // https://core.telegram.org/bots/api#setwebhook
-//
-// port should be one of: 443, 80, 88, or 8443.
 func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResult) {
 	b.webhookHost = host
 	b.webhookPort = port
@@ -100,10 +90,9 @@ func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result Api
 }
 
 // Delete webhook.
+// (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 //
 // https://core.telegram.org/bots/api#setwebhook
-//
-// (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 func (b *Bot) DeleteWebhook() (result ApiResult) {
 	b.webhookHost = ""
 	b.webhookPort = 0
@@ -119,14 +108,11 @@ func (b *Bot) DeleteWebhook() (result ApiResult) {
 }
 
 // Start Webhook server(and wait forever).
-//
 // Function SetWebhook(host, port, certFilepath) should be called priorly to setup host, port, and certification file.
-//
 // Certification file(.pem) and a private key is needed.
-//
-// (https://core.telegram.org/bots/self-signed)
-//
 // Incoming webhooks will be received through webhookHandler function.
+//
+// https://core.telegram.org/bots/self-signed
 func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(b *Bot, webhook Update, err error)) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.webhookPort)
 
@@ -143,7 +129,6 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 }
 
 // Retrieve updates from API server constantly.
-//
 // If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
 func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(b *Bot, update Update, err error)) {
 	b.verbose("starting monitoring updates (interval seconds: %d) ...", interval)

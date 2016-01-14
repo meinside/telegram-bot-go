@@ -8,6 +8,7 @@ import (
 	"io"
 )
 
+// Chat types
 type ChatType string
 
 const (
@@ -16,12 +17,14 @@ const (
 	ChatTypeChannel ChatType = "channel"
 )
 
+// Parse modes
 type ParseMode string // parse_mode
 
 const (
 	ParseModeMarkdown ParseMode = "Markdown"
 )
 
+// Chat actions
 type ChatAction string
 
 const (
@@ -35,6 +38,7 @@ const (
 	ChatActionFindLocation   ChatAction = "find_location"
 )
 
+// Inline query result types
 type InlineQueryResultType string
 
 const (
@@ -45,6 +49,7 @@ const (
 	InlineQueryResultTypeVideo    InlineQueryResultType = "video"
 )
 
+// Video mime types
 type VideoMimeType string
 
 const (
@@ -410,6 +415,8 @@ func (m *Message) HasGroupChatCreated() bool {
 	return m.GroupChatCreated
 }
 
+// Inline query
+//
 // https://core.telegram.org/bots/api#inlinequery
 type InlineQuery struct {
 	Id     *string `json:"id"`
@@ -425,6 +432,8 @@ func (i InlineQuery) String() string {
 	return fmt.Sprintf("%+v", i)
 }
 
+// Chosen inline result
+//
 // https://core.telegram.org/bots/api#choseninlineresult
 type ChosenInlineResult struct {
 	ResultId *string `json:"result_id"`
@@ -439,6 +448,8 @@ func (c ChosenInlineResult) String() string {
 	return fmt.Sprintf("%+v", c)
 }
 
+// Inline query results
+//
 // https://core.telegram.org/bots/api#inlinequeryresult
 type InlineQueryResult struct {
 	Type InlineQueryResultType `json:"type"`
@@ -548,9 +559,9 @@ func NewInlineQueryResultArticle(title, messageText, description string) (newArt
 
 // Helper function for generating a new InlineQueryResultPhoto
 //
-// https://core.telegram.org/bots/api#inlinequeryresultphoto
-//
 // Photo must be in jpeg format, < 5MB.
+//
+// https://core.telegram.org/bots/api#inlinequeryresultphoto
 func NewInlineQueryResultPhoto(photoUrl, thumbUrl string) (newPhoto *InlineQueryResultPhoto, generatedId *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultPhoto{
@@ -568,9 +579,9 @@ func NewInlineQueryResultPhoto(photoUrl, thumbUrl string) (newPhoto *InlineQuery
 
 // Helper function for generating a new InlineQueryResultGif
 //
-// https://core.telegram.org/bots/api#inlinequeryresultgif
-//
 // Gif must be in gif format, < 1MB.
+//
+// https://core.telegram.org/bots/api#inlinequeryresultgif
 func NewInlineQueryResultGif(gifUrl, thumbUrl string) (newGif *InlineQueryResultGif, generatedId *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultGif{
@@ -588,9 +599,9 @@ func NewInlineQueryResultGif(gifUrl, thumbUrl string) (newGif *InlineQueryResult
 
 // Helper function for generating a new InlineQueryResultMpeg4Gif
 //
-// https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
-//
 // Mpeg4 must be in H.264/MPEG-4 AVC video(wihout sound) format, < 1MB.
+//
+// https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
 func NewInlineQueryResultMpeg4Gif(mpeg4Url, thumbUrl string) (newMpeg4Gif *InlineQueryResultMpeg4Gif, generatedId *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultMpeg4Gif{
