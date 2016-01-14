@@ -1,5 +1,4 @@
 // https://core.telegram.org/bots/api#available-types
-
 package telegrambot
 
 import (

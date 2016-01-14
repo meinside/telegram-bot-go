@@ -5,7 +5,6 @@
 // created on : 2015.10.06.
 //
 // by meinside@gmail.com
-
 package telegrambot
 
 import (
