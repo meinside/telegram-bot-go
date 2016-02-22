@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"reflect"
 	"strconv"
 )
 
@@ -378,7 +379,7 @@ func checkIfFileParamExists(params map[string]interface{}) bool {
 
 // Convert given interface to string. (for HTTP params)
 func (b *Bot) paramToString(param interface{}) (result string, success bool) {
-	switch t := param.(type) {
+	switch param.(type) {
 	case int:
 		if intValue, ok := param.(int); ok {
 			return strconv.Itoa(intValue), ok
@@ -421,85 +422,12 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
-	case ReplyKeyboardMarkup:
-		if value, ok := param.(ReplyKeyboardMarkup); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
+	case ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply, InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, InlineQueryResultVideo: // (json) structs
+		value := reflect.ValueOf(param)
+		if json, err := json.Marshal(value.Type()); err == nil {
+			return string(json), true
 		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
-		}
-	case ReplyKeyboardHide:
-		if value, ok := param.(ReplyKeyboardHide); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
-		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
-		}
-	case ForceReply:
-		if value, ok := param.(ForceReply); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
-		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
-		}
-	case InlineQueryResultArticle:
-		if value, ok := param.(InlineQueryResultArticle); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
-		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
-		}
-	case InlineQueryResultPhoto:
-		if value, ok := param.(InlineQueryResultPhoto); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
-		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
-		}
-	case InlineQueryResultGif:
-		if value, ok := param.(InlineQueryResultGif); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
-		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
-		}
-	case InlineQueryResultMpeg4Gif:
-		if value, ok := param.(InlineQueryResultMpeg4Gif); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
-		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
-		}
-	case InlineQueryResultVideo:
-		if value, ok := param.(InlineQueryResultVideo); ok {
-			if json, err := json.Marshal(value); err == nil {
-				return string(json), true
-			} else {
-				b.error(err.Error())
-			}
-		} else {
-			b.error("parameter '%+v' could not be cast to %T value", param, t)
+			b.error(err.Error())
 		}
 	default:
 		b.error("unexpected type: '%+v' (%T)", param, param)
