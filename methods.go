@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"reflect"
 	"strconv"
 )
 
@@ -423,8 +422,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
 	case ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply, InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, InlineQueryResultVideo: // (json) structs
-		value := reflect.ValueOf(param)
-		if json, err := json.Marshal(value.Type()); err == nil {
+		if json, err := json.Marshal(param); err == nil {
 			return string(json), true
 		} else {
 			b.error(err.Error())
