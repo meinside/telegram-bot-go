@@ -22,6 +22,7 @@ type ParseMode string // parse_mode
 
 const (
 	ParseModeMarkdown ParseMode = "Markdown"
+	ParseModeHtml     ParseMode = "HTML"
 )
 
 // Chat actions
