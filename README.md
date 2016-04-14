@@ -50,7 +50,7 @@ Also, you can generate certificate and private key using **telegrambot.GenCertAn
 ## Usage: with incoming webhook
 
 ```go
-// sample code for telegram-bot-go (receive webhooks), last update: 2016.01.12.
+// sample code for telegram-bot-go (receive webhooks), last update: 2016.04.14.
 package main
 
 import (
@@ -95,21 +95,52 @@ func main() {
 								b.SendChatAction(webhook.Message.Chat.Id, bot.ChatActionTyping)
 								time.Sleep(TypingDelaySeconds * time.Second)
 
-								// send message
 								var message string
-								if webhook.Message.HasText() {
-									message = fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
-								} else {
-									message = fmt.Sprintf("I received @%s's message", *webhook.Message.From.Username)
-								}
+
+								key1 := "Just a button"
+								key2 := "Request contact"
+								key3 := "Request location"
 								options := map[string]interface{}{
-									"reply_to_message_id": webhook.Message.MessageId,
+									"reply_to_message_id": webhook.Message.MessageId, // show original message
+									"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
+										Keyboard: [][]bot.KeyboardButton{
+											[]bot.KeyboardButton{
+												bot.KeyboardButton{
+													Text: &key1, // string only
+												},
+											},
+											[]bot.KeyboardButton{
+												bot.KeyboardButton{
+													Text:           &key2,
+													RequestContact: true, // request contact
+												},
+												bot.KeyboardButton{
+													Text:            &key3,
+													RequestLocation: true, // request location
+												},
+											},
+										},
+									},
 								}
+
+								if webhook.Message.HasContact() {
+									message = fmt.Sprintf("I received @%s's phone no.: %s", *webhook.Message.From.Username, *webhook.Message.Contact.PhoneNumber)
+								} else if webhook.Message.HasLocation() {
+									message = fmt.Sprintf("I received @%s's location: (%f, %f)", *webhook.Message.From.Username, webhook.Message.Location.Latitude, webhook.Message.Location.Longitude)
+								} else {
+									if webhook.Message.HasText() {
+										message = fmt.Sprintf("I received @%s's message: %s", *webhook.Message.From.Username, *webhook.Message.Text)
+									} else {
+										message = fmt.Sprintf("I received @%s's message", *webhook.Message.From.Username)
+									}
+
+								}
+								// send message
 								if sent := b.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
 									log.Printf("*** failed to send message: %s\n", *sent.Description)
 								}
 							} else if webhook.HasInlineQuery() {
-								// articles for test
+								// articles for inline query
 								article1, _ := bot.NewInlineQueryResultArticle(
 									"Star Wars quotes",
 									"I am your father.",
@@ -123,6 +154,8 @@ func main() {
 									article1,
 									article2,
 								}
+
+								// answer inline query
 								if sent := b.AnswerInlineQuery(*webhook.InlineQuery.Id, results, nil); !sent.Ok {
 									log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 								}
