@@ -279,9 +279,9 @@ type ReplyKeyboardMarkup struct {
 //
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
-	Text            *string `json:"text"`
-	RequestContact  bool    `json:"request_contact,omitempty"`
-	RequestLocation bool    `json:"request_location,omitempty"`
+	Text            string `json:"text"`
+	RequestContact  bool   `json:"request_contact,omitempty"`
+	RequestLocation bool   `json:"request_location,omitempty"`
 }
 
 // ReplyKeyboardHide

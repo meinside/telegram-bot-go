@@ -608,7 +608,7 @@ func NewKeyboardButtons(texts ...string) []KeyboardButton {
 
 	for _, text := range texts {
 		keyboards = append(keyboards, KeyboardButton{
-			Text: &text,
+			Text: text,
 		})
 	}
 

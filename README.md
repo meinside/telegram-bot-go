@@ -97,26 +97,23 @@ func main() {
 
 								var message string
 
-								key1 := "Just a button"
-								key2 := "Request contact"
-								key3 := "Request location"
 								options := map[string]interface{}{
 									"reply_to_message_id": webhook.Message.MessageId, // show original message
 									"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
 										Keyboard: [][]bot.KeyboardButton{
 											[]bot.KeyboardButton{
 												bot.KeyboardButton{
-													Text: &key1, // string only
+													Text: "Just a button",
 												},
 											},
 											[]bot.KeyboardButton{
 												bot.KeyboardButton{
-													Text:           &key2,
-													RequestContact: true, // request contact
+													Text:           "Request contact",
+													RequestContact: true,
 												},
 												bot.KeyboardButton{
-													Text:            &key3,
-													RequestLocation: true, // request location
+													Text:            "Request location",
+													RequestLocation: true,
 												},
 											},
 										},
@@ -224,26 +221,23 @@ func main() {
 
 						var message string
 
-						key1 := "Just a button"
-						key2 := "Request contact"
-						key3 := "Request location"
 						options := map[string]interface{}{
 							"reply_to_message_id": update.Message.MessageId, // show original message
 							"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
 								Keyboard: [][]bot.KeyboardButton{
 									[]bot.KeyboardButton{
 										bot.KeyboardButton{
-											Text: &key1, // string only
+											Text: "Just a button",
 										},
 									},
 									[]bot.KeyboardButton{
 										bot.KeyboardButton{
-											Text:           &key2,
-											RequestContact: true, // request contact
+											Text:           "Request contact",
+											RequestContact: true,
 										},
 										bot.KeyboardButton{
-											Text:            &key3,
-											RequestLocation: true, // request location
+											Text:            "Request location",
+											RequestLocation: true,
 										},
 									},
 								},
