@@ -602,11 +602,15 @@ func (c ChosenInlineResult) String() string {
 // Helper functions for KeyboardButton
 //
 
-// Helper function for generating a new KeyboardButton
-func NewKeyboardButton(text string, requestContact, requestLocation bool) *KeyboardButton {
-	return &KeyboardButton{
-		Text:            &text,
-		RequestContact:  requestContact,
-		RequestLocation: requestLocation,
+// Helper function for generating an array of KeyboardButtons
+func NewKeyboardButtons(texts ...string) []KeyboardButton {
+	keyboards := []KeyboardButton{}
+
+	for _, text := range texts {
+		keyboards = append(keyboards, KeyboardButton{
+			Text: &text,
+		})
 	}
+
+	return keyboards
 }
