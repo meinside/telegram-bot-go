@@ -36,25 +36,18 @@ const (
 type InlineQueryResultType string
 
 const (
-	InlineQueryResultTypeArticle        InlineQueryResultType = "article"
-	InlineQueryResultTypePhoto          InlineQueryResultType = "photo"
-	InlineQueryResultTypeGif            InlineQueryResultType = "gif"
-	InlineQueryResultTypeMpeg4Gif       InlineQueryResultType = "mpeg4_gif"
-	InlineQueryResultTypeVideo          InlineQueryResultType = "video"
-	InlineQueryResultTypeAudio          InlineQueryResultType = "audio"
-	InlineQueryResultTypeVoice          InlineQueryResultType = "voice"
-	InlineQueryResultTypeDocument       InlineQueryResultType = "document"
-	InlineQueryResultTypeLocation       InlineQueryResultType = "location"
-	InlineQueryResultTypeVenue          InlineQueryResultType = "venue"
-	InlineQueryResultTypeContact        InlineQueryResultType = "contact"
-	InlineQueryResultTypeCachedPhoto    InlineQueryResultType = "photo"
-	InlineQueryResultTypeCachedGif      InlineQueryResultType = "gif"
-	InlineQueryResultTypeCachedMpeg4Gif InlineQueryResultType = "mpeg4_gif"
-	InlineQueryResultTypeCachedSticker  InlineQueryResultType = "sticker"
-	InlineQueryResultTypeCachedDocument InlineQueryResultType = "document"
-	InlineQueryResultTypeCachedVideo    InlineQueryResultType = "video"
-	InlineQueryResultTypeCachedVoice    InlineQueryResultType = "voice"
-	InlineQueryResultTypeCachedAudio    InlineQueryResultType = "audio"
+	InlineQueryResultTypeArticle  InlineQueryResultType = "article"
+	InlineQueryResultTypePhoto    InlineQueryResultType = "photo"
+	InlineQueryResultTypeGif      InlineQueryResultType = "gif"
+	InlineQueryResultTypeMpeg4Gif InlineQueryResultType = "mpeg4_gif"
+	InlineQueryResultTypeVideo    InlineQueryResultType = "video"
+	InlineQueryResultTypeAudio    InlineQueryResultType = "audio"
+	InlineQueryResultTypeVoice    InlineQueryResultType = "voice"
+	InlineQueryResultTypeDocument InlineQueryResultType = "document"
+	InlineQueryResultTypeLocation InlineQueryResultType = "location"
+	InlineQueryResultTypeVenue    InlineQueryResultType = "venue"
+	InlineQueryResultTypeContact  InlineQueryResultType = "contact"
+	InlineQueryResultTypeSticker  InlineQueryResultType = "sticker"
 )
 
 // Message Entity Types

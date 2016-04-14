@@ -7,6 +7,9 @@ import (
 	"io"
 )
 
+////////////////////////////////
+// Helper functions for InlineQueryResult
+
 // Generate a random UUID according to RFC-4122
 //
 // http://play.golang.org/p/4FkNSiUDMg
@@ -126,6 +129,259 @@ func NewInlineQueryResultVideo(videoUrl, thumbUrl, title string, mimeType VideoM
 	return &InlineQueryResultVideo{}, nil
 }
 
+// Helper function for generating a new InlineQueryResultAudio
+//
+// https://core.telegram.org/bots/api#inlinequeryresultaudio
+func NewInlineQueryResultAudio(audioUrl, title string) (newAudio *InlineQueryResultAudio, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultAudio{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeAudio,
+				Id:   &id,
+			},
+			AudioUrl: &audioUrl,
+			Title:    &title,
+		}, &id
+	}
+
+	return &InlineQueryResultAudio{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultVoice
+//
+// https://core.telegram.org/bots/api#inlinequeryresultvoice
+func NewInlineQueryResultVoice(voiceUrl, title string) (newVoice *InlineQueryResultVoice, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultVoice{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeVoice,
+				Id:   &id,
+			},
+			VoiceUrl: &voiceUrl,
+			Title:    &title,
+		}, &id
+	}
+
+	return &InlineQueryResultVoice{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultDocument
+//
+// https://core.telegram.org/bots/api#inlinequeryresultdocument
+func NewInlineQueryResultDocument(documentUrl, title string, mimeType DocumentMimeType) (newDocument *InlineQueryResultDocument, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultDocument{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeDocument,
+				Id:   &id,
+			},
+			Title:       &title,
+			DocumentUrl: &documentUrl,
+			MimeType:    &mimeType,
+		}, &id
+	}
+
+	return &InlineQueryResultDocument{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultLocation
+//
+// https://core.telegram.org/bots/api#inlinequeryresultlocation
+func NewInlineQueryResultLocation(latitude, longitude float32, title string) (newLocation *InlineQueryResultLocation, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultLocation{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeLocation,
+				Id:   &id,
+			},
+			Latitude:  latitude,
+			Longitude: longitude,
+			Title:     &title,
+		}, &id
+	}
+
+	return &InlineQueryResultLocation{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultVenue
+//
+// https://core.telegram.org/bots/api#inlinequeryresultvenue
+func NewInlineQueryResultVenue(latitude, longitude float32, title, address string) (newVenue *InlineQueryResultVenue, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultVenue{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeVenue,
+				Id:   &id,
+			},
+			Latitude:  latitude,
+			Longitude: longitude,
+			Title:     &title,
+			Address:   &address,
+		}, &id
+	}
+
+	return &InlineQueryResultVenue{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultContact
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcontact
+func NewInlineQueryResultContact(phoneNumber, firstName, lastName string) (newContact *InlineQueryResultContact, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultContact{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeContact,
+				Id:   &id,
+			},
+			PhoneNumber: &phoneNumber,
+			FirstName:   &firstName,
+			LastName:    &lastName,
+		}, &id
+	}
+
+	return &InlineQueryResultContact{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedPhoto
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcachedphoto
+func NewInlineQueryResultCachedPhoto(photoFileId string) (newPhoto *InlineQueryResultCachedPhoto, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedPhoto{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypePhoto,
+				Id:   &id,
+			},
+			PhotoFileId: &photoFileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedPhoto{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedGif
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcachedgif
+func NewInlineQueryResultCachedGif(gifFileId string) (newGif *InlineQueryResultCachedGif, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedGif{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeGif,
+				Id:   &id,
+			},
+			GifFileId: &gifFileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedGif{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedMpeg4Gif
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif
+func NewInlineQueryResultCachedMpeg4Gif(mpeg4FileId string) (newMpeg4Gif *InlineQueryResultCachedMpeg4Gif, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedMpeg4Gif{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeMpeg4Gif,
+				Id:   &id,
+			},
+			Mpeg4FileId: &mpeg4FileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedMpeg4Gif{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedSticker
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcachedsticker
+func NewInlineQueryResultCachedSticker(stickerFileId string) (newSticker *InlineQueryResultCachedSticker, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedSticker{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeSticker,
+				Id:   &id,
+			},
+			StickerFileId: &stickerFileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedSticker{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedDocument
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcacheddocument
+func NewInlineQueryResultCachedDocument(title, documentFileId string) (newDocument *InlineQueryResultCachedDocument, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedDocument{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeDocument,
+				Id:   &id,
+			},
+			Title:          &title,
+			DocumentFileId: &documentFileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedDocument{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedVideo
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcachedvideo
+func NewInlineQueryResultCachedVideo(title, videoFileId string) (newVideo *InlineQueryResultCachedVideo, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedVideo{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeVideo,
+				Id:   &id,
+			},
+			Title:       &title,
+			VideoFileId: &videoFileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedVideo{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedVoice
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcachedvoice
+func NewInlineQueryResultCachedVoice(title, voiceFileId string) (newVoice *InlineQueryResultCachedVoice, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedVoice{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeVoice,
+				Id:   &id,
+			},
+			Title:       &title,
+			VoiceFileId: &voiceFileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedVoice{}, nil
+}
+
+// Helper function for generating a new InlineQueryResultCachedAudio
+//
+// https://core.telegram.org/bots/api#inlinequeryresultcachedaudio
+func NewInlineQueryResultCachedAudio(audioFileId string) (newAudio *InlineQueryResultCachedAudio, generatedId *string) {
+	if id, err := newUUID(); err == nil {
+		return &InlineQueryResultCachedAudio{
+			InlineQueryResult: InlineQueryResult{
+				Type: InlineQueryResultTypeAudio,
+				Id:   &id,
+			},
+			AudioFileId: &audioFileId,
+		}, &id
+	}
+
+	return &InlineQueryResultCachedAudio{}, nil
+}
+
+////////////////////////////////
 // Helper functions for Update
 //
 
@@ -157,6 +413,7 @@ func (u *Update) HasCallbackQuery() bool {
 	return u.CallbackQuery != nil
 }
 
+////////////////////////////////
 // Helper functions for User
 //
 
@@ -168,6 +425,7 @@ func (u User) String() string {
 	return fmt.Sprintf("%+v", u)
 }
 
+////////////////////////////////
 // Helper functions for Chat
 //
 
@@ -179,6 +437,7 @@ func (c Chat) String() string {
 	return fmt.Sprintf("%+v", c)
 }
 
+////////////////////////////////
 // Helper functions for Message
 //
 
@@ -315,6 +574,7 @@ func (m *Message) HasPinnedMessage() bool {
 	return m.PinnedMessage != nil
 }
 
+////////////////////////////////
 // Helper functions for InlineQuery
 //
 
@@ -326,6 +586,7 @@ func (i InlineQuery) String() string {
 	return fmt.Sprintf("%+v", i)
 }
 
+////////////////////////////////
 // Helper functions for ChosenInlineResult
 //
 
