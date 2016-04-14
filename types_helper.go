@@ -152,6 +152,11 @@ func (u *Update) HasChosenInlineResult() bool {
 	return u.ChosenInlineResult != nil
 }
 
+// Check if Update has CallbackQuery
+func (u *Update) HasCallbackQuery() bool {
+	return u.CallbackQuery != nil
+}
+
 // Helper functions for User
 //
 
@@ -187,7 +192,7 @@ func (m Message) String() string {
 
 // Check if Message has Forward.
 func (m *Message) HasForward() bool {
-	return m.ForwardDate > 0
+	return m.ForwardFrom != nil && m.ForwardDate > 0
 }
 
 // Check if Message has ReplyTo.
@@ -198,6 +203,11 @@ func (m *Message) HasReplyTo() bool {
 // Check if Message has Text.
 func (m *Message) HasText() bool {
 	return m.Text != nil
+}
+
+// Check if Message has MessageEntities
+func (m *Message) HasMessageEntities() bool {
+	return len(m.Entities) > 0
 }
 
 // Check if Message has Audio.
@@ -225,6 +235,11 @@ func (m *Message) HasVideo() bool {
 	return m.Video != nil
 }
 
+// Check if Message has Voice.
+func (m *Message) HasVoice() bool {
+	return m.Voice != nil
+}
+
 // Check if Message has Caption.
 func (m *Message) HasCaption() bool {
 	return m.Caption != nil
@@ -238,6 +253,11 @@ func (m *Message) HasContact() bool {
 // Check if Message has Location.
 func (m *Message) HasLocation() bool {
 	return m.Location != nil
+}
+
+// Check if Message has Venue.
+func (m *Message) HasVenue() bool {
+	return m.Venue != nil
 }
 
 // Check if Message has NewChatParticipant.
@@ -268,6 +288,31 @@ func (m *Message) HasDeleteChatPhoto() bool {
 // Check if Message has GroupChatCreated.
 func (m *Message) HasGroupChatCreated() bool {
 	return m.GroupChatCreated
+}
+
+// Check if Message has SupergroupChatCreated.
+func (m *Message) HasSupergroupChatCreated() bool {
+	return m.SupergroupChatCreated
+}
+
+// Check if Message has ChannelChatCreated.
+func (m *Message) HasChannelChatCreated() bool {
+	return m.ChannelChatCreated
+}
+
+// Check if Message has MigrateToChatId.
+func (m *Message) HasMigrateToChatId() bool {
+	return m.MigrateToChatId > 0
+}
+
+// Check if Message has MigrateFromChatId.
+func (m *Message) HasMigrateFromChatId() bool {
+	return m.MigrateFromChatId > 0
+}
+
+// Check if Message has PinnedMessage.
+func (m *Message) HasPinnedMessage() bool {
+	return m.PinnedMessage != nil
 }
 
 // Helper functions for InlineQuery
