@@ -25,7 +25,7 @@ func (b *Bot) GetMe() (result ApiResultUser) {
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: parse_mode, disable_web_page_preview, reply_to_message_id, and reply_markup.
+// options include: parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendmessage
 func (b *Bot) SendMessage(chatId interface{}, text *string, options map[string]interface{}) (result ApiResultMessage) {
@@ -48,6 +48,8 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options map[string]i
 //
 // chatId and fromChatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
+// options include: disable_notification
+//
 // https://core.telegram.org/bots/api#forwardmessage
 func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, messageId int) (result ApiResultMessage) {
 	// essential params
@@ -64,7 +66,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: caption, reply_to_message_id, and reply_markup.
+// options include: caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
@@ -95,7 +97,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[s
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: duration, performer, title, reply_to_message_id, and reply_markup.
+// options include: duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
@@ -126,7 +128,7 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[s
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: reply_to_message_id, and reply_markup.
+// options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
@@ -157,7 +159,7 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: reply_to_message_id, and reply_markup.
+// options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
@@ -188,7 +190,7 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options m
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: duration, caption, reply_to_message_id, and reply_markup.
+// options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
@@ -219,7 +221,7 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[s
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: duration, reply_to_message_id, and reply_markup.
+// options include: disable_notification, duration, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[string]interface{}) (result ApiResultMessage) {
@@ -250,7 +252,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[s
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: reply_to_message_id, and reply_markup.
+// options include: display_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendlocation
 func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, options map[string]interface{}) (result ApiResultMessage) {
@@ -270,11 +272,59 @@ func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, opti
 	return b.requestResultMessage("sendLocation", params)
 }
 
-// Send chat action.
+// Send venues.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// action can be one of: typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, or find_location
+// options include: foursquare_id, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendvenue
+func (b *Bot) SendVenue(chatId interface{}, latitude, longitude float32, title, address *string, options map[string]interface{}) (result ApiResultMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":   chatId,
+		"latitude":  latitude,
+		"longitude": longitude,
+		"title":     *title,
+		"address":   *address,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResultMessage("sendVenue", params)
+}
+
+// Send contacts.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: last_name, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendvenue
+func (b *Bot) SendContact(chatId interface{}, phoneNumber, firstName *string, options map[string]interface{}) (result ApiResultMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":      chatId,
+		"phone_number": phoneNumber,
+		"first_name":   firstName,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResultMessage("sendVenue", params)
+}
+
+// Send chat action.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
 // https://core.telegram.org/bots/api#sendchataction
 func (b *Bot) SendChatAction(chatId interface{}, action ChatAction) (result ApiResult) {
@@ -307,23 +357,6 @@ func (b *Bot) GetUserProfilePhotos(userId int, options map[string]interface{}) (
 	return b.requestResultUserProfilePhotos("getUserProfilePhotos", params)
 }
 
-// Get updates.
-//
-// options include: offset, limit, and timeout.
-//
-// https://core.telegram.org/bots/api#getupdates
-func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResultUpdates) {
-	// optional params
-	params := map[string]interface{}{}
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
-	}
-
-	return b.requestResultUpdates("getUpdates", params)
-}
-
 // Get file info and prepare for download.
 //
 // https://core.telegram.org/bots/api#getfile
@@ -341,11 +374,136 @@ func (b *Bot) GetFileUrl(file File) string {
 	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.token, *file.FilePath)
 }
 
+// Kick chat member
+//
+// https://core.telegram.org/bots/api#kickchatmember
+func (b *Bot) KickChatMember(chatId interface{}, userId int) bool {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"user_id": userId,
+	}
+
+	return b.requestBool("kickChatMember", params)
+}
+
+// Unban chat member
+//
+//https://core.telegram.org/bots/api#unbanchatmember
+func (b *Bot) UnbanChatMember(chatId interface{}, userId int) bool {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"user_id": userId,
+	}
+
+	return b.requestBool("unbanChatMember", params)
+}
+
+// Answer callback query
+//
+// options include: text and show_alert
+//
+// https://core.telegram.org/bots/api#answercallbackquery
+func (b *Bot) AnswerCallbackQuery(callbackQueryId *string, options map[string]interface{}) bool {
+	// essential params
+	params := map[string]interface{}{
+		"callback_query_id": *callbackQueryId,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestBool("answerCallbackQuery", params)
+}
+
+// Updating messages
+//
+// https://core.telegram.org/bots/api#updating-messages
+
+// Edit text of message
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// other options: parse_mode, disable_web_page_preview, and reply_markup
+//
+// https://core.telegram.org/bots/api#editmessagetext
+func (b *Bot) EditMessageText(text *string, options map[string]interface{}) (result ApiResultMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"text": *text,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResultMessage("editMessageText", params)
+}
+
+// Edit caption of message
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// other options: reply_markup
+//
+// https://core.telegram.org/bots/api#editmessagecaption
+func (b *Bot) EditMessageCaption(caption *string, options map[string]interface{}) (result ApiResultMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"caption": *caption,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResultMessage("editMessageCaption", params)
+}
+
+// Edit reply markup of message
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// other options: reply_markup
+//
+// https://core.telegram.org/bots/api#editmessagereplymarkup
+func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result ApiResultMessage) {
+	return b.requestResultMessage("editMessageReplyMarkup", options)
+}
+
+// Get updates.
+//
+// options include: offset, limit, and timeout.
+//
+// https://core.telegram.org/bots/api#getupdates
+func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResultUpdates) {
+	// optional params
+	params := map[string]interface{}{}
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResultUpdates("getUpdates", params)
+}
+
 // Send answers to an inline query.
 //
 // results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, or InlineQueryResultVideo.
 //
-// options include: cache_time, is_personal, and next_offset.
+// options include: cache_time, is_personal, next_offset, switch_pm_text, and switch_pm_parameter.
 //
 // https://core.telegram.org/bots/api#answerinlinequery
 func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, options map[string]interface{}) (result ApiResult) {
@@ -669,6 +827,31 @@ func (b *Bot) requestResultFile(method string, params map[string]interface{}) (r
 	b.error(errStr)
 
 	return ApiResultFile{Ok: false, Description: &errStr}
+}
+
+// Send request for True/False result.
+func (b *Bot) requestBool(method string, params map[string]interface{}) bool {
+	var errStr string
+
+	if resp, success := b.sendRequest(method, params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			if string(body) == "True" {
+				return true
+			} else {
+				return false
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("%s failed", method)
+	}
+
+	b.error(errStr)
+
+	return false
 }
 
 // Handle Webhook request.

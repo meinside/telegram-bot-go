@@ -1,13 +1,6 @@
 // https://core.telegram.org/bots/api#available-types
 package telegrambot
 
-import (
-	"crypto/rand"
-	"encoding/json"
-	"fmt"
-	"io"
-)
-
 // Chat types
 type ChatType string
 
@@ -43,19 +36,43 @@ const (
 type InlineQueryResultType string
 
 const (
-	InlineQueryResultTypeArticle  InlineQueryResultType = "article"
-	InlineQueryResultTypePhoto    InlineQueryResultType = "photo"
-	InlineQueryResultTypeGif      InlineQueryResultType = "gif"
-	InlineQueryResultTypeMpeg4Gif InlineQueryResultType = "mpeg4_gif"
-	InlineQueryResultTypeVideo    InlineQueryResultType = "video"
+	InlineQueryResultTypeArticle        InlineQueryResultType = "article"
+	InlineQueryResultTypePhoto          InlineQueryResultType = "photo"
+	InlineQueryResultTypeGif            InlineQueryResultType = "gif"
+	InlineQueryResultTypeMpeg4Gif       InlineQueryResultType = "mpeg4_gif"
+	InlineQueryResultTypeVideo          InlineQueryResultType = "video"
+	InlineQueryResultTypeAudio          InlineQueryResultType = "audio"
+	InlineQueryResultTypeVoice          InlineQueryResultType = "voice"
+	InlineQueryResultTypeDocument       InlineQueryResultType = "document"
+	InlineQueryResultTypeLocation       InlineQueryResultType = "location"
+	InlineQueryResultTypeVenue          InlineQueryResultType = "venue"
+	InlineQueryResultTypeContact        InlineQueryResultType = "contact"
+	InlineQueryResultTypeCachedPhoto    InlineQueryResultType = "photo"
+	InlineQueryResultTypeCachedGif      InlineQueryResultType = "gif"
+	InlineQueryResultTypeCachedMpeg4Gif InlineQueryResultType = "mpeg4_gif"
+	InlineQueryResultTypeCachedSticker  InlineQueryResultType = "sticker"
+	InlineQueryResultTypeCachedDocument InlineQueryResultType = "document"
+	InlineQueryResultTypeCachedVideo    InlineQueryResultType = "video"
+	InlineQueryResultTypeCachedVoice    InlineQueryResultType = "voice"
+	InlineQueryResultTypeCachedAudio    InlineQueryResultType = "audio"
 )
 
-// Video mime types
-type VideoMimeType string
+// Message Entity Types
+//
+// https://core.telegram.org/bots/api#messageentity
+type MessageEntityType string
 
 const (
-	VideoMimeTypeHtml VideoMimeType = "text/html"
-	VideoMimeTypeMp4  VideoMimeType = "video/mp4"
+	MessageEntityTypeMention    = "mention"
+	MessageEntityTypeHashTag    = "hashtag"
+	MessageEntityTypeBotCommand = "bot_command"
+	MessageEntityTypeUrl        = "url"
+	MessageEntityTypeEmail      = "email"
+	MessageEntityTypeBold       = "bold"
+	MessageEntityTypeItalic     = "italic"
+	MessageEntityTypeCode       = "code"
+	MessageEntityTypePre        = "pre"
+	MessageEntityTypeTextLink   = "text_link"
 )
 
 // API result
@@ -108,28 +125,7 @@ type Update struct {
 	Message            *Message            `json:"message,omitempty"`
 	InlineQuery        *InlineQuery        `json:"inline_query,omitempty"`
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
-}
-
-func (u Update) String() string {
-	if json, err := json.Marshal(u); err == nil {
-		return fmt.Sprintf("%T%s", u, string(json))
-	}
-	return fmt.Sprintf("%+v", u)
-}
-
-// Check if Update has Message.
-func (u *Update) HasMessage() bool {
-	return u.Message != nil
-}
-
-// Check if Update has InlineQuery
-func (u *Update) HasInlineQuery() bool {
-	return u.InlineQuery != nil
-}
-
-// Check if Update has ChosenInlineResult
-func (u *Update) HasChosenInlineResult() bool {
-	return u.ChosenInlineResult != nil
+	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
 }
 
 // User
@@ -140,13 +136,6 @@ type User struct {
 	FirstName *string `json:"first_name"`
 	LastName  *string `json:"last_name,omitempty"`
 	Username  *string `json:"username,omitempty"`
-}
-
-func (u User) String() string {
-	if json, err := json.Marshal(u); err == nil {
-		return fmt.Sprintf("%T%s", u, string(json))
-	}
-	return fmt.Sprintf("%+v", u)
 }
 
 // Chat
@@ -161,13 +150,6 @@ type Chat struct {
 	LastName  *string   `json:"last_name,omitempty"`
 }
 
-func (c Chat) String() string {
-	if json, err := json.Marshal(c); err == nil {
-		return fmt.Sprintf("%T%s", c, string(json))
-	}
-	return fmt.Sprintf("%+v", c)
-}
-
 // Audio
 //
 // https://core.telegram.org/bots/api#audio
@@ -178,6 +160,16 @@ type Audio struct {
 	Title     *string `json:"title,omitempty"`
 	MimeType  *string `json:"mime_type,omitempty"`
 	FileSize  int     `json:"file_size,omitempty"`
+}
+
+// MessageEntity
+//
+// https://core.telegram.org/bots/api#messageentity
+type MessageEntity struct {
+	Type   MessageEntityType `json:"type"`
+	Offset int               `json:"offset"`
+	Length int               `json:"length"`
+	Url    *string           `json:"url,omitempty"`
 }
 
 // PhotoSize
@@ -253,6 +245,16 @@ type Location struct {
 	Latitude  float32 `json:"latitude"`
 }
 
+// Venue
+//
+// https://core.telegram.org/bots/api#venue
+type Venue struct {
+	Location     *Location `json:"location"`
+	Title        *string   `json:"title"`
+	Address      *string   `json:"address"`
+	FoursquareId *string   `json:"foursquare_id,omitempty"`
+}
+
 // UserProfilePhotos
 //
 // https://core.telegram.org/bots/api#userprofilephotos
@@ -274,10 +276,19 @@ type File struct {
 //
 // https://core.telegram.org/bots/api#replykeyboardmarkup
 type ReplyKeyboardMarkup struct {
-	Keyboard        [][]string `json:"keyboard"`
-	ResizeKeyboard  bool       `json:"resize_keyboard,omitempty"`
-	OneTimeKeyboard bool       `json:"one_time_keyboard,omitempty"`
-	Selective       bool       `json:"selective,omitempty"`
+	Keyboard        [][]KeyboardButton `json:"keyboard"`
+	ResizeKeyboard  bool               `json:"resize_keyboard,omitempty"`
+	OneTimeKeyboard bool               `json:"one_time_keyboard,omitempty"`
+	Selective       bool               `json:"selective,omitempty"`
+}
+
+// KeyboardButton
+//
+// https://core.telegram.org/bots/api#keyboardbutton
+type KeyboardButton struct {
+	Text            *string `json:"text"`
+	RequestContact  bool    `json:"request_contact,omitempty"`
+	RequestLocation bool    `json:"request_location,omitempty"`
 }
 
 // ReplyKeyboardHide
@@ -286,6 +297,34 @@ type ReplyKeyboardMarkup struct {
 type ReplyKeyboardHide struct {
 	HideKeyboard bool `json:"hide_keyboard"`
 	Selective    bool `json:"selective,omitempty"`
+}
+
+// InlineKeyboardMarkup
+//
+// https://core.telegram.org/bots/api#inlinekeyboardmarkup
+type InlineKeyboardMarkup struct {
+	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+}
+
+// InlineKeyboardButton
+//
+// https://core.telegram.org/bots/api#inlinekeyboardbutton
+type InlineKeyboardButton struct {
+	Text              *string `json:"text"`
+	Url               *string `json:"url,omitempty"`
+	CallbackData      *string `json:"callback_data,omitempty"`
+	SwitchInlineQuery *string `json:"switch_inline_query,omitempty"`
+}
+
+// CallbackQuery
+//
+// https://core.telegram.org/bots/api#callbackquery
+type CallbackQuery struct {
+	Id              *string  `json:"id"`
+	From            *User    `json:"from"`
+	Message         *Message `json:"message,omitempty"`
+	InlineMessageId *string  `json:"inline_message_id,omitempty"`
+	Data            *string  `json:"data"`
 }
 
 // ForceReply
@@ -300,154 +339,75 @@ type ForceReply struct {
 //
 // https://core.telegram.org/bots/api#message
 type Message struct {
-	MessageId             int         `json:"message_id"`
-	From                  *User       `json:"from,omitempty"`
-	Date                  int         `json:"date"`
-	Chat                  *Chat       `json:"chat"`
-	ForwardFrom           *User       `json:"forward_from,omitempty"`
-	ForwardDate           int         `json:"forward_date,omitempty"`
-	ReplyToMessage        *Message    `json:"reply_to_message,omitempty"`
-	Text                  *string     `json:"text,omitempty"`
-	Audio                 *Audio      `json:"audio,omitempty"`
-	Document              *Document   `json:"document,omitempty"`
-	Photo                 []PhotoSize `json:"photo,omitempty"`
-	Sticker               *Sticker    `json:"sticker,omitempty"`
-	Video                 *Video      `json:"video,omitempty"`
-	Voice                 *Voice      `json:"voice,omitempty"`
-	Caption               *string     `json:"caption,omitempty"`
-	Contact               *Contact    `json:"contact,omitempty"`
-	Location              *Location   `json:"location,omitempty"`
-	NewChatParticipant    *User       `json:"new_chat_participant,omitempty"`
-	LeftChatParticipant   *User       `json:"left_chat_participant,omitempty"`
-	NewChatTitle          *string     `json:"new_chat_title,omitempty"`
-	NewChatPhoto          []PhotoSize `json:"new_chat_photo,omitempty"`
-	DeleteChatPhoto       bool        `json:"delete_chat_photo,omitempty"`
-	GroupChatCreated      bool        `json:"group_chat_created,omitempty"`
-	SupergroupChatCreated bool        `json:"supergroup_chat_created,omitempty"`
-	ChannelChatCreated    bool        `json:"channel_chat_created,omitempty"`
-	MigrateToChatId       int         `json:"migrate_to_chat_id,omitempty"`
-	MigrateFromChatId     int         `json:"migrate_from_chat_id,omitempty"`
-}
-
-func (m Message) String() string {
-	if json, err := json.Marshal(m); err == nil {
-		return fmt.Sprintf("%T%s", m, string(json))
-	}
-	return fmt.Sprintf("%+v", m)
-}
-
-// Check if Message has Forward.
-func (m *Message) HasForward() bool {
-	return m.ForwardDate > 0
-}
-
-// Check if Message has ReplyTo.
-func (m *Message) HasReplyTo() bool {
-	return m.ReplyToMessage != nil
-}
-
-// Check if Message has Text.
-func (m *Message) HasText() bool {
-	return m.Text != nil
-}
-
-// Check if Message has Audio.
-func (m *Message) HasAudio() bool {
-	return m.Audio != nil
-}
-
-// Check if Message has Document.
-func (m *Message) HasDocument() bool {
-	return m.Document != nil
-}
-
-// Check if Message has Photo.
-func (m *Message) HasPhoto() bool {
-	return len(m.Photo) > 0
-}
-
-// Check if Message has Sticker.
-func (m *Message) HasSticker() bool {
-	return m.Sticker != nil
-}
-
-// Check if Message has Video.
-func (m *Message) HasVideo() bool {
-	return m.Video != nil
-}
-
-// Check if Message has Caption.
-func (m *Message) HasCaption() bool {
-	return m.Caption != nil
-}
-
-// Check if Message has Contact.
-func (m *Message) HasContact() bool {
-	return m.Contact != nil
-}
-
-// Check if Message has NewChatParticipant.
-func (m *Message) HasNewChatParticipant() bool {
-	return m.NewChatParticipant != nil
-}
-
-// Check if Message has LeftChatParticipant.
-func (m *Message) HasLeftChatParticipant() bool {
-	return m.LeftChatParticipant != nil
-}
-
-// Check if Message has NewChatTitle.
-func (m *Message) HasNewChatTitle() bool {
-	return m.NewChatTitle != nil
-}
-
-// Check if Message has NewChatPhoto.
-func (m *Message) HasNewChatPhoto() bool {
-	return len(m.NewChatPhoto) > 0
-}
-
-// Check if Message has DeleteChatPhoto.
-func (m *Message) HasDeleteChatPhoto() bool {
-	return m.DeleteChatPhoto
-}
-
-// Check if Message has GroupChatCreated.
-func (m *Message) HasGroupChatCreated() bool {
-	return m.GroupChatCreated
+	MessageId             int             `json:"message_id"`
+	From                  *User           `json:"from,omitempty"`
+	Date                  int             `json:"date"`
+	Chat                  *Chat           `json:"chat"`
+	ForwardFrom           *User           `json:"forward_from,omitempty"`
+	ForwardDate           int             `json:"forward_date,omitempty"`
+	ReplyToMessage        *Message        `json:"reply_to_message,omitempty"`
+	Text                  *string         `json:"text,omitempty"`
+	Entities              []MessageEntity `json:"entities,omitempty"`
+	Audio                 *Audio          `json:"audio,omitempty"`
+	Document              *Document       `json:"document,omitempty"`
+	Photo                 []PhotoSize     `json:"photo,omitempty"`
+	Sticker               *Sticker        `json:"sticker,omitempty"`
+	Video                 *Video          `json:"video,omitempty"`
+	Voice                 *Voice          `json:"voice,omitempty"`
+	Caption               *string         `json:"caption,omitempty"`
+	Contact               *Contact        `json:"contact,omitempty"`
+	Location              *Location       `json:"location,omitempty"`
+	Venue                 *Venue          `json:"venue,omitempty"`
+	NewChatMember         *User           `json:"new_chat_member,omitempty"`
+	LeftChatMember        *User           `json:"left_chat_member,omitempty"`
+	NewChatTitle          *string         `json:"new_chat_title,omitempty"`
+	NewChatPhoto          []PhotoSize     `json:"new_chat_photo,omitempty"`
+	DeleteChatPhoto       bool            `json:"delete_chat_photo,omitempty"`
+	GroupChatCreated      bool            `json:"group_chat_created,omitempty"`
+	SupergroupChatCreated bool            `json:"supergroup_chat_created,omitempty"`
+	ChannelChatCreated    bool            `json:"channel_chat_created,omitempty"`
+	MigrateToChatId       int             `json:"migrate_to_chat_id,omitempty"`
+	MigrateFromChatId     int             `json:"migrate_from_chat_id,omitempty"`
+	PinnedMessage         *Message        `json:"pinned_message,omitempty"`
 }
 
 // Inline query
 //
 // https://core.telegram.org/bots/api#inlinequery
 type InlineQuery struct {
-	Id     *string `json:"id"`
-	From   *User   `json:"from"`
-	Query  *string `json:"query"`
-	Offset *string `json:"offset"`
-}
-
-func (i InlineQuery) String() string {
-	if json, err := json.Marshal(i); err == nil {
-		return fmt.Sprintf("%T%s", i, string(json))
-	}
-	return fmt.Sprintf("%+v", i)
+	Id       *string   `json:"id"`
+	From     *User     `json:"from"`
+	Location *Location `json:"location,omitempty"`
+	Query    *string   `json:"query"`
+	Offset   *string   `json:"offset"`
 }
 
 // Chosen inline result
 //
 // https://core.telegram.org/bots/api#choseninlineresult
 type ChosenInlineResult struct {
-	ResultId *string `json:"result_id"`
-	From     *User   `json:"from"`
-	Query    *string `json:"query"`
+	ResultId        *string   `json:"result_id"`
+	From            *User     `json:"from"`
+	Location        *Location `json:"location,omitempty"`
+	InlineMessageId *string   `json:"inline_message_id,omitempty"`
+	Query           *string   `json:"query"`
 }
 
-func (c ChosenInlineResult) String() string {
-	if json, err := json.Marshal(c); err == nil {
-		return fmt.Sprintf("%T%s", c, string(json))
-	}
-	return fmt.Sprintf("%+v", c)
-}
+// Video mime types for inline query
+type VideoMimeType string
+
+const (
+	VideoMimeTypeHtml VideoMimeType = "text/html"
+	VideoMimeTypeMp4  VideoMimeType = "video/mp4"
+)
+
+// Document mime types for inline query
+type DocumentMimeType string
+
+const (
+	DocumentMimeTypePdf DocumentMimeType = "application/pdf"
+	DocumentMimeTypeZip DocumentMimeType = "application/zip"
+)
 
 // Inline query results
 //
@@ -456,185 +416,216 @@ type InlineQueryResult struct {
 	Type InlineQueryResultType `json:"type"`
 	Id   *string               `json:"id"`
 }
-type InlineQueryResultArticle struct {
+type InlineQueryResultArticle struct { // https://core.telegram.org/bots/api#inlinequeryresultarticle
 	InlineQueryResult
-	Title                 *string    `json:"title"`
+	Title               *string               `json:"title"`
+	InputMessageContent InputMessageContent   `json:"input_message_content"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	Url                 *string               `json:"url,omitempty"`
+	HideUrl             bool                  `json:"hide_url,omitempty"`
+	Description         *string               `json:"description,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url,omitempty"`
+	ThumbWidth          int                   `json:"thumb_width,omitempty"`
+	ThumbHeight         int                   `json:"thumb_height,omitempty"`
+}
+type InlineQueryResultPhoto struct { // https://core.telegram.org/bots/api#inlinequeryresultphoto
+	InlineQueryResult
+	PhotoUrl            *string               `json:"photo_url"`
+	PhotoWidth          int                   `json:"photo_width,omitempty"`
+	PhotoHeight         int                   `json:"photo_height,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url"`
+	Title               *string               `json:"title,omitempty"`
+	Description         *string               `json:"description,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultGif struct { // https://core.telegram.org/bots/api#inlinequeryresultgif
+	InlineQueryResult
+	GifUrl              *string               `json:"gif_url"`
+	GifWidth            int                   `json:"gif_width,omitempty"`
+	GifHeight           int                   `json:"gif_height,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url"`
+	Title               *string               `json:"title,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultMpeg4Gif struct { // https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
+	InlineQueryResult
+	Mpeg4Url            *string               `json:"mpeg4_url"`
+	Mpeg4Width          int                   `json:"mpeg4_width,omitempty"`
+	Mpeg4Height         int                   `json:"mpeg4_height,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url"`
+	Title               *string               `json:"title,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultVideo struct { // https://core.telegram.org/bots/api#inlinequeryresultvideo
+	InlineQueryResult
+	VideoUrl            *string               `json:"video_url"`
+	MimeType            *VideoMimeType        `json:"mime_type"`
+	ThumbUrl            *string               `json:"thumb_url"`
+	Title               *string               `json:"title"`
+	Caption             *string               `json:"caption,omitempty"`
+	VideoWidth          int                   `json:"video_width,omitempty"`
+	VideoHeight         int                   `json:"video_height,omitempty"`
+	VideoDuration       int                   `json:"video_duration,omitempty"`
+	Description         *string               `json:"description,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultAudio struct { // https://core.telegram.org/bots/api#inlinequeryresultaudio
+	InlineQueryResult
+	AudioUrl            *string               `json:"audio_url"`
+	Title               *string               `json:"title"`
+	Performer           *string               `json:"performer,omitempty"`
+	AudioDuration       int                   `json:"audio_duration,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultVoice struct { // https://core.telegram.org/bots/api#inlinequeryresultvoice
+	InlineQueryResult
+	VoiceUrl            *string               `json:"voice_url"`
+	Title               *string               `json:"title"`
+	VoiceDuration       int                   `json:"voice_duration,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultDocument struct { // https://core.telegram.org/bots/api#inlinequeryresultdocument
+	InlineQueryResult
+	Title               *string               `json:"title"`
+	Caption             *string               `json:"caption,omitempty"`
+	DocumentUrl         *string               `json:"document_url,omitempty"`
+	MimeType            *DocumentMimeType     `json:"mime_type"`
+	Description         *string               `json:"description,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url,omitempty"`
+	ThumbWidth          int                   `json:"thumb_width,omitempty"`
+	ThumbHeight         int                   `json:"thumb_height,omitempty"`
+}
+type InlineQueryResultLocation struct { // https://core.telegram.org/bots/api#inlinequeryresultlocation
+	InlineQueryResult
+	Latitude            float32               `json:"latitude"`
+	Longitude           float32               `json:"longitude"`
+	Title               *string               `json:"title"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url,omitempty"`
+	ThumbWidth          int                   `json:"thumb_width,omitempty"`
+	ThumbHeight         int                   `json:"thumb_height,omitempty"`
+}
+type InlineQueryResultVenue struct { // https://core.telegram.org/bots/api#inlinequeryresultvenue
+	InlineQueryResult
+	Latitude            float32               `json:"latitude"`
+	Longitude           float32               `json:"longitude"`
+	Title               *string               `json:"title"`
+	Address             *string               `json:"address"`
+	FoursquareId        *string               `json:"foursquare_id,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url,omitempty"`
+	ThumbWidth          int                   `json:"thumb_width,omitempty"`
+	ThumbHeight         int                   `json:"thumb_height,omitempty"`
+}
+type InlineQueryResultContact struct { // https://core.telegram.org/bots/api#inlinequeryresultcontact
+	InlineQueryResult
+	PhoneNumber         *string               `json:"phone_number"`
+	FirstName           *string               `json:"first_name"`
+	LastName            *string               `json:"last_name,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+	ThumbUrl            *string               `json:"thumb_url,omitempty"`
+	ThumbWidth          int                   `json:"thumb_width,omitempty"`
+	ThumbHeight         int                   `json:"thumb_height,omitempty"`
+}
+type InlineQueryResultCachedPhoto struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedphoto
+	InlineQueryResult
+	PhotoFileId         *string               `json:"photo_file_id"`
+	Title               *string               `json:"title,omitempty"`
+	Description         *string               `json:"description,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultCachedGif struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedgif
+	InlineQueryResult
+	GifFileId           *string               `json:"gif_file_id"`
+	Title               *string               `json:"title,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultCachedMpeg4Gif struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif
+	InlineQueryResult
+	Mpeg4FileId         *string               `json:"mpeg4_file_id"`
+	Title               *string               `json:"title,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultCachedSticker struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedsticker
+	InlineQueryResult
+	StickerFileId       *string               `json:"sticker_file_id"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultCachedDocument struct { // https://core.telegram.org/bots/api#inlinequeryresultcacheddocument
+	InlineQueryResult
+	Title               *string               `json:"title"`
+	DocumentFileId      *string               `json:"document_file_id"`
+	Description         *string               `json:"description,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultCachedVideo struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedvideo
+	InlineQueryResult
+	VideoFileId         *string               `json:"video_file_id"`
+	Title               *string               `json:"title"`
+	Description         *string               `json:"description,omitempty"`
+	Caption             *string               `json:"caption,omitempty"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultCachedVoice struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedvoice
+	InlineQueryResult
+	VoiceFileId         *string               `json:"voice_file_id"`
+	Title               *string               `json:"title"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+type InlineQueryResultCachedAudio struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedaudio
+	InlineQueryResult
+	AudioFileId         *string               `json:"audio_file_id"`
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+}
+
+// InputMessageContent
+//
+// https://core.telegram.org/bots/api#inputmessagecontent
+type InputMessageContent interface{}
+type InputTextMessageContent struct { // https://core.telegram.org/bots/api#inputtextmessagecontent
 	MessageText           *string    `json:"message_text"`
 	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
 	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
-	Url                   *string    `json:"url,omitempty"`
-	HideUrl               bool       `json:"hide_url,omitempty"`
-	Description           *string    `json:"description,omitempty"`
-	ThumbUrl              *string    `json:"thumb_url,omitempty"`
-	ThumbWidth            int        `json:"thumb_width,omitempty"`
-	ThumbHeight           int        `json:"thumb_height,omitempty"`
 }
-type InlineQueryResultPhoto struct {
-	InlineQueryResult
-	PhotoUrl              *string    `json:"photo_url"`
-	PhotoWidth            int        `json:"photo_width,omitempty"`
-	PhotoHeight           int        `json:"photo_height,omitempty"`
-	ThumbUrl              *string    `json:"thumb_url"`
-	Title                 *string    `json:"title,omitempty"`
-	Description           *string    `json:"description,omitempty"`
-	Caption               *string    `json:"caption,omitempty"`
-	MessageText           *string    `json:"message_text,omitempty"`
-	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
-	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
+type InputLocationMessageContent struct { // https://core.telegram.org/bots/api#inputlocationmessagecontent
+	Latitude  float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
 }
-type InlineQueryResultGif struct {
-	InlineQueryResult
-	GifUrl                *string    `json:"gif_url"`
-	GifWidth              int        `json:"gif_width,omitempty"`
-	GifHeight             int        `json:"gif_height,omitempty"`
-	ThumbUrl              *string    `json:"thumb_url"`
-	Title                 *string    `json:"title,omitempty"`
-	Caption               *string    `json:"caption,omitempty"`
-	MessageText           *string    `json:"message_text,omitempty"`
-	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
-	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
+type InputVenueMessageContent struct { // https://core.telegram.org/bots/api#inputvenuemessagecontent
+	Latitude     float32 `json:"latitude"`
+	Longitude    float32 `json:"longitude"`
+	Title        *string `json:"title"`
+	Address      *string `json:"address"`
+	FoursquareId *string `json:"foursquare_id,omitempty"`
 }
-type InlineQueryResultMpeg4Gif struct {
-	InlineQueryResult
-	Mpeg4Url              *string    `json:"mpeg4_url"`
-	Mpeg4Width            int        `json:"mpeg4_width,omitempty"`
-	Mpeg4Height           int        `json:"mpeg4_height,omitempty"`
-	ThumbUrl              *string    `json:"thumb_url"`
-	Title                 *string    `json:"title,omitempty"`
-	Caption               *string    `json:"caption,omitempty"`
-	MessageText           *string    `json:"message_text,omitempty"`
-	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
-	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
-}
-type InlineQueryResultVideo struct {
-	InlineQueryResult
-	VideoUrl              *string        `json:"video_url"`
-	MimeType              *VideoMimeType `json:"mime_type"`
-	MessageText           *string        `json:"message_text"`
-	ParseMode             *ParseMode     `json:"parse_mode,omitempty"`
-	DisableWebPagePreview bool           `json:"disable_web_page_preview,omitempty"`
-	VideoWidth            int            `json:"video_width,omitempty"`
-	VideoHeight           int            `json:"video_height,omitempty"`
-	VideoDuration         int            `json:"video_duration,omitempty"`
-	ThumbUrl              *string        `json:"thumb_url"`
-	Title                 *string        `json:"title"`
-	Description           *string        `json:"description,omitempty"`
-}
-
-// Generate a random UUID according to RFC-4122
-//
-// http://play.golang.org/p/4FkNSiUDMg
-func newUUID() (string, error) {
-	uuid := make([]byte, 16)
-	n, err := io.ReadFull(rand.Reader, uuid)
-	if n != len(uuid) || err != nil {
-		return "", err
-	}
-
-	// variant bits; see section 4.1.1
-	uuid[8] = uuid[8]&^0xc0 | 0x80
-	// version 4 (pseudo-random); see section 4.1.3
-	uuid[6] = uuid[6]&^0xf0 | 0x40
-
-	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
-}
-
-// Helper function for generating a new InlineQueryResultArticle
-//
-// https://core.telegram.org/bots/api#inlinequeryresultarticle
-func NewInlineQueryResultArticle(title, messageText, description string) (newArticle *InlineQueryResultArticle, generatedId *string) {
-	if id, err := newUUID(); err == nil {
-		return &InlineQueryResultArticle{
-			InlineQueryResult: InlineQueryResult{
-				Type: InlineQueryResultTypeArticle,
-				Id:   &id,
-			},
-			Title:       &title,
-			MessageText: &messageText,
-			Description: &description,
-		}, &id
-	}
-
-	return &InlineQueryResultArticle{}, nil
-}
-
-// Helper function for generating a new InlineQueryResultPhoto
-//
-// Photo must be in jpeg format, < 5MB.
-//
-// https://core.telegram.org/bots/api#inlinequeryresultphoto
-func NewInlineQueryResultPhoto(photoUrl, thumbUrl string) (newPhoto *InlineQueryResultPhoto, generatedId *string) {
-	if id, err := newUUID(); err == nil {
-		return &InlineQueryResultPhoto{
-			InlineQueryResult: InlineQueryResult{
-				Type: InlineQueryResultTypePhoto,
-				Id:   &id,
-			},
-			PhotoUrl: &photoUrl,
-			ThumbUrl: &thumbUrl,
-		}, &id
-	}
-
-	return &InlineQueryResultPhoto{}, nil
-}
-
-// Helper function for generating a new InlineQueryResultGif
-//
-// Gif must be in gif format, < 1MB.
-//
-// https://core.telegram.org/bots/api#inlinequeryresultgif
-func NewInlineQueryResultGif(gifUrl, thumbUrl string) (newGif *InlineQueryResultGif, generatedId *string) {
-	if id, err := newUUID(); err == nil {
-		return &InlineQueryResultGif{
-			InlineQueryResult: InlineQueryResult{
-				Type: InlineQueryResultTypeGif,
-				Id:   &id,
-			},
-			GifUrl:   &gifUrl,
-			ThumbUrl: &thumbUrl,
-		}, &id
-	}
-
-	return &InlineQueryResultGif{}, nil
-}
-
-// Helper function for generating a new InlineQueryResultMpeg4Gif
-//
-// Mpeg4 must be in H.264/MPEG-4 AVC video(wihout sound) format, < 1MB.
-//
-// https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
-func NewInlineQueryResultMpeg4Gif(mpeg4Url, thumbUrl string) (newMpeg4Gif *InlineQueryResultMpeg4Gif, generatedId *string) {
-	if id, err := newUUID(); err == nil {
-		return &InlineQueryResultMpeg4Gif{
-			InlineQueryResult: InlineQueryResult{
-				Type: InlineQueryResultTypeMpeg4Gif,
-				Id:   &id,
-			},
-			Mpeg4Url: &mpeg4Url,
-			ThumbUrl: &thumbUrl,
-		}, &id
-	}
-
-	return &InlineQueryResultMpeg4Gif{}, nil
-}
-
-// Helper function for generating a new InlineQueryResultVideo
-//
-// https://core.telegram.org/bots/api#inlinequeryresultvideo
-func NewInlineQueryResultVideo(videoUrl, thumbUrl, title, messageText string, mimeType VideoMimeType) (newVideo *InlineQueryResultVideo, generatedId *string) {
-	if id, err := newUUID(); err == nil {
-		return &InlineQueryResultVideo{
-			InlineQueryResult: InlineQueryResult{
-				Type: InlineQueryResultTypeVideo,
-				Id:   &id,
-			},
-			VideoUrl:    &videoUrl,
-			MimeType:    &mimeType,
-			MessageText: &messageText,
-			ThumbUrl:    &thumbUrl,
-			Title:       &title,
-		}, &id
-	}
-
-	return &InlineQueryResultVideo{}, nil
+type InputContactMessageContent struct { // https://core.telegram.org/bots/api#inputcontactmessagecontent
+	PhoneNumber *string `json:"phone_number"`
+	FirstName   *string `json:"first_name"`
+	LastName    *string `json:"last_name,omitempty"`
 }
