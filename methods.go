@@ -561,12 +561,6 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
-	case []interface{}:
-		if json, err := json.Marshal(param); err == nil {
-			return string(json), true
-		} else {
-			b.error(err.Error())
-		}
 	case ChatAction:
 		if value, ok := param.(ChatAction); ok {
 			return string(value), ok
@@ -579,7 +573,10 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
-	case ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply, InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, InlineQueryResultVideo: // (json) structs
+	case []interface{},
+		InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply,
+		InlineQueryResultCachedAudio, InlineQueryResultCachedDocument, InlineQueryResultCachedGif, InlineQueryResultCachedMpeg4Gif, InlineQueryResultCachedPhoto, InlineQueryResultCachedSticker, InlineQueryResultCachedVideo, InlineQueryResultCachedVoice,
+		InlineQueryResultArticle, InlineQueryResultAudio, InlineQueryResultContact, InlineQueryResultDocument, InlineQueryResultGif, InlineQueryResultLocation, InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue, InlineQueryResultVideo, InlineQueryResultVoice:
 		if json, err := json.Marshal(param); err == nil {
 			return string(json), true
 		} else {
@@ -601,9 +598,7 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 
 	b.verbose("sending request to api url: %s, params: %#v", apiUrl, params)
 
-	if checkIfFileParamExists(params) {
-		// multipart form data
-
+	if checkIfFileParamExists(params) { // multipart form data
 		body := &bytes.Buffer{}
 		writer := multipart.NewWriter(body)
 
@@ -645,9 +640,7 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 		} else {
 			b.error("building request error: %s", err.Error())
 		}
-	} else {
-		// www-form urlencoded
-
+	} else { // www-form urlencoded
 		paramValues := url.Values{}
 		for key, value := range params {
 			if strValue, ok := b.paramToString(value); ok {
