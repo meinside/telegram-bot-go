@@ -151,7 +151,7 @@ func main() {
 It would be useful when you're behind a firewall or something.
 
 ```go
-// sample code for telegram-bot-go (get updates), last update: 2016.01.12.
+// sample code for telegram-bot-go (get updates), last update: 2016.04.14.
 package main
 
 import (
@@ -189,21 +189,52 @@ func main() {
 						b.SendChatAction(update.Message.Chat.Id, bot.ChatActionTyping)
 						time.Sleep(TypingDelaySeconds * time.Second)
 
-						// send message
 						var message string
-						if update.Message.HasText() {
-							message = fmt.Sprintf("I received @%s's message: %s", *update.Message.From.Username, *update.Message.Text)
-						} else {
-							message = fmt.Sprintf("I received @%s's message", *update.Message.From.Username)
-						}
+
+						key1 := "Just a button"
+						key2 := "Request contact"
+						key3 := "Request location"
 						options := map[string]interface{}{
-							"reply_to_message_id": update.Message.MessageId,
+							"reply_to_message_id": update.Message.MessageId, // show original message
+							"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
+								Keyboard: [][]bot.KeyboardButton{
+									[]bot.KeyboardButton{
+										bot.KeyboardButton{
+											Text: &key1, // string only
+										},
+									},
+									[]bot.KeyboardButton{
+										bot.KeyboardButton{
+											Text:           &key2,
+											RequestContact: true, // request contact
+										},
+										bot.KeyboardButton{
+											Text:            &key3,
+											RequestLocation: true, // request location
+										},
+									},
+								},
+							},
 						}
+
+						if update.Message.HasContact() {
+							message = fmt.Sprintf("I received @%s's phone no.: %s", *update.Message.From.Username, *update.Message.Contact.PhoneNumber)
+						} else if update.Message.HasLocation() {
+							message = fmt.Sprintf("I received @%s's location: (%f, %f)", *update.Message.From.Username, update.Message.Location.Latitude, update.Message.Location.Longitude)
+						} else {
+							if update.Message.HasText() {
+								message = fmt.Sprintf("I received @%s's message: %s", *update.Message.From.Username, *update.Message.Text)
+							} else {
+								message = fmt.Sprintf("I received @%s's message", *update.Message.From.Username)
+							}
+
+						}
+						// send message
 						if sent := b.SendMessage(update.Message.Chat.Id, &message, options); !sent.Ok {
 							log.Printf("*** failed to send message: %s\n", *sent.Description)
 						}
 					} else if update.HasInlineQuery() {
-						// articles for test
+						// articles for inline query
 						article1, _ := bot.NewInlineQueryResultArticle(
 							"Star Wars quotes",
 							"I am your father.",
@@ -217,6 +248,8 @@ func main() {
 							article1,
 							article2,
 						}
+
+						// answer inline query
 						if sent := b.AnswerInlineQuery(*update.InlineQuery.Id, results, nil); !sent.Ok {
 							log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 						}

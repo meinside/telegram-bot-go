@@ -235,6 +235,11 @@ func (m *Message) HasContact() bool {
 	return m.Contact != nil
 }
 
+// Check if Message has Location.
+func (m *Message) HasLocation() bool {
+	return m.Location != nil
+}
+
 // Check if Message has NewChatParticipant.
 func (m *Message) HasNewChatMember() bool {
 	return m.NewChatMember != nil
