@@ -597,3 +597,16 @@ func (c ChosenInlineResult) String() string {
 	}
 	return fmt.Sprintf("%+v", c)
 }
+
+////////////////////////////////
+// Helper functions for KeyboardButton
+//
+
+// Helper function for generating a new KeyboardButton
+func NewKeyboardButton(text string, requestContact, requestLocation bool) *KeyboardButton {
+	return &KeyboardButton{
+		Text:            &text,
+		RequestContact:  requestContact,
+		RequestLocation: requestLocation,
+	}
+}
