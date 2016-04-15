@@ -377,27 +377,27 @@ func (b *Bot) GetFileUrl(file File) string {
 // Kick chat member
 //
 // https://core.telegram.org/bots/api#kickchatmember
-func (b *Bot) KickChatMember(chatId interface{}, userId int) bool {
+func (b *Bot) KickChatMember(chatId interface{}, userId int) (result ApiResult) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
 		"user_id": userId,
 	}
 
-	return b.requestBool("kickChatMember", params)
+	return b.requestResult("kickChatMember", params)
 }
 
 // Unban chat member
 //
 //https://core.telegram.org/bots/api#unbanchatmember
-func (b *Bot) UnbanChatMember(chatId interface{}, userId int) bool {
+func (b *Bot) UnbanChatMember(chatId interface{}, userId int) (result ApiResult) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
 		"user_id": userId,
 	}
 
-	return b.requestBool("unbanChatMember", params)
+	return b.requestResult("unbanChatMember", params)
 }
 
 // Answer callback query
@@ -405,7 +405,7 @@ func (b *Bot) UnbanChatMember(chatId interface{}, userId int) bool {
 // options include: text and show_alert
 //
 // https://core.telegram.org/bots/api#answercallbackquery
-func (b *Bot) AnswerCallbackQuery(callbackQueryId *string, options map[string]interface{}) bool {
+func (b *Bot) AnswerCallbackQuery(callbackQueryId *string, options map[string]interface{}) (result ApiResult) {
 	// essential params
 	params := map[string]interface{}{
 		"callback_query_id": *callbackQueryId,
@@ -417,7 +417,7 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryId *string, options map[string]in
 		}
 	}
 
-	return b.requestBool("answerCallbackQuery", params)
+	return b.requestResult("answerCallbackQuery", params)
 }
 
 // Updating messages
@@ -820,31 +820,6 @@ func (b *Bot) requestResultFile(method string, params map[string]interface{}) (r
 	b.error(errStr)
 
 	return ApiResultFile{Ok: false, Description: &errStr}
-}
-
-// Send request for True/False result.
-func (b *Bot) requestBool(method string, params map[string]interface{}) bool {
-	var errStr string
-
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			if string(body) == "True" {
-				return true
-			} else {
-				return false
-			}
-		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
-		}
-	} else {
-		errStr = fmt.Sprintf("%s failed", method)
-	}
-
-	b.error(errStr)
-
-	return false
 }
 
 // Handle Webhook request.
