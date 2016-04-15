@@ -7,7 +7,7 @@ View the [documentation here](https://godoc.org/github.com/meinside/telegram-bot
 ## Install
 
 ```
-$ go get github.com/meinside/telegram-bot-go
+$ go get -u github.com/meinside/telegram-bot-go
 ```
 
 ## Generate a self-signed certificate (when using incoming webhook)
@@ -130,7 +130,6 @@ func main() {
 									} else {
 										message = fmt.Sprintf("I received @%s's message", *webhook.Message.From.Username)
 									}
-
 								}
 								// send message
 								if sent := b.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
@@ -254,7 +253,6 @@ func main() {
 							} else {
 								message = fmt.Sprintf("I received @%s's message", *update.Message.From.Username)
 							}
-
 						}
 						// send message
 						if sent := b.SendMessage(update.Message.Chat.Id, &message, options); !sent.Ok {
