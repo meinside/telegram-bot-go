@@ -656,3 +656,14 @@ func NewInlineKeyboardButtonsWithSwitchInlineQuery(values map[string]string) []I
 
 	return keyboards
 }
+
+////////////////////////////////
+// Helper functions for CallbackQuery
+
+// String function for CallbackQuery
+func (q CallbackQuery) String() string {
+	if json, err := json.Marshal(q); err == nil {
+		return fmt.Sprintf("%T%s", q, string(json))
+	}
+	return fmt.Sprintf("%+v", q)
+}
