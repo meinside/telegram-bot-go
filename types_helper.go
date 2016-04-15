@@ -599,7 +599,7 @@ func (c ChosenInlineResult) String() string {
 }
 
 ////////////////////////////////
-// Helper functions for KeyboardButton
+// Helper functions for KeyboardButton and InlineKeyboardButton
 //
 
 // Helper function for generating an array of KeyboardButtons
@@ -609,6 +609,48 @@ func NewKeyboardButtons(texts ...string) []KeyboardButton {
 	for _, text := range texts {
 		keyboards = append(keyboards, KeyboardButton{
 			Text: text,
+		})
+	}
+
+	return keyboards
+}
+
+// Helper function for generating an array of InlineKeyboardButtons with url
+func NewInlineKeyboardButtonsWithUrl(values map[string]string) []InlineKeyboardButton {
+	keyboards := []InlineKeyboardButton{}
+
+	for text, url := range values {
+		keyboards = append(keyboards, InlineKeyboardButton{
+			Text: text,
+			Url:  url,
+		})
+	}
+
+	return keyboards
+}
+
+// Helper function for generating an array of InlineKeyboardButtons with callback data
+func NewInlineKeyboardButtonsWithCallbackData(values map[string]string) []InlineKeyboardButton {
+	keyboards := []InlineKeyboardButton{}
+
+	for text, callbackData := range values {
+		keyboards = append(keyboards, InlineKeyboardButton{
+			Text:         text,
+			CallbackData: callbackData,
+		})
+	}
+
+	return keyboards
+}
+
+// Helper function for generating an array of InlineKeyboardButtons with switch inline query
+func NewInlineKeyboardButtonsWithSwitchInlineQuery(values map[string]string) []InlineKeyboardButton {
+	keyboards := []InlineKeyboardButton{}
+
+	for text, switchInlineQuery := range values {
+		keyboards = append(keyboards, InlineKeyboardButton{
+			Text:              text,
+			SwitchInlineQuery: switchInlineQuery,
 		})
 	}
 

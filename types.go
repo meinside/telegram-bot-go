@@ -303,10 +303,10 @@ type InlineKeyboardMarkup struct {
 //
 // https://core.telegram.org/bots/api#inlinekeyboardbutton
 type InlineKeyboardButton struct {
-	Text              *string `json:"text"`
-	Url               *string `json:"url,omitempty"`
-	CallbackData      *string `json:"callback_data,omitempty"`
-	SwitchInlineQuery *string `json:"switch_inline_query,omitempty"`
+	Text              string `json:"text"`
+	Url               string `json:"url,omitempty"`
+	CallbackData      string `json:"callback_data,omitempty"`
+	SwitchInlineQuery string `json:"switch_inline_query,omitempty"`
 }
 
 // CallbackQuery
