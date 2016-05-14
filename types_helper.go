@@ -450,8 +450,13 @@ func (m Message) String() string {
 }
 
 // Check if Message has Forward.
-func (m *Message) HasForward() bool {
+func (m *Message) HasForwardFrom() bool {
 	return m.ForwardFrom != nil && m.ForwardDate > 0
+}
+
+// Check if Message has Forward from chat.
+func (m *Message) HasForwardFromChat() bool {
+	return m.ForwardFromChat != nil && m.ForwardDate > 0
 }
 
 // Check if Message has ReplyTo.
