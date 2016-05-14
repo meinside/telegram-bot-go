@@ -338,6 +338,7 @@ type Message struct {
 	Date                  int             `json:"date"`
 	Chat                  *Chat           `json:"chat"`
 	ForwardFrom           *User           `json:"forward_from,omitempty"`
+	ForwardFromChat       *Chat           `json:"forward_from_chat,omitempty"`
 	ForwardDate           int             `json:"forward_date,omitempty"`
 	ReplyToMessage        *Message        `json:"reply_to_message,omitempty"`
 	Text                  *string         `json:"text,omitempty"`
