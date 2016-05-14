@@ -194,6 +194,7 @@ type Sticker struct {
 	Width    int        `json:"width"`
 	Height   int        `json:"height"`
 	Thumb    *PhotoSize `json:"thumb,omitempty"`
+	Emoji    *string    `json:"emoji,omitempty"`
 	FileSize int        `json:"file_size,omitempty"`
 }
 
