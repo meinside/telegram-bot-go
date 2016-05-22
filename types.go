@@ -342,6 +342,7 @@ type Message struct {
 	ForwardFromChat       *Chat           `json:"forward_from_chat,omitempty"`
 	ForwardDate           int             `json:"forward_date,omitempty"`
 	ReplyToMessage        *Message        `json:"reply_to_message,omitempty"`
+	EditDate              int             `json:"edit_date,omitempty"`
 	Text                  *string         `json:"text,omitempty"`
 	Entities              []MessageEntity `json:"entities,omitempty"`
 	Audio                 *Audio          `json:"audio,omitempty"`
