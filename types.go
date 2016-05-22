@@ -56,16 +56,17 @@ const (
 type MessageEntityType string
 
 const (
-	MessageEntityTypeMention    = "mention"
-	MessageEntityTypeHashTag    = "hashtag"
-	MessageEntityTypeBotCommand = "bot_command"
-	MessageEntityTypeUrl        = "url"
-	MessageEntityTypeEmail      = "email"
-	MessageEntityTypeBold       = "bold"
-	MessageEntityTypeItalic     = "italic"
-	MessageEntityTypeCode       = "code"
-	MessageEntityTypePre        = "pre"
-	MessageEntityTypeTextLink   = "text_link"
+	MessageEntityTypeMention     = "mention"
+	MessageEntityTypeHashTag     = "hashtag"
+	MessageEntityTypeBotCommand  = "bot_command"
+	MessageEntityTypeUrl         = "url"
+	MessageEntityTypeEmail       = "email"
+	MessageEntityTypeBold        = "bold"
+	MessageEntityTypeItalic      = "italic"
+	MessageEntityTypeCode        = "code"
+	MessageEntityTypePre         = "pre"
+	MessageEntityTypeTextLink    = "text_link"
+	MessageEntityTypeTextMention = "text_mention"
 )
 
 // API result
@@ -163,7 +164,8 @@ type MessageEntity struct {
 	Type   MessageEntityType `json:"type"`
 	Offset int               `json:"offset"`
 	Length int               `json:"length"`
-	Url    *string           `json:"url,omitempty"`
+	Url    *string           `json:"url,omitempty"`  // for Type == "text_link" only,
+	User   *User             `json:"user,omitempty"` // for Type == "text_mention" only,
 }
 
 // PhotoSize
