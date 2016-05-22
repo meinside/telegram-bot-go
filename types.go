@@ -138,6 +138,13 @@ type ApiResultChatAdministrators struct {
 	Result      []ChatMember `json:"result,omitempty"`
 }
 
+// API result for ChatMember
+type ApiResultChatMember struct {
+	Ok          bool       `json:"ok"`
+	Description *string    `json:"description,omitempty"`
+	Result      ChatMember `json:"result,omitempty"`
+}
+
 // Update
 //
 // https://core.telegram.org/bots/api#update
