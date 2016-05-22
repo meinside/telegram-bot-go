@@ -69,6 +69,19 @@ const (
 	MessageEntityTypeTextMention = "text_mention"
 )
 
+// Chat Member Statuses
+//
+// https://core.telegram.org/bots/api#chatmember
+type ChatMemberStatus string
+
+const (
+	ChatMemberStatusCreator       ChatMemberStatus = "creator"
+	ChatMemberStatusAdministrator ChatMemberStatus = "administrator"
+	ChatMemberStatusMember        ChatMemberStatus = "member"
+	ChatMemberStatusLeft          ChatMemberStatus = "left"
+	ChatMemberStatusKicked        ChatMemberStatus = "kicked"
+)
+
 // API result
 type ApiResult struct {
 	Ok          bool        `json:"ok"`
@@ -116,6 +129,13 @@ type ApiResultChat struct {
 	Ok          bool    `json:"ok"`
 	Description *string `json:"description,omitempty"`
 	Result      *Chat   `json:"result,omitempty"`
+}
+
+// API result for ChatAdministrators
+type ApiResultChatAdministrators struct {
+	Ok          bool         `json:"ok"`
+	Description *string      `json:"description,omitempty"`
+	Result      []ChatMember `json:"result,omitempty"`
 }
 
 // Update
@@ -337,6 +357,14 @@ type CallbackQuery struct {
 type ForceReply struct {
 	ForceReply bool `json:"force_reply"`
 	Selective  bool `json:"selective,omitempty"`
+}
+
+// ChatMember
+//
+// https://core.telegram.org/bots/api#chatmember
+type ChatMember struct {
+	User   *User            `json:"user"`
+	Status ChatMemberStatus `json:"status"`
 }
 
 // Message

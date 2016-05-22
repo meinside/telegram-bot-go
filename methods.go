@@ -424,6 +424,18 @@ func (b *Bot) LeaveChat(chatId interface{}) (result ApiResult) {
 	return b.requestResult("leaveChat", params)
 }
 
+// Get chat administrators
+//
+// https://core.telegram.org/bots/api#leavechat
+func (b *Bot) GetChatAdministrators(chatId interface{}) (result ApiResultChatAdministrators) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResultChatAdministrators("getChatAdministrators", params)
+}
+
 // Answer callback query
 //
 // options include: text and show_alert
@@ -870,6 +882,32 @@ func (b *Bot) requestResultChat(method string, params map[string]interface{}) (r
 	b.error(errStr)
 
 	return ApiResultChat{Ok: false, Description: &errStr}
+}
+
+// Send request for ApiResultChatAdministrator and fetch its result.
+func (b *Bot) requestResultChatAdministrators(method string, params map[string]interface{}) (result ApiResultChatAdministrators) {
+	var errStr string
+
+	if resp, success := b.sendRequest(method, params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResultChatAdministrators
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("%s failed", method)
+	}
+
+	b.error(errStr)
+
+	return ApiResultChatAdministrators{Ok: false, Description: &errStr}
 }
 
 // Handle Webhook request.
