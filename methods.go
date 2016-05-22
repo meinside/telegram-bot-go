@@ -389,7 +389,7 @@ func (b *Bot) KickChatMember(chatId interface{}, userId int) (result ApiResult) 
 
 // Unban chat member
 //
-//https://core.telegram.org/bots/api#unbanchatmember
+// https://core.telegram.org/bots/api#unbanchatmember
 func (b *Bot) UnbanChatMember(chatId interface{}, userId int) (result ApiResult) {
 	// essential params
 	params := map[string]interface{}{
@@ -398,6 +398,18 @@ func (b *Bot) UnbanChatMember(chatId interface{}, userId int) (result ApiResult)
 	}
 
 	return b.requestResult("unbanChatMember", params)
+}
+
+// Get chat
+//
+// https://core.telegram.org/bots/api#getchat
+func (b *Bot) GetChat(chatId interface{}) (result ApiResultChat) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResultChat("getChat", params)
 }
 
 // Answer callback query
@@ -820,6 +832,32 @@ func (b *Bot) requestResultFile(method string, params map[string]interface{}) (r
 	b.error(errStr)
 
 	return ApiResultFile{Ok: false, Description: &errStr}
+}
+
+// Send request for ApiResultChat and fetch its result.
+func (b *Bot) requestResultChat(method string, params map[string]interface{}) (result ApiResultChat) {
+	var errStr string
+
+	if resp, success := b.sendRequest(method, params); success {
+		defer resp.Body.Close()
+
+		if body, err := ioutil.ReadAll(resp.Body); err == nil {
+			var jsonResponse ApiResultChat
+			if err := json.Unmarshal(body, &jsonResponse); err == nil {
+				return jsonResponse
+			} else {
+				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
+			}
+		} else {
+			errStr = fmt.Sprintf("response read error: %s", err.Error())
+		}
+	} else {
+		errStr = fmt.Sprintf("%s failed", method)
+	}
+
+	b.error(errStr)
+
+	return ApiResultChat{Ok: false, Description: &errStr}
 }
 
 // Handle Webhook request.

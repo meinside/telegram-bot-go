@@ -111,6 +111,13 @@ type ApiResultUpdates struct {
 	Result      []Update `json:"result,omitempty"`
 }
 
+// API result for Chat
+type ApiResultChat struct {
+	Ok          bool    `json:"ok"`
+	Description *string `json:"description,omitempty"`
+	Result      *Chat   `json:"result,omitempty"`
+}
+
 // Update
 //
 // https://core.telegram.org/bots/api#update
