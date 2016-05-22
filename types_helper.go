@@ -398,6 +398,11 @@ func (u *Update) HasMessage() bool {
 	return u.Message != nil
 }
 
+// Check if Update has EditedMessage.
+func (u *Update) HasEditedMessage() bool {
+	return u.EditedMessage != nil
+}
+
 // Check if Update has InlineQuery
 func (u *Update) HasInlineQuery() bool {
 	return u.InlineQuery != nil
