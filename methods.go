@@ -412,6 +412,18 @@ func (b *Bot) GetChat(chatId interface{}) (result ApiResultChat) {
 	return b.requestResultChat("getChat", params)
 }
 
+// Leave chat
+//
+// https://core.telegram.org/bots/api#leavechat
+func (b *Bot) LeaveChat(chatId interface{}) (result ApiResult) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResult("leaveChat", params)
+}
+
 // Answer callback query
 //
 // options include: text and show_alert
