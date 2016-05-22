@@ -426,7 +426,7 @@ func (b *Bot) LeaveChat(chatId interface{}) (result ApiResult) {
 
 // Get chat administrators
 //
-// https://core.telegram.org/bots/api#leavechat
+// https://core.telegram.org/bots/api#getchatadministrators
 func (b *Bot) GetChatAdministrators(chatId interface{}) (result ApiResultChatAdministrators) {
 	// essential params
 	params := map[string]interface{}{
