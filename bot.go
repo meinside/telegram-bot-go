@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -63,48 +62,6 @@ func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string,
 	}
 
 	return nil
-}
-
-// Set webhook url and certificate for receiving incoming updates.
-// port should be one of: 443, 80, 88, or 8443.
-//
-// https://core.telegram.org/bots/api#setwebhook
-func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResult) {
-	b.webhookHost = host
-	b.webhookPort = port
-	b.webhookUrl = b.getWebhookUrl()
-
-	file, err := os.Open(certFilepath)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	params := map[string]interface{}{
-		"url":         b.webhookUrl,
-		"certificate": file,
-	}
-
-	b.verbose("setting webhook url to: %s", b.webhookUrl)
-
-	return b.requestResult("setWebhook", params)
-}
-
-// Delete webhook.
-// (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
-//
-// https://core.telegram.org/bots/api#setwebhook
-func (b *Bot) DeleteWebhook() (result ApiResult) {
-	b.webhookHost = ""
-	b.webhookPort = 0
-	b.webhookUrl = ""
-
-	params := map[string]interface{}{
-		"url": "",
-	}
-
-	b.verbose("deleting webhook url")
-
-	return b.requestResult("setWebhook", params)
 }
 
 // Start Webhook server(and wait forever).

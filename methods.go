@@ -14,6 +14,65 @@ import (
 	"strconv"
 )
 
+// Get updates.
+//
+// options include: offset, limit, and timeout.
+//
+// https://core.telegram.org/bots/api#getupdates
+func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResultUpdates) {
+	// optional params
+	params := map[string]interface{}{}
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResultUpdates("getUpdates", params)
+}
+
+// Set webhook url and certificate for receiving incoming updates.
+// port should be one of: 443, 80, 88, or 8443.
+//
+// https://core.telegram.org/bots/api#setwebhook
+func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResult) {
+	b.webhookHost = host
+	b.webhookPort = port
+	b.webhookUrl = b.getWebhookUrl()
+
+	file, err := os.Open(certFilepath)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	params := map[string]interface{}{
+		"url":         b.webhookUrl,
+		"certificate": file,
+	}
+
+	b.verbose("setting webhook url to: %s", b.webhookUrl)
+
+	return b.requestResult("setWebhook", params)
+}
+
+// Delete webhook.
+// (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
+//
+// https://core.telegram.org/bots/api#setwebhook
+func (b *Bot) DeleteWebhook() (result ApiResult) {
+	b.webhookHost = ""
+	b.webhookPort = 0
+	b.webhookUrl = ""
+
+	params := map[string]interface{}{
+		"url": "",
+	}
+
+	b.verbose("deleting webhook url")
+
+	return b.requestResult("setWebhook", params)
+}
+
 // Get info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
@@ -304,7 +363,7 @@ func (b *Bot) SendVenue(chatId interface{}, latitude, longitude float32, title, 
 //
 // options include: last_name, disable_notification, reply_to_message_id, and reply_markup.
 //
-// https://core.telegram.org/bots/api#sendvenue
+// https://core.telegram.org/bots/api#sendcontact
 func (b *Bot) SendContact(chatId interface{}, phoneNumber, firstName *string, options map[string]interface{}) (result ApiResultMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -319,7 +378,7 @@ func (b *Bot) SendContact(chatId interface{}, phoneNumber, firstName *string, op
 		}
 	}
 
-	return b.requestResultMessage("sendVenue", params)
+	return b.requestResultMessage("sendContact", params)
 }
 
 // Send chat action.
@@ -387,6 +446,18 @@ func (b *Bot) KickChatMember(chatId interface{}, userId int) (result ApiResult) 
 	return b.requestResult("kickChatMember", params)
 }
 
+// Leave chat
+//
+// https://core.telegram.org/bots/api#leavechat
+func (b *Bot) LeaveChat(chatId interface{}) (result ApiResult) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResult("leaveChat", params)
+}
+
 // Unban chat member
 //
 // https://core.telegram.org/bots/api#unbanchatmember
@@ -412,18 +483,6 @@ func (b *Bot) GetChat(chatId interface{}) (result ApiResultChat) {
 	return b.requestResultChat("getChat", params)
 }
 
-// Leave chat
-//
-// https://core.telegram.org/bots/api#leavechat
-func (b *Bot) LeaveChat(chatId interface{}) (result ApiResult) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatId,
-	}
-
-	return b.requestResult("leaveChat", params)
-}
-
 // Get chat administrators
 //
 // https://core.telegram.org/bots/api#getchatadministrators
@@ -434,6 +493,18 @@ func (b *Bot) GetChatAdministrators(chatId interface{}) (result ApiResultChatAdm
 	}
 
 	return b.requestResultChatAdministrators("getChatAdministrators", params)
+}
+
+// Get chat members count
+//
+// https://core.telegram.org/bots/api#getchatmemberscount
+func (b *Bot) GetChatMembersCount(chatId interface{}) (result ApiResultInt) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResultInt("getChatMembersCount", params)
 }
 
 // Get chat member
@@ -447,18 +518,6 @@ func (b *Bot) GetChatMember(chatId interface{}, userId int) (result ApiResultCha
 	}
 
 	return b.requestResultChatMember("getChatMember", params)
-}
-
-// Get chat members count
-//
-// https://core.telegram.org/bots/api#getchatmemberscount
-func (b *Bot) GetChatMembersCount(chatId interface{}) (result ApiResultInt) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatId,
-	}
-
-	return b.requestResultInt("getChatMembersCount", params)
 }
 
 // Answer callback query
@@ -541,23 +600,6 @@ func (b *Bot) EditMessageCaption(caption *string, options map[string]interface{}
 // https://core.telegram.org/bots/api#editmessagereplymarkup
 func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result ApiResultMessage) {
 	return b.requestResultMessage("editMessageReplyMarkup", options)
-}
-
-// Get updates.
-//
-// options include: offset, limit, and timeout.
-//
-// https://core.telegram.org/bots/api#getupdates
-func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResultUpdates) {
-	// optional params
-	params := map[string]interface{}{}
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
-	}
-
-	return b.requestResultUpdates("getUpdates", params)
 }
 
 // Send answers to an inline query.
