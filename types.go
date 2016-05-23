@@ -82,74 +82,70 @@ const (
 	ChatMemberStatusKicked        ChatMemberStatus = "kicked"
 )
 
-// API result
-type ApiResult struct {
-	Ok          bool        `json:"ok"`
-	Description *string     `json:"description,omitempty"`
-	Result      interface{} `json:"result,omitempty"`
-}
-
-// API result for User
-type ApiResultUser struct {
+// API response (base)
+type ApiResponseBase struct {
 	Ok          bool    `json:"ok"`
 	Description *string `json:"description,omitempty"`
-	Result      *User   `json:"result,omitempty"`
 }
 
-// API result for Message
-type ApiResultMessage struct {
-	Ok          bool     `json:"ok"`
-	Description *string  `json:"description,omitempty"`
-	Result      *Message `json:"result,omitempty"`
+// API response
+type ApiResponse struct {
+	ApiResponseBase
+	Result interface{} `json:"result,omitempty"`
 }
 
-// API result for UserProfilePhotos
-type ApiResultUserProfilePhotos struct {
-	Ok          bool               `json:"ok"`
-	Description *string            `json:"description,omitempty"`
-	Result      *UserProfilePhotos `json:"result,omitempty"`
+// API response with result type: User
+type ApiResponseUser struct {
+	ApiResponseBase
+	Result *User `json:"result,omitempty"`
 }
 
-// API result for File
-type ApiResultFile struct {
-	Ok          bool    `json:"ok"`
-	Description *string `json:"description,omitempty"`
-	Result      *File   `json:"result,omitempty"`
+// API response with result type: Message
+type ApiResponseMessage struct {
+	ApiResponseBase
+	Result *Message `json:"result,omitempty"`
 }
 
-// API result for Update
-type ApiResultUpdates struct {
-	Ok          bool     `json:"ok"`
-	Description *string  `json:"description,omitempty"`
-	Result      []Update `json:"result,omitempty"`
+// API response with result type: UserProfilePhotos
+type ApiResponseUserProfilePhotos struct {
+	ApiResponseBase
+	Result *UserProfilePhotos `json:"result,omitempty"`
 }
 
-// API result for Chat
-type ApiResultChat struct {
-	Ok          bool    `json:"ok"`
-	Description *string `json:"description,omitempty"`
-	Result      *Chat   `json:"result,omitempty"`
+// API response with result type: File
+type ApiResponseFile struct {
+	ApiResponseBase
+	Result *File `json:"result,omitempty"`
 }
 
-// API result for ChatAdministrators
-type ApiResultChatAdministrators struct {
-	Ok          bool         `json:"ok"`
-	Description *string      `json:"description,omitempty"`
-	Result      []ChatMember `json:"result,omitempty"`
+// API response with result type: Update
+type ApiResponseUpdates struct {
+	ApiResponseBase
+	Result []Update `json:"result,omitempty"`
 }
 
-// API result for ChatMember
-type ApiResultChatMember struct {
-	Ok          bool       `json:"ok"`
-	Description *string    `json:"description,omitempty"`
-	Result      ChatMember `json:"result,omitempty"`
+// API response with result type: Chat
+type ApiResponseChat struct {
+	ApiResponseBase
+	Result *Chat `json:"result,omitempty"`
 }
 
-// API result for int
-type ApiResultInt struct {
-	Ok          bool    `json:"ok"`
-	Description *string `json:"description,omitempty"`
-	Result      int     `json:"result,omitempty"`
+// API response with result type: ChatAdministrators
+type ApiResponseChatAdministrators struct {
+	ApiResponseBase
+	Result []ChatMember `json:"result,omitempty"`
+}
+
+// API response with result type: ChatMember
+type ApiResponseChatMember struct {
+	ApiResponseBase
+	Result ChatMember `json:"result,omitempty"`
+}
+
+// API response with result type: int
+type ApiResponseInt struct {
+	ApiResponseBase
+	Result int `json:"result,omitempty"`
 }
 
 // Update

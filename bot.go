@@ -97,7 +97,7 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 	// set update handler
 	b.updateHandler = updateHandler
 
-	var updates ApiResultUpdates
+	var updates ApiResponseUpdates
 	for {
 		if updates = b.GetUpdates(options); updates.Ok {
 			for _, update := range updates.Result {
