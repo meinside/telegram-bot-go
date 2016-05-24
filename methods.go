@@ -28,7 +28,7 @@ func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResponseUpda
 		}
 	}
 
-	return b.requestResultUpdates("getUpdates", params)
+	return b.requestResponseUpdates("getUpdates", params)
 }
 
 // Set webhook url and certificate for receiving incoming updates.
@@ -52,7 +52,7 @@ func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result Api
 
 	b.verbose("setting webhook url to: %s", b.webhookUrl)
 
-	return b.requestResult("setWebhook", params)
+	return b.requestResponse("setWebhook", params)
 }
 
 // Delete webhook.
@@ -70,14 +70,14 @@ func (b *Bot) DeleteWebhook() (result ApiResponse) {
 
 	b.verbose("deleting webhook url")
 
-	return b.requestResult("setWebhook", params)
+	return b.requestResponse("setWebhook", params)
 }
 
 // Get info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
 func (b *Bot) GetMe() (result ApiResponseUser) {
-	return b.requestResultUser("getMe", map[string]interface{}{}) // no params
+	return b.requestResponseUser("getMe", map[string]interface{}{}) // no params
 }
 
 // Send a message.
@@ -100,7 +100,7 @@ func (b *Bot) SendMessage(chatId interface{}, text *string, options map[string]i
 		}
 	}
 
-	return b.requestResultMessage("sendMessage", params)
+	return b.requestResponseMessage("sendMessage", params)
 }
 
 // Forward a message.
@@ -118,7 +118,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 		"message_id":   messageId,
 	}
 
-	return b.requestResultMessage("forwardMessage", params)
+	return b.requestResponseMessage("forwardMessage", params)
 }
 
 // Send photos.
@@ -142,7 +142,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[s
 			}
 		}
 
-		return b.requestResultMessage("sendPhoto", params)
+		return b.requestResponseMessage("sendPhoto", params)
 	} else {
 		errStr := err.Error()
 
@@ -178,7 +178,7 @@ func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[s
 			}
 		}
 
-		return b.requestResultMessage("sendAudio", params)
+		return b.requestResponseMessage("sendAudio", params)
 	} else {
 		errStr := err.Error()
 
@@ -214,7 +214,7 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options
 			}
 		}
 
-		return b.requestResultMessage("sendDocument", params)
+		return b.requestResponseMessage("sendDocument", params)
 	} else {
 		errStr := err.Error()
 
@@ -250,7 +250,7 @@ func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options m
 			}
 		}
 
-		return b.requestResultMessage("sendSticker", params)
+		return b.requestResponseMessage("sendSticker", params)
 	} else {
 		errStr := err.Error()
 
@@ -286,7 +286,7 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[s
 			}
 		}
 
-		return b.requestResultMessage("sendVideo", params)
+		return b.requestResponseMessage("sendVideo", params)
 	} else {
 		errStr := err.Error()
 
@@ -322,7 +322,7 @@ func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[s
 			}
 		}
 
-		return b.requestResultMessage("sendVoice", params)
+		return b.requestResponseMessage("sendVoice", params)
 	} else {
 		errStr := err.Error()
 
@@ -358,7 +358,7 @@ func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, opti
 		}
 	}
 
-	return b.requestResultMessage("sendLocation", params)
+	return b.requestResponseMessage("sendLocation", params)
 }
 
 // Send venues.
@@ -384,7 +384,7 @@ func (b *Bot) SendVenue(chatId interface{}, latitude, longitude float32, title, 
 		}
 	}
 
-	return b.requestResultMessage("sendVenue", params)
+	return b.requestResponseMessage("sendVenue", params)
 }
 
 // Send contacts.
@@ -408,7 +408,7 @@ func (b *Bot) SendContact(chatId interface{}, phoneNumber, firstName *string, op
 		}
 	}
 
-	return b.requestResultMessage("sendContact", params)
+	return b.requestResponseMessage("sendContact", params)
 }
 
 // Send chat action.
@@ -423,7 +423,7 @@ func (b *Bot) SendChatAction(chatId interface{}, action ChatAction) (result ApiR
 		"action":  action,
 	}
 
-	return b.requestResult("sendChatAction", params)
+	return b.requestResponse("sendChatAction", params)
 }
 
 // Get user profile photos.
@@ -443,7 +443,7 @@ func (b *Bot) GetUserProfilePhotos(userId int, options map[string]interface{}) (
 		}
 	}
 
-	return b.requestResultUserProfilePhotos("getUserProfilePhotos", params)
+	return b.requestResponseUserProfilePhotos("getUserProfilePhotos", params)
 }
 
 // Get file info and prepare for download.
@@ -455,7 +455,7 @@ func (b *Bot) GetFile(fileId *string) (result ApiResponseFile) {
 		"file_id": *fileId,
 	}
 
-	return b.requestResultFile("getFile", params)
+	return b.requestResponseFile("getFile", params)
 }
 
 // Get download link from given File.
@@ -473,7 +473,7 @@ func (b *Bot) KickChatMember(chatId interface{}, userId int) (result ApiResponse
 		"user_id": userId,
 	}
 
-	return b.requestResult("kickChatMember", params)
+	return b.requestResponse("kickChatMember", params)
 }
 
 // Leave chat
@@ -485,7 +485,7 @@ func (b *Bot) LeaveChat(chatId interface{}) (result ApiResponse) {
 		"chat_id": chatId,
 	}
 
-	return b.requestResult("leaveChat", params)
+	return b.requestResponse("leaveChat", params)
 }
 
 // Unban chat member
@@ -498,7 +498,7 @@ func (b *Bot) UnbanChatMember(chatId interface{}, userId int) (result ApiRespons
 		"user_id": userId,
 	}
 
-	return b.requestResult("unbanChatMember", params)
+	return b.requestResponse("unbanChatMember", params)
 }
 
 // Get chat
@@ -510,7 +510,7 @@ func (b *Bot) GetChat(chatId interface{}) (result ApiResponseChat) {
 		"chat_id": chatId,
 	}
 
-	return b.requestResultChat("getChat", params)
+	return b.requestResponseChat("getChat", params)
 }
 
 // Get chat administrators
@@ -522,7 +522,7 @@ func (b *Bot) GetChatAdministrators(chatId interface{}) (result ApiResponseChatA
 		"chat_id": chatId,
 	}
 
-	return b.requestResultChatAdministrators("getChatAdministrators", params)
+	return b.requestResponseChatAdministrators("getChatAdministrators", params)
 }
 
 // Get chat members count
@@ -534,7 +534,7 @@ func (b *Bot) GetChatMembersCount(chatId interface{}) (result ApiResponseInt) {
 		"chat_id": chatId,
 	}
 
-	return b.requestResultInt("getChatMembersCount", params)
+	return b.requestResponseInt("getChatMembersCount", params)
 }
 
 // Get chat member
@@ -547,7 +547,7 @@ func (b *Bot) GetChatMember(chatId interface{}, userId int) (result ApiResponseC
 		"user_id": userId,
 	}
 
-	return b.requestResultChatMember("getChatMember", params)
+	return b.requestResponseChatMember("getChatMember", params)
 }
 
 // Answer callback query
@@ -567,7 +567,7 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryId *string, options map[string]in
 		}
 	}
 
-	return b.requestResult("answerCallbackQuery", params)
+	return b.requestResponse("answerCallbackQuery", params)
 }
 
 // Updating messages
@@ -594,7 +594,7 @@ func (b *Bot) EditMessageText(text *string, options map[string]interface{}) (res
 		}
 	}
 
-	return b.requestResultMessage("editMessageText", params)
+	return b.requestResponseMessage("editMessageText", params)
 }
 
 // Edit caption of message
@@ -617,7 +617,7 @@ func (b *Bot) EditMessageCaption(caption *string, options map[string]interface{}
 		}
 	}
 
-	return b.requestResultMessage("editMessageCaption", params)
+	return b.requestResponseMessage("editMessageCaption", params)
 }
 
 // Edit reply markup of message
@@ -629,7 +629,7 @@ func (b *Bot) EditMessageCaption(caption *string, options map[string]interface{}
 //
 // https://core.telegram.org/bots/api#editmessagereplymarkup
 func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result ApiResponseMessage) {
-	return b.requestResultMessage("editMessageReplyMarkup", options)
+	return b.requestResponseMessage("editMessageReplyMarkup", options)
 }
 
 // Send answers to an inline query.
@@ -652,7 +652,7 @@ func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, opt
 		}
 	}
 
-	return b.requestResult("answerInlineQuery", params)
+	return b.requestResponse("answerInlineQuery", params)
 }
 
 // Check if given http params contain file or not.
@@ -722,10 +722,10 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 	return "", false
 }
 
-// Send request to API server and return the response synchronously.
+// Send request to API server and return the response as bytes(synchronously).
 //
-// If *os.File is included in the params, it will be closed automatically.
-func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *http.Response, success bool) {
+// NOTE: If *os.File is included in the params, it will be closed automatically.
+func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, success bool) {
 	client := &http.Client{}
 	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.token, method)
 
@@ -766,7 +766,13 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 			req.Header.Add("Content-Type", writer.FormDataContentType()) // due to file parameter
 
 			if resp, err := client.Do(req); err == nil {
-				return resp, true
+				defer resp.Body.Close()
+
+				if bytes, err := ioutil.ReadAll(resp.Body); err == nil {
+					return bytes, true
+				} else {
+					b.error("response read error: %s", err.Error())
+				}
 			} else {
 				b.error("request error: %s", err.Error())
 			}
@@ -787,7 +793,13 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 			req.Header.Add("Content-Length", strconv.Itoa(len(encoded)))
 
 			if resp, err := client.Do(req); err == nil {
-				return resp, true
+				defer resp.Body.Close()
+
+				if bytes, err := ioutil.ReadAll(resp.Body); err == nil {
+					return bytes, true
+				} else {
+					b.error("response read error: %s", err.Error())
+				}
 			} else {
 				b.error("request error: %s", err.Error())
 			}
@@ -796,25 +808,19 @@ func (b *Bot) sendRequest(method string, params map[string]interface{}) (resp *h
 		}
 	}
 
-	return nil, false
+	return []byte{}, false
 }
 
 // Send request for ApiResponse and fetch its result.
-func (b *Bot) requestResult(method string, params map[string]interface{}) (result ApiResponse) {
+func (b *Bot) requestResponse(method string, params map[string]interface{}) (result ApiResponse) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponse
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponse
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -822,30 +828,19 @@ func (b *Bot) requestResult(method string, params map[string]interface{}) (resul
 
 	b.error(errStr)
 
-	return ApiResponse{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponse{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseUser and fetch its result.
-func (b *Bot) requestResultUser(method string, params map[string]interface{}) (result ApiResponseUser) {
+func (b *Bot) requestResponseUser(method string, params map[string]interface{}) (result ApiResponseUser) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseUser
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseUser
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -853,30 +848,19 @@ func (b *Bot) requestResultUser(method string, params map[string]interface{}) (r
 
 	b.error(errStr)
 
-	return ApiResponseUser{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseUser{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseMessage and fetch its result.
-func (b *Bot) requestResultMessage(method string, params map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) requestResponseMessage(method string, params map[string]interface{}) (result ApiResponseMessage) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseMessage
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseMessage
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -884,30 +868,19 @@ func (b *Bot) requestResultMessage(method string, params map[string]interface{})
 
 	b.error(errStr)
 
-	return ApiResponseMessage{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseMessage{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseUserProfilePhotos and fetch its result.
-func (b *Bot) requestResultUserProfilePhotos(method string, params map[string]interface{}) (result ApiResponseUserProfilePhotos) {
+func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]interface{}) (result ApiResponseUserProfilePhotos) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseUserProfilePhotos
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseUserProfilePhotos
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -915,30 +888,19 @@ func (b *Bot) requestResultUserProfilePhotos(method string, params map[string]in
 
 	b.error(errStr)
 
-	return ApiResponseUserProfilePhotos{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseUserProfilePhotos{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseUpdates and fetch its result.
-func (b *Bot) requestResultUpdates(method string, params map[string]interface{}) (result ApiResponseUpdates) {
+func (b *Bot) requestResponseUpdates(method string, params map[string]interface{}) (result ApiResponseUpdates) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseUpdates
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseUpdates
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -946,30 +908,19 @@ func (b *Bot) requestResultUpdates(method string, params map[string]interface{})
 
 	b.error(errStr)
 
-	return ApiResponseUpdates{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseUpdates{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseFile and fetch its result.
-func (b *Bot) requestResultFile(method string, params map[string]interface{}) (result ApiResponseFile) {
+func (b *Bot) requestResponseFile(method string, params map[string]interface{}) (result ApiResponseFile) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseFile
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseFile
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -977,30 +928,19 @@ func (b *Bot) requestResultFile(method string, params map[string]interface{}) (r
 
 	b.error(errStr)
 
-	return ApiResponseFile{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseFile{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseChat and fetch its result.
-func (b *Bot) requestResultChat(method string, params map[string]interface{}) (result ApiResponseChat) {
+func (b *Bot) requestResponseChat(method string, params map[string]interface{}) (result ApiResponseChat) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseChat
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseChat
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1008,30 +948,19 @@ func (b *Bot) requestResultChat(method string, params map[string]interface{}) (r
 
 	b.error(errStr)
 
-	return ApiResponseChat{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseChat{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseChatAdministrator and fetch its result.
-func (b *Bot) requestResultChatAdministrators(method string, params map[string]interface{}) (result ApiResponseChatAdministrators) {
+func (b *Bot) requestResponseChatAdministrators(method string, params map[string]interface{}) (result ApiResponseChatAdministrators) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseChatAdministrators
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseChatAdministrators
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1039,30 +968,19 @@ func (b *Bot) requestResultChatAdministrators(method string, params map[string]i
 
 	b.error(errStr)
 
-	return ApiResponseChatAdministrators{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseChatAdministrators{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseChatMember and fetch its result.
-func (b *Bot) requestResultChatMember(method string, params map[string]interface{}) (result ApiResponseChatMember) {
+func (b *Bot) requestResponseChatMember(method string, params map[string]interface{}) (result ApiResponseChatMember) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseChatMember
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseChatMember
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1070,30 +988,19 @@ func (b *Bot) requestResultChatMember(method string, params map[string]interface
 
 	b.error(errStr)
 
-	return ApiResponseChatMember{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseChatMember{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseInt and fetch its result.
-func (b *Bot) requestResultInt(method string, params map[string]interface{}) (result ApiResponseInt) {
+func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (result ApiResponseInt) {
 	var errStr string
 
-	if resp, success := b.sendRequest(method, params); success {
-		defer resp.Body.Close()
-
-		if body, err := ioutil.ReadAll(resp.Body); err == nil {
-			var jsonResponse ApiResponseInt
-			if err := json.Unmarshal(body, &jsonResponse); err == nil {
-				return jsonResponse
-			} else {
-				errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(body))
-			}
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseInt
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("response read error: %s", err.Error())
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1101,12 +1008,7 @@ func (b *Bot) requestResultInt(method string, params map[string]interface{}) (re
 
 	b.error(errStr)
 
-	return ApiResponseInt{
-		ApiResponseBase: ApiResponseBase{
-			Ok:          false,
-			Description: &errStr,
-		},
-	}
+	return ApiResponseInt{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.
