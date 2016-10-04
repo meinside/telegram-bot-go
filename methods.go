@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // Get updates.
@@ -125,216 +126,78 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
+// photoFilepath can be local filepath or remote http url.
+//
 // options include: caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
-	if file, err := os.Open(*photoFilepath); err == nil {
-		// essential params
-		params := map[string]interface{}{
-			"chat_id": chatId,
-			"photo":   file,
-		}
-		// optional params
-		for key, val := range options {
-			if val != nil {
-				params[key] = val
-			}
-		}
-
-		return b.requestResponseMessage("sendPhoto", params)
-	} else {
-		errStr := err.Error()
-
-		b.error(errStr)
-
-		return ApiResponseMessage{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errStr,
-			},
-		}
-	}
+	return b.sendFile(chatId, "sendPhoto", "photo", photoFilepath, options)
 }
 
 // Send audio files. (.mp3 format only, will be played with external players)
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
+// audioFilepath can be local filepath or remote http url.
+//
+// options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
-	if file, err := os.Open(*audioFilepath); err == nil {
-		// essential params
-		params := map[string]interface{}{
-			"chat_id": chatId,
-			"audio":   file,
-		}
-		// optional params
-		for key, val := range options {
-			if val != nil {
-				params[key] = val
-			}
-		}
-
-		return b.requestResponseMessage("sendAudio", params)
-	} else {
-		errStr := err.Error()
-
-		b.error(errStr)
-
-		return ApiResponseMessage{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errStr,
-			},
-		}
-	}
+	return b.sendFile(chatId, "sendAudio", "audio", audioFilepath, options)
 }
 
 // Send general files.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
+// documentFilepath can be local filepath or remote http url.
+//
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
-	if file, err := os.Open(*documentFilepath); err == nil {
-		// essential params
-		params := map[string]interface{}{
-			"chat_id":  chatId,
-			"document": file,
-		}
-		// optional params
-		for key, val := range options {
-			if val != nil {
-				params[key] = val
-			}
-		}
-
-		return b.requestResponseMessage("sendDocument", params)
-	} else {
-		errStr := err.Error()
-
-		b.error(errStr)
-
-		return ApiResponseMessage{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errStr,
-			},
-		}
-	}
+	return b.sendFile(chatId, "sendDocument", "document", documentFilepath, options)
 }
 
 // Send stickers.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
+// stickerFilepath can be local filepath or remote http url.
+//
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
-	if file, err := os.Open(*stickerFilepath); err == nil {
-		// essential params
-		params := map[string]interface{}{
-			"chat_id": chatId,
-			"sticker": file,
-		}
-		// optional params
-		for key, val := range options {
-			if val != nil {
-				params[key] = val
-			}
-		}
-
-		return b.requestResponseMessage("sendSticker", params)
-	} else {
-		errStr := err.Error()
-
-		b.error(errStr)
-
-		return ApiResponseMessage{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errStr,
-			},
-		}
-	}
+	return b.sendFile(chatId, "sendSticker", "sticker", stickerFilepath, options)
 }
 
 // Send video files.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
+// videoFilepath can be local filepath or remote http url.
+//
 // options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
-	if file, err := os.Open(*videoFilepath); err == nil {
-		// essential params
-		params := map[string]interface{}{
-			"chat_id": chatId,
-			"video":   file,
-		}
-		// optional params
-		for key, val := range options {
-			if val != nil {
-				params[key] = val
-			}
-		}
-
-		return b.requestResponseMessage("sendVideo", params)
-	} else {
-		errStr := err.Error()
-
-		b.error(errStr)
-
-		return ApiResponseMessage{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errStr,
-			},
-		}
-	}
+	return b.sendFile(chatId, "sendVideo", "video", videoFilepath, options)
 }
 
 // Send voice files. (.ogg format only, will be played with Telegram itself))
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: disable_notification, duration, reply_to_message_id, and reply_markup.
+// voiceFilepath can be local filepath or remote http url.
+//
+// options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
-	if file, err := os.Open(*voiceFilepath); err == nil {
-		// essential params
-		params := map[string]interface{}{
-			"chat_id": chatId,
-			"voice":   file,
-		}
-		// optional params
-		for key, val := range options {
-			if val != nil {
-				params[key] = val
-			}
-		}
-
-		return b.requestResponseMessage("sendVoice", params)
-	} else {
-		errStr := err.Error()
-
-		b.error(errStr)
-
-		return ApiResponseMessage{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errStr,
-			},
-		}
-	}
+	return b.sendFile(chatId, "sendVoice", "voice", voiceFilepath, options)
 }
 
 // Send locations.
@@ -552,7 +415,7 @@ func (b *Bot) GetChatMember(chatId interface{}, userId int) (result ApiResponseC
 
 // Answer callback query
 //
-// options include: text and show_alert
+// options include: text, show_alert, and url
 //
 // https://core.telegram.org/bots/api#answercallbackquery
 func (b *Bot) AnswerCallbackQuery(callbackQueryId *string, options map[string]interface{}) (result ApiResponse) {
@@ -655,6 +518,72 @@ func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, opt
 	return b.requestResponse("answerInlineQuery", params)
 }
 
+// Send a game.
+//
+// options include: game_short_name, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendgame
+func (b *Bot) SendGame(chatId interface{}, gameShortName string, options map[string]interface{}) (result ApiResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":         chatId,
+		"game_short_name": gameShortName,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage("sendGame", params)
+}
+
+// Set score of a game.
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// other options: edit_message
+//
+// https://core.telegram.org/bots/api#setgamescore
+func (b *Bot) SetGameScore(userId int, score int, options map[string]interface{}) (result ApiResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"user_id": userId,
+		"score":   score,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage("setGameScore", params)
+}
+
+// Get high scores of a game.
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// https://core.telegram.org/bots/api#getgamehighscores
+func (b *Bot) GetGameHighScores(userId int, options map[string]interface{}) (result ApiResponseGameHighScores) {
+	// essential params
+	params := map[string]interface{}{
+		"user_id": userId,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseGameHighScores("getGameHighScores", params)
+}
+
 // Check if given http params contain file or not.
 func checkIfFileParamExists(params map[string]interface{}) bool {
 	for _, value := range params {
@@ -675,6 +604,12 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 			return strconv.Itoa(intValue), ok
 		} else {
 			b.error("parameter '%+v' could not be cast to int value", param)
+		}
+	case int64:
+		if intValue, ok := param.(int64); ok {
+			return strconv.FormatInt(intValue, 10), ok
+		} else {
+			b.error("parameter '%+v' could not be cast to int64 value", param)
 		}
 	case float32:
 		if floatValue, ok := param.(float32); ok {
@@ -708,7 +643,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		}
 	case []interface{},
 		InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply,
-		InlineQueryResultCachedAudio, InlineQueryResultCachedDocument, InlineQueryResultCachedGif, InlineQueryResultCachedMpeg4Gif, InlineQueryResultCachedPhoto, InlineQueryResultCachedSticker, InlineQueryResultCachedVideo, InlineQueryResultCachedVoice,
+		InlineQueryResultCachedAudio, InlineQueryResultCachedDocument, InlineQueryResultCachedGif, InlineQueryResultCachedMpeg4Gif, InlineQueryResultGame, InlineQueryResultCachedPhoto, InlineQueryResultCachedSticker, InlineQueryResultCachedVideo, InlineQueryResultCachedVoice,
 		InlineQueryResultArticle, InlineQueryResultAudio, InlineQueryResultContact, InlineQueryResultDocument, InlineQueryResultGif, InlineQueryResultLocation, InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue, InlineQueryResultVideo, InlineQueryResultVoice:
 		if json, err := json.Marshal(param); err == nil {
 			return string(json), true
@@ -724,7 +659,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 
 // Send request to API server and return the response as bytes(synchronously).
 //
-// NOTE: If *os.File is included in the params, it will be closed automatically.
+// NOTE: If *os.File is included in the params, it will be closed automatically in this function.
 func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, success bool) {
 	client := &http.Client{}
 	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.token, method)
@@ -1011,6 +946,26 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 	return ApiResponseInt{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
+// Send request for ApiResponseGameHighScores and fetch its result.
+func (b *Bot) requestResponseGameHighScores(method string, params map[string]interface{}) (result ApiResponseGameHighScores) {
+	var errStr string
+
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseGameHighScores
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
+		} else {
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+		}
+	} else {
+		errStr = fmt.Sprintf("%s failed", method)
+	}
+
+	b.error(errStr)
+
+	return ApiResponseGameHighScores{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
+}
+
 // Handle Webhook request.
 func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
@@ -1031,4 +986,46 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 
 		b.updateHandler(b, Update{}, err)
 	}
+}
+
+// Send file
+func (b *Bot) sendFile(chatId interface{}, apiName, paramKey string, filepath *string, options map[string]interface{}) (result ApiResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+	if isHttpUrl(*filepath) {
+		params[paramKey] = *filepath
+	} else {
+		if file, err := os.Open(*filepath); err == nil {
+			params[paramKey] = file
+		} else {
+			errStr := err.Error()
+
+			b.error(errStr)
+
+			return ApiResponseMessage{
+				ApiResponseBase: ApiResponseBase{
+					Ok:          false,
+					Description: &errStr,
+				},
+			}
+		}
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage(apiName, params)
+}
+
+// check if given path is http url
+func isHttpUrl(path string) bool {
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+		return true
+	}
+	return false
 }
