@@ -641,12 +641,33 @@ func NewInlineKeyboardButtonsWithUrl(values map[string]string) []InlineKeyboardB
 
 // Helper function for generating an array of InlineKeyboardButtons with callback data
 func NewInlineKeyboardButtonsWithCallbackData(values map[string]string) []InlineKeyboardButton {
+	return NewInlineKeyboardButtonsAsColumnsWithCallbackData(values)
+}
+
+// Helper function for generating an array of InlineKeyboardButtons (as columns) with callback data
+func NewInlineKeyboardButtonsAsColumnsWithCallbackData(values map[string]string) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
 	for text, callbackData := range values {
 		keyboards = append(keyboards, InlineKeyboardButton{
 			Text:         text,
 			CallbackData: callbackData,
+		})
+	}
+
+	return keyboards
+}
+
+// Helper function for generating an array of InlineKeyboardButtons (as rows) with callback data
+func NewInlineKeyboardButtonsAsRowsWithCallbackData(values map[string]string) [][]InlineKeyboardButton {
+	keyboards := [][]InlineKeyboardButton{}
+
+	for text, callbackData := range values {
+		keyboards = append(keyboards, []InlineKeyboardButton{
+			InlineKeyboardButton{
+				Text:         text,
+				CallbackData: callbackData,
+			},
 		})
 	}
 
