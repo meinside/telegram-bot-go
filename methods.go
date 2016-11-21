@@ -415,7 +415,7 @@ func (b *Bot) GetChatMember(chatId interface{}, userId int) (result ApiResponseC
 
 // Answer callback query
 //
-// options include: text, show_alert, and url
+// options include: text, show_alert, url, and cache_time
 //
 // https://core.telegram.org/bots/api#answercallbackquery
 func (b *Bot) AnswerCallbackQuery(callbackQueryId *string, options map[string]interface{}) (result ApiResponse) {
@@ -544,7 +544,7 @@ func (b *Bot) SendGame(chatId interface{}, gameShortName string, options map[str
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
 //
-// other options: edit_message
+// other options: force, and disable_edit_message
 //
 // https://core.telegram.org/bots/api#setgamescore
 func (b *Bot) SetGameScore(userId int, score int, options map[string]interface{}) (result ApiResponseMessage) {
@@ -642,7 +642,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
 	case []interface{},
-		InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardHide, ForceReply,
+		InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply,
 		InlineQueryResultCachedAudio, InlineQueryResultCachedDocument, InlineQueryResultCachedGif, InlineQueryResultCachedMpeg4Gif, InlineQueryResultGame, InlineQueryResultCachedPhoto, InlineQueryResultCachedSticker, InlineQueryResultCachedVideo, InlineQueryResultCachedVoice,
 		InlineQueryResultArticle, InlineQueryResultAudio, InlineQueryResultContact, InlineQueryResultDocument, InlineQueryResultGif, InlineQueryResultLocation, InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue, InlineQueryResultVideo, InlineQueryResultVoice:
 		if json, err := json.Marshal(param); err == nil {

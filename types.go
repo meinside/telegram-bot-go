@@ -171,6 +171,8 @@ type Update struct {
 	UpdateId           int                 `json:"update_id"`
 	Message            *Message            `json:"message,omitempty"`
 	EditedMessage      *Message            `json:"edited_message,omitempty"`
+	ChannelPost        *Message            `json:"channel_post,omitempty"`
+	EditedChannelPost  *Message            `json:"edited_channel_post,omitempty"`
 	InlineQuery        *InlineQuery        `json:"inline_query,omitempty"`
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
 	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
@@ -342,12 +344,12 @@ type KeyboardButton struct {
 	RequestLocation bool   `json:"request_location,omitempty"`
 }
 
-// ReplyKeyboardHide
+// ReplyKeyboardRemove
 //
-// https://core.telegram.org/bots/api#replykeyboardhide
-type ReplyKeyboardHide struct {
-	HideKeyboard bool `json:"hide_keyboard"`
-	Selective    bool `json:"selective,omitempty"`
+// https://core.telegram.org/bots/api#replykeyboardremove
+type ReplyKeyboardRemove struct {
+	RemoveKeyboard bool `json:"remove_keyboard"`
+	Selective      bool `json:"selective,omitempty"`
 }
 
 // InlineKeyboardMarkup
@@ -408,6 +410,7 @@ type Message struct {
 	Chat                  *Chat           `json:"chat"`
 	ForwardFrom           *User           `json:"forward_from,omitempty"`
 	ForwardFromChat       *Chat           `json:"forward_from_chat,omitempty"`
+	ForwardFromMessageId  int             `json:"forward_from_message_id,omitempty"`
 	ForwardDate           int             `json:"forward_date,omitempty"`
 	ReplyToMessage        *Message        `json:"reply_to_message,omitempty"`
 	EditDate              int             `json:"edit_date,omitempty"`
