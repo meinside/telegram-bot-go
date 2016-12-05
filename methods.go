@@ -34,9 +34,10 @@ func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResponseUpda
 
 // Set webhook url and certificate for receiving incoming updates.
 // port should be one of: 443, 80, 88, or 8443.
+// default maxConnections = 40
 //
 // https://core.telegram.org/bots/api#setwebhook
-func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResponse) {
+func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, maxConnections int, allowedUpdates []UpdateType) (result ApiResponse) {
 	b.webhookHost = host
 	b.webhookPort = port
 	b.webhookUrl = b.getWebhookUrl()
@@ -47,8 +48,10 @@ func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result Api
 	}
 
 	params := map[string]interface{}{
-		"url":         b.webhookUrl,
-		"certificate": file,
+		"url":             b.webhookUrl,
+		"certificate":     file,
+		"max_connections": maxConnections,
+		"allowed_updates": allowedUpdates,
 	}
 
 	b.verbose("setting webhook url to: %s", b.webhookUrl)
@@ -56,22 +59,29 @@ func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result Api
 	return b.requestResponse("setWebhook", params)
 }
 
+func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResponse) {
+	return b.SetWebhookWithOptions(host, port, certFilepath, 40, []UpdateType{})
+}
+
 // Delete webhook.
 // (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 //
-// https://core.telegram.org/bots/api#setwebhook
+// https://core.telegram.org/bots/api#deletewebhook
 func (b *Bot) DeleteWebhook() (result ApiResponse) {
 	b.webhookHost = ""
 	b.webhookPort = 0
 	b.webhookUrl = ""
 
-	params := map[string]interface{}{
-		"url": "",
-	}
-
 	b.verbose("deleting webhook url")
 
-	return b.requestResponse("setWebhook", params)
+	return b.requestResponse("deleteWebhook", map[string]interface{}{})
+}
+
+// Get webhook info.
+//
+// https://core.telegram.org/bots/api#getwebhookinfo
+func (b *Bot) GetWebhookInfo() (result ApiResponseWebhookInfo) {
+	return b.requestResponseWebhookInfo()
 }
 
 // Get info of this bot.
@@ -710,7 +720,8 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 	case []interface{},
 		InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply,
 		InlineQueryResultCachedAudio, InlineQueryResultCachedDocument, InlineQueryResultCachedGif, InlineQueryResultCachedMpeg4Gif, InlineQueryResultGame, InlineQueryResultCachedPhoto, InlineQueryResultCachedSticker, InlineQueryResultCachedVideo, InlineQueryResultCachedVoice,
-		InlineQueryResultArticle, InlineQueryResultAudio, InlineQueryResultContact, InlineQueryResultDocument, InlineQueryResultGif, InlineQueryResultLocation, InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue, InlineQueryResultVideo, InlineQueryResultVoice:
+		InlineQueryResultArticle, InlineQueryResultAudio, InlineQueryResultContact, InlineQueryResultDocument, InlineQueryResultGif, InlineQueryResultLocation, InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue, InlineQueryResultVideo, InlineQueryResultVoice,
+		[]UpdateType:
 		if json, err := json.Marshal(param); err == nil {
 			return string(json), true
 		} else {
@@ -830,6 +841,26 @@ func (b *Bot) requestResponse(method string, params map[string]interface{}) (res
 	b.error(errStr)
 
 	return ApiResponse{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for ApiResponseWebhookInfo and fetch its result.
+func (b *Bot) requestResponseWebhookInfo() (result ApiResponseWebhookInfo) {
+	var errStr string
+
+	if bytes, success := b.request("getWebhookInfo", map[string]interface{}{}); success {
+		var jsonResponse ApiResponseWebhookInfo
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
+		} else {
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+		}
+	} else {
+		errStr = "getWebhookInfo failed"
+	}
+
+	b.error(errStr)
+
+	return ApiResponseWebhookInfo{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseUser and fetch its result.

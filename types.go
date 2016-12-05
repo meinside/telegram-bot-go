@@ -104,6 +104,12 @@ type ApiResponse struct {
 	Result interface{} `json:"result,omitempty"`
 }
 
+// API response with result type: WebhookInfo
+type ApiResponseWebhookInfo struct {
+	ApiResponseBase
+	Result *WebhookInfo `json:"result,omitempty"`
+}
+
 // API response with result type: User
 type ApiResponseUser struct {
 	ApiResponseBase
@@ -162,6 +168,34 @@ type ApiResponseInt struct {
 type ApiResponseGameHighScores struct {
 	ApiResponseBase
 	Result []GameHighScore `json:"result,omitempty"`
+}
+
+// Update types (for allowed_updates)
+//
+// https://core.telegram.org/bots/api#setwebhook
+type UpdateType string
+
+const (
+	UpdateTypeMessage            UpdateType = "message"
+	UpdateTypeEditedMessage      UpdateType = "edited_message"
+	UpdateTypeChannelPost        UpdateType = "channel_post"
+	UpdateTypeEditedChannelPost  UpdateType = "edited_channel_post"
+	UpdateTypeInlineQuery        UpdateType = "inline_query"
+	UpdateTypeChosenInlineResult UpdateType = "chosen_inline_result"
+	UpdateTypeCallbackQuery      UpdateType = "callback_query"
+)
+
+// WebhookInfo
+//
+// https://core.telegram.org/bots/api#webhookinfo
+type WebhookInfo struct {
+	Url                  string       `json:"url"`
+	HasCustomCertificate bool         `json:"has_custom_certificate"`
+	PendingUpdateCount   int          `json:"pending_update_count"`
+	LastErrorDate        int          `json:"last_error_date,omitempty"`
+	LastErrorMessage     string       `json:"last_error_message,omitempty"`
+	MaxConnections       int          `json:"max_connections,omitempty"`
+	AllowedUpdates       []UpdateType `json:"allowed_updates,omitempty"`
 }
 
 // Update
