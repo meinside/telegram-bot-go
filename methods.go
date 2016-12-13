@@ -135,6 +135,17 @@ func (b *Bot) SendPhoto(chatId interface{}, photoFilepath *string, options map[s
 	return b.sendFile(chatId, "sendPhoto", "photo", photoFilepath, options)
 }
 
+// Send a photo with bytes array.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: caption, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendphoto
+func (b *Bot) SendPhotoWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendBytes(chatId, "sendPhoto", "photo", bytes, options)
+}
+
 // Send a photo with file id
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
@@ -157,6 +168,17 @@ func (b *Bot) SendPhotoWithFileId(chatId interface{}, fileId *string, options ma
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatId interface{}, audioFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendFile(chatId, "sendAudio", "audio", audioFilepath, options)
+}
+
+// Send an audio with bytes array.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendaudio
+func (b *Bot) SendAudioWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendBytes(chatId, "sendAudio", "audio", bytes, options)
 }
 
 // Send an audio file with file id.
@@ -183,6 +205,17 @@ func (b *Bot) SendDocument(chatId interface{}, documentFilepath *string, options
 	return b.sendFile(chatId, "sendDocument", "document", documentFilepath, options)
 }
 
+// Send a general with bytes array.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#senddocument
+func (b *Bot) SendDocumentWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendBytes(chatId, "sendDocument", "document", bytes, options)
+}
+
 // Send a general with file id.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
@@ -205,6 +238,17 @@ func (b *Bot) SendDocumentWithFileId(chatId interface{}, fileId *string, options
 // https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatId interface{}, stickerFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendFile(chatId, "sendSticker", "sticker", stickerFilepath, options)
+}
+
+// Send a sticker with bytes array.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendsticker
+func (b *Bot) SendStickerWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendBytes(chatId, "sendSticker", "sticker", bytes, options)
 }
 
 // Send a sticker with file id.
@@ -231,6 +275,17 @@ func (b *Bot) SendVideo(chatId interface{}, videoFilepath *string, options map[s
 	return b.sendFile(chatId, "sendVideo", "video", videoFilepath, options)
 }
 
+// Send a video file with bytes array.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendvideo
+func (b *Bot) SendVideoWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendBytes(chatId, "sendVideo", "video", bytes, options)
+}
+
 // Send a video file with file id.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
@@ -253,6 +308,17 @@ func (b *Bot) SendVideoWithFileId(chatId interface{}, fileId *string, options ma
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatId interface{}, voiceFilepath *string, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendFile(chatId, "sendVoice", "voice", voiceFilepath, options)
+}
+
+// Send a voice file with bytes array.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendvoice
+func (b *Bot) SendVoiceWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendBytes(chatId, "sendVoice", "voice", bytes, options)
 }
 
 // Send a voice file with file id.
@@ -654,7 +720,7 @@ func (b *Bot) GetGameHighScores(userId int, options map[string]interface{}) (res
 func checkIfFileParamExists(params map[string]interface{}) bool {
 	for _, value := range params {
 		switch value.(type) {
-		case *os.File:
+		case *os.File, []byte:
 			return true
 		}
 	}
@@ -751,6 +817,19 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 					}
 				} else {
 					b.error("parameter '%s' (%v) could not be cast to file", key, value)
+				}
+			case []byte:
+				if fbytes, ok := value.([]byte); ok {
+					filename := fmt.Sprintf("%s.%s", key, getExtension(fbytes))
+					if part, err := writer.CreateFormFile(key, filename); err == nil {
+						if _, err = io.Copy(part, bytes.NewReader(fbytes)); err != nil {
+							b.error("could now write to multipart: %s", key)
+						}
+					} else {
+						b.error("could not create form file for parameter '%s' ([]byte)", key)
+					}
+				} else {
+					b.error("parameter '%s' could not be cast to []byte", key)
 				}
 			default:
 				if strValue, ok := b.paramToString(value); ok {
@@ -1088,6 +1167,23 @@ func (b *Bot) sendFile(chatId interface{}, apiName, paramKey string, filepath *s
 	return b.requestResponseMessage(apiName, params)
 }
 
+// Send bytes
+func (b *Bot) sendBytes(chatId interface{}, apiName, paramKey string, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		paramKey:  bytes,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage(apiName, params)
+}
+
 // Send file id (which is already uploaded to Telegram server)
 func (b *Bot) sendFileId(chatId interface{}, apiName, paramKey string, fileId *string, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
@@ -1111,4 +1207,18 @@ func isHttpUrl(path string) bool {
 		return true
 	}
 	return false
+}
+
+// get file extension from bytes array
+//
+// https://www.w3.org/Protocols/rfc1341/4_Content-Type.html
+func getExtension(bytes []byte) string {
+	types := strings.Split(http.DetectContentType(bytes), "/") // ex: "image/jpeg"
+	if len(types) >= 2 {
+		splitted := strings.Split(types[1], ";") // for removing subtype parameter
+		if len(splitted) >= 1 {
+			return splitted[0] // return subtype only
+		}
+	}
+	return "" // default
 }
