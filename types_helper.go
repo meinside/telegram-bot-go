@@ -418,6 +418,16 @@ func (u *Update) HasCallbackQuery() bool {
 	return u.CallbackQuery != nil
 }
 
+// Check if Update has ShippingQuery
+func (u *Update) HasShippingQuery() bool {
+	return u.ShippingQuery != nil
+}
+
+// Check if Update has PreCheckoutQuery
+func (u *Update) HasPreCheckoutQuery() bool {
+	return u.PreCheckoutQuery != nil
+}
+
 ////////////////////////////////
 // Helper functions for User
 //
@@ -530,8 +540,8 @@ func (m *Message) HasVenue() bool {
 }
 
 // Check if Message has NewChatParticipant.
-func (m *Message) HasNewChatMember() bool {
-	return m.NewChatMember != nil
+func (m *Message) HasNewChatMembers() bool {
+	return len(m.NewChatMembers) > 0
 }
 
 // Check if Message has LeftChatParticipant.

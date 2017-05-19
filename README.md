@@ -294,7 +294,7 @@ func main() {
 
 ## License
 
-Copyright (c) 2016 Sungjin Han
+Copyright (c) 2017 Sungjin Han
 
 MIT License
 

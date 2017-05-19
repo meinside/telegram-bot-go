@@ -44,7 +44,7 @@ func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, 
 
 	file, err := os.Open(certFilepath)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 
 	params := map[string]interface{}{
@@ -342,6 +342,30 @@ func (b *Bot) SendVoiceWithFileId(chatId interface{}, fileId *string, options ma
 	return b.sendFileId(chatId, "sendVoice", "voice", fileId, options)
 }
 
+// Send a video note with bytes array.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: duration, length, disable_notification, reply_to_message_id, and reply_markup.
+// (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
+//
+// https://core.telegram.org/bots/api#sendvideonote
+func (b *Bot) SendVideoNoteWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendBytes(chatId, "sendVideoNote", "video_note", bytes, options)
+}
+
+// Send a video note with file id.
+//
+// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+//
+// options include: duration, length, disable_notification, reply_to_message_id, and reply_markup.
+// (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
+//
+// https://core.telegram.org/bots/api#sendvideonote
+func (b *Bot) SendVideoNoteWithFileId(chatId interface{}, fileId *string, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendFileId(chatId, "sendVideoNote", "video_note", fileId, options)
+}
+
 // Send locations.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
@@ -637,6 +661,16 @@ func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result Api
 	return b.requestResponseMessage("editMessageReplyMarkup", options)
 }
 
+// Delete message
+//
+// https://core.telegram.org/bots/api#deletemessage
+func (b *Bot) DeleteMessage(chatId interface{}, messageId int) (result ApiResponse) {
+	return b.requestResponse("deleteMessage", map[string]interface{}{
+		"chat_id":    chatId,
+		"message_id": messageId,
+	})
+}
+
 // Send answers to an inline query.
 //
 // results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, or InlineQueryResultVideo.
@@ -658,6 +692,78 @@ func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, opt
 	}
 
 	return b.requestResponse("answerInlineQuery", params)
+}
+
+// Send invoice.
+//
+// options include: photo_url, photo_size, photo_width, photo_height, need_name, need_phone_number, need_email, need_shipping_address, is_flexible, disable_notification, reply_to_message_id, and reply_markup
+//
+// https://core.telegram.org/bots/api#sendinvoice
+func (b *Bot) SendInvoice(chatId int64, title, description, payload, providerToken, startParameter, currency string, prices []LabeledPrice, options map[string]interface{}) (result ApiResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":         chatId,
+		"title":           title,
+		"description":     description,
+		"payload":         payload,
+		"provider_token":  providerToken,
+		"start_parameter": startParameter,
+		"currency":        currency,
+		"prices":          prices,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage("sendInvoice", params)
+}
+
+// Answer shipping query.
+//
+// if ok is true, shippingOptions should be provided.
+// otherwise, errorMessage should be provided.
+//
+// https://core.telegram.org/bots/api#answershippingquery
+func (b *Bot) AnswerShippingQuery(shippingQueryId *string, ok bool, shippingOptions []ShippingOption, errorMessage *string) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"shipping_query_id": *shippingQueryId,
+		"ok":                ok,
+	}
+	// optional params
+	if ok {
+		if len(shippingOptions) > 0 {
+			params["shipping_options"] = shippingOptions
+		}
+	} else {
+		if errorMessage != nil {
+			params["error_message"] = *errorMessage
+		}
+	}
+
+	return b.requestResponse("answerShippingQuery", params)
+}
+
+// Answer pre-checkout query.
+//
+// https://core.telegram.org/bots/api#answerprecheckoutquery
+func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryId *string, ok bool, errorMessage *string) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"pre_checkout_query_id": *preCheckoutQueryId,
+		"ok": ok,
+	}
+	// optional params
+	if !ok {
+		if errorMessage != nil {
+			params["error_message"] = *errorMessage
+		}
+	}
+
+	return b.requestResponse("answerPreCheckoutQuery", params)
 }
 
 // Send a game.
@@ -783,18 +889,12 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		} else {
 			b.error("parameter '%+v' could not be cast to string value", param)
 		}
-	case []interface{},
-		InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, ForceReply,
-		InlineQueryResultCachedAudio, InlineQueryResultCachedDocument, InlineQueryResultCachedGif, InlineQueryResultCachedMpeg4Gif, InlineQueryResultGame, InlineQueryResultCachedPhoto, InlineQueryResultCachedSticker, InlineQueryResultCachedVideo, InlineQueryResultCachedVoice,
-		InlineQueryResultArticle, InlineQueryResultAudio, InlineQueryResultContact, InlineQueryResultDocument, InlineQueryResultGif, InlineQueryResultLocation, InlineQueryResultMpeg4Gif, InlineQueryResultPhoto, InlineQueryResultVenue, InlineQueryResultVideo, InlineQueryResultVoice,
-		[]UpdateType:
+	default:
 		if json, err := json.Marshal(param); err == nil {
 			return string(json), true
 		} else {
-			b.error(err.Error())
+			b.error("parameter '%+v' could not be encoded as json: %s", param, err)
 		}
-	default:
-		b.error("unexpected type: '%+v' (%T)", param, param)
 	}
 
 	return "", false
@@ -850,7 +950,7 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 		}
 
 		if err := writer.Close(); err != nil {
-			b.error("error while closing writer (%s)", err.Error())
+			b.error("error while closing writer (%s)", err)
 		}
 
 		if req, err := http.NewRequest("POST", apiUrl, body); err == nil {
@@ -862,13 +962,13 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 				if bytes, err := ioutil.ReadAll(resp.Body); err == nil {
 					return bytes, true
 				} else {
-					b.error("response read error: %s", err.Error())
+					b.error("response read error: %s", err)
 				}
 			} else {
-				b.error("request error: %s", err.Error())
+				b.error("request error: %s", err)
 			}
 		} else {
-			b.error("building request error: %s", err.Error())
+			b.error("building request error: %s", err)
 		}
 	} else { // www-form urlencoded
 		paramValues := url.Values{}
@@ -889,13 +989,13 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 				if bytes, err := ioutil.ReadAll(resp.Body); err == nil {
 					return bytes, true
 				} else {
-					b.error("response read error: %s", err.Error())
+					b.error("response read error: %s", err)
 				}
 			} else {
-				b.error("request error: %s", err.Error())
+				b.error("request error: %s", err)
 			}
 		} else {
-			b.error("building request error: %s", err.Error())
+			b.error("building request error: %s", err)
 		}
 	}
 
@@ -911,7 +1011,7 @@ func (b *Bot) requestResponse(method string, params map[string]interface{}) (res
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -931,7 +1031,7 @@ func (b *Bot) requestResponseWebhookInfo() (result ApiResponseWebhookInfo) {
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = "getWebhookInfo failed"
@@ -951,7 +1051,7 @@ func (b *Bot) requestResponseUser(method string, params map[string]interface{}) 
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -971,7 +1071,7 @@ func (b *Bot) requestResponseMessage(method string, params map[string]interface{
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -991,7 +1091,7 @@ func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1011,7 +1111,7 @@ func (b *Bot) requestResponseUpdates(method string, params map[string]interface{
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1031,7 +1131,7 @@ func (b *Bot) requestResponseFile(method string, params map[string]interface{}) 
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1051,7 +1151,7 @@ func (b *Bot) requestResponseChat(method string, params map[string]interface{}) 
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1071,7 +1171,7 @@ func (b *Bot) requestResponseChatAdministrators(method string, params map[string
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1091,7 +1191,7 @@ func (b *Bot) requestResponseChatMember(method string, params map[string]interfa
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1111,7 +1211,7 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1131,7 +1231,7 @@ func (b *Bot) requestResponseGameHighScores(method string, params map[string]int
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
 		} else {
-			errStr = fmt.Sprintf("json parse error: %s (%s)", err.Error(), string(bytes))
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
 		errStr = fmt.Sprintf("%s failed", method)
@@ -1151,14 +1251,14 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 	if body, err := ioutil.ReadAll(req.Body); err == nil {
 		var webhook Update
 		if err := json.Unmarshal(body, &webhook); err != nil {
-			b.error("error while parsing json (%s)", err.Error())
+			b.error("error while parsing json (%s)", err)
 		} else {
 			b.verbose("received webhook body: %s", string(body))
 
 			b.updateHandler(b, webhook, nil)
 		}
 	} else {
-		b.error("error while reading webhook request (%s)", err.Error())
+		b.error("error while reading webhook request (%s)", err)
 
 		b.updateHandler(b, Update{}, err)
 	}

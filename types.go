@@ -22,14 +22,16 @@ const (
 type ChatAction string
 
 const (
-	ChatActionTyping         ChatAction = "typing"
-	ChatActionUploadPhoto    ChatAction = "upload_photo"
-	ChatActionRecordVideo    ChatAction = "record_video"
-	ChatActionUploadVideo    ChatAction = "upload_video"
-	ChatActionRecordAudio    ChatAction = "record_audio"
-	ChatActionUploadAudio    ChatAction = "upload_audio"
-	ChatActionUploadDocument ChatAction = "upload_document"
-	ChatActionFindLocation   ChatAction = "find_location"
+	ChatActionTyping          ChatAction = "typing"
+	ChatActionUploadPhoto     ChatAction = "upload_photo"
+	ChatActionRecordVideo     ChatAction = "record_video"
+	ChatActionUploadVideo     ChatAction = "upload_video"
+	ChatActionRecordAudio     ChatAction = "record_audio"
+	ChatActionUploadAudio     ChatAction = "upload_audio"
+	ChatActionUploadDocument  ChatAction = "upload_document"
+	ChatActionFindLocation    ChatAction = "find_location"
+	ChatActionRecordVideoNote ChatAction = "record_video_note"
+	ChatActionUploadVideoNote ChatAction = "upload_video_note"
 )
 
 // Inline query result types
@@ -210,16 +212,19 @@ type Update struct {
 	InlineQuery        *InlineQuery        `json:"inline_query,omitempty"`
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
 	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
+	ShippingQuery      *ShippingQuery      `json:"shipping_query,omitempty"`
+	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query,omitempty"`
 }
 
 // User
 //
 // https://core.telegram.org/bots/api#user
 type User struct {
-	Id        int     `json:"id"`
-	FirstName *string `json:"first_name"`
-	LastName  *string `json:"last_name,omitempty"`
-	Username  *string `json:"username,omitempty"`
+	Id           int     `json:"id"`
+	FirstName    *string `json:"first_name"`
+	LastName     *string `json:"last_name,omitempty"`
+	Username     *string `json:"username,omitempty"`
+	LanguageCode *string `json:"language_code,omitempty"` // https://en.wikipedia.org/wiki/IETF_language_tag
 }
 
 // Chat
@@ -314,6 +319,17 @@ type Voice struct {
 	FileSize int     `json:"file_size,omitempty"`
 }
 
+// VideoNote
+//
+// https://core.telegram.org/bots/api#videonote
+type VideoNote struct {
+	FileId   *string    `json:"file_id"`
+	Length   int        `json:"length"`
+	Duration int        `json:"duration"`
+	Thumb    *PhotoSize `json:"thumb,omitempty"`
+	FileSize int        `json:"file_size,omitempty"`
+}
+
 // Contact
 //
 // https://core.telegram.org/bots/api#contact
@@ -403,6 +419,7 @@ type InlineKeyboardButton struct {
 	SwitchInlineQuery            string       `json:"switch_inline_query,omitempty"`
 	SwitchInlineQueryCurrentChat string       `json:"switch_inline_query_current_chat,omitempty"`
 	CallbackGame                 CallbackGame `json:"callback_game,omitempty"`
+	Pay                          bool         `json:"pay,omitempty"`
 }
 
 // CallbackQuery
@@ -416,6 +433,29 @@ type CallbackQuery struct {
 	ChatInstance    *string  `json:"chat_instance"`
 	Data            *string  `json:"data,omitempty"`
 	GameShortName   *string  `json:"game_short_name,omitempty"`
+}
+
+// ShippingQuery
+//
+// https://core.telegram.org/bots/api#shippingquery
+type ShippingQuery struct {
+	Id              *string          `json:"id"`
+	From            *User            `json:"from"`
+	InvoicePayload  *string          `json:"invoice_payload"`
+	ShippingAddress *ShippingAddress `json:"shipping_address"`
+}
+
+// PreCheckoutQuery
+//
+// https://core.telegram.org/bots/api#precheckoutquery
+type PreCheckoutQuery struct {
+	Id                *string    `json:"id"`
+	From              *User      `json:"from"`
+	Currency          *string    `json:"currency"`
+	TotalAmount       int        `json:"total_amount"`
+	InvoicePayload    *string    `json:"invoice_payload"`
+	ShippingOptioniId *string    `json:"shipping_option_id,omitempty"`
+	OrderInfo         *OrderInfo `json:"order_info,omitempty"`
 }
 
 // ForceReply
@@ -438,40 +478,43 @@ type ChatMember struct {
 //
 // https://core.telegram.org/bots/api#message
 type Message struct {
-	MessageId             int             `json:"message_id"`
-	From                  *User           `json:"from,omitempty"`
-	Date                  int             `json:"date"`
-	Chat                  *Chat           `json:"chat"`
-	ForwardFrom           *User           `json:"forward_from,omitempty"`
-	ForwardFromChat       *Chat           `json:"forward_from_chat,omitempty"`
-	ForwardFromMessageId  int             `json:"forward_from_message_id,omitempty"`
-	ForwardDate           int             `json:"forward_date,omitempty"`
-	ReplyToMessage        *Message        `json:"reply_to_message,omitempty"`
-	EditDate              int             `json:"edit_date,omitempty"`
-	Text                  *string         `json:"text,omitempty"`
-	Entities              []MessageEntity `json:"entities,omitempty"`
-	Audio                 *Audio          `json:"audio,omitempty"`
-	Document              *Document       `json:"document,omitempty"`
-	Game                  *Game           `json:"game,omitempty"`
-	Photo                 []PhotoSize     `json:"photo,omitempty"`
-	Sticker               *Sticker        `json:"sticker,omitempty"`
-	Video                 *Video          `json:"video,omitempty"`
-	Voice                 *Voice          `json:"voice,omitempty"`
-	Caption               *string         `json:"caption,omitempty"`
-	Contact               *Contact        `json:"contact,omitempty"`
-	Location              *Location       `json:"location,omitempty"`
-	Venue                 *Venue          `json:"venue,omitempty"`
-	NewChatMember         *User           `json:"new_chat_member,omitempty"`
-	LeftChatMember        *User           `json:"left_chat_member,omitempty"`
-	NewChatTitle          *string         `json:"new_chat_title,omitempty"`
-	NewChatPhoto          []PhotoSize     `json:"new_chat_photo,omitempty"`
-	DeleteChatPhoto       bool            `json:"delete_chat_photo,omitempty"`
-	GroupChatCreated      bool            `json:"group_chat_created,omitempty"`
-	SupergroupChatCreated bool            `json:"supergroup_chat_created,omitempty"`
-	ChannelChatCreated    bool            `json:"channel_chat_created,omitempty"`
-	MigrateToChatId       int64           `json:"migrate_to_chat_id,omitempty"`
-	MigrateFromChatId     int64           `json:"migrate_from_chat_id,omitempty"`
-	PinnedMessage         *Message        `json:"pinned_message,omitempty"`
+	MessageId             int                `json:"message_id"`
+	From                  *User              `json:"from,omitempty"`
+	Date                  int                `json:"date"`
+	Chat                  *Chat              `json:"chat"`
+	ForwardFrom           *User              `json:"forward_from,omitempty"`
+	ForwardFromChat       *Chat              `json:"forward_from_chat,omitempty"`
+	ForwardFromMessageId  int                `json:"forward_from_message_id,omitempty"`
+	ForwardDate           int                `json:"forward_date,omitempty"`
+	ReplyToMessage        *Message           `json:"reply_to_message,omitempty"`
+	EditDate              int                `json:"edit_date,omitempty"`
+	Text                  *string            `json:"text,omitempty"`
+	Entities              []MessageEntity    `json:"entities,omitempty"`
+	Audio                 *Audio             `json:"audio,omitempty"`
+	Document              *Document          `json:"document,omitempty"`
+	Game                  *Game              `json:"game,omitempty"`
+	Photo                 []PhotoSize        `json:"photo,omitempty"`
+	Sticker               *Sticker           `json:"sticker,omitempty"`
+	Video                 *Video             `json:"video,omitempty"`
+	Voice                 *Voice             `json:"voice,omitempty"`
+	VideoNote             *VideoNote         `json:"video_note,omitempty"`
+	Caption               *string            `json:"caption,omitempty"`
+	Contact               *Contact           `json:"contact,omitempty"`
+	Location              *Location          `json:"location,omitempty"`
+	Venue                 *Venue             `json:"venue,omitempty"`
+	NewChatMembers        []User             `json:"new_chat_members,omitempty"`
+	LeftChatMember        *User              `json:"left_chat_member,omitempty"`
+	NewChatTitle          *string            `json:"new_chat_title,omitempty"`
+	NewChatPhoto          []PhotoSize        `json:"new_chat_photo,omitempty"`
+	DeleteChatPhoto       bool               `json:"delete_chat_photo,omitempty"`
+	GroupChatCreated      bool               `json:"group_chat_created,omitempty"`
+	SupergroupChatCreated bool               `json:"supergroup_chat_created,omitempty"`
+	ChannelChatCreated    bool               `json:"channel_chat_created,omitempty"`
+	MigrateToChatId       int64              `json:"migrate_to_chat_id,omitempty"`
+	MigrateFromChatId     int64              `json:"migrate_from_chat_id,omitempty"`
+	PinnedMessage         *Message           `json:"pinned_message,omitempty"`
+	Invoice               *Invoice           `json:"invoice,omitempty"`
+	SuccessfulPayment     *SuccessfulPayment `json:"successful_payment,omitempty"`
 }
 
 // Inline query
@@ -548,6 +591,7 @@ type InlineQueryResultGif struct { // https://core.telegram.org/bots/api#inlineq
 	GifUrl              *string               `json:"gif_url"`
 	GifWidth            int                   `json:"gif_width,omitempty"`
 	GifHeight           int                   `json:"gif_height,omitempty"`
+	GifDuration         int                   `json:"gif_duration,omitempty"`
 	ThumbUrl            *string               `json:"thumb_url"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
@@ -559,6 +603,7 @@ type InlineQueryResultMpeg4Gif struct { // https://core.telegram.org/bots/api#in
 	Mpeg4Url            *string               `json:"mpeg4_url"`
 	Mpeg4Width          int                   `json:"mpeg4_width,omitempty"`
 	Mpeg4Height         int                   `json:"mpeg4_height,omitempty"`
+	Mpeg4Duration       int                   `json:"mpeg4_duration,omitempty"`
 	ThumbUrl            *string               `json:"thumb_url"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
@@ -779,4 +824,67 @@ type GameHighScore struct {
 	Position int  `json:"position"`
 	User     User `json:"user"`
 	Score    int  `json:"score"`
+}
+
+//Invoice
+//
+// https://core.telegram.org/bots/api#invoice
+type Invoice struct {
+	Title          *string `json:"title"`
+	Description    *string `json:"description"`
+	StartParameter *string `json:"start_parameter"`
+	Currency       *string `json:"currency"`     // https://core.telegram.org/bots/payments#supported-currencies
+	TotalAmount    int     `json:"total_amount"` // https://core.telegram.org/bots/payments/currencies.json
+}
+
+// SuccessfulPayment
+//
+// https://core.telegram.org/bots/api#successfulpayment
+type SuccessfulPayment struct {
+	Currency                *string    `json:"currency"`
+	TotalAmount             int        `json:"total_amount"`
+	InvoicePayload          *string    `json:"invoice_payload"`
+	ShippingOptionId        *string    `json:"shipping_option_id,omitempty"`
+	OrderInfo               *OrderInfo `json:"order_info,omitempty"`
+	TelegramPaymentChargeId *string    `json:"telegram_payment_charge_id"`
+	ProviderPaymentChargeId *string    `json:"provider_payment_charge_id"`
+}
+
+// OrderInfo
+//
+// https://core.telegram.org/bots/api#orderinfo
+type OrderInfo struct {
+	Name            *string          `json:"name,omitempty"`
+	PhoneNumber     *string          `json:"phone_number,omitempty"`
+	Email           *string          `json:"email,omitempty"`
+	ShippingAddress *ShippingAddress `json:"shipping_address,omitempty"`
+}
+
+// ShippingOption
+//
+// https://core.telegram.org/bots/api#shippingoption
+type ShippingOption struct {
+	Id     *string        `json:"id"`
+	Title  *string        `json:"title"`
+	Prices []LabeledPrice `json:"prices"`
+}
+
+// LabeledPrice
+//
+// https://core.telegram.org/bots/api#labeledprice
+type LabeledPrice struct {
+	Label  string `json:"label"`
+	Amount int    `json:"amount"`
+}
+
+// ShippingAddress
+//
+// https://core.telegram.org/bots/api#shippingaddress
+type ShippingAddress struct {
+	CountryCode *string `json:"country_code"`
+	State       *string `json:"state"`
+	City        *string `json:"city"`
+	StreetLine1 *string `json:"street_line1"`
+	StreetLine2 *string `json:"street_line2"`
+	PostCode    *string `json:"post_code"`
 }
