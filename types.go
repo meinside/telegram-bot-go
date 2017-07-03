@@ -166,6 +166,12 @@ type ApiResponseInt struct {
 	Result int `json:"result,omitempty"`
 }
 
+// API response with result type: string
+type ApiResponseString struct {
+	ApiResponseBase
+	Result string `json:"result,omitempty"`
+}
+
 // API response with result type: GameHighScores
 type ApiResponseGameHighScores struct {
 	ApiResponseBase
@@ -231,13 +237,16 @@ type User struct {
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
-	Id                          int64     `json:"id"`
-	Type                        *ChatType `json:"type"`
-	Title                       *string   `json:"title,omitempty"`
-	Username                    *string   `json:"username,omitempty"`
-	FirstName                   *string   `json:"first_name,omitempty"`
-	LastName                    *string   `json:"last_name,omitempty"`
-	AllMembersAreAdministrators bool      `json:"all_members_are_administrators,omitempty"`
+	Id                          int64      `json:"id"`
+	Type                        *ChatType  `json:"type"`
+	Title                       *string    `json:"title,omitempty"`
+	Username                    *string    `json:"username,omitempty"`
+	FirstName                   *string    `json:"first_name,omitempty"`
+	LastName                    *string    `json:"last_name,omitempty"`
+	AllMembersAreAdministrators bool       `json:"all_members_are_administrators,omitempty"`
+	Photo                       *ChatPhoto `json:"photo,omitempty"`
+	Description                 *string    `json:"description,omitempty"`
+	InviteLink                  *string    `json:"invite_link,omitempty"`
 }
 
 // Audio
@@ -466,12 +475,34 @@ type ForceReply struct {
 	Selective  bool `json:"selective,omitempty"`
 }
 
+// ChatPhoto
+//
+// https://core.telegram.org/bots/api#chatphoto
+type ChatPhoto struct {
+	SmallFileId string `json:"small_file_id"`
+	BigFileId   string `json:"big_file_id"`
+}
+
 // ChatMember
 //
 // https://core.telegram.org/bots/api#chatmember
 type ChatMember struct {
-	User   *User            `json:"user"`
-	Status ChatMemberStatus `json:"status"`
+	User                  *User            `json:"user"`
+	Status                ChatMemberStatus `json:"status"`
+	UntilDate             int              `json:"until_date,omitempty"`
+	CanBeEdited           bool             `json:"can_be_edited,omitempty"`
+	CanChangeInfo         bool             `json:"can_change_info,omitempty"`
+	CanPostMessages       bool             `json:"can_post_messages,omitempty"`
+	CanEditMessages       bool             `json:"can_edit_messages,omitempty"`
+	CanDeleteMessages     bool             `json:"can_delete_messages,omitempty"`
+	CanInviteUsers        bool             `json:"can_invite_users,omitempty"`
+	CanRestrictMembers    bool             `json:"can_restrict_members,omitempty"`
+	CanPinMessages        bool             `json:"can_pin_messages,omitempty"`
+	CanPromoteMembers     bool             `json:"can_promote_members,omitempty"`
+	CanSendMessages       bool             `json:"can_send_messages,omitempty"`
+	CanSendMediaMessages  bool             `json:"can_send_media_messages,omitempty"`
+	CanSendOtherMessages  bool             `json:"can_send_other_messages,omitempty"`
+	CanAddWebPagePreviews bool             `json:"can_add_web_page_previews,omitempty"`
 }
 
 // Message

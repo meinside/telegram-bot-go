@@ -505,6 +505,17 @@ func (b *Bot) KickChatMember(chatId interface{}, userId int) (result ApiResponse
 	return b.requestResponse("kickChatMember", params)
 }
 
+func (b *Bot) KickChatMemberUntil(chatId interface{}, userId int, untilDate int) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":    chatId,
+		"user_id":    userId,
+		"until_date": untilDate,
+	}
+
+	return b.requestResponse("kickChatMember", params)
+}
+
 // Leave chat
 //
 // https://core.telegram.org/bots/api#leavechat
@@ -528,6 +539,154 @@ func (b *Bot) UnbanChatMember(chatId interface{}, userId int) (result ApiRespons
 	}
 
 	return b.requestResponse("unbanChatMember", params)
+}
+
+// Restrict chat member
+//
+// options include: until_date, can_send_messages, can_send_media_messages, can_send_other_messages, and can_send_web_page_previews
+//
+// https://core.telegram.org/bots/api#restrictchatmember
+func (b *Bot) RestrictChatMember(chatId interface{}, userId int, options map[string]interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"user_id": userId,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponse("restrictChatMember", params)
+}
+
+// Promote chat member
+//
+// options include: can_change_info, can_post_messages, can_edit_messages, can_delete_messages, can_invite_users, can_restrict_members, can_pin_messages, and can_promote_members
+//
+// https://core.telegram.org/bots/api#promotechatmember
+func (b *Bot) PromoteChatMember(chatId interface{}, userId int, options map[string]interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"user_id": userId,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponse("promoteChatMember", params)
+}
+
+// Export chat invite link
+//
+// https://core.telegram.org/bots/api#exportchatinvitelink
+func (b *Bot) ExportChatInviteLink(chatId interface{}) (result ApiResponseString) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResponseString("exportChatInviteLink", params)
+}
+
+// Set chat photo
+//
+// https://core.telegram.org/bots/api#setchatphoto
+func (b *Bot) SetChatPhotoWithBytes(chatId interface{}, bytes []byte) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"photo":   bytes,
+	}
+
+	return b.requestResponse("setChatPhoto", params)
+}
+
+func (b *Bot) SetChatPhotoWithFileId(chatId interface{}, fileId *string) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"photo":   *fileId,
+	}
+
+	return b.requestResponse("setChatPhoto", params)
+}
+
+// Delete chat photo
+//
+// https://core.telegram.org/bots/api#deletechatphoto
+func (b *Bot) DeleteChatPhoto(chatId interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResponse("deleteChatPhoto", params)
+}
+
+// Set chat title
+//
+// https://core.telegram.org/bots/api#setchattitle
+func (b *Bot) SetChatTitle(chatId interface{}, title string) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"title":   title,
+	}
+
+	return b.requestResponse("setChatTitle", params)
+}
+
+// Set chat description
+//
+// https://core.telegram.org/bots/api#setchatdescription
+func (b *Bot) SetChatDescription(chatId interface{}, description string) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":     chatId,
+		"description": description,
+	}
+
+	return b.requestResponse("setChatDescription", params)
+}
+
+// Pin chat message
+//
+// options include: disable_notification
+//
+// https://core.telegram.org/bots/api#pinchatmessage
+func (b *Bot) PinChatMessage(chatId interface{}, messageId int, options map[string]interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":    chatId,
+		"message_id": messageId,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponse("pinChatMessage", params)
+}
+
+// Unpin chat message
+//
+// https://core.telegram.org/bots/api#unpinchatmessage
+func (b *Bot) UnpinChatMessage(chatId interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResponse("unpinChatMessage", params)
 }
 
 // Get chat
@@ -1220,6 +1379,26 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 	b.error(errStr)
 
 	return ApiResponseInt{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for ApiResponseString and fetch its result.
+func (b *Bot) requestResponseString(method string, params map[string]interface{}) (result ApiResponseString) {
+	var errStr string
+
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseString
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
+		} else {
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+		}
+	} else {
+		errStr = fmt.Sprintf("%s failed", method)
+	}
+
+	b.error(errStr)
+
+	return ApiResponseString{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseGameHighScores and fetch its result.
