@@ -36,11 +36,11 @@ func NewInlineQueryResultArticle(title, messageText, description string) (newArt
 		return &InlineQueryResultArticle{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeArticle,
-				Id:   &id,
+				Id:   id,
 			},
-			Title: &title,
+			Title: title,
 			InputMessageContent: InputTextMessageContent{
-				MessageText: &messageText,
+				MessageText: messageText,
 			},
 			Description: &description,
 		}, &id
@@ -59,10 +59,10 @@ func NewInlineQueryResultPhoto(photoUrl, thumbUrl string) (newPhoto *InlineQuery
 		return &InlineQueryResultPhoto{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypePhoto,
-				Id:   &id,
+				Id:   id,
 			},
-			PhotoUrl: &photoUrl,
-			ThumbUrl: &thumbUrl,
+			PhotoUrl: photoUrl,
+			ThumbUrl: thumbUrl,
 		}, &id
 	}
 
@@ -79,10 +79,10 @@ func NewInlineQueryResultGif(gifUrl, thumbUrl string) (newGif *InlineQueryResult
 		return &InlineQueryResultGif{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeGif,
-				Id:   &id,
+				Id:   id,
 			},
-			GifUrl:   &gifUrl,
-			ThumbUrl: &thumbUrl,
+			GifUrl:   gifUrl,
+			ThumbUrl: thumbUrl,
 		}, &id
 	}
 
@@ -99,10 +99,10 @@ func NewInlineQueryResultMpeg4Gif(mpeg4Url, thumbUrl string) (newMpeg4Gif *Inlin
 		return &InlineQueryResultMpeg4Gif{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeMpeg4Gif,
-				Id:   &id,
+				Id:   id,
 			},
-			Mpeg4Url: &mpeg4Url,
-			ThumbUrl: &thumbUrl,
+			Mpeg4Url: mpeg4Url,
+			ThumbUrl: thumbUrl,
 		}, &id
 	}
 
@@ -117,12 +117,12 @@ func NewInlineQueryResultVideo(videoUrl, thumbUrl, title string, mimeType VideoM
 		return &InlineQueryResultVideo{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeVideo,
-				Id:   &id,
+				Id:   id,
 			},
-			VideoUrl: &videoUrl,
-			MimeType: &mimeType,
-			ThumbUrl: &thumbUrl,
-			Title:    &title,
+			VideoUrl: videoUrl,
+			MimeType: mimeType,
+			ThumbUrl: thumbUrl,
+			Title:    title,
 		}, &id
 	}
 
@@ -137,10 +137,10 @@ func NewInlineQueryResultAudio(audioUrl, title string) (newAudio *InlineQueryRes
 		return &InlineQueryResultAudio{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeAudio,
-				Id:   &id,
+				Id:   id,
 			},
-			AudioUrl: &audioUrl,
-			Title:    &title,
+			AudioUrl: audioUrl,
+			Title:    title,
 		}, &id
 	}
 
@@ -155,10 +155,10 @@ func NewInlineQueryResultVoice(voiceUrl, title string) (newVoice *InlineQueryRes
 		return &InlineQueryResultVoice{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeVoice,
-				Id:   &id,
+				Id:   id,
 			},
-			VoiceUrl: &voiceUrl,
-			Title:    &title,
+			VoiceUrl: voiceUrl,
+			Title:    title,
 		}, &id
 	}
 
@@ -173,11 +173,11 @@ func NewInlineQueryResultDocument(documentUrl, title string, mimeType DocumentMi
 		return &InlineQueryResultDocument{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeDocument,
-				Id:   &id,
+				Id:   id,
 			},
-			Title:       &title,
-			DocumentUrl: &documentUrl,
-			MimeType:    &mimeType,
+			Title:       title,
+			DocumentUrl: documentUrl,
+			MimeType:    mimeType,
 		}, &id
 	}
 
@@ -192,11 +192,11 @@ func NewInlineQueryResultLocation(latitude, longitude float32, title string) (ne
 		return &InlineQueryResultLocation{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeLocation,
-				Id:   &id,
+				Id:   id,
 			},
 			Latitude:  latitude,
 			Longitude: longitude,
-			Title:     &title,
+			Title:     title,
 		}, &id
 	}
 
@@ -211,12 +211,12 @@ func NewInlineQueryResultVenue(latitude, longitude float32, title, address strin
 		return &InlineQueryResultVenue{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeVenue,
-				Id:   &id,
+				Id:   id,
 			},
 			Latitude:  latitude,
 			Longitude: longitude,
-			Title:     &title,
-			Address:   &address,
+			Title:     title,
+			Address:   address,
 		}, &id
 	}
 
@@ -226,16 +226,15 @@ func NewInlineQueryResultVenue(latitude, longitude float32, title, address strin
 // Helper function for generating a new InlineQueryResultContact
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcontact
-func NewInlineQueryResultContact(phoneNumber, firstName, lastName string) (newContact *InlineQueryResultContact, generatedId *string) {
+func NewInlineQueryResultContact(phoneNumber, firstName string) (newContact *InlineQueryResultContact, generatedId *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultContact{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeContact,
-				Id:   &id,
+				Id:   id,
 			},
-			PhoneNumber: &phoneNumber,
-			FirstName:   &firstName,
-			LastName:    &lastName,
+			PhoneNumber: phoneNumber,
+			FirstName:   firstName,
 		}, &id
 	}
 
@@ -250,9 +249,9 @@ func NewInlineQueryResultCachedPhoto(photoFileId string) (newPhoto *InlineQueryR
 		return &InlineQueryResultCachedPhoto{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypePhoto,
-				Id:   &id,
+				Id:   id,
 			},
-			PhotoFileId: &photoFileId,
+			PhotoFileId: photoFileId,
 		}, &id
 	}
 
@@ -267,9 +266,9 @@ func NewInlineQueryResultCachedGif(gifFileId string) (newGif *InlineQueryResultC
 		return &InlineQueryResultCachedGif{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeGif,
-				Id:   &id,
+				Id:   id,
 			},
-			GifFileId: &gifFileId,
+			GifFileId: gifFileId,
 		}, &id
 	}
 
@@ -284,9 +283,9 @@ func NewInlineQueryResultCachedMpeg4Gif(mpeg4FileId string) (newMpeg4Gif *Inline
 		return &InlineQueryResultCachedMpeg4Gif{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeMpeg4Gif,
-				Id:   &id,
+				Id:   id,
 			},
-			Mpeg4FileId: &mpeg4FileId,
+			Mpeg4FileId: mpeg4FileId,
 		}, &id
 	}
 
@@ -301,9 +300,9 @@ func NewInlineQueryResultCachedSticker(stickerFileId string) (newSticker *Inline
 		return &InlineQueryResultCachedSticker{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeSticker,
-				Id:   &id,
+				Id:   id,
 			},
-			StickerFileId: &stickerFileId,
+			StickerFileId: stickerFileId,
 		}, &id
 	}
 
@@ -318,10 +317,10 @@ func NewInlineQueryResultCachedDocument(title, documentFileId string) (newDocume
 		return &InlineQueryResultCachedDocument{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeDocument,
-				Id:   &id,
+				Id:   id,
 			},
-			Title:          &title,
-			DocumentFileId: &documentFileId,
+			Title:          title,
+			DocumentFileId: documentFileId,
 		}, &id
 	}
 
@@ -336,10 +335,10 @@ func NewInlineQueryResultCachedVideo(title, videoFileId string) (newVideo *Inlin
 		return &InlineQueryResultCachedVideo{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeVideo,
-				Id:   &id,
+				Id:   id,
 			},
-			Title:       &title,
-			VideoFileId: &videoFileId,
+			Title:       title,
+			VideoFileId: videoFileId,
 		}, &id
 	}
 
@@ -354,10 +353,10 @@ func NewInlineQueryResultCachedVoice(title, voiceFileId string) (newVoice *Inlin
 		return &InlineQueryResultCachedVoice{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeVoice,
-				Id:   &id,
+				Id:   id,
 			},
-			Title:       &title,
-			VoiceFileId: &voiceFileId,
+			Title:       title,
+			VoiceFileId: voiceFileId,
 		}, &id
 	}
 
@@ -372,9 +371,9 @@ func NewInlineQueryResultCachedAudio(audioFileId string) (newAudio *InlineQueryR
 		return &InlineQueryResultCachedAudio{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeAudio,
-				Id:   &id,
+				Id:   id,
 			},
-			AudioFileId: &audioFileId,
+			AudioFileId: audioFileId,
 		}, &id
 	}
 
@@ -640,9 +639,10 @@ func NewInlineKeyboardButtonsWithUrl(values map[string]string) []InlineKeyboardB
 	keyboards := []InlineKeyboardButton{}
 
 	for text, url := range values {
+		u := url
 		keyboards = append(keyboards, InlineKeyboardButton{
 			Text: text,
-			Url:  url,
+			Url:  &u,
 		})
 	}
 
@@ -658,10 +658,11 @@ func NewInlineKeyboardButtonsWithCallbackData(values map[string]string) []Inline
 func NewInlineKeyboardButtonsAsColumnsWithCallbackData(values map[string]string) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
-	for text, callbackData := range values {
+	for text, data := range values {
+		callbackData := data
 		keyboards = append(keyboards, InlineKeyboardButton{
 			Text:         text,
-			CallbackData: callbackData,
+			CallbackData: &callbackData,
 		})
 	}
 
@@ -672,11 +673,12 @@ func NewInlineKeyboardButtonsAsColumnsWithCallbackData(values map[string]string)
 func NewInlineKeyboardButtonsAsRowsWithCallbackData(values map[string]string) [][]InlineKeyboardButton {
 	keyboards := [][]InlineKeyboardButton{}
 
-	for text, callbackData := range values {
+	for text, data := range values {
+		callbackData := data
 		keyboards = append(keyboards, []InlineKeyboardButton{
 			InlineKeyboardButton{
 				Text:         text,
-				CallbackData: callbackData,
+				CallbackData: &callbackData,
 			},
 		})
 	}
@@ -689,9 +691,10 @@ func NewInlineKeyboardButtonsWithSwitchInlineQuery(values map[string]string) []I
 	keyboards := []InlineKeyboardButton{}
 
 	for text, switchInlineQuery := range values {
+		query := switchInlineQuery
 		keyboards = append(keyboards, InlineKeyboardButton{
 			Text:              text,
-			SwitchInlineQuery: switchInlineQuery,
+			SwitchInlineQuery: &query,
 		})
 	}
 

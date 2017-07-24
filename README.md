@@ -50,7 +50,9 @@ Also, you can generate certificate and private key using **telegrambot.GenCertAn
 ## Usage: with incoming webhook
 
 ```go
-// sample code for telegram-bot-go (receive webhooks), last update: 2016.04.14.
+// sample code for telegram-bot-go (receive webhooks),
+//
+// last update: 2017.07.24.
 package main
 
 import (
@@ -79,7 +81,7 @@ func main() {
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
-		log.Printf("Bot information: @%s (%s)\n", *me.Result.Username, *me.Result.FirstName)
+		log.Printf("Bot information: @%s (%s)\n", *me.Result.Username, me.Result.FirstName)
 
 		// delete webhook
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
@@ -121,7 +123,7 @@ func main() {
 								}
 
 								if webhook.Message.HasContact() {
-									message = fmt.Sprintf("I received @%s's phone no.: %s", *webhook.Message.From.Username, *webhook.Message.Contact.PhoneNumber)
+									message = fmt.Sprintf("I received @%s's phone no.: %s", *webhook.Message.From.Username, webhook.Message.Contact.PhoneNumber)
 								} else if webhook.Message.HasLocation() {
 									message = fmt.Sprintf("I received @%s's location: (%f, %f)", *webhook.Message.From.Username, webhook.Message.Location.Latitude, webhook.Message.Location.Longitude)
 								} else {
@@ -132,7 +134,7 @@ func main() {
 									}
 								}
 								// send message
-								if sent := b.SendMessage(webhook.Message.Chat.Id, &message, options); !sent.Ok {
+								if sent := b.SendMessage(webhook.Message.Chat.Id, message, options); !sent.Ok {
 									log.Printf("*** failed to send message: %s\n", *sent.Description)
 								}
 							} else if webhook.HasInlineQuery() {
@@ -152,7 +154,7 @@ func main() {
 								}
 
 								// answer inline query
-								if sent := b.AnswerInlineQuery(*webhook.InlineQuery.Id, results, nil); !sent.Ok {
+								if sent := b.AnswerInlineQuery(webhook.InlineQuery.Id, results, nil); !sent.Ok {
 									log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 								}
 							}
@@ -180,7 +182,9 @@ func main() {
 It would be useful when you're behind a firewall or something.
 
 ```go
-// sample code for telegram-bot-go (get updates), last update: 2016.04.14.
+// sample code for telegram-bot-go (get updates),
+//
+// last update: 2017.07.24.
 package main
 
 import (
@@ -206,7 +210,7 @@ func main() {
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
-		log.Printf("Bot information: @%s (%s)\n", *me.Result.Username, *me.Result.FirstName)
+		log.Printf("Bot information: @%s (%s)\n", *me.Result.Username, me.Result.FirstName)
 
 		// delete webhook (getting updates will not work when wehbook is set up)
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
@@ -244,7 +248,7 @@ func main() {
 						}
 
 						if update.Message.HasContact() {
-							message = fmt.Sprintf("I received @%s's phone no.: %s", *update.Message.From.Username, *update.Message.Contact.PhoneNumber)
+							message = fmt.Sprintf("I received @%s's phone no.: %s", *update.Message.From.Username, update.Message.Contact.PhoneNumber)
 						} else if update.Message.HasLocation() {
 							message = fmt.Sprintf("I received @%s's location: (%f, %f)", *update.Message.From.Username, update.Message.Location.Latitude, update.Message.Location.Longitude)
 						} else {
@@ -255,7 +259,7 @@ func main() {
 							}
 						}
 						// send message
-						if sent := b.SendMessage(update.Message.Chat.Id, &message, options); !sent.Ok {
+						if sent := b.SendMessage(update.Message.Chat.Id, message, options); !sent.Ok {
 							log.Printf("*** failed to send message: %s\n", *sent.Description)
 						}
 					} else if update.HasInlineQuery() {
@@ -275,7 +279,7 @@ func main() {
 						}
 
 						// answer inline query
-						if sent := b.AnswerInlineQuery(*update.InlineQuery.Id, results, nil); !sent.Ok {
+						if sent := b.AnswerInlineQuery(update.InlineQuery.Id, results, nil); !sent.Ok {
 							log.Printf("*** failed to answer inline query: %s\n", *sent.Description)
 						}
 					}
