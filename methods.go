@@ -136,234 +136,92 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// photoFilepath can be local filepath or remote http url.
+// photo can be local filepath, remote http url, bytes array, or file id.
 //
 // options include: caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendphoto
-func (b *Bot) SendPhoto(chatId interface{}, photoFilepath string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFile(chatId, "sendPhoto", "photo", photoFilepath, options)
-}
-
-// Send a photo with bytes array.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: caption, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendphoto
-func (b *Bot) SendPhotoWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendBytes(chatId, "sendPhoto", "photo", bytes, options)
-}
-
-// Send a photo with file id
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: caption, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendphoto
-func (b *Bot) SendPhotoWithFileId(chatId interface{}, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFileId(chatId, "sendPhoto", "photo", fileId, options)
+func (b *Bot) SendPhoto(chatId interface{}, photo interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendObject(chatId, "photo", photo, options)
 }
 
 // Send an audio file. (.mp3 format only, will be played with external players)
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// audioFilepath can be local filepath or remote http url.
+// audio can be local filepath, remote http url, bytes array, or file id.
 //
 // options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendaudio
-func (b *Bot) SendAudio(chatId interface{}, audioFilepath string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFile(chatId, "sendAudio", "audio", audioFilepath, options)
-}
-
-// Send an audio with bytes array.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendaudio
-func (b *Bot) SendAudioWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendBytes(chatId, "sendAudio", "audio", bytes, options)
-}
-
-// Send an audio file with file id.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendaudio
-func (b *Bot) SendAudioWithFileId(chatId interface{}, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFileId(chatId, "sendAudio", "audio", fileId, options)
+func (b *Bot) SendAudio(chatId interface{}, audio interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendObject(chatId, "audio", audio, options)
 }
 
 // Send a general file.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// documentFilepath can be local filepath or remote http url.
+// document can be local filepath, remote http url, bytes array, or file id.
 //
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#senddocument
-func (b *Bot) SendDocument(chatId interface{}, documentFilepath string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFile(chatId, "sendDocument", "document", documentFilepath, options)
-}
-
-// Send a general with bytes array.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#senddocument
-func (b *Bot) SendDocumentWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendBytes(chatId, "sendDocument", "document", bytes, options)
-}
-
-// Send a general with file id.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#senddocument
-func (b *Bot) SendDocumentWithFileId(chatId interface{}, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFileId(chatId, "sendDocument", "document", fileId, options)
+func (b *Bot) SendDocument(chatId interface{}, document interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendObject(chatId, "document", document, options)
 }
 
 // Send a sticker.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// stickerFilepath can be local filepath or remote http url.
+// sticker can be local filepath, remote http url, bytes array, or file id.
 //
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendsticker
-func (b *Bot) SendSticker(chatId interface{}, stickerFilepath string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFile(chatId, "sendSticker", "sticker", stickerFilepath, options)
-}
-
-// Send a sticker with bytes array.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendsticker
-func (b *Bot) SendStickerWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendBytes(chatId, "sendSticker", "sticker", bytes, options)
-}
-
-// Send a sticker with file id.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendsticker
-func (b *Bot) SendStickerWithFileId(chatId interface{}, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFileId(chatId, "sendSticker", "sticker", fileId, options)
+func (b *Bot) SendSticker(chatId interface{}, sticker interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendObject(chatId, "sticker", sticker, options)
 }
 
 // Send a video file.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// videoFilepath can be local filepath or remote http url.
+// video can be local filepath, remote http url, bytes array, or file id.
 //
 // options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvideo
-func (b *Bot) SendVideo(chatId interface{}, videoFilepath string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFile(chatId, "sendVideo", "video", videoFilepath, options)
-}
-
-// Send a video file with bytes array.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendvideo
-func (b *Bot) SendVideoWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendBytes(chatId, "sendVideo", "video", bytes, options)
-}
-
-// Send a video file with file id.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendvideo
-func (b *Bot) SendVideoWithFileId(chatId interface{}, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFileId(chatId, "sendVideo", "video", fileId, options)
+func (b *Bot) SendVideo(chatId interface{}, video interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendObject(chatId, "video", video, options)
 }
 
 // Send a voice file. (.ogg format only, will be played with Telegram itself))
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// voiceFilepath can be local filepath or remote http url.
+// voice can be local filepath, remote http url, bytes array, or file id.
 //
 // options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvoice
-func (b *Bot) SendVoice(chatId interface{}, voiceFilepath string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFile(chatId, "sendVoice", "voice", voiceFilepath, options)
+func (b *Bot) SendVoice(chatId interface{}, voice interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendObject(chatId, "voice", voice, options)
 }
 
-// Send a voice file with bytes array.
+// Send a video note.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendvoice
-func (b *Bot) SendVoiceWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendBytes(chatId, "sendVoice", "voice", bytes, options)
-}
-
-// Send a voice file with file id.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
-//
-// https://core.telegram.org/bots/api#sendvoice
-func (b *Bot) SendVoiceWithFileId(chatId interface{}, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFileId(chatId, "sendVoice", "voice", fileId, options)
-}
-
-// Send a video note with bytes array.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
+// videoNote can be local filepath, bytes array, or file id. (XXX - remote http url is not supported yet)
 //
 // options include: duration, length, disable_notification, reply_to_message_id, and reply_markup.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
-func (b *Bot) SendVideoNoteWithBytes(chatId interface{}, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendBytes(chatId, "sendVideoNote", "video_note", bytes, options)
-}
-
-// Send a video note with file id.
-//
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// options include: duration, length, disable_notification, reply_to_message_id, and reply_markup.
-// (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
-//
-// https://core.telegram.org/bots/api#sendvideonote
-func (b *Bot) SendVideoNoteWithFileId(chatId interface{}, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendFileId(chatId, "sendVideoNote", "video_note", fileId, options)
+func (b *Bot) SendVideoNote(chatId interface{}, videoNote interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	return b.sendObject(chatId, "video_note", videoNote, options)
 }
 
 // Send locations.
@@ -1511,6 +1369,41 @@ func (b *Bot) sendFileId(chatId interface{}, apiName, paramKey, fileId string, o
 	return b.requestResponseMessage(apiName, params)
 }
 
+// Send object (in []byte, filepath, http url, or file id)
+func (b *Bot) sendObject(chatId interface{}, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+	// Example: "video_note" => ["send", "Video", "Note"] => "sendVideoNote"
+	elms := []string{"send"}
+	for _, elm := range strings.Split(paramKey, "_") {
+		elms = append(elms, strings.Title(elm))
+	}
+	apiName := strings.Join(elms, "")
+
+	switch obj.(type) {
+	case []byte:
+		bytes := obj.([]byte)
+		return b.sendBytes(chatId, apiName, paramKey, bytes, options)
+	case string:
+		str := obj.(string)
+		if isHttpUrl(str) {
+			return b.sendFile(chatId, apiName, paramKey, str, options)
+		} else {
+			if fileExists(str) {
+				return b.sendFile(chatId, apiName, paramKey, str, options)
+			} else {
+				return b.sendFileId(chatId, apiName, paramKey, str, options)
+			}
+		}
+	default:
+		errorMessage := fmt.Sprintf("passed %s parameter is not supported: %T", paramKey, obj)
+		return ApiResponseMessage{
+			ApiResponseBase: ApiResponseBase{
+				Ok:          false,
+				Description: &errorMessage,
+			},
+		}
+	}
+}
+
 // check if given path is http url
 func isHttpUrl(path string) bool {
 	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
@@ -1531,4 +1424,10 @@ func getExtension(bytes []byte) string {
 		}
 	}
 	return "" // default
+}
+
+// check if given filepath really exists
+func fileExists(filepath string) bool {
+	_, err := os.Stat(filepath)
+	return !os.IsNotExist(err)
 }
