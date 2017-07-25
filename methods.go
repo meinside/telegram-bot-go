@@ -455,22 +455,42 @@ func (b *Bot) ExportChatInviteLink(chatId interface{}) (result ApiResponseString
 
 // Set chat photo
 //
+// photo can be local filepath, remote http url, bytes array, or file id.
+//
 // https://core.telegram.org/bots/api#setchatphoto
-func (b *Bot) SetChatPhotoWithBytes(chatId interface{}, bytes []byte) (result ApiResponse) {
+func (b *Bot) SetChatPhoto(chatId interface{}, photo interface{}) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
-		"photo":   bytes,
 	}
-
-	return b.requestResponse("setChatPhoto", params)
-}
-
-func (b *Bot) SetChatPhotoWithFileId(chatId interface{}, fileId string) (result ApiResponse) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatId,
-		"photo":   fileId,
+	switch photo.(type) {
+	case string: // filepath, http url, or file id
+		str := photo.(string)
+		if fileExists(str) {
+			if file, err := os.Open(str); err == nil {
+				params["photo"] = file
+			} else {
+				errStr := err.Error()
+				return ApiResponse{
+					ApiResponseBase: ApiResponseBase{
+						Ok:          false,
+						Description: &errStr,
+					},
+				}
+			}
+		} else { // http url or file id
+			params["photo"] = photo
+		}
+	case []byte:
+		params["photo"] = photo
+	default:
+		errorMessage := fmt.Sprintf("passed photo parameter is not supported: %T", photo)
+		return ApiResponse{
+			ApiResponseBase: ApiResponseBase{
+				Ok:          false,
+				Description: &errorMessage,
+			},
+		}
 	}
 
 	return b.requestResponse("setChatPhoto", params)
