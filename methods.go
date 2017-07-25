@@ -184,6 +184,193 @@ func (b *Bot) SendSticker(chatId interface{}, sticker interface{}, options map[s
 	return b.sendObject(chatId, "sticker", sticker, options)
 }
 
+// Get a sticker set.
+//
+// https://core.telegram.org/bots/api#getstickerset
+func (b *Bot) GetStickerSet(name string) (result ApiResponseStickerSet) {
+	// essential params
+	params := map[string]interface{}{
+		"name": name,
+	}
+
+	return b.requestResponseStickerSet("getStickerSet", params)
+}
+
+// Upload a sticker file.
+//
+// sticker can be local filepath, remote http url, bytes array, or file id.
+//
+// https://core.telegram.org/bots/api#uploadstickerfile
+func (b *Bot) UploadStickerFile(userId int, sticker interface{}) (result ApiResponseFile) {
+	// essential params
+	params := map[string]interface{}{
+		"user_id": userId,
+	}
+	switch sticker.(type) {
+	case string: // filepath, http url, or file id
+		str := sticker.(string)
+		if fileExists(str) {
+			if file, err := os.Open(str); err == nil {
+				params["png_sticker"] = file
+			} else {
+				errStr := err.Error()
+				return ApiResponseFile{
+					ApiResponseBase: ApiResponseBase{
+						Ok:          false,
+						Description: &errStr,
+					},
+				}
+			}
+		} else { // http url or file id
+			params["png_sticker"] = sticker
+		}
+	case []byte:
+		params["png_sticker"] = sticker
+	default:
+		errorMessage := fmt.Sprintf("passed sticker parameter is not supported: %T", sticker)
+		return ApiResponseFile{
+			ApiResponseBase: ApiResponseBase{
+				Ok:          false,
+				Description: &errorMessage,
+			},
+		}
+	}
+
+	return b.requestResponseFile("uploadStickerFile", params)
+}
+
+// Create a new sticker set.
+//
+// sticker can be local filepath, remote http url, bytes array, or file id.
+//
+// options include: contains_masks and mask_position
+//
+// https://core.telegram.org/bots/api#createnewstickerset
+func (b *Bot) CreateNewStickerSet(userId int, name, title string, sticker interface{}, emojis string, options map[string]interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"user_id": userId,
+		"name":    name,
+		"title":   title,
+		"emojis":  emojis,
+	}
+	switch sticker.(type) {
+	case string: // filepath, http url, or file id
+		str := sticker.(string)
+		if fileExists(str) {
+			if file, err := os.Open(str); err == nil {
+				params["png_sticker"] = file
+			} else {
+				errStr := err.Error()
+				return ApiResponse{
+					ApiResponseBase: ApiResponseBase{
+						Ok:          false,
+						Description: &errStr,
+					},
+				}
+			}
+		} else { // http url or file id
+			params["png_sticker"] = sticker
+		}
+	case []byte:
+		params["png_sticker"] = sticker
+	default:
+		errorMessage := fmt.Sprintf("passed sticker parameter is not supported: %T", sticker)
+		return ApiResponse{
+			ApiResponseBase: ApiResponseBase{
+				Ok:          false,
+				Description: &errorMessage,
+			},
+		}
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponse("createNewStickerSet", params)
+}
+
+// Add a sticker to set.
+//
+// sticker can be local filepath, remote http url, bytes array, or file id.
+//
+// options include: mask_position
+//
+// https://core.telegram.org/bots/api#addstickertoset
+func (b *Bot) AddStickerToSet(userId int, name string, sticker interface{}, emojis string, options map[string]interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"user_id": userId,
+		"name":    name,
+		"emojis":  emojis,
+	}
+	switch sticker.(type) {
+	case string: // filepath, http url, or file id
+		str := sticker.(string)
+		if fileExists(str) {
+			if file, err := os.Open(str); err == nil {
+				params["png_sticker"] = file
+			} else {
+				errStr := err.Error()
+				return ApiResponse{
+					ApiResponseBase: ApiResponseBase{
+						Ok:          false,
+						Description: &errStr,
+					},
+				}
+			}
+		} else { // http url or file id
+			params["png_sticker"] = sticker
+		}
+	case []byte:
+		params["png_sticker"] = sticker
+	default:
+		errorMessage := fmt.Sprintf("passed sticker parameter is not supported: %T", sticker)
+		return ApiResponse{
+			ApiResponseBase: ApiResponseBase{
+				Ok:          false,
+				Description: &errorMessage,
+			},
+		}
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponse("addStickerToSet", params)
+}
+
+// Set sticker position in set.
+//
+// https://core.telegram.org/bots/api#setstickerpositioninset
+func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"sticker":  sticker,
+		"position": position,
+	}
+
+	return b.requestResponse("setStickerPositionInSet", params)
+}
+
+// Delete sticker from set.
+//
+// https://core.telegram.org/bots/api#deletestickerfromset
+func (b *Bot) DeleteStickerFromSet(sticker string) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"sticker": sticker,
+	}
+
+	return b.requestResponse("deleteStickerFromSet", params)
+}
+
 // Send a video file.
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
@@ -1297,6 +1484,26 @@ func (b *Bot) requestResponseGameHighScores(method string, params map[string]int
 	b.error(errStr)
 
 	return ApiResponseGameHighScores{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for ApiResponseStickerSet and fetch its result.
+func (b *Bot) requestResponseStickerSet(method string, params map[string]interface{}) (result ApiResponseStickerSet) {
+	var errStr string
+
+	if bytes, success := b.request(method, params); success {
+		var jsonResponse ApiResponseStickerSet
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
+		} else {
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+		}
+	} else {
+		errStr = fmt.Sprintf("%s failed", method)
+	}
+
+	b.error(errStr)
+
+	return ApiResponseStickerSet{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.

@@ -85,6 +85,18 @@ const (
 	ChatMemberStatusKicked        ChatMemberStatus = "kicked"
 )
 
+// MaskPosition Point
+//
+// https://core.telegram.org/bots/api#maskposition
+type MaskPositionPoint string
+
+const (
+	MaskPositionForehead MaskPositionPoint = "forehead"
+	MaskPositionEyes     MaskPositionPoint = "eyes"
+	MaskPositionMouth    MaskPositionPoint = "mouth"
+	MaskPositionChin     MaskPositionPoint = "chin"
+)
+
 // API response (base)
 type ApiResponseBase struct {
 	Ok          bool                   `json:"ok"`
@@ -176,6 +188,12 @@ type ApiResponseString struct {
 type ApiResponseGameHighScores struct {
 	ApiResponseBase
 	Result []GameHighScore `json:"result,omitempty"`
+}
+
+// API response with result type: StickerSet
+type ApiResponseStickerSet struct {
+	ApiResponseBase
+	Result *StickerSet `json:"result,omitempty"`
 }
 
 // Update types (for allowed_updates)
@@ -297,12 +315,34 @@ type Document struct {
 //
 // https://core.telegram.org/bots/api#sticker
 type Sticker struct {
-	FileId   string     `json:"file_id"`
-	Width    int        `json:"width"`
-	Height   int        `json:"height"`
-	Thumb    *PhotoSize `json:"thumb,omitempty"`
-	Emoji    *string    `json:"emoji,omitempty"`
-	FileSize int        `json:"file_size,omitempty"`
+	FileId       string        `json:"file_id"`
+	Width        int           `json:"width"`
+	Height       int           `json:"height"`
+	Thumb        *PhotoSize    `json:"thumb,omitempty"`
+	Emoji        *string       `json:"emoji,omitempty"`
+	SetName      *string       `json:"set_name,omitempty"`
+	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
+	FileSize     int           `json:"file_size,omitempty"`
+}
+
+// StickerSet
+//
+// https://core.telegram.org/bots/api#stickerset
+type StickerSet struct {
+	Name          *string   `json:"name"`
+	Title         *string   `json:"title"`
+	ContainsMasks bool      `json:"contains_masks"`
+	Stickers      []Sticker `json:"stickers"`
+}
+
+// MaskPosition
+//
+// https://core.telegram.org/bots/api#maskposition
+type MaskPosition struct {
+	Point  MaskPositionPoint `json:"point"`
+	XShift float32           `json:"x_shift"`
+	YShift float32           `json:"y_shift"`
+	Scale  float32           `json:"scale"`
 }
 
 // Video
