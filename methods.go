@@ -142,7 +142,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 //
 // https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatId interface{}, photo interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObjectMessage(chatId, "photo", photo, options)
+	return b.sendObjectMessage(chatId, "sendPhoto", "photo", photo, options)
 }
 
 // Send an audio file. (.mp3 format only, will be played with external players)
@@ -155,7 +155,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photo interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatId interface{}, audio interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObjectMessage(chatId, "audio", audio, options)
+	return b.sendObjectMessage(chatId, "sendAudio", "audio", audio, options)
 }
 
 // Send a general file.
@@ -168,7 +168,7 @@ func (b *Bot) SendAudio(chatId interface{}, audio interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatId interface{}, document interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObjectMessage(chatId, "document", document, options)
+	return b.sendObjectMessage(chatId, "sendDocument", "document", document, options)
 }
 
 // Send a sticker.
@@ -181,7 +181,7 @@ func (b *Bot) SendDocument(chatId interface{}, document interface{}, options map
 //
 // https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatId interface{}, sticker interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObjectMessage(chatId, "sticker", sticker, options)
+	return b.sendObjectMessage(chatId, "sendSticker", "sticker", sticker, options)
 }
 
 // Get a sticker set.
@@ -294,7 +294,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result ApiResponse) {
 //
 // https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatId interface{}, video interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObjectMessage(chatId, "video", video, options)
+	return b.sendObjectMessage(chatId, "sendVideo", "video", video, options)
 }
 
 // Send a voice file. (.ogg format only, will be played with Telegram itself))
@@ -307,7 +307,7 @@ func (b *Bot) SendVideo(chatId interface{}, video interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatId interface{}, voice interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObjectMessage(chatId, "voice", voice, options)
+	return b.sendObjectMessage(chatId, "sendVoice", "voice", voice, options)
 }
 
 // Send a video note.
@@ -321,7 +321,7 @@ func (b *Bot) SendVoice(chatId interface{}, voice interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#sendvideonote
 func (b *Bot) SendVideoNote(chatId interface{}, videoNote interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObjectMessage(chatId, "video_note", videoNote, options)
+	return b.sendObjectMessage(chatId, "sendVideoNote", "video_note", videoNote, options)
 }
 
 // Send locations.
@@ -1519,14 +1519,7 @@ func (b *Bot) sendObject(apiName, paramKey string, obj interface{}, options map[
 }
 
 // Send object (in []byte, filepath, http url, or file id) and return as ApiResponseMessage
-func (b *Bot) sendObjectMessage(chatId interface{}, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	// Example: "video_note" => ["send", "Video", "Note"] => "sendVideoNote"
-	elms := []string{"send"}
-	for _, elm := range strings.Split(paramKey, "_") {
-		elms = append(elms, strings.Title(elm))
-	}
-	apiName := strings.Join(elms, "")
-
+func (b *Bot) sendObjectMessage(chatId interface{}, apiName, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseMessage) {
 	switch obj.(type) {
 	case []byte:
 		bytes := obj.([]byte)
