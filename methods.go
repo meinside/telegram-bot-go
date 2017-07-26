@@ -142,7 +142,7 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 //
 // https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatId interface{}, photo interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObject(chatId, "photo", photo, options)
+	return b.sendObjectMessage(chatId, "photo", photo, options)
 }
 
 // Send an audio file. (.mp3 format only, will be played with external players)
@@ -155,7 +155,7 @@ func (b *Bot) SendPhoto(chatId interface{}, photo interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatId interface{}, audio interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObject(chatId, "audio", audio, options)
+	return b.sendObjectMessage(chatId, "audio", audio, options)
 }
 
 // Send a general file.
@@ -168,7 +168,7 @@ func (b *Bot) SendAudio(chatId interface{}, audio interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatId interface{}, document interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObject(chatId, "document", document, options)
+	return b.sendObjectMessage(chatId, "document", document, options)
 }
 
 // Send a sticker.
@@ -181,7 +181,7 @@ func (b *Bot) SendDocument(chatId interface{}, document interface{}, options map
 //
 // https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatId interface{}, sticker interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObject(chatId, "sticker", sticker, options)
+	return b.sendObjectMessage(chatId, "sticker", sticker, options)
 }
 
 // Get a sticker set.
@@ -206,37 +206,8 @@ func (b *Bot) UploadStickerFile(userId int, sticker interface{}) (result ApiResp
 	params := map[string]interface{}{
 		"user_id": userId,
 	}
-	switch sticker.(type) {
-	case string: // filepath, http url, or file id
-		str := sticker.(string)
-		if fileExists(str) {
-			if file, err := os.Open(str); err == nil {
-				params["png_sticker"] = file
-			} else {
-				errStr := err.Error()
-				return ApiResponseFile{
-					ApiResponseBase: ApiResponseBase{
-						Ok:          false,
-						Description: &errStr,
-					},
-				}
-			}
-		} else { // http url or file id
-			params["png_sticker"] = sticker
-		}
-	case []byte:
-		params["png_sticker"] = sticker
-	default:
-		errorMessage := fmt.Sprintf("passed sticker parameter is not supported: %T", sticker)
-		return ApiResponseFile{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errorMessage,
-			},
-		}
-	}
 
-	return b.requestResponseFile("uploadStickerFile", params)
+	return b.sendObjectFile("uploadStickerFile", "png_sticker", sticker, params)
 }
 
 // Create a new sticker set.
@@ -254,35 +225,6 @@ func (b *Bot) CreateNewStickerSet(userId int, name, title string, sticker interf
 		"title":   title,
 		"emojis":  emojis,
 	}
-	switch sticker.(type) {
-	case string: // filepath, http url, or file id
-		str := sticker.(string)
-		if fileExists(str) {
-			if file, err := os.Open(str); err == nil {
-				params["png_sticker"] = file
-			} else {
-				errStr := err.Error()
-				return ApiResponse{
-					ApiResponseBase: ApiResponseBase{
-						Ok:          false,
-						Description: &errStr,
-					},
-				}
-			}
-		} else { // http url or file id
-			params["png_sticker"] = sticker
-		}
-	case []byte:
-		params["png_sticker"] = sticker
-	default:
-		errorMessage := fmt.Sprintf("passed sticker parameter is not supported: %T", sticker)
-		return ApiResponse{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errorMessage,
-			},
-		}
-	}
 	// optional params
 	for key, val := range options {
 		if val != nil {
@@ -290,7 +232,7 @@ func (b *Bot) CreateNewStickerSet(userId int, name, title string, sticker interf
 		}
 	}
 
-	return b.requestResponse("createNewStickerSet", params)
+	return b.sendObject("createNewStickerSet", "png_sticker", sticker, params)
 }
 
 // Add a sticker to set.
@@ -307,35 +249,6 @@ func (b *Bot) AddStickerToSet(userId int, name string, sticker interface{}, emoj
 		"name":    name,
 		"emojis":  emojis,
 	}
-	switch sticker.(type) {
-	case string: // filepath, http url, or file id
-		str := sticker.(string)
-		if fileExists(str) {
-			if file, err := os.Open(str); err == nil {
-				params["png_sticker"] = file
-			} else {
-				errStr := err.Error()
-				return ApiResponse{
-					ApiResponseBase: ApiResponseBase{
-						Ok:          false,
-						Description: &errStr,
-					},
-				}
-			}
-		} else { // http url or file id
-			params["png_sticker"] = sticker
-		}
-	case []byte:
-		params["png_sticker"] = sticker
-	default:
-		errorMessage := fmt.Sprintf("passed sticker parameter is not supported: %T", sticker)
-		return ApiResponse{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errorMessage,
-			},
-		}
-	}
 	// optional params
 	for key, val := range options {
 		if val != nil {
@@ -343,7 +256,7 @@ func (b *Bot) AddStickerToSet(userId int, name string, sticker interface{}, emoj
 		}
 	}
 
-	return b.requestResponse("addStickerToSet", params)
+	return b.sendObject("addStickerToSet", "png_sticker", sticker, params)
 }
 
 // Set sticker position in set.
@@ -381,7 +294,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result ApiResponse) {
 //
 // https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatId interface{}, video interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObject(chatId, "video", video, options)
+	return b.sendObjectMessage(chatId, "video", video, options)
 }
 
 // Send a voice file. (.ogg format only, will be played with Telegram itself))
@@ -394,7 +307,7 @@ func (b *Bot) SendVideo(chatId interface{}, video interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatId interface{}, voice interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObject(chatId, "voice", voice, options)
+	return b.sendObjectMessage(chatId, "voice", voice, options)
 }
 
 // Send a video note.
@@ -408,7 +321,7 @@ func (b *Bot) SendVoice(chatId interface{}, voice interface{}, options map[strin
 //
 // https://core.telegram.org/bots/api#sendvideonote
 func (b *Bot) SendVideoNote(chatId interface{}, videoNote interface{}, options map[string]interface{}) (result ApiResponseMessage) {
-	return b.sendObject(chatId, "video_note", videoNote, options)
+	return b.sendObjectMessage(chatId, "video_note", videoNote, options)
 }
 
 // Send locations.
@@ -650,37 +563,8 @@ func (b *Bot) SetChatPhoto(chatId interface{}, photo interface{}) (result ApiRes
 	params := map[string]interface{}{
 		"chat_id": chatId,
 	}
-	switch photo.(type) {
-	case string: // filepath, http url, or file id
-		str := photo.(string)
-		if fileExists(str) {
-			if file, err := os.Open(str); err == nil {
-				params["photo"] = file
-			} else {
-				errStr := err.Error()
-				return ApiResponse{
-					ApiResponseBase: ApiResponseBase{
-						Ok:          false,
-						Description: &errStr,
-					},
-				}
-			}
-		} else { // http url or file id
-			params["photo"] = photo
-		}
-	case []byte:
-		params["photo"] = photo
-	default:
-		errorMessage := fmt.Sprintf("passed photo parameter is not supported: %T", photo)
-		return ApiResponse{
-			ApiResponseBase: ApiResponseBase{
-				Ok:          false,
-				Description: &errorMessage,
-			},
-		}
-	}
 
-	return b.requestResponse("setChatPhoto", params)
+	return b.sendObject("setChatPhoto", "photo", photo, params)
 }
 
 // Delete chat photo
@@ -1596,8 +1480,46 @@ func (b *Bot) sendFileId(chatId interface{}, apiName, paramKey, fileId string, o
 	return b.requestResponseMessage(apiName, params)
 }
 
-// Send object (in []byte, filepath, http url, or file id)
-func (b *Bot) sendObject(chatId interface{}, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+// Send object (in []byte, filepath, http url, or file id) and return as ApiResponse
+func (b *Bot) sendObject(apiName, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponse) {
+	// params
+	params := options
+
+	switch obj.(type) {
+	case string: // filepath, http url, or file id
+		str := obj.(string)
+		if fileExists(str) {
+			if file, err := os.Open(str); err == nil {
+				params[paramKey] = file
+			} else {
+				errStr := err.Error()
+				return ApiResponse{
+					ApiResponseBase: ApiResponseBase{
+						Ok:          false,
+						Description: &errStr,
+					},
+				}
+			}
+		} else { // http url or file id
+			params[paramKey] = obj
+		}
+	case []byte:
+		params[paramKey] = obj
+	default:
+		errorMessage := fmt.Sprintf("passed parameter %s is not supported: %T", paramKey, obj)
+		return ApiResponse{
+			ApiResponseBase: ApiResponseBase{
+				Ok:          false,
+				Description: &errorMessage,
+			},
+		}
+	}
+
+	return b.requestResponse(apiName, params)
+}
+
+// Send object (in []byte, filepath, http url, or file id) and return as ApiResponseMessage
+func (b *Bot) sendObjectMessage(chatId interface{}, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseMessage) {
 	// Example: "video_note" => ["send", "Video", "Note"] => "sendVideoNote"
 	elms := []string{"send"}
 	for _, elm := range strings.Split(paramKey, "_") {
@@ -1621,7 +1543,7 @@ func (b *Bot) sendObject(chatId interface{}, paramKey string, obj interface{}, o
 			}
 		}
 	default:
-		errorMessage := fmt.Sprintf("passed %s parameter is not supported: %T", paramKey, obj)
+		errorMessage := fmt.Sprintf("passed parameter %s is not supported: %T", paramKey, obj)
 		return ApiResponseMessage{
 			ApiResponseBase: ApiResponseBase{
 				Ok:          false,
@@ -1629,6 +1551,43 @@ func (b *Bot) sendObject(chatId interface{}, paramKey string, obj interface{}, o
 			},
 		}
 	}
+}
+
+// Send object (in []byte, filepath, http url, or file id) and return as ApiResponseFile
+func (b *Bot) sendObjectFile(apiName, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseFile) {
+	params := options
+
+	switch obj.(type) {
+	case string: // filepath, http url, or file id
+		str := obj.(string)
+		if fileExists(str) {
+			if file, err := os.Open(str); err == nil {
+				params[paramKey] = file
+			} else {
+				errStr := err.Error()
+				return ApiResponseFile{
+					ApiResponseBase: ApiResponseBase{
+						Ok:          false,
+						Description: &errStr,
+					},
+				}
+			}
+		} else { // http url or file id
+			params[paramKey] = obj
+		}
+	case []byte:
+		params[paramKey] = obj
+	default:
+		errorMessage := fmt.Sprintf("passed parameter %s is not supported: %T", paramKey, obj)
+		return ApiResponseFile{
+			ApiResponseBase: ApiResponseBase{
+				Ok:          false,
+				Description: &errorMessage,
+			},
+		}
+	}
+
+	return b.requestResponseFile(apiName, params)
 }
 
 // check if given path is http url
