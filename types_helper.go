@@ -439,6 +439,10 @@ func (u User) String() string {
 	return fmt.Sprintf("%+v", u)
 }
 
+func (u User) InlineLink() string {
+	return fmt.Sprintf("tg://user?id=%d", u.Id)
+}
+
 ////////////////////////////////
 // Helper functions for Chat
 //

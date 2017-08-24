@@ -245,6 +245,7 @@ type Update struct {
 // https://core.telegram.org/bots/api#user
 type User struct {
 	Id           int     `json:"id"`
+	IsBot        bool    `json:"is_bot"`
 	FirstName    string  `json:"first_name"`
 	LastName     *string `json:"last_name,omitempty"`
 	Username     *string `json:"username,omitempty"`
@@ -265,6 +266,7 @@ type Chat struct {
 	Photo                       *ChatPhoto `json:"photo,omitempty"`
 	Description                 *string    `json:"description,omitempty"`
 	InviteLink                  *string    `json:"invite_link,omitempty"`
+	PinnedMessage               *Message   `json:"pinned_message,omitempty"`
 }
 
 // Audio
@@ -556,9 +558,11 @@ type Message struct {
 	ForwardFrom           *User              `json:"forward_from,omitempty"`
 	ForwardFromChat       *Chat              `json:"forward_from_chat,omitempty"`
 	ForwardFromMessageId  int                `json:"forward_from_message_id,omitempty"`
+	ForwardSignature      *string            `json:"forward_signature,omitempty"`
 	ForwardDate           int                `json:"forward_date,omitempty"`
 	ReplyToMessage        *Message           `json:"reply_to_message,omitempty"`
 	EditDate              int                `json:"edit_date,omitempty"`
+	AuthorSignature       *string            `json:"author_signature,omitempty"`
 	Text                  *string            `json:"text,omitempty"`
 	Entities              []MessageEntity    `json:"entities,omitempty"`
 	Audio                 *Audio             `json:"audio,omitempty"`
