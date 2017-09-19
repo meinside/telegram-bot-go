@@ -386,10 +386,7 @@ func NewInlineQueryResultCachedAudio(audioFileId string) (newAudio *InlineQueryR
 
 // String function for Update
 func (u Update) String() string {
-	if json, err := json.Marshal(u); err == nil {
-		return fmt.Sprintf("%T%s", u, string(json))
-	}
-	return fmt.Sprintf("%+v", u)
+	return structToString(u)
 }
 
 // Check if Update has Message.
@@ -433,10 +430,7 @@ func (u *Update) HasPreCheckoutQuery() bool {
 
 // String function for User
 func (u User) String() string {
-	if json, err := json.Marshal(u); err == nil {
-		return fmt.Sprintf("%T%s", u, string(json))
-	}
-	return fmt.Sprintf("%+v", u)
+	return structToString(u)
 }
 
 func (u User) InlineLink() string {
@@ -449,10 +443,7 @@ func (u User) InlineLink() string {
 
 // String function for Chat
 func (c Chat) String() string {
-	if json, err := json.Marshal(c); err == nil {
-		return fmt.Sprintf("%T%s", c, string(json))
-	}
-	return fmt.Sprintf("%+v", c)
+	return structToString(c)
 }
 
 ////////////////////////////////
@@ -461,10 +452,7 @@ func (c Chat) String() string {
 
 // String function for Message
 func (m Message) String() string {
-	if json, err := json.Marshal(m); err == nil {
-		return fmt.Sprintf("%T%s", m, string(json))
-	}
-	return fmt.Sprintf("%+v", m)
+	return structToString(m)
 }
 
 // Check if Message has Forward.
@@ -603,10 +591,7 @@ func (m *Message) HasPinnedMessage() bool {
 
 // String function for InlineQuery
 func (i InlineQuery) String() string {
-	if json, err := json.Marshal(i); err == nil {
-		return fmt.Sprintf("%T%s", i, string(json))
-	}
-	return fmt.Sprintf("%+v", i)
+	return structToString(i)
 }
 
 ////////////////////////////////
@@ -615,10 +600,7 @@ func (i InlineQuery) String() string {
 
 // String function for ChosenInlineResult
 func (c ChosenInlineResult) String() string {
-	if json, err := json.Marshal(c); err == nil {
-		return fmt.Sprintf("%T%s", c, string(json))
-	}
-	return fmt.Sprintf("%+v", c)
+	return structToString(c)
 }
 
 ////////////////////////////////
@@ -710,8 +692,17 @@ func NewInlineKeyboardButtonsWithSwitchInlineQuery(values map[string]string) []I
 
 // String function for CallbackQuery
 func (q CallbackQuery) String() string {
-	if json, err := json.Marshal(q); err == nil {
-		return fmt.Sprintf("%T%s", q, string(json))
+	return structToString(q)
+}
+
+////////////////////////////////
+// Other helper functions
+
+// interface to string (in JSON format)
+func structToString(v interface{}) string {
+	if json, err := json.Marshal(v); err == nil {
+		return fmt.Sprintf("%T%s", v, string(json))
+	} else {
+		return err.Error()
 	}
-	return fmt.Sprintf("%+v", q)
 }
