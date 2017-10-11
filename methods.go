@@ -328,7 +328,7 @@ func (b *Bot) SendVideoNote(chatId interface{}, videoNote interface{}, options m
 //
 // chatId can be Message.Chat.Id or target channel(eg. @channelusername).
 //
-// options include: display_notification, reply_to_message_id, and reply_markup.
+// options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendlocation
 func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, options map[string]interface{}) (result ApiResponseMessage) {
@@ -687,6 +687,31 @@ func (b *Bot) GetChatMember(chatId interface{}, userId int) (result ApiResponseC
 	return b.requestResponseChatMember("getChatMember", params)
 }
 
+// Set chat sticker set
+//
+// https://core.telegram.org/bots/api#setchatstickerset
+func (b *Bot) SetChatStickerSet(chatId interface{}, stickerSetName string) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id":          chatId,
+		"sticker_set_name": stickerSetName,
+	}
+
+	return b.requestResponse("setChatStickerSet", params)
+}
+
+// Delete chat sticker set
+//
+// https://core.telegram.org/bots/api#deletechatstickerset
+func (b *Bot) DeleteChatStickerSet(chatId interface{}) (result ApiResponse) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+	}
+
+	return b.requestResponse("deleteChatStickerSet", params)
+}
+
 // Answer callback query
 //
 // options include: text, show_alert, url, and cache_time
@@ -767,6 +792,42 @@ func (b *Bot) EditMessageCaption(caption string, options map[string]interface{})
 // https://core.telegram.org/bots/api#editmessagereplymarkup
 func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result ApiResponseMessage) {
 	return b.requestResponseMessage("editMessageReplyMarkup", options)
+}
+
+// Edit live location of message
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// other options: reply_markup
+//
+// https://core.telegram.org/bots/api#editmessagelivelocation
+func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[string]interface{}) (result ApiResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"latitude":  latitude,
+		"longitude": longitude,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage("editMessageLiveLocation", params)
+}
+
+// Stop live location of message
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// other options: reply_markup
+//
+// https://core.telegram.org/bots/api#stopmessagelivelocation
+func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result ApiResponseMessage) {
+	return b.requestResponseMessage("stopMessageLiveLocation", options)
 }
 
 // Delete message

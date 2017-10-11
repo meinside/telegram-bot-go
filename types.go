@@ -267,6 +267,8 @@ type Chat struct {
 	Description                 *string    `json:"description,omitempty"`
 	InviteLink                  *string    `json:"invite_link,omitempty"`
 	PinnedMessage               *Message   `json:"pinned_message,omitempty"`
+	StickerSetName              *string    `json:"sticker_set_name,omitempty"`
+	CanSetStickerSet            bool       `json:"can_set_sticker_set,omitempty"`
 }
 
 // Audio
@@ -565,6 +567,7 @@ type Message struct {
 	AuthorSignature       *string            `json:"author_signature,omitempty"`
 	Text                  *string            `json:"text,omitempty"`
 	Entities              []MessageEntity    `json:"entities,omitempty"`
+	CaptionEntities       []MessageEntity    `json:"caption_entities,omitempty"`
 	Audio                 *Audio             `json:"audio,omitempty"`
 	Document              *Document          `json:"document,omitempty"`
 	Game                  *Game              `json:"game,omitempty"`
