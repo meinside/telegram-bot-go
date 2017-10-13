@@ -1,6 +1,12 @@
 // https://core.telegram.org/bots/api#available-types
 package telegrambot
 
+// Chat Id
+//
+// It can be Message.Chat.Id,
+// or target channel name (in string, eg. "@channelusername")
+type ChatId interface{}
+
 // Chat types
 type ChatType string
 
@@ -270,6 +276,11 @@ type Chat struct {
 	StickerSetName              *string    `json:"sticker_set_name,omitempty"`
 	CanSetStickerSet            bool       `json:"can_set_sticker_set,omitempty"`
 }
+
+// Universal file type for convenience
+//
+// It can be one of local filepath (string), remote http url (string), bytes array ([]byte), or file id (string)
+type FileParam interface{}
 
 // Audio
 //

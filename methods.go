@@ -93,12 +93,10 @@ func (b *Bot) GetMe() (result ApiResponseUser) {
 
 // Send a message.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
 // options include: parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendmessage
-func (b *Bot) SendMessage(chatId interface{}, text string, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendMessage(chatId ChatId, text string, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -116,12 +114,10 @@ func (b *Bot) SendMessage(chatId interface{}, text string, options map[string]in
 
 // Forward a message.
 //
-// chatId and fromChatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
 // options include: disable_notification
 //
 // https://core.telegram.org/bots/api#forwardmessage
-func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, messageId int) (result ApiResponseMessage) {
+func (b *Bot) ForwardMessage(chatId, fromChatId ChatId, messageId int) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":      chatId,
@@ -134,53 +130,37 @@ func (b *Bot) ForwardMessage(chatId interface{}, fromChatId interface{}, message
 
 // Send a photo.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// photo can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendphoto
-func (b *Bot) SendPhoto(chatId interface{}, photo interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendPhoto(chatId ChatId, photo FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendObjectMessage(chatId, "sendPhoto", "photo", photo, options)
 }
 
 // Send an audio file. (.mp3 format only, will be played with external players)
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// audio can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendaudio
-func (b *Bot) SendAudio(chatId interface{}, audio interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendAudio(chatId ChatId, audio FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendObjectMessage(chatId, "sendAudio", "audio", audio, options)
 }
 
 // Send a general file.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// document can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#senddocument
-func (b *Bot) SendDocument(chatId interface{}, document interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendDocument(chatId ChatId, document FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendObjectMessage(chatId, "sendDocument", "document", document, options)
 }
 
 // Send a sticker.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// sticker can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendsticker
-func (b *Bot) SendSticker(chatId interface{}, sticker interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendSticker(chatId ChatId, sticker FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendObjectMessage(chatId, "sendSticker", "sticker", sticker, options)
 }
 
@@ -198,10 +178,8 @@ func (b *Bot) GetStickerSet(name string) (result ApiResponseStickerSet) {
 
 // Upload a sticker file.
 //
-// sticker can be local filepath, remote http url, bytes array, or file id.
-//
 // https://core.telegram.org/bots/api#uploadstickerfile
-func (b *Bot) UploadStickerFile(userId int, sticker interface{}) (result ApiResponseFile) {
+func (b *Bot) UploadStickerFile(userId int, sticker FileParam) (result ApiResponseFile) {
 	// essential params
 	params := map[string]interface{}{
 		"user_id": userId,
@@ -212,12 +190,10 @@ func (b *Bot) UploadStickerFile(userId int, sticker interface{}) (result ApiResp
 
 // Create a new sticker set.
 //
-// sticker can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: contains_masks and mask_position
 //
 // https://core.telegram.org/bots/api#createnewstickerset
-func (b *Bot) CreateNewStickerSet(userId int, name, title string, sticker interface{}, emojis string, options map[string]interface{}) (result ApiResponse) {
+func (b *Bot) CreateNewStickerSet(userId int, name, title string, sticker FileParam, emojis string, options map[string]interface{}) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"user_id": userId,
@@ -237,12 +213,10 @@ func (b *Bot) CreateNewStickerSet(userId int, name, title string, sticker interf
 
 // Add a sticker to set.
 //
-// sticker can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: mask_position
 //
 // https://core.telegram.org/bots/api#addstickertoset
-func (b *Bot) AddStickerToSet(userId int, name string, sticker interface{}, emojis string, options map[string]interface{}) (result ApiResponse) {
+func (b *Bot) AddStickerToSet(userId int, name string, sticker FileParam, emojis string, options map[string]interface{}) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"user_id": userId,
@@ -286,52 +260,40 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result ApiResponse) {
 
 // Send a video file.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// video can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvideo
-func (b *Bot) SendVideo(chatId interface{}, video interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendVideo(chatId ChatId, video FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendObjectMessage(chatId, "sendVideo", "video", video, options)
 }
 
 // Send a voice file. (.ogg format only, will be played with Telegram itself))
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// voice can be local filepath, remote http url, bytes array, or file id.
-//
 // options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvoice
-func (b *Bot) SendVoice(chatId interface{}, voice interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendVoice(chatId ChatId, voice FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendObjectMessage(chatId, "sendVoice", "voice", voice, options)
 }
 
 // Send a video note.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
-// videoNote can be local filepath, bytes array, or file id. (XXX - remote http url is not supported yet)
+// videoNote cannot be a remote http url (not supported yet)
 //
 // options include: duration, length, disable_notification, reply_to_message_id, and reply_markup.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
-func (b *Bot) SendVideoNote(chatId interface{}, videoNote interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendVideoNote(chatId ChatId, videoNote FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	return b.sendObjectMessage(chatId, "sendVideoNote", "video_note", videoNote, options)
 }
 
 // Send locations.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendlocation
-func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendLocation(chatId ChatId, latitude, longitude float32, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":   chatId,
@@ -350,12 +312,10 @@ func (b *Bot) SendLocation(chatId interface{}, latitude, longitude float32, opti
 
 // Send venues.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
 // options include: foursquare_id, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvenue
-func (b *Bot) SendVenue(chatId interface{}, latitude, longitude float32, title, address string, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendVenue(chatId ChatId, latitude, longitude float32, title, address string, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":   chatId,
@@ -376,12 +336,10 @@ func (b *Bot) SendVenue(chatId interface{}, latitude, longitude float32, title, 
 
 // Send contacts.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
 // options include: last_name, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendcontact
-func (b *Bot) SendContact(chatId interface{}, phoneNumber, firstName string, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendContact(chatId ChatId, phoneNumber, firstName string, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":      chatId,
@@ -400,10 +358,8 @@ func (b *Bot) SendContact(chatId interface{}, phoneNumber, firstName string, opt
 
 // Send chat action.
 //
-// chatId can be Message.Chat.Id or target channel(eg. @channelusername).
-//
 // https://core.telegram.org/bots/api#sendchataction
-func (b *Bot) SendChatAction(chatId interface{}, action ChatAction) (result ApiResponse) {
+func (b *Bot) SendChatAction(chatId ChatId, action ChatAction) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -453,7 +409,7 @@ func (b *Bot) GetFileUrl(file File) string {
 // Kick chat member
 //
 // https://core.telegram.org/bots/api#kickchatmember
-func (b *Bot) KickChatMember(chatId interface{}, userId int) (result ApiResponse) {
+func (b *Bot) KickChatMember(chatId ChatId, userId int) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -463,7 +419,7 @@ func (b *Bot) KickChatMember(chatId interface{}, userId int) (result ApiResponse
 	return b.requestResponse("kickChatMember", params)
 }
 
-func (b *Bot) KickChatMemberUntil(chatId interface{}, userId int, untilDate int) (result ApiResponse) {
+func (b *Bot) KickChatMemberUntil(chatId ChatId, userId int, untilDate int) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":    chatId,
@@ -477,7 +433,7 @@ func (b *Bot) KickChatMemberUntil(chatId interface{}, userId int, untilDate int)
 // Leave chat
 //
 // https://core.telegram.org/bots/api#leavechat
-func (b *Bot) LeaveChat(chatId interface{}) (result ApiResponse) {
+func (b *Bot) LeaveChat(chatId ChatId) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -489,7 +445,7 @@ func (b *Bot) LeaveChat(chatId interface{}) (result ApiResponse) {
 // Unban chat member
 //
 // https://core.telegram.org/bots/api#unbanchatmember
-func (b *Bot) UnbanChatMember(chatId interface{}, userId int) (result ApiResponse) {
+func (b *Bot) UnbanChatMember(chatId ChatId, userId int) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -504,7 +460,7 @@ func (b *Bot) UnbanChatMember(chatId interface{}, userId int) (result ApiRespons
 // options include: until_date, can_send_messages, can_send_media_messages, can_send_other_messages, and can_send_web_page_previews
 //
 // https://core.telegram.org/bots/api#restrictchatmember
-func (b *Bot) RestrictChatMember(chatId interface{}, userId int, options map[string]interface{}) (result ApiResponse) {
+func (b *Bot) RestrictChatMember(chatId ChatId, userId int, options map[string]interface{}) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -525,7 +481,7 @@ func (b *Bot) RestrictChatMember(chatId interface{}, userId int, options map[str
 // options include: can_change_info, can_post_messages, can_edit_messages, can_delete_messages, can_invite_users, can_restrict_members, can_pin_messages, and can_promote_members
 //
 // https://core.telegram.org/bots/api#promotechatmember
-func (b *Bot) PromoteChatMember(chatId interface{}, userId int, options map[string]interface{}) (result ApiResponse) {
+func (b *Bot) PromoteChatMember(chatId ChatId, userId int, options map[string]interface{}) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -544,7 +500,7 @@ func (b *Bot) PromoteChatMember(chatId interface{}, userId int, options map[stri
 // Export chat invite link
 //
 // https://core.telegram.org/bots/api#exportchatinvitelink
-func (b *Bot) ExportChatInviteLink(chatId interface{}) (result ApiResponseString) {
+func (b *Bot) ExportChatInviteLink(chatId ChatId) (result ApiResponseString) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -555,10 +511,8 @@ func (b *Bot) ExportChatInviteLink(chatId interface{}) (result ApiResponseString
 
 // Set chat photo
 //
-// photo can be local filepath, remote http url, bytes array, or file id.
-//
 // https://core.telegram.org/bots/api#setchatphoto
-func (b *Bot) SetChatPhoto(chatId interface{}, photo interface{}) (result ApiResponse) {
+func (b *Bot) SetChatPhoto(chatId ChatId, photo FileParam) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -570,7 +524,7 @@ func (b *Bot) SetChatPhoto(chatId interface{}, photo interface{}) (result ApiRes
 // Delete chat photo
 //
 // https://core.telegram.org/bots/api#deletechatphoto
-func (b *Bot) DeleteChatPhoto(chatId interface{}) (result ApiResponse) {
+func (b *Bot) DeleteChatPhoto(chatId ChatId) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -582,7 +536,7 @@ func (b *Bot) DeleteChatPhoto(chatId interface{}) (result ApiResponse) {
 // Set chat title
 //
 // https://core.telegram.org/bots/api#setchattitle
-func (b *Bot) SetChatTitle(chatId interface{}, title string) (result ApiResponse) {
+func (b *Bot) SetChatTitle(chatId ChatId, title string) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -595,7 +549,7 @@ func (b *Bot) SetChatTitle(chatId interface{}, title string) (result ApiResponse
 // Set chat description
 //
 // https://core.telegram.org/bots/api#setchatdescription
-func (b *Bot) SetChatDescription(chatId interface{}, description string) (result ApiResponse) {
+func (b *Bot) SetChatDescription(chatId ChatId, description string) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":     chatId,
@@ -610,7 +564,7 @@ func (b *Bot) SetChatDescription(chatId interface{}, description string) (result
 // options include: disable_notification
 //
 // https://core.telegram.org/bots/api#pinchatmessage
-func (b *Bot) PinChatMessage(chatId interface{}, messageId int, options map[string]interface{}) (result ApiResponse) {
+func (b *Bot) PinChatMessage(chatId ChatId, messageId int, options map[string]interface{}) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":    chatId,
@@ -629,7 +583,7 @@ func (b *Bot) PinChatMessage(chatId interface{}, messageId int, options map[stri
 // Unpin chat message
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
-func (b *Bot) UnpinChatMessage(chatId interface{}) (result ApiResponse) {
+func (b *Bot) UnpinChatMessage(chatId ChatId) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -641,7 +595,7 @@ func (b *Bot) UnpinChatMessage(chatId interface{}) (result ApiResponse) {
 // Get chat
 //
 // https://core.telegram.org/bots/api#getchat
-func (b *Bot) GetChat(chatId interface{}) (result ApiResponseChat) {
+func (b *Bot) GetChat(chatId ChatId) (result ApiResponseChat) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -653,7 +607,7 @@ func (b *Bot) GetChat(chatId interface{}) (result ApiResponseChat) {
 // Get chat administrators
 //
 // https://core.telegram.org/bots/api#getchatadministrators
-func (b *Bot) GetChatAdministrators(chatId interface{}) (result ApiResponseChatAdministrators) {
+func (b *Bot) GetChatAdministrators(chatId ChatId) (result ApiResponseChatAdministrators) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -665,7 +619,7 @@ func (b *Bot) GetChatAdministrators(chatId interface{}) (result ApiResponseChatA
 // Get chat members count
 //
 // https://core.telegram.org/bots/api#getchatmemberscount
-func (b *Bot) GetChatMembersCount(chatId interface{}) (result ApiResponseInt) {
+func (b *Bot) GetChatMembersCount(chatId ChatId) (result ApiResponseInt) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -677,7 +631,7 @@ func (b *Bot) GetChatMembersCount(chatId interface{}) (result ApiResponseInt) {
 // Get chat member
 //
 // https://core.telegram.org/bots/api#getchatmember
-func (b *Bot) GetChatMember(chatId interface{}, userId int) (result ApiResponseChatMember) {
+func (b *Bot) GetChatMember(chatId ChatId, userId int) (result ApiResponseChatMember) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -690,7 +644,7 @@ func (b *Bot) GetChatMember(chatId interface{}, userId int) (result ApiResponseC
 // Set chat sticker set
 //
 // https://core.telegram.org/bots/api#setchatstickerset
-func (b *Bot) SetChatStickerSet(chatId interface{}, stickerSetName string) (result ApiResponse) {
+func (b *Bot) SetChatStickerSet(chatId ChatId, stickerSetName string) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":          chatId,
@@ -703,7 +657,7 @@ func (b *Bot) SetChatStickerSet(chatId interface{}, stickerSetName string) (resu
 // Delete chat sticker set
 //
 // https://core.telegram.org/bots/api#deletechatstickerset
-func (b *Bot) DeleteChatStickerSet(chatId interface{}) (result ApiResponse) {
+func (b *Bot) DeleteChatStickerSet(chatId ChatId) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -833,7 +787,7 @@ func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result Ap
 // Delete message
 //
 // https://core.telegram.org/bots/api#deletemessage
-func (b *Bot) DeleteMessage(chatId interface{}, messageId int) (result ApiResponse) {
+func (b *Bot) DeleteMessage(chatId ChatId, messageId int) (result ApiResponse) {
 	return b.requestResponse("deleteMessage", map[string]interface{}{
 		"chat_id":    chatId,
 		"message_id": messageId,
@@ -940,7 +894,7 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryId string, ok bool, errorMe
 // options include: game_short_name, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendgame
-func (b *Bot) SendGame(chatId interface{}, gameShortName string, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendGame(chatId ChatId, gameShortName string, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":         chatId,
@@ -1474,7 +1428,7 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 }
 
 // Send file
-func (b *Bot) sendFile(chatId interface{}, apiName, paramKey, filepath string, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) sendFile(chatId ChatId, apiName, paramKey, filepath string, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -1508,7 +1462,7 @@ func (b *Bot) sendFile(chatId interface{}, apiName, paramKey, filepath string, o
 }
 
 // Send bytes
-func (b *Bot) sendBytes(chatId interface{}, apiName, paramKey string, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) sendBytes(chatId ChatId, apiName, paramKey string, bytes []byte, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -1525,7 +1479,7 @@ func (b *Bot) sendBytes(chatId interface{}, apiName, paramKey string, bytes []by
 }
 
 // Send file id (which is already uploaded to Telegram server)
-func (b *Bot) sendFileId(chatId interface{}, apiName, paramKey, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) sendFileId(chatId ChatId, apiName, paramKey, fileId string, options map[string]interface{}) (result ApiResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -1542,7 +1496,7 @@ func (b *Bot) sendFileId(chatId interface{}, apiName, paramKey, fileId string, o
 }
 
 // Send object (in []byte, filepath, http url, or file id) and return as ApiResponse
-func (b *Bot) sendObject(apiName, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponse) {
+func (b *Bot) sendObject(apiName, paramKey string, obj FileParam, options map[string]interface{}) (result ApiResponse) {
 	// params
 	params := options
 
@@ -1580,7 +1534,7 @@ func (b *Bot) sendObject(apiName, paramKey string, obj interface{}, options map[
 }
 
 // Send object (in []byte, filepath, http url, or file id) and return as ApiResponseMessage
-func (b *Bot) sendObjectMessage(chatId interface{}, apiName, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) sendObjectMessage(chatId ChatId, apiName, paramKey string, obj FileParam, options map[string]interface{}) (result ApiResponseMessage) {
 	switch obj.(type) {
 	case []byte:
 		bytes := obj.([]byte)
@@ -1608,7 +1562,7 @@ func (b *Bot) sendObjectMessage(chatId interface{}, apiName, paramKey string, ob
 }
 
 // Send object (in []byte, filepath, http url, or file id) and return as ApiResponseFile
-func (b *Bot) sendObjectFile(apiName, paramKey string, obj interface{}, options map[string]interface{}) (result ApiResponseFile) {
+func (b *Bot) sendObjectFile(apiName, paramKey string, obj FileParam, options map[string]interface{}) (result ApiResponseFile) {
 	params := options
 
 	switch obj.(type) {
