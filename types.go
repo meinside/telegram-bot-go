@@ -1,32 +1,34 @@
-// https://core.telegram.org/bots/api#available-types
 package telegrambot
 
-// Chat Id
-//
-// It can be Message.Chat.Id,
+// https://core.telegram.org/bots/api#available-types
+
+// ChatId can be `Message.Chat.Id`,
 // or target channel name (in string, eg. "@channelusername")
 type ChatId interface{}
 
-// Chat types
+// ChatType is a type of Chat
 type ChatType string
 
+// ChatType strings
 const (
 	ChatTypePrivate ChatType = "private"
 	ChatTypeGroup   ChatType = "group"
 	ChatTypeChannel ChatType = "channel"
 )
 
-// Parse modes
+// ParseMode is a mode of parse
 type ParseMode string // parse_mode
 
+// ParseMode strings
 const (
 	ParseModeMarkdown ParseMode = "Markdown"
 	ParseModeHtml     ParseMode = "HTML"
 )
 
-// Chat actions
+// ChatAction is a type of action in chats
 type ChatAction string
 
+// ChatAction strings
 const (
 	ChatActionTyping          ChatAction = "typing"
 	ChatActionUploadPhoto     ChatAction = "upload_photo"
@@ -40,9 +42,10 @@ const (
 	ChatActionUploadVideoNote ChatAction = "upload_video_note"
 )
 
-// Inline query result types
+// InlineQueryResultType is a type of inline query result
 type InlineQueryResultType string
 
+// InlineQueryResultType strings
 const (
 	InlineQueryResultTypeArticle  InlineQueryResultType = "article"
 	InlineQueryResultTypePhoto    InlineQueryResultType = "photo"
@@ -59,11 +62,12 @@ const (
 	InlineQueryResultTypeGame     InlineQueryResultType = "game"
 )
 
-// Message Entity Types
+// MessageEntityType is a type of MessageEntity
 //
 // https://core.telegram.org/bots/api#messageentity
 type MessageEntityType string
 
+// MessageEntityType strings
 const (
 	MessageEntityTypeMention     = "mention"
 	MessageEntityTypeHashTag     = "hashtag"
@@ -78,11 +82,12 @@ const (
 	MessageEntityTypeTextMention = "text_mention"
 )
 
-// Chat Member Statuses
+// ChatMemberStatus is a status of chat member
 //
 // https://core.telegram.org/bots/api#chatmember
 type ChatMemberStatus string
 
+// ChatMemberStatus strings
 const (
 	ChatMemberStatusCreator       ChatMemberStatus = "creator"
 	ChatMemberStatusAdministrator ChatMemberStatus = "administrator"
@@ -91,11 +96,12 @@ const (
 	ChatMemberStatusKicked        ChatMemberStatus = "kicked"
 )
 
-// MaskPosition Point
+// MaskPositionPoint is a point in MaskPosition
 //
 // https://core.telegram.org/bots/api#maskposition
 type MaskPositionPoint string
 
+// MaskPosition points
 const (
 	MaskPositionForehead MaskPositionPoint = "forehead"
 	MaskPositionEyes     MaskPositionPoint = "eyes"
@@ -103,14 +109,14 @@ const (
 	MaskPositionChin     MaskPositionPoint = "chin"
 )
 
-// API response (base)
+// ApiResponseBase is a base of API responses
 type ApiResponseBase struct {
 	Ok          bool                   `json:"ok"`
 	Description *string                `json:"description,omitempty"`
 	Parameters  *ApiResponseParameters `json:"parameters,omitempty"`
 }
 
-// API response parameters
+// ApiResponseParameters is parameters in API responses
 //
 // https://core.telegram.org/bots/api#responseparameters
 type ApiResponseParameters struct {
@@ -118,37 +124,37 @@ type ApiResponseParameters struct {
 	RetryAfter      int   `json:"retry_after,omitempty"`
 }
 
-// API response
+// ApiResponse is an API response
 type ApiResponse struct {
 	ApiResponseBase
 	Result interface{} `json:"result,omitempty"`
 }
 
-// API response with result type: WebhookInfo
+// ApiResponseWebhookInfo is an API response with result type: WebhookInfo
 type ApiResponseWebhookInfo struct {
 	ApiResponseBase
 	Result *WebhookInfo `json:"result,omitempty"`
 }
 
-// API response with result type: User
+// ApiResponseUser is an API response with result type: User
 type ApiResponseUser struct {
 	ApiResponseBase
 	Result *User `json:"result,omitempty"`
 }
 
-// API response with result type: Message
+// ApiResponseMessage is an API response with result type: Message
 type ApiResponseMessage struct {
 	ApiResponseBase
 	Result *Message `json:"result,omitempty"`
 }
 
-// API response with result type: UserProfilePhotos
+// ApiResponseUserProfilePhotos is an API response with result type: UserProfilePhotos
 type ApiResponseUserProfilePhotos struct {
 	ApiResponseBase
 	Result *UserProfilePhotos `json:"result,omitempty"`
 }
 
-// API response with result type: File
+// ApiResponseFile is an API response with result type: File
 type ApiResponseFile struct {
 	ApiResponseBase
 	Result *File `json:"result,omitempty"`
@@ -160,31 +166,31 @@ type ApiResponseUpdates struct {
 	Result []Update `json:"result,omitempty"`
 }
 
-// API response with result type: Chat
+// ApiResponseChat is an API response with result type: Chat
 type ApiResponseChat struct {
 	ApiResponseBase
 	Result *Chat `json:"result,omitempty"`
 }
 
-// API response with result type: ChatAdministrators
+// ApiResponseChatAdministrators is an API response with result type: ChatAdministrators
 type ApiResponseChatAdministrators struct {
 	ApiResponseBase
 	Result []ChatMember `json:"result,omitempty"`
 }
 
-// API response with result type: ChatMember
+// ApiResponseChatMember is an API response with result type: ChatMember
 type ApiResponseChatMember struct {
 	ApiResponseBase
 	Result *ChatMember `json:"result,omitempty"`
 }
 
-// API response with result type: int
+// ApiResponseInt is an API response with result type: int
 type ApiResponseInt struct {
 	ApiResponseBase
 	Result int `json:"result,omitempty"`
 }
 
-// API response with result type: string
+// ApiResponseString is an API response with result type: string
 type ApiResponseString struct {
 	ApiResponseBase
 	Result *string `json:"result,omitempty"`
@@ -196,17 +202,19 @@ type ApiResponseGameHighScores struct {
 	Result []GameHighScore `json:"result,omitempty"`
 }
 
-// API response with result type: StickerSet
+// ApiResponseStickerSet is an API response with result type: StickerSet
 type ApiResponseStickerSet struct {
 	ApiResponseBase
 	Result *StickerSet `json:"result,omitempty"`
 }
 
-// Update types (for allowed_updates)
+// UpdateType is a type of updates (for allowed_updates)
 //
 // https://core.telegram.org/bots/api#setwebhook
+// https://core.telegram.org/bots/api#update
 type UpdateType string
 
+// UpdateType strings
 const (
 	UpdateTypeMessage            UpdateType = "message"
 	UpdateTypeEditedMessage      UpdateType = "edited_message"
@@ -217,7 +225,7 @@ const (
 	UpdateTypeCallbackQuery      UpdateType = "callback_query"
 )
 
-// WebhookInfo
+// WebhookInfo is a struct of webhook info
 //
 // https://core.telegram.org/bots/api#webhookinfo
 type WebhookInfo struct {
@@ -230,7 +238,7 @@ type WebhookInfo struct {
 	AllowedUpdates       []UpdateType `json:"allowed_updates,omitempty"`
 }
 
-// Update
+// Update is a struct of an update
 //
 // https://core.telegram.org/bots/api#update
 type Update struct {
@@ -246,7 +254,7 @@ type Update struct {
 	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query,omitempty"`
 }
 
-// User
+// User is a struct of a user
 //
 // https://core.telegram.org/bots/api#user
 type User struct {
@@ -258,7 +266,7 @@ type User struct {
 	LanguageCode *string `json:"language_code,omitempty"` // https://en.wikipedia.org/wiki/IETF_language_tag
 }
 
-// Chat
+// Chat is a struct of a chat
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
@@ -277,12 +285,12 @@ type Chat struct {
 	CanSetStickerSet            bool       `json:"can_set_sticker_set,omitempty"`
 }
 
-// Universal file type for convenience
+// FileParam is a universal file type for convenience
 //
 // It can be one of local filepath (string), remote http url (string), bytes array ([]byte), or file id (string)
 type FileParam interface{}
 
-// Audio
+// Audio is a struct for an audio file
 //
 // https://core.telegram.org/bots/api#audio
 type Audio struct {
@@ -294,7 +302,7 @@ type Audio struct {
 	FileSize  int     `json:"file_size,omitempty"`
 }
 
-// MessageEntity
+// MessageEntity is a struct of a message entity
 //
 // https://core.telegram.org/bots/api#messageentity
 type MessageEntity struct {
@@ -305,7 +313,7 @@ type MessageEntity struct {
 	User   *User             `json:"user,omitempty"` // for Type == "text_mention" only,
 }
 
-// PhotoSize
+// PhotoSize is a struct of a photo's size
 //
 // https://core.telegram.org/bots/api#photosize
 type PhotoSize struct {
@@ -315,7 +323,7 @@ type PhotoSize struct {
 	FileSize int    `json:"file_size,omitempty"`
 }
 
-// Document
+// Document is a struct for an ordinary file
 //
 // https://core.telegram.org/bots/api#document
 type Document struct {
@@ -326,7 +334,7 @@ type Document struct {
 	FileSize int        `json:"file_size,omitempty"`
 }
 
-// Sticker
+// Sticker is a struct of a sticker
 //
 // https://core.telegram.org/bots/api#sticker
 type Sticker struct {
@@ -340,7 +348,7 @@ type Sticker struct {
 	FileSize     int           `json:"file_size,omitempty"`
 }
 
-// StickerSet
+// StickerSet is a struct of a sticker set
 //
 // https://core.telegram.org/bots/api#stickerset
 type StickerSet struct {
@@ -350,7 +358,7 @@ type StickerSet struct {
 	Stickers      []Sticker `json:"stickers"`
 }
 
-// MaskPosition
+// MaskPosition is a struct for a mask position
 //
 // https://core.telegram.org/bots/api#maskposition
 type MaskPosition struct {
@@ -360,7 +368,7 @@ type MaskPosition struct {
 	Scale  float32           `json:"scale"`
 }
 
-// Video
+// Video is a struct for a video file
 //
 // https://core.telegram.org/bots/api#video
 type Video struct {
@@ -373,7 +381,7 @@ type Video struct {
 	FileSize int        `json:"file_size,omitempty"`
 }
 
-// Voice
+// Voice is a struct for a voice file
 //
 // https://core.telegram.org/bots/api#voice
 type Voice struct {
@@ -383,7 +391,7 @@ type Voice struct {
 	FileSize int     `json:"file_size,omitempty"`
 }
 
-// VideoNote
+// VideoNote is a struct for a video note
 //
 // https://core.telegram.org/bots/api#videonote
 type VideoNote struct {
@@ -394,7 +402,7 @@ type VideoNote struct {
 	FileSize int        `json:"file_size,omitempty"`
 }
 
-// Contact
+// Contact is a struct for a contact info
 //
 // https://core.telegram.org/bots/api#contact
 type Contact struct {
@@ -404,7 +412,7 @@ type Contact struct {
 	UserId      int     `json:"user_id,omitempty"`
 }
 
-// Location
+// Location is a struct for a location
 //
 // https://core.telegram.org/bots/api#location
 type Location struct {
@@ -412,7 +420,7 @@ type Location struct {
 	Latitude  float32 `json:"latitude"`
 }
 
-// Venue
+// Venue is a struct of a venue
 //
 // https://core.telegram.org/bots/api#venue
 type Venue struct {
@@ -422,7 +430,7 @@ type Venue struct {
 	FoursquareId *string  `json:"foursquare_id,omitempty"`
 }
 
-// UserProfilePhotos
+// UserProfilePhotos is a struct for user profile photos
 //
 // https://core.telegram.org/bots/api#userprofilephotos
 type UserProfilePhotos struct {
@@ -430,7 +438,7 @@ type UserProfilePhotos struct {
 	Photos     [][]PhotoSize `json:"photos"`
 }
 
-// File
+// File is a struct for a file
 //
 // https://core.telegram.org/bots/api#file
 type File struct {
@@ -439,7 +447,7 @@ type File struct {
 	FilePath *string `json:"file_path,omitempty"`
 }
 
-// ReplyKeyboardMarkup
+// ReplyKeyboardMarkup is a struct for reply keyboard markups
 //
 // https://core.telegram.org/bots/api#replykeyboardmarkup
 type ReplyKeyboardMarkup struct {
@@ -449,7 +457,7 @@ type ReplyKeyboardMarkup struct {
 	Selective       bool               `json:"selective,omitempty"`
 }
 
-// KeyboardButton
+// KeyboardButton is a struct of a keyboard button
 //
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
@@ -458,7 +466,7 @@ type KeyboardButton struct {
 	RequestLocation bool   `json:"request_location,omitempty"`
 }
 
-// ReplyKeyboardRemove
+// ReplyKeyboardRemove is a struct for ReplyKeyboardRemove
 //
 // https://core.telegram.org/bots/api#replykeyboardremove
 type ReplyKeyboardRemove struct {
@@ -466,14 +474,14 @@ type ReplyKeyboardRemove struct {
 	Selective      bool `json:"selective,omitempty"`
 }
 
-// InlineKeyboardMarkup
+// InlineKeyboardMarkup is a struct for InlineKeyboardMarkup
 //
 // https://core.telegram.org/bots/api#inlinekeyboardmarkup
 type InlineKeyboardMarkup struct {
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
 }
 
-// InlineKeyboardButton
+// InlineKeyboardButton is a struct for InlineKeyboardButtons
 //
 // https://core.telegram.org/bots/api#inlinekeyboardbutton
 type InlineKeyboardButton struct {
@@ -486,7 +494,7 @@ type InlineKeyboardButton struct {
 	Pay                          bool          `json:"pay,omitempty"`
 }
 
-// CallbackQuery
+// CallbackQuery is a struct for a callback query
 //
 // https://core.telegram.org/bots/api#callbackquery
 type CallbackQuery struct {
@@ -499,7 +507,7 @@ type CallbackQuery struct {
 	GameShortName   *string  `json:"game_short_name,omitempty"`
 }
 
-// ShippingQuery
+// ShippingQuery is a struct for a shipping query
 //
 // https://core.telegram.org/bots/api#shippingquery
 type ShippingQuery struct {
@@ -509,7 +517,7 @@ type ShippingQuery struct {
 	ShippingAddress ShippingAddress `json:"shipping_address"`
 }
 
-// PreCheckoutQuery
+// PreCheckoutQuery is a struct for a precheckout query
 //
 // https://core.telegram.org/bots/api#precheckoutquery
 type PreCheckoutQuery struct {
@@ -522,7 +530,7 @@ type PreCheckoutQuery struct {
 	OrderInfo         *OrderInfo `json:"order_info,omitempty"`
 }
 
-// ForceReply
+// ForceReply is a struct for force-reply
 //
 // https://core.telegram.org/bots/api#forcereply
 type ForceReply struct {
@@ -530,7 +538,7 @@ type ForceReply struct {
 	Selective  bool `json:"selective,omitempty"`
 }
 
-// ChatPhoto
+// ChatPhoto is a struct for a chat photo
 //
 // https://core.telegram.org/bots/api#chatphoto
 type ChatPhoto struct {
@@ -538,7 +546,7 @@ type ChatPhoto struct {
 	BigFileId   string `json:"big_file_id"`
 }
 
-// ChatMember
+// ChatMember is a struct of a chat member
 //
 // https://core.telegram.org/bots/api#chatmember
 type ChatMember struct {
@@ -560,7 +568,7 @@ type ChatMember struct {
 	CanAddWebPagePreviews bool             `json:"can_add_web_page_previews,omitempty"`
 }
 
-// Message
+// Message is a struct of a message
 //
 // https://core.telegram.org/bots/api#message
 type Message struct {
@@ -606,7 +614,7 @@ type Message struct {
 	SuccessfulPayment     *SuccessfulPayment `json:"successful_payment,omitempty"`
 }
 
-// Inline query
+// InlineQuery is a struct of an inline query
 //
 // https://core.telegram.org/bots/api#inlinequery
 type InlineQuery struct {
@@ -617,7 +625,7 @@ type InlineQuery struct {
 	Offset   string    `json:"offset"`
 }
 
-// Chosen inline result
+// ChosenInlineResult is a struct for a chosen inline result
 //
 // https://core.telegram.org/bots/api#choseninlineresult
 type ChosenInlineResult struct {
@@ -628,29 +636,33 @@ type ChosenInlineResult struct {
 	Query           string    `json:"query"`
 }
 
-// Video mime types for inline query
+// VideoMimeType is a video mime type for an inline query
 type VideoMimeType string
 
+// VideoMimeType strings
 const (
 	VideoMimeTypeHtml VideoMimeType = "text/html"
 	VideoMimeTypeMp4  VideoMimeType = "video/mp4"
 )
 
-// Document mime types for inline query
+// DocumentMimeType is a document mime type for an inline query
 type DocumentMimeType string
 
+// DocumentMimeType strings
 const (
 	DocumentMimeTypePdf DocumentMimeType = "application/pdf"
 	DocumentMimeTypeZip DocumentMimeType = "application/zip"
 )
 
-// Inline query results
+// InlineQueryResult is a struct for inline query results
 //
 // https://core.telegram.org/bots/api#inlinequeryresult
 type InlineQueryResult struct {
 	Type InlineQueryResultType `json:"type"`
 	Id   string                `json:"id"`
 }
+
+// InlineQueryResultArticle is a struct for InlineQueryResultArticle
 type InlineQueryResultArticle struct { // https://core.telegram.org/bots/api#inlinequeryresultarticle
 	InlineQueryResult
 	Title               string                `json:"title"`
@@ -663,6 +675,8 @@ type InlineQueryResultArticle struct { // https://core.telegram.org/bots/api#inl
 	ThumbWidth          int                   `json:"thumb_width,omitempty"`
 	ThumbHeight         int                   `json:"thumb_height,omitempty"`
 }
+
+// InlineQueryResultPhoto is a struct for InlineQueryResultPhoto
 type InlineQueryResultPhoto struct { // https://core.telegram.org/bots/api#inlinequeryresultphoto
 	InlineQueryResult
 	PhotoUrl            string                `json:"photo_url"`
@@ -675,6 +689,8 @@ type InlineQueryResultPhoto struct { // https://core.telegram.org/bots/api#inlin
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultGif is a struct for InlineQueryResultGif
 type InlineQueryResultGif struct { // https://core.telegram.org/bots/api#inlinequeryresultgif
 	InlineQueryResult
 	GifUrl              string                `json:"gif_url"`
@@ -687,6 +703,8 @@ type InlineQueryResultGif struct { // https://core.telegram.org/bots/api#inlineq
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultMpeg4Gif is a struct for InlineQueryResultMpeg4Gif
 type InlineQueryResultMpeg4Gif struct { // https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
 	InlineQueryResult
 	Mpeg4Url            string                `json:"mpeg4_url"`
@@ -699,6 +717,8 @@ type InlineQueryResultMpeg4Gif struct { // https://core.telegram.org/bots/api#in
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultVideo is a struct of InlineQueryResultVideo
 type InlineQueryResultVideo struct { // https://core.telegram.org/bots/api#inlinequeryresultvideo
 	InlineQueryResult
 	VideoUrl            string                `json:"video_url"`
@@ -713,6 +733,8 @@ type InlineQueryResultVideo struct { // https://core.telegram.org/bots/api#inlin
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultAudio is a struct of InlineQueryResultAudio
 type InlineQueryResultAudio struct { // https://core.telegram.org/bots/api#inlinequeryresultaudio
 	InlineQueryResult
 	AudioUrl            string                `json:"audio_url"`
@@ -723,6 +745,8 @@ type InlineQueryResultAudio struct { // https://core.telegram.org/bots/api#inlin
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultVoice is a struct of InlineQueryResultVoice
 type InlineQueryResultVoice struct { // https://core.telegram.org/bots/api#inlinequeryresultvoice
 	InlineQueryResult
 	VoiceUrl            string                `json:"voice_url"`
@@ -732,6 +756,8 @@ type InlineQueryResultVoice struct { // https://core.telegram.org/bots/api#inlin
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultDocument is a struct of InlineQueryResultDocument
 type InlineQueryResultDocument struct { // https://core.telegram.org/bots/api#inlinequeryresultdocument
 	InlineQueryResult
 	Title               string                `json:"title"`
@@ -745,6 +771,8 @@ type InlineQueryResultDocument struct { // https://core.telegram.org/bots/api#in
 	ThumbWidth          int                   `json:"thumb_width,omitempty"`
 	ThumbHeight         int                   `json:"thumb_height,omitempty"`
 }
+
+// InlineQueryResultLocation is a struct of InlineQueryResultLocation
 type InlineQueryResultLocation struct { // https://core.telegram.org/bots/api#inlinequeryresultlocation
 	InlineQueryResult
 	Latitude            float32               `json:"latitude"`
@@ -756,6 +784,8 @@ type InlineQueryResultLocation struct { // https://core.telegram.org/bots/api#in
 	ThumbWidth          int                   `json:"thumb_width,omitempty"`
 	ThumbHeight         int                   `json:"thumb_height,omitempty"`
 }
+
+// InlineQueryResultVenue is a struct of InlineQueryResultVenue
 type InlineQueryResultVenue struct { // https://core.telegram.org/bots/api#inlinequeryresultvenue
 	InlineQueryResult
 	Latitude            float32               `json:"latitude"`
@@ -769,6 +799,8 @@ type InlineQueryResultVenue struct { // https://core.telegram.org/bots/api#inlin
 	ThumbWidth          int                   `json:"thumb_width,omitempty"`
 	ThumbHeight         int                   `json:"thumb_height,omitempty"`
 }
+
+// InlineQueryResultContact is a struct of InlineQueryResultContact
 type InlineQueryResultContact struct { // https://core.telegram.org/bots/api#inlinequeryresultcontact
 	InlineQueryResult
 	PhoneNumber         string                `json:"phone_number"`
@@ -780,11 +812,15 @@ type InlineQueryResultContact struct { // https://core.telegram.org/bots/api#inl
 	ThumbWidth          int                   `json:"thumb_width,omitempty"`
 	ThumbHeight         int                   `json:"thumb_height,omitempty"`
 }
+
+// InlineQueryResultGame is a struct of InlineQueryResultGame
 type InlineQueryResultGame struct { // https://core.telegram.org/bots/api#inlinequeryresultgame
 	InlineQueryResult
 	GameShortName string                `json:"game_short_name"`
 	ReplyMarkup   *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
+
+// InlineQueryResultCachedPhoto is a struct of InlineQueryResultCachedPhoto
 type InlineQueryResultCachedPhoto struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedphoto
 	InlineQueryResult
 	PhotoFileId         string                `json:"photo_file_id"`
@@ -794,6 +830,8 @@ type InlineQueryResultCachedPhoto struct { // https://core.telegram.org/bots/api
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultCachedGif is a struct of InlineQueryResultCachedGif
 type InlineQueryResultCachedGif struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedgif
 	InlineQueryResult
 	GifFileId           string                `json:"gif_file_id"`
@@ -802,6 +840,8 @@ type InlineQueryResultCachedGif struct { // https://core.telegram.org/bots/api#i
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultCachedMpeg4Gif is a struct of InlineQueryResultCachedMpeg4Gif
 type InlineQueryResultCachedMpeg4Gif struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif
 	InlineQueryResult
 	Mpeg4FileId         string                `json:"mpeg4_file_id"`
@@ -810,12 +850,16 @@ type InlineQueryResultCachedMpeg4Gif struct { // https://core.telegram.org/bots/
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultCachedSticker is a struct of InlineQueryResultCachedSticker
 type InlineQueryResultCachedSticker struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedsticker
 	InlineQueryResult
 	StickerFileId       string                `json:"sticker_file_id"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultCachedDocument is a struct of InlineQueryResultCachedDocument
 type InlineQueryResultCachedDocument struct { // https://core.telegram.org/bots/api#inlinequeryresultcacheddocument
 	InlineQueryResult
 	Title               string                `json:"title"`
@@ -825,6 +869,8 @@ type InlineQueryResultCachedDocument struct { // https://core.telegram.org/bots/
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultCachedVideo is a struct of InlineQueryResultCachedVideo
 type InlineQueryResultCachedVideo struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedvideo
 	InlineQueryResult
 	VideoFileId         string                `json:"video_file_id"`
@@ -834,6 +880,8 @@ type InlineQueryResultCachedVideo struct { // https://core.telegram.org/bots/api
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultCachedVoice is a struct of InlineQueryResultCachedVoice
 type InlineQueryResultCachedVoice struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedvoice
 	InlineQueryResult
 	VoiceFileId         string                `json:"voice_file_id"`
@@ -842,6 +890,8 @@ type InlineQueryResultCachedVoice struct { // https://core.telegram.org/bots/api
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
+
+// InlineQueryResultCachedAudio is a struct of InlineQueryResultCachedAudio
 type InlineQueryResultCachedAudio struct { // https://core.telegram.org/bots/api#inlinequeryresultcachedaudio
 	InlineQueryResult
 	AudioFileId         string                `json:"audio_file_id"`
@@ -850,19 +900,25 @@ type InlineQueryResultCachedAudio struct { // https://core.telegram.org/bots/api
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
 
-// InputMessageContent
+// InputMessageContent is a generic type of input message content types
 //
 // https://core.telegram.org/bots/api#inputmessagecontent
 type InputMessageContent interface{}
+
+// InputTextMessageContent is a struct of InputTextMessageContent
 type InputTextMessageContent struct { // https://core.telegram.org/bots/api#inputtextmessagecontent
 	MessageText           string     `json:"message_text"`
 	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
 	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
 }
+
+// InputLocationMessageContent is a struct of InputLocationMessageContent
 type InputLocationMessageContent struct { // https://core.telegram.org/bots/api#inputlocationmessagecontent
 	Latitude  float32 `json:"latitude"`
 	Longitude float32 `json:"longitude"`
 }
+
+// InputVenueMessageContent is a struct of InputVenueMessageContent
 type InputVenueMessageContent struct { // https://core.telegram.org/bots/api#inputvenuemessagecontent
 	Latitude     float32 `json:"latitude"`
 	Longitude    float32 `json:"longitude"`
@@ -870,20 +926,22 @@ type InputVenueMessageContent struct { // https://core.telegram.org/bots/api#inp
 	Address      string  `json:"address"`
 	FoursquareId *string `json:"foursquare_id,omitempty"`
 }
+
+// InputContactMessageContent is a struct of InputContactMessageContent
 type InputContactMessageContent struct { // https://core.telegram.org/bots/api#inputcontactmessagecontent
 	PhoneNumber string  `json:"phone_number"`
 	FirstName   string  `json:"first_name"`
 	LastName    *string `json:"last_name,omitempty"`
 }
 
-// CallbackGame
+// CallbackGame is for callback of games
 //
 // https://core.telegram.org/bots/api#callbackgame
 type CallbackGame struct {
 	// has nothing yet
 }
 
-// Game
+// Game is a struct of Game
 //
 // https://core.telegram.org/bots/api#game
 type Game struct {
@@ -895,7 +953,7 @@ type Game struct {
 	Animation    *Animation      `json:"animation,omitempty"`
 }
 
-// Animation
+// Animation is a struct of Animation
 //
 // https://core.telegram.org/bots/api#animation
 type Animation struct {
@@ -906,7 +964,7 @@ type Animation struct {
 	FileSize int        `json:"file_size,omitempty"`
 }
 
-// GameHighScore
+// GameHighScore is a struct of GameHighScore
 //
 // https://core.telegram.org/bots/api#gamehighscore
 type GameHighScore struct {
@@ -915,7 +973,7 @@ type GameHighScore struct {
 	Score    int  `json:"score"`
 }
 
-//Invoice
+// Invoice is a struct of Invoice
 //
 // https://core.telegram.org/bots/api#invoice
 type Invoice struct {
@@ -926,7 +984,7 @@ type Invoice struct {
 	TotalAmount    int    `json:"total_amount"` // https://core.telegram.org/bots/payments/currencies.json
 }
 
-// SuccessfulPayment
+// SuccessfulPayment is a struct of successful payments
 //
 // https://core.telegram.org/bots/api#successfulpayment
 type SuccessfulPayment struct {
@@ -939,7 +997,7 @@ type SuccessfulPayment struct {
 	ProviderPaymentChargeId string     `json:"provider_payment_charge_id"`
 }
 
-// OrderInfo
+// OrderInfo is a struct of order info
 //
 // https://core.telegram.org/bots/api#orderinfo
 type OrderInfo struct {
@@ -949,7 +1007,7 @@ type OrderInfo struct {
 	ShippingAddress *ShippingAddress `json:"shipping_address,omitempty"`
 }
 
-// ShippingOption
+// ShippingOption is a struct of an option of the shipping
 //
 // https://core.telegram.org/bots/api#shippingoption
 type ShippingOption struct {
@@ -958,7 +1016,7 @@ type ShippingOption struct {
 	Prices []LabeledPrice `json:"prices"`
 }
 
-// LabeledPrice
+// LabeledPrice is a struct of labeled prices
 //
 // https://core.telegram.org/bots/api#labeledprice
 type LabeledPrice struct {
@@ -966,7 +1024,7 @@ type LabeledPrice struct {
 	Amount int    `json:"amount"`
 }
 
-// ShippingAddress
+// ShippingAddress is a struct of shipping address
 //
 // https://core.telegram.org/bots/api#shippingaddress
 type ShippingAddress struct {

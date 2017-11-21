@@ -1,4 +1,6 @@
-// Telegram Bot API helper (https://core.telegram.org/bots/api)
+// Package telegrambot / Telegram Bot API helper
+//
+// https://core.telegram.org/bots/api
 //
 // Created on : 2015.10.06, meinside@gmail.com
 package telegrambot
@@ -15,18 +17,17 @@ import (
 )
 
 const (
-	ApiBaseUrl         = "https://api.telegram.org/bot"
-	FileBaseUrl        = "https://api.telegram.org/file/bot"
-	DefaultWebhookPort = 443
+	apiBaseUrl  = "https://api.telegram.org/bot"
+	fileBaseUrl = "https://api.telegram.org/file/bot"
 
-	WebhookPath = "/telegram/bot/webhook"
+	webhookPath = "/telegram/bot/webhook"
 )
 
 const (
-	RedactedString = "<REDACTED>" // confidential info will be displayed as this
+	redactedString = "<REDACTED>" // confidential info will be displayed as this
 )
 
-// Bot
+// Bot struct
 type Bot struct {
 	token       string // Telegram bot API's token
 	tokenHashed string // hashed token
@@ -40,7 +41,7 @@ type Bot struct {
 	Verbose bool // print verbose log messages or not
 }
 
-// Get a new bot API client with given token string.
+// NewClient gets a new bot API client with given token string.
 func NewClient(token string) *Bot {
 	return &Bot{
 		token:       token,
@@ -48,8 +49,8 @@ func NewClient(token string) *Bot {
 	}
 }
 
-// Generate certificate and private key file with given domain.
-// OpenSSL is needed.
+// GenCertAndKey generates a certificate and a private key file with given domain.
+// (`OpenSSL` is needed.)
 func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string, expiresInDays int) error {
 	numBits := 2048
 	country := "US"
@@ -64,7 +65,7 @@ func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string,
 	return nil
 }
 
-// Start Webhook server(and wait forever).
+// StartWebhookServerAndWait starts a webhook server(and waits forever).
 // Function SetWebhook(host, port, certFilepath) should be called priorly to setup host, port, and certification file.
 // Certification file(.pem) and a private key is needed.
 // Incoming webhooks will be received through webhookHandler function.
@@ -85,7 +86,7 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	}
 }
 
-// Retrieve updates from API server constantly.
+// StartMonitoringUpdates retrieves updates from API server constantly.
 // If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
 func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(b *Bot, update Update, err error)) {
 	b.verbose("starting monitoring updates (interval seconds: %d) ...", interval)
@@ -118,7 +119,7 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 
 // Get webhook path generated with hash.
 func (b *Bot) getWebhookPath() string {
-	return fmt.Sprintf("%s/%s", WebhookPath, b.tokenHashed)
+	return fmt.Sprintf("%s/%s", webhookPath, b.tokenHashed)
 }
 
 // Get full URL of webhook interface.
@@ -128,8 +129,8 @@ func (b *Bot) getWebhookUrl() string {
 
 // Remove confidential info from given string.
 func (b *Bot) redact(str string) string {
-	tokenRemoved := strings.Replace(str, b.token, RedactedString, -1)
-	redacted := strings.Replace(tokenRemoved, b.tokenHashed, RedactedString, -1)
+	tokenRemoved := strings.Replace(str, b.token, redactedString, -1)
+	redacted := strings.Replace(tokenRemoved, b.tokenHashed, redactedString, -1)
 	return redacted
 }
 

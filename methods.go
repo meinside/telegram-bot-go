@@ -1,5 +1,6 @@
-// https://core.telegram.org/bots/api#available-methods
 package telegrambot
+
+// https://core.telegram.org/bots/api#available-methods
 
 import (
 	"bytes"
@@ -15,7 +16,7 @@ import (
 	"strings"
 )
 
-// Get updates.
+// GetUpdates retrieves updates from Telegram bot API.
 //
 // options include: offset, limit, and timeout.
 //
@@ -32,7 +33,8 @@ func (b *Bot) GetUpdates(options map[string]interface{}) (result ApiResponseUpda
 	return b.requestResponseUpdates("getUpdates", params)
 }
 
-// Set webhook url and certificate for receiving incoming updates.
+// SetWebhookWithOptions sets webhook url, certificate, and various options for receiving incoming updates.
+//
 // port should be one of: 443, 80, 88, or 8443.
 // default maxConnections = 40
 //
@@ -59,11 +61,12 @@ func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, 
 	return b.requestResponse("setWebhook", params)
 }
 
+// SetWebhook sets webhook url and certificate for receiving incoming updates.
 func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result ApiResponse) {
 	return b.SetWebhookWithOptions(host, port, certFilepath, 40, []UpdateType{})
 }
 
-// Delete webhook.
+// DeleteWebhook deletes webhook for this bot.
 // (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 //
 // https://core.telegram.org/bots/api#deletewebhook
@@ -77,21 +80,21 @@ func (b *Bot) DeleteWebhook() (result ApiResponse) {
 	return b.requestResponse("deleteWebhook", map[string]interface{}{})
 }
 
-// Get webhook info.
+// GetWebhookInfo gets webhook info for this bot.
 //
 // https://core.telegram.org/bots/api#getwebhookinfo
 func (b *Bot) GetWebhookInfo() (result ApiResponseWebhookInfo) {
 	return b.requestResponseWebhookInfo()
 }
 
-// Get info of this bot.
+// GetMe gets info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
 func (b *Bot) GetMe() (result ApiResponseUser) {
 	return b.requestResponseUser("getMe", map[string]interface{}{}) // no params
 }
 
-// Send a message.
+// SendMessage sends a message to the bot.
 //
 // options include: parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -112,7 +115,7 @@ func (b *Bot) SendMessage(chatId ChatId, text string, options map[string]interfa
 	return b.requestResponseMessage("sendMessage", params)
 }
 
-// Forward a message.
+// ForwardMessage forwards a message.
 //
 // options include: disable_notification
 //
@@ -128,7 +131,7 @@ func (b *Bot) ForwardMessage(chatId, fromChatId ChatId, messageId int) (result A
 	return b.requestResponseMessage("forwardMessage", params)
 }
 
-// Send a photo.
+// SendPhoto sends a photo.
 //
 // options include: caption, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -137,7 +140,7 @@ func (b *Bot) SendPhoto(chatId ChatId, photo FileParam, options map[string]inter
 	return b.sendObjectMessage(chatId, "sendPhoto", "photo", photo, options)
 }
 
-// Send an audio file. (.mp3 format only, will be played with external players)
+// SendAudio sends an audio file. (.mp3 format only, will be played with external players)
 //
 // options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -146,7 +149,7 @@ func (b *Bot) SendAudio(chatId ChatId, audio FileParam, options map[string]inter
 	return b.sendObjectMessage(chatId, "sendAudio", "audio", audio, options)
 }
 
-// Send a general file.
+// SendDocument sends a general file.
 //
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -155,7 +158,7 @@ func (b *Bot) SendDocument(chatId ChatId, document FileParam, options map[string
 	return b.sendObjectMessage(chatId, "sendDocument", "document", document, options)
 }
 
-// Send a sticker.
+// SendSticker sends a sticker.
 //
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -164,7 +167,7 @@ func (b *Bot) SendSticker(chatId ChatId, sticker FileParam, options map[string]i
 	return b.sendObjectMessage(chatId, "sendSticker", "sticker", sticker, options)
 }
 
-// Get a sticker set.
+// GetStickerSet gets a sticker set.
 //
 // https://core.telegram.org/bots/api#getstickerset
 func (b *Bot) GetStickerSet(name string) (result ApiResponseStickerSet) {
@@ -176,7 +179,7 @@ func (b *Bot) GetStickerSet(name string) (result ApiResponseStickerSet) {
 	return b.requestResponseStickerSet("getStickerSet", params)
 }
 
-// Upload a sticker file.
+// UploadStickerFile uploads a sticker file.
 //
 // https://core.telegram.org/bots/api#uploadstickerfile
 func (b *Bot) UploadStickerFile(userId int, sticker FileParam) (result ApiResponseFile) {
@@ -188,7 +191,7 @@ func (b *Bot) UploadStickerFile(userId int, sticker FileParam) (result ApiRespon
 	return b.sendObjectFile("uploadStickerFile", "png_sticker", sticker, params)
 }
 
-// Create a new sticker set.
+// CreateNewStickerSet creates a new sticker set.
 //
 // options include: contains_masks and mask_position
 //
@@ -211,7 +214,7 @@ func (b *Bot) CreateNewStickerSet(userId int, name, title string, sticker FilePa
 	return b.sendObject("createNewStickerSet", "png_sticker", sticker, params)
 }
 
-// Add a sticker to set.
+// AddStickerToSet adds a sticker to set.
 //
 // options include: mask_position
 //
@@ -233,7 +236,7 @@ func (b *Bot) AddStickerToSet(userId int, name string, sticker FileParam, emojis
 	return b.sendObject("addStickerToSet", "png_sticker", sticker, params)
 }
 
-// Set sticker position in set.
+// SetStickerPositionInSet sets sticker position in set.
 //
 // https://core.telegram.org/bots/api#setstickerpositioninset
 func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result ApiResponse) {
@@ -246,7 +249,7 @@ func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result ApiR
 	return b.requestResponse("setStickerPositionInSet", params)
 }
 
-// Delete sticker from set.
+// DeleteStickerFromSet deletes a sticker from set.
 //
 // https://core.telegram.org/bots/api#deletestickerfromset
 func (b *Bot) DeleteStickerFromSet(sticker string) (result ApiResponse) {
@@ -258,7 +261,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result ApiResponse) {
 	return b.requestResponse("deleteStickerFromSet", params)
 }
 
-// Send a video file.
+// SendVideo sends a video file.
 //
 // options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -267,7 +270,7 @@ func (b *Bot) SendVideo(chatId ChatId, video FileParam, options map[string]inter
 	return b.sendObjectMessage(chatId, "sendVideo", "video", video, options)
 }
 
-// Send a voice file. (.ogg format only, will be played with Telegram itself))
+// SendVoice sends a voice file. (.ogg format only, will be played with Telegram itself))
 //
 // options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -276,7 +279,7 @@ func (b *Bot) SendVoice(chatId ChatId, voice FileParam, options map[string]inter
 	return b.sendObjectMessage(chatId, "sendVoice", "voice", voice, options)
 }
 
-// Send a video note.
+// SendVideoNote sends a video note.
 //
 // videoNote cannot be a remote http url (not supported yet)
 //
@@ -288,7 +291,7 @@ func (b *Bot) SendVideoNote(chatId ChatId, videoNote FileParam, options map[stri
 	return b.sendObjectMessage(chatId, "sendVideoNote", "video_note", videoNote, options)
 }
 
-// Send locations.
+// SendLocation sends locations.
 //
 // options include: disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -310,7 +313,7 @@ func (b *Bot) SendLocation(chatId ChatId, latitude, longitude float32, options m
 	return b.requestResponseMessage("sendLocation", params)
 }
 
-// Send venues.
+// SendVenue sends venues.
 //
 // options include: foursquare_id, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -334,7 +337,7 @@ func (b *Bot) SendVenue(chatId ChatId, latitude, longitude float32, title, addre
 	return b.requestResponseMessage("sendVenue", params)
 }
 
-// Send contacts.
+// SendContact sends contacts.
 //
 // options include: last_name, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -356,7 +359,7 @@ func (b *Bot) SendContact(chatId ChatId, phoneNumber, firstName string, options 
 	return b.requestResponseMessage("sendContact", params)
 }
 
-// Send chat action.
+// SendChatAction sends chat actions.
 //
 // https://core.telegram.org/bots/api#sendchataction
 func (b *Bot) SendChatAction(chatId ChatId, action ChatAction) (result ApiResponse) {
@@ -369,7 +372,7 @@ func (b *Bot) SendChatAction(chatId ChatId, action ChatAction) (result ApiRespon
 	return b.requestResponse("sendChatAction", params)
 }
 
-// Get user profile photos.
+// GetUserProfilePhotos gets user profile photos.
 //
 // options include: offset and limit.
 //
@@ -389,7 +392,7 @@ func (b *Bot) GetUserProfilePhotos(userId int, options map[string]interface{}) (
 	return b.requestResponseUserProfilePhotos("getUserProfilePhotos", params)
 }
 
-// Get file info and prepare for download.
+// GetFile gets file info and prepare for download.
 //
 // https://core.telegram.org/bots/api#getfile
 func (b *Bot) GetFile(fileId string) (result ApiResponseFile) {
@@ -401,12 +404,12 @@ func (b *Bot) GetFile(fileId string) (result ApiResponseFile) {
 	return b.requestResponseFile("getFile", params)
 }
 
-// Get download link from given File.
+// GetFileUrl gets download link from a given File.
 func (b *Bot) GetFileUrl(file File) string {
-	return fmt.Sprintf("%s%s/%s", FileBaseUrl, b.token, *file.FilePath)
+	return fmt.Sprintf("%s%s/%s", fileBaseUrl, b.token, *file.FilePath)
 }
 
-// Kick chat member
+// KickChatMember kicks a chat member
 //
 // https://core.telegram.org/bots/api#kickchatmember
 func (b *Bot) KickChatMember(chatId ChatId, userId int) (result ApiResponse) {
@@ -419,6 +422,7 @@ func (b *Bot) KickChatMember(chatId ChatId, userId int) (result ApiResponse) {
 	return b.requestResponse("kickChatMember", params)
 }
 
+// KickChatMemberUntil kicks a chat member until given date
 func (b *Bot) KickChatMemberUntil(chatId ChatId, userId int, untilDate int) (result ApiResponse) {
 	// essential params
 	params := map[string]interface{}{
@@ -430,7 +434,7 @@ func (b *Bot) KickChatMemberUntil(chatId ChatId, userId int, untilDate int) (res
 	return b.requestResponse("kickChatMember", params)
 }
 
-// Leave chat
+// LeaveChat leaves a chat
 //
 // https://core.telegram.org/bots/api#leavechat
 func (b *Bot) LeaveChat(chatId ChatId) (result ApiResponse) {
@@ -442,7 +446,7 @@ func (b *Bot) LeaveChat(chatId ChatId) (result ApiResponse) {
 	return b.requestResponse("leaveChat", params)
 }
 
-// Unban chat member
+// UnbanChatMember unbans a chat member
 //
 // https://core.telegram.org/bots/api#unbanchatmember
 func (b *Bot) UnbanChatMember(chatId ChatId, userId int) (result ApiResponse) {
@@ -455,7 +459,7 @@ func (b *Bot) UnbanChatMember(chatId ChatId, userId int) (result ApiResponse) {
 	return b.requestResponse("unbanChatMember", params)
 }
 
-// Restrict chat member
+// RestrictChatMember restricts a chat member
 //
 // options include: until_date, can_send_messages, can_send_media_messages, can_send_other_messages, and can_send_web_page_previews
 //
@@ -476,7 +480,7 @@ func (b *Bot) RestrictChatMember(chatId ChatId, userId int, options map[string]i
 	return b.requestResponse("restrictChatMember", params)
 }
 
-// Promote chat member
+// PromoteChatMember promotes a chat member
 //
 // options include: can_change_info, can_post_messages, can_edit_messages, can_delete_messages, can_invite_users, can_restrict_members, can_pin_messages, and can_promote_members
 //
@@ -497,7 +501,7 @@ func (b *Bot) PromoteChatMember(chatId ChatId, userId int, options map[string]in
 	return b.requestResponse("promoteChatMember", params)
 }
 
-// Export chat invite link
+// ExportChatInviteLink exports a chat invite link
 //
 // https://core.telegram.org/bots/api#exportchatinvitelink
 func (b *Bot) ExportChatInviteLink(chatId ChatId) (result ApiResponseString) {
@@ -509,7 +513,7 @@ func (b *Bot) ExportChatInviteLink(chatId ChatId) (result ApiResponseString) {
 	return b.requestResponseString("exportChatInviteLink", params)
 }
 
-// Set chat photo
+// SetChatPhoto sets a chat photo
 //
 // https://core.telegram.org/bots/api#setchatphoto
 func (b *Bot) SetChatPhoto(chatId ChatId, photo FileParam) (result ApiResponse) {
@@ -521,7 +525,7 @@ func (b *Bot) SetChatPhoto(chatId ChatId, photo FileParam) (result ApiResponse) 
 	return b.sendObject("setChatPhoto", "photo", photo, params)
 }
 
-// Delete chat photo
+// DeleteChatPhoto deletes a chat photo
 //
 // https://core.telegram.org/bots/api#deletechatphoto
 func (b *Bot) DeleteChatPhoto(chatId ChatId) (result ApiResponse) {
@@ -533,7 +537,7 @@ func (b *Bot) DeleteChatPhoto(chatId ChatId) (result ApiResponse) {
 	return b.requestResponse("deleteChatPhoto", params)
 }
 
-// Set chat title
+// SetChatTitle sets a chat title
 //
 // https://core.telegram.org/bots/api#setchattitle
 func (b *Bot) SetChatTitle(chatId ChatId, title string) (result ApiResponse) {
@@ -546,7 +550,7 @@ func (b *Bot) SetChatTitle(chatId ChatId, title string) (result ApiResponse) {
 	return b.requestResponse("setChatTitle", params)
 }
 
-// Set chat description
+// SetChatDescription sets a chat description
 //
 // https://core.telegram.org/bots/api#setchatdescription
 func (b *Bot) SetChatDescription(chatId ChatId, description string) (result ApiResponse) {
@@ -559,7 +563,7 @@ func (b *Bot) SetChatDescription(chatId ChatId, description string) (result ApiR
 	return b.requestResponse("setChatDescription", params)
 }
 
-// Pin chat message
+// PinChatMessage pins a chat message
 //
 // options include: disable_notification
 //
@@ -580,7 +584,7 @@ func (b *Bot) PinChatMessage(chatId ChatId, messageId int, options map[string]in
 	return b.requestResponse("pinChatMessage", params)
 }
 
-// Unpin chat message
+// UnpinChatMessage unpins a chat message
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
 func (b *Bot) UnpinChatMessage(chatId ChatId) (result ApiResponse) {
@@ -592,7 +596,7 @@ func (b *Bot) UnpinChatMessage(chatId ChatId) (result ApiResponse) {
 	return b.requestResponse("unpinChatMessage", params)
 }
 
-// Get chat
+// GetChat gets a chat
 //
 // https://core.telegram.org/bots/api#getchat
 func (b *Bot) GetChat(chatId ChatId) (result ApiResponseChat) {
@@ -604,7 +608,7 @@ func (b *Bot) GetChat(chatId ChatId) (result ApiResponseChat) {
 	return b.requestResponseChat("getChat", params)
 }
 
-// Get chat administrators
+// GetChatAdministrators gets chat administrators
 //
 // https://core.telegram.org/bots/api#getchatadministrators
 func (b *Bot) GetChatAdministrators(chatId ChatId) (result ApiResponseChatAdministrators) {
@@ -616,7 +620,7 @@ func (b *Bot) GetChatAdministrators(chatId ChatId) (result ApiResponseChatAdmini
 	return b.requestResponseChatAdministrators("getChatAdministrators", params)
 }
 
-// Get chat members count
+// GetChatMembersCount gets chat members' count
 //
 // https://core.telegram.org/bots/api#getchatmemberscount
 func (b *Bot) GetChatMembersCount(chatId ChatId) (result ApiResponseInt) {
@@ -628,7 +632,7 @@ func (b *Bot) GetChatMembersCount(chatId ChatId) (result ApiResponseInt) {
 	return b.requestResponseInt("getChatMembersCount", params)
 }
 
-// Get chat member
+// GetChatMember gets a chat member
 //
 // https://core.telegram.org/bots/api#getchatmember
 func (b *Bot) GetChatMember(chatId ChatId, userId int) (result ApiResponseChatMember) {
@@ -641,7 +645,7 @@ func (b *Bot) GetChatMember(chatId ChatId, userId int) (result ApiResponseChatMe
 	return b.requestResponseChatMember("getChatMember", params)
 }
 
-// Set chat sticker set
+// SetChatStickerSet sets a chat sticker set
 //
 // https://core.telegram.org/bots/api#setchatstickerset
 func (b *Bot) SetChatStickerSet(chatId ChatId, stickerSetName string) (result ApiResponse) {
@@ -654,7 +658,7 @@ func (b *Bot) SetChatStickerSet(chatId ChatId, stickerSetName string) (result Ap
 	return b.requestResponse("setChatStickerSet", params)
 }
 
-// Delete chat sticker set
+// DeleteChatStickerSet deletes a chat sticker set
 //
 // https://core.telegram.org/bots/api#deletechatstickerset
 func (b *Bot) DeleteChatStickerSet(chatId ChatId) (result ApiResponse) {
@@ -666,7 +670,7 @@ func (b *Bot) DeleteChatStickerSet(chatId ChatId) (result ApiResponse) {
 	return b.requestResponse("deleteChatStickerSet", params)
 }
 
-// Answer callback query
+// AnswerCallbackQuery answers a callback query
 //
 // options include: text, show_alert, url, and cache_time
 //
@@ -690,7 +694,7 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryId string, options map[string]int
 //
 // https://core.telegram.org/bots/api#updating-messages
 
-// Edit text of message
+// EditMessageText edits text of a message
 //
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
@@ -713,7 +717,7 @@ func (b *Bot) EditMessageText(text string, options map[string]interface{}) (resu
 	return b.requestResponseMessage("editMessageText", params)
 }
 
-// Edit caption of message
+// EditMessageCaption edits caption of a message
 //
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
@@ -736,7 +740,7 @@ func (b *Bot) EditMessageCaption(caption string, options map[string]interface{})
 	return b.requestResponseMessage("editMessageCaption", params)
 }
 
-// Edit reply markup of message
+// EditMessageReplyMarkup edits reply markup of a message
 //
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
@@ -748,7 +752,7 @@ func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result Api
 	return b.requestResponseMessage("editMessageReplyMarkup", options)
 }
 
-// Edit live location of message
+// EditMessageLiveLocation edits live location of a message
 //
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
@@ -772,7 +776,7 @@ func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[s
 	return b.requestResponseMessage("editMessageLiveLocation", params)
 }
 
-// Stop live location of message
+// StopMessageLiveLocation stops live location of a message
 //
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
@@ -784,7 +788,7 @@ func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result Ap
 	return b.requestResponseMessage("stopMessageLiveLocation", options)
 }
 
-// Delete message
+// DeleteMessage deletes a message
 //
 // https://core.telegram.org/bots/api#deletemessage
 func (b *Bot) DeleteMessage(chatId ChatId, messageId int) (result ApiResponse) {
@@ -794,7 +798,7 @@ func (b *Bot) DeleteMessage(chatId ChatId, messageId int) (result ApiResponse) {
 	})
 }
 
-// Send answers to an inline query.
+// AnswerInlineQuery sends answers to an inline query.
 //
 // results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, or InlineQueryResultVideo.
 //
@@ -817,7 +821,7 @@ func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, opt
 	return b.requestResponse("answerInlineQuery", params)
 }
 
-// Send invoice.
+// SendInvoice sends an invoice.
 //
 // options include: photo_url, photo_size, photo_width, photo_height, need_name, need_phone_number, need_email, need_shipping_address, is_flexible, disable_notification, reply_to_message_id, and reply_markup
 //
@@ -844,7 +848,7 @@ func (b *Bot) SendInvoice(chatId int64, title, description, payload, providerTok
 	return b.requestResponseMessage("sendInvoice", params)
 }
 
-// Answer shipping query.
+// AnswerShippingQuery answers a shipping query.
 //
 // if ok is true, shippingOptions should be provided.
 // otherwise, errorMessage should be provided.
@@ -870,7 +874,7 @@ func (b *Bot) AnswerShippingQuery(shippingQueryId string, ok bool, shippingOptio
 	return b.requestResponse("answerShippingQuery", params)
 }
 
-// Answer pre-checkout query.
+// AnswerPreCheckoutQuery answers a pre-checkout query.
 //
 // https://core.telegram.org/bots/api#answerprecheckoutquery
 func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryId string, ok bool, errorMessage *string) (result ApiResponse) {
@@ -889,7 +893,7 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryId string, ok bool, errorMe
 	return b.requestResponse("answerPreCheckoutQuery", params)
 }
 
-// Send a game.
+// SendGame sends a game.
 //
 // options include: game_short_name, disable_notification, reply_to_message_id, and reply_markup.
 //
@@ -910,7 +914,7 @@ func (b *Bot) SendGame(chatId ChatId, gameShortName string, options map[string]i
 	return b.requestResponseMessage("sendGame", params)
 }
 
-// Set score of a game.
+// SetGameScore sets score of a game.
 //
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
@@ -934,7 +938,7 @@ func (b *Bot) SetGameScore(userId int, score int, options map[string]interface{}
 	return b.requestResponseMessage("setGameScore", params)
 }
 
-// Get high scores of a game.
+// GetGameHighScores gets high scores of a game.
 //
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
@@ -973,45 +977,38 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 	case int:
 		if intValue, ok := param.(int); ok {
 			return strconv.Itoa(intValue), ok
-		} else {
-			b.error("parameter '%+v' could not be cast to int value", param)
 		}
+		b.error("parameter '%+v' could not be cast to int value", param)
 	case int64:
 		if intValue, ok := param.(int64); ok {
 			return strconv.FormatInt(intValue, 10), ok
-		} else {
-			b.error("parameter '%+v' could not be cast to int64 value", param)
 		}
+		b.error("parameter '%+v' could not be cast to int64 value", param)
 	case float32:
 		if floatValue, ok := param.(float32); ok {
 			return fmt.Sprintf("%.8f", floatValue), ok
-		} else {
-			b.error("parameter '%+v' could not be cast to float32 value", param)
 		}
+		b.error("parameter '%+v' could not be cast to float32 value", param)
 	case bool:
 		if boolValue, ok := param.(bool); ok {
 			return strconv.FormatBool(boolValue), ok
-		} else {
-			b.error("parameter '%+v' could not be cast to bool value", param)
 		}
+		b.error("parameter '%+v' could not be cast to bool value", param)
 	case string:
 		if strValue, ok := param.(string); ok {
 			return strValue, ok
-		} else {
-			b.error("parameter '%+v' could not be cast to string value", param)
 		}
+		b.error("parameter '%+v' could not be cast to string value", param)
 	case ChatAction:
 		if value, ok := param.(ChatAction); ok {
 			return string(value), ok
-		} else {
-			b.error("parameter '%+v' could not be cast to string value", param)
 		}
+		b.error("parameter '%+v' could not be cast to string value", param)
 	case ParseMode:
 		if value, ok := param.(ParseMode); ok {
 			return string(value), ok
-		} else {
-			b.error("parameter '%+v' could not be cast to string value", param)
 		}
+		b.error("parameter '%+v' could not be cast to string value", param)
 	default:
 		if json, err := json.Marshal(param); err == nil {
 			return string(json), true
@@ -1028,7 +1025,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // NOTE: If *os.File is included in the params, it will be closed automatically in this function.
 func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, success bool) {
 	client := &http.Client{}
-	apiUrl := fmt.Sprintf("%s%s/%s", ApiBaseUrl, b.token, method)
+	apiUrl := fmt.Sprintf("%s%s/%s", apiBaseUrl, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiUrl, params)
 
@@ -1543,13 +1540,11 @@ func (b *Bot) sendObjectMessage(chatId ChatId, apiName, paramKey string, obj Fil
 		str := obj.(string)
 		if isHttpUrl(str) {
 			return b.sendFile(chatId, apiName, paramKey, str, options)
-		} else {
-			if fileExists(str) {
-				return b.sendFile(chatId, apiName, paramKey, str, options)
-			} else {
-				return b.sendFileId(chatId, apiName, paramKey, str, options)
-			}
 		}
+		if fileExists(str) {
+			return b.sendFile(chatId, apiName, paramKey, str, options)
+		}
+		return b.sendFileId(chatId, apiName, paramKey, str, options)
 	default:
 		errorMessage := fmt.Sprintf("passed parameter %s is not supported: %T", paramKey, obj)
 		return ApiResponseMessage{

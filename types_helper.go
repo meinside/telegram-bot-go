@@ -28,7 +28,7 @@ func newUUID() (string, error) {
 	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
 }
 
-// Helper function for generating a new InlineQueryResultArticle
+// NewInlineQueryResultArticle is a helper function for generating a new InlineQueryResultArticle
 //
 // https://core.telegram.org/bots/api#inlinequeryresultarticle
 func NewInlineQueryResultArticle(title, messageText, description string) (newArticle *InlineQueryResultArticle, generatedId *string) {
@@ -49,7 +49,7 @@ func NewInlineQueryResultArticle(title, messageText, description string) (newArt
 	return &InlineQueryResultArticle{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultPhoto
+// NewInlineQueryResultPhoto is a helper function for generating a new InlineQueryResultPhoto
 //
 // Photo must be in jpeg format, < 5MB.
 //
@@ -69,7 +69,7 @@ func NewInlineQueryResultPhoto(photoUrl, thumbUrl string) (newPhoto *InlineQuery
 	return &InlineQueryResultPhoto{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultGif
+// NewInlineQueryResultGif is a helper function for generating a new InlineQueryResultGif
 //
 // Gif must be in gif format, < 1MB.
 //
@@ -89,7 +89,7 @@ func NewInlineQueryResultGif(gifUrl, thumbUrl string) (newGif *InlineQueryResult
 	return &InlineQueryResultGif{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultMpeg4Gif
+// NewInlineQueryResultMpeg4Gif is a helper function for generating a new InlineQueryResultMpeg4Gif
 //
 // Mpeg4 must be in H.264/MPEG-4 AVC video(wihout sound) format, < 1MB.
 //
@@ -109,7 +109,7 @@ func NewInlineQueryResultMpeg4Gif(mpeg4Url, thumbUrl string) (newMpeg4Gif *Inlin
 	return &InlineQueryResultMpeg4Gif{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultVideo
+// NewInlineQueryResultVideo is a helper function for generating a new InlineQueryResultVideo
 //
 // https://core.telegram.org/bots/api#inlinequeryresultvideo
 func NewInlineQueryResultVideo(videoUrl, thumbUrl, title string, mimeType VideoMimeType) (newVideo *InlineQueryResultVideo, generatedId *string) {
@@ -129,7 +129,7 @@ func NewInlineQueryResultVideo(videoUrl, thumbUrl, title string, mimeType VideoM
 	return &InlineQueryResultVideo{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultAudio
+// NewInlineQueryResultAudio is a helper function for generating a new InlineQueryResultAudio
 //
 // https://core.telegram.org/bots/api#inlinequeryresultaudio
 func NewInlineQueryResultAudio(audioUrl, title string) (newAudio *InlineQueryResultAudio, generatedId *string) {
@@ -147,7 +147,7 @@ func NewInlineQueryResultAudio(audioUrl, title string) (newAudio *InlineQueryRes
 	return &InlineQueryResultAudio{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultVoice
+// NewInlineQueryResultVoice is a helper function for generating a new InlineQueryResultVoice
 //
 // https://core.telegram.org/bots/api#inlinequeryresultvoice
 func NewInlineQueryResultVoice(voiceUrl, title string) (newVoice *InlineQueryResultVoice, generatedId *string) {
@@ -165,7 +165,7 @@ func NewInlineQueryResultVoice(voiceUrl, title string) (newVoice *InlineQueryRes
 	return &InlineQueryResultVoice{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultDocument
+// NewInlineQueryResultDocument is a helper function for generating a new InlineQueryResultDocument
 //
 // https://core.telegram.org/bots/api#inlinequeryresultdocument
 func NewInlineQueryResultDocument(documentUrl, title string, mimeType DocumentMimeType) (newDocument *InlineQueryResultDocument, generatedId *string) {
@@ -184,7 +184,7 @@ func NewInlineQueryResultDocument(documentUrl, title string, mimeType DocumentMi
 	return &InlineQueryResultDocument{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultLocation
+// NewInlineQueryResultLocation is a helper function for generating a new InlineQueryResultLocation
 //
 // https://core.telegram.org/bots/api#inlinequeryresultlocation
 func NewInlineQueryResultLocation(latitude, longitude float32, title string) (newLocation *InlineQueryResultLocation, generatedId *string) {
@@ -203,7 +203,7 @@ func NewInlineQueryResultLocation(latitude, longitude float32, title string) (ne
 	return &InlineQueryResultLocation{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultVenue
+// NewInlineQueryResultVenue is a helper function for generating a new InlineQueryResultVenue
 //
 // https://core.telegram.org/bots/api#inlinequeryresultvenue
 func NewInlineQueryResultVenue(latitude, longitude float32, title, address string) (newVenue *InlineQueryResultVenue, generatedId *string) {
@@ -223,7 +223,7 @@ func NewInlineQueryResultVenue(latitude, longitude float32, title, address strin
 	return &InlineQueryResultVenue{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultContact
+// NewInlineQueryResultContact is a helper function for generating a new InlineQueryResultContact
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcontact
 func NewInlineQueryResultContact(phoneNumber, firstName string) (newContact *InlineQueryResultContact, generatedId *string) {
@@ -241,7 +241,7 @@ func NewInlineQueryResultContact(phoneNumber, firstName string) (newContact *Inl
 	return &InlineQueryResultContact{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedPhoto
+// NewInlineQueryResultCachedPhoto is a helper function for generating a new InlineQueryResultCachedPhoto
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedphoto
 func NewInlineQueryResultCachedPhoto(photoFileId string) (newPhoto *InlineQueryResultCachedPhoto, generatedId *string) {
@@ -258,7 +258,7 @@ func NewInlineQueryResultCachedPhoto(photoFileId string) (newPhoto *InlineQueryR
 	return &InlineQueryResultCachedPhoto{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedGif
+// NewInlineQueryResultCachedGif is a helper function for generating a new InlineQueryResultCachedGif
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedgif
 func NewInlineQueryResultCachedGif(gifFileId string) (newGif *InlineQueryResultCachedGif, generatedId *string) {
@@ -275,7 +275,7 @@ func NewInlineQueryResultCachedGif(gifFileId string) (newGif *InlineQueryResultC
 	return &InlineQueryResultCachedGif{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedMpeg4Gif
+// NewInlineQueryResultCachedMpeg4Gif is a helper function for generating a new InlineQueryResultCachedMpeg4Gif
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif
 func NewInlineQueryResultCachedMpeg4Gif(mpeg4FileId string) (newMpeg4Gif *InlineQueryResultCachedMpeg4Gif, generatedId *string) {
@@ -292,7 +292,7 @@ func NewInlineQueryResultCachedMpeg4Gif(mpeg4FileId string) (newMpeg4Gif *Inline
 	return &InlineQueryResultCachedMpeg4Gif{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedSticker
+// NewInlineQueryResultCachedSticker is a helper function for generating a new InlineQueryResultCachedSticker
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedsticker
 func NewInlineQueryResultCachedSticker(stickerFileId string) (newSticker *InlineQueryResultCachedSticker, generatedId *string) {
@@ -309,7 +309,7 @@ func NewInlineQueryResultCachedSticker(stickerFileId string) (newSticker *Inline
 	return &InlineQueryResultCachedSticker{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedDocument
+// NewInlineQueryResultCachedDocument is a helper function for generating a new InlineQueryResultCachedDocument
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcacheddocument
 func NewInlineQueryResultCachedDocument(title, documentFileId string) (newDocument *InlineQueryResultCachedDocument, generatedId *string) {
@@ -327,7 +327,7 @@ func NewInlineQueryResultCachedDocument(title, documentFileId string) (newDocume
 	return &InlineQueryResultCachedDocument{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedVideo
+// NewInlineQueryResultCachedVideo is a helper function for generating a new InlineQueryResultCachedVideo
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedvideo
 func NewInlineQueryResultCachedVideo(title, videoFileId string) (newVideo *InlineQueryResultCachedVideo, generatedId *string) {
@@ -345,7 +345,7 @@ func NewInlineQueryResultCachedVideo(title, videoFileId string) (newVideo *Inlin
 	return &InlineQueryResultCachedVideo{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedVoice
+// NewInlineQueryResultCachedVoice is a helper function for generating a new InlineQueryResultCachedVoice
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedvoice
 func NewInlineQueryResultCachedVoice(title, voiceFileId string) (newVoice *InlineQueryResultCachedVoice, generatedId *string) {
@@ -363,7 +363,7 @@ func NewInlineQueryResultCachedVoice(title, voiceFileId string) (newVoice *Inlin
 	return &InlineQueryResultCachedVoice{}, nil
 }
 
-// Helper function for generating a new InlineQueryResultCachedAudio
+// NewInlineQueryResultCachedAudio is a helper function for generating a new InlineQueryResultCachedAudio
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedaudio
 func NewInlineQueryResultCachedAudio(audioFileId string) (newAudio *InlineQueryResultCachedAudio, generatedId *string) {
@@ -389,37 +389,37 @@ func (u Update) String() string {
 	return structToString(u)
 }
 
-// Check if Update has Message.
+// HasMessage checks if Update has Message.
 func (u *Update) HasMessage() bool {
 	return u.Message != nil
 }
 
-// Check if Update has EditedMessage.
+// HasEditedMessage checks if Update has EditedMessage.
 func (u *Update) HasEditedMessage() bool {
 	return u.EditedMessage != nil
 }
 
-// Check if Update has InlineQuery
+// HasInlineQuery checks if Update has InlineQuery
 func (u *Update) HasInlineQuery() bool {
 	return u.InlineQuery != nil
 }
 
-// Check if Update has ChosenInlineResult
+// HasChosenInlineResult checks if Update has ChosenInlineResult
 func (u *Update) HasChosenInlineResult() bool {
 	return u.ChosenInlineResult != nil
 }
 
-// Check if Update has CallbackQuery
+// HasCallbackQuery checks if Update has CallbackQuery
 func (u *Update) HasCallbackQuery() bool {
 	return u.CallbackQuery != nil
 }
 
-// Check if Update has ShippingQuery
+// HasShippingQuery checks if Update has ShippingQuery
 func (u *Update) HasShippingQuery() bool {
 	return u.ShippingQuery != nil
 }
 
-// Check if Update has PreCheckoutQuery
+// HasPreCheckoutQuery checks if Update has PreCheckoutQuery
 func (u *Update) HasPreCheckoutQuery() bool {
 	return u.PreCheckoutQuery != nil
 }
@@ -433,6 +433,7 @@ func (u User) String() string {
 	return structToString(u)
 }
 
+// InlineLink generates an inline link for User
 func (u User) InlineLink() string {
 	return fmt.Sprintf("tg://user?id=%d", u.Id)
 }
@@ -455,132 +456,132 @@ func (m Message) String() string {
 	return structToString(m)
 }
 
-// Check if Message has Forward.
+// HasForwardFrom checks if Message has Forward.
 func (m *Message) HasForwardFrom() bool {
 	return m.ForwardFrom != nil && m.ForwardDate > 0
 }
 
-// Check if Message has Forward from chat.
+// HasForwardFromChat checks if Message has Forward from chat.
 func (m *Message) HasForwardFromChat() bool {
 	return m.ForwardFromChat != nil && m.ForwardDate > 0
 }
 
-// Check if Message has ReplyTo.
+// HasReplyTo checks if Message has ReplyTo.
 func (m *Message) HasReplyTo() bool {
 	return m.ReplyToMessage != nil
 }
 
-// Check if Message has Text.
+// HasText checks if Message has Text.
 func (m *Message) HasText() bool {
 	return m.Text != nil
 }
 
-// Check if Message has MessageEntities
+// HasMessageEntities checks if Message has MessageEntities
 func (m *Message) HasMessageEntities() bool {
 	return len(m.Entities) > 0
 }
 
-// Check if Message has Audio.
+// HasAudio checks if Message has Audio.
 func (m *Message) HasAudio() bool {
 	return m.Audio != nil
 }
 
-// Check if Message has Document.
+// HasDocument checks if Message has Document.
 func (m *Message) HasDocument() bool {
 	return m.Document != nil
 }
 
-// Check if Message has Photo.
+// HasPhoto checks if Message has Photo.
 func (m *Message) HasPhoto() bool {
 	return len(m.Photo) > 0
 }
 
-// Check if Message has Sticker.
+// HasSticker checks if Message has Sticker.
 func (m *Message) HasSticker() bool {
 	return m.Sticker != nil
 }
 
-// Check if Message has Video.
+// HasVideo checks if Message has Video.
 func (m *Message) HasVideo() bool {
 	return m.Video != nil
 }
 
-// Check if Message has Voice.
+// HasVoice checks if Message has Voice.
 func (m *Message) HasVoice() bool {
 	return m.Voice != nil
 }
 
-// Check if Message has Caption.
+// HasCaption checks if Message has Caption.
 func (m *Message) HasCaption() bool {
 	return m.Caption != nil
 }
 
-// Check if Message has Contact.
+// HasContact checks if Message has Contact.
 func (m *Message) HasContact() bool {
 	return m.Contact != nil
 }
 
-// Check if Message has Location.
+// HasLocation checks if Message has Location.
 func (m *Message) HasLocation() bool {
 	return m.Location != nil
 }
 
-// Check if Message has Venue.
+// HasVenue checks if Message has Venue.
 func (m *Message) HasVenue() bool {
 	return m.Venue != nil
 }
 
-// Check if Message has NewChatParticipant.
+// HasNewChatMembers checks if Message has NewChatParticipant.
 func (m *Message) HasNewChatMembers() bool {
 	return len(m.NewChatMembers) > 0
 }
 
-// Check if Message has LeftChatParticipant.
+// HasLeftChatMember checks if Message has LeftChatParticipant.
 func (m *Message) HasLeftChatMember() bool {
 	return m.LeftChatMember != nil
 }
 
-// Check if Message has NewChatTitle.
+// HasNewChatTitle checks if Message has NewChatTitle.
 func (m *Message) HasNewChatTitle() bool {
 	return m.NewChatTitle != nil
 }
 
-// Check if Message has NewChatPhoto.
+// HasNewChatPhoto checks if Message has NewChatPhoto.
 func (m *Message) HasNewChatPhoto() bool {
 	return len(m.NewChatPhoto) > 0
 }
 
-// Check if Message has DeleteChatPhoto.
+// HasDeleteChatPhoto checks if Message has DeleteChatPhoto.
 func (m *Message) HasDeleteChatPhoto() bool {
 	return m.DeleteChatPhoto
 }
 
-// Check if Message has GroupChatCreated.
+// HasGroupChatCreated checks if Message has GroupChatCreated.
 func (m *Message) HasGroupChatCreated() bool {
 	return m.GroupChatCreated
 }
 
-// Check if Message has SupergroupChatCreated.
+// HasSupergroupChatCreated checks if Message has SupergroupChatCreated.
 func (m *Message) HasSupergroupChatCreated() bool {
 	return m.SupergroupChatCreated
 }
 
-// Check if Message has ChannelChatCreated.
+// HasChannelChatCreated checks if Message has ChannelChatCreated.
 func (m *Message) HasChannelChatCreated() bool {
 	return m.ChannelChatCreated
 }
 
-// Check if Message has MigrateToChatId.
+// HasMigrateToChatId checks if Message has MigrateToChatId.
 func (m *Message) HasMigrateToChatId() bool {
 	return m.MigrateToChatId > 0
 }
 
-// Check if Message has MigrateFromChatId.
+// HasMigrateFromChatId checks if Message has MigrateFromChatId.
 func (m *Message) HasMigrateFromChatId() bool {
 	return m.MigrateFromChatId > 0
 }
 
-// Check if Message has PinnedMessage.
+// HasPinnedMessage checks if Message has PinnedMessage.
 func (m *Message) HasPinnedMessage() bool {
 	return m.PinnedMessage != nil
 }
@@ -607,7 +608,7 @@ func (c ChosenInlineResult) String() string {
 // Helper functions for KeyboardButton and InlineKeyboardButton
 //
 
-// Helper function for generating an array of KeyboardButtons
+// NewKeyboardButtons is a helper function for generating an array of KeyboardButtons
 func NewKeyboardButtons(texts ...string) []KeyboardButton {
 	keyboards := []KeyboardButton{}
 
@@ -620,7 +621,8 @@ func NewKeyboardButtons(texts ...string) []KeyboardButton {
 	return keyboards
 }
 
-// Helper function for generating an array of InlineKeyboardButtons with url
+// NewInlineKeyboardButtonsWithUrl is a helper function
+// for generating an array of InlineKeyboardButtons with urls
 func NewInlineKeyboardButtonsWithUrl(values map[string]string) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
@@ -635,12 +637,14 @@ func NewInlineKeyboardButtonsWithUrl(values map[string]string) []InlineKeyboardB
 	return keyboards
 }
 
-// Helper function for generating an array of InlineKeyboardButtons with callback data
+// NewInlineKeyboardButtonsWithCallbackData is a helper function
+// for generating an array of InlineKeyboardButtons with callback data
 func NewInlineKeyboardButtonsWithCallbackData(values map[string]string) []InlineKeyboardButton {
 	return NewInlineKeyboardButtonsAsColumnsWithCallbackData(values)
 }
 
-// Helper function for generating an array of InlineKeyboardButtons (as columns) with callback data
+// NewInlineKeyboardButtonsAsColumnsWithCallbackData is a helper function
+// for generating an array of InlineKeyboardButtons (as columns) with callback data
 func NewInlineKeyboardButtonsAsColumnsWithCallbackData(values map[string]string) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
@@ -655,7 +659,8 @@ func NewInlineKeyboardButtonsAsColumnsWithCallbackData(values map[string]string)
 	return keyboards
 }
 
-// Helper function for generating an array of InlineKeyboardButtons (as rows) with callback data
+// NewInlineKeyboardButtonsAsRowsWithCallbackData is a helper function
+// for generating an array of InlineKeyboardButtons (as rows) with callback data
 func NewInlineKeyboardButtonsAsRowsWithCallbackData(values map[string]string) [][]InlineKeyboardButton {
 	keyboards := [][]InlineKeyboardButton{}
 
@@ -672,7 +677,8 @@ func NewInlineKeyboardButtonsAsRowsWithCallbackData(values map[string]string) []
 	return keyboards
 }
 
-// Helper function for generating an array of InlineKeyboardButtons with switch inline query
+// NewInlineKeyboardButtonsWithSwitchInlineQuery is a helper function
+// for generating an array of InlineKeyboardButtons with switch inline query
 func NewInlineKeyboardButtonsWithSwitchInlineQuery(values map[string]string) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
