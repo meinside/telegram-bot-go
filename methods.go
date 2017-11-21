@@ -291,6 +291,27 @@ func (b *Bot) SendVideoNote(chatId ChatId, videoNote InputFile, options map[stri
 	return b.sendObjectMessage(chatId, "sendVideoNote", "video_note", videoNote, options)
 }
 
+// SendMediaGroup sends a group of photos or videos as an album.
+//
+// options include: disable_notification, and reply_to_message_id
+//
+// https://core.telegram.org/bots/api#sendmediagroup
+func (b *Bot) SendMediaGroup(chatId ChatId, media []InputMedia, options map[string]interface{}) (result ApiResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatId,
+		"media":   media,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage("sendMediaGroup", params)
+}
+
 // SendLocation sends locations.
 //
 // options include: disable_notification, reply_to_message_id, and reply_markup.
@@ -823,7 +844,7 @@ func (b *Bot) AnswerInlineQuery(inlineQueryId string, results []interface{}, opt
 
 // SendInvoice sends an invoice.
 //
-// options include: photo_url, photo_size, photo_width, photo_height, need_name, need_phone_number, need_email, need_shipping_address, is_flexible, disable_notification, reply_to_message_id, and reply_markup
+// options include: provider_data, photo_url, photo_size, photo_width, photo_height, need_name, need_phone_number, need_email, need_shipping_address, is_flexible, disable_notification, reply_to_message_id, and reply_markup
 //
 // https://core.telegram.org/bots/api#sendinvoice
 func (b *Bot) SendInvoice(chatId int64, title, description, payload, providerToken, startParameter, currency string, prices []LabeledPrice, options map[string]interface{}) (result ApiResponseMessage) {

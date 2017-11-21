@@ -285,6 +285,27 @@ type Chat struct {
 	CanSetStickerSet            bool       `json:"can_set_sticker_set,omitempty"`
 }
 
+// InputMediaType is a type of InputMedia
+type InputMediaType string
+
+// InputMediaType strings
+const (
+	InputMediaPhoto InputMediaType = "photo"
+	InputMediaVideo InputMediaType = "video"
+)
+
+// InputMedia represents the content of a media message to be sent.
+//
+// https://core.telegram.org/bots/api#inputmedia
+type InputMedia struct {
+	Type     InputMediaType `json:"type"`
+	Media    string         `json:"media"`
+	Caption  string         `json:"caption,omitempty"`
+	Width    int            `json:"width,omitempty"`
+	Height   int            `json:"height,omitempty"`
+	Duration int            `json:"duration,omitempty"`
+}
+
 // InputFile represents contents of a file to be uploaded.
 // Can be generated with InputFileFromXXX() functions in types_helper.go
 //
