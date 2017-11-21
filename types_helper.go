@@ -712,3 +712,31 @@ func structToString(v interface{}) string {
 		return err.Error()
 	}
 }
+
+// InputFileFromFilepath generates an InputFile from given filepath
+func InputFileFromFilepath(filepath string) InputFile {
+	return InputFile{
+		Filepath: &filepath,
+	}
+}
+
+// InputFileFromUrl generates an InputFile from given url
+func InputFileFromUrl(url string) InputFile {
+	return InputFile{
+		Url: &url,
+	}
+}
+
+// InputFileFromBytes generates an InputFile from given bytes array
+func InputFileFromBytes(bytes []byte) InputFile {
+	return InputFile{
+		Bytes: bytes,
+	}
+}
+
+// InputFileFromFileId generates an InputFile from given file id
+func InputFileFromFileId(fileId string) InputFile {
+	return InputFile{
+		FileId: &fileId,
+	}
+}

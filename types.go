@@ -285,10 +285,16 @@ type Chat struct {
 	CanSetStickerSet            bool       `json:"can_set_sticker_set,omitempty"`
 }
 
-// FileParam is a universal file type for convenience
+// InputFile represents contents of a file to be uploaded.
+// Can be generated with InputFileFromXXX() functions in types_helper.go
 //
-// It can be one of local filepath (string), remote http url (string), bytes array ([]byte), or file id (string)
-type FileParam interface{}
+// https://core.telegram.org/bots/api#inputfile
+type InputFile struct {
+	Filepath *string
+	Url      *string
+	Bytes    []byte
+	FileId   *string
+}
 
 // Audio is a struct for an audio file
 //
