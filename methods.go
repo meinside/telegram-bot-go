@@ -1044,7 +1044,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // Send request to API server and return the response as bytes(synchronously).
 //
 // NOTE: If *os.File is included in the params, it will be closed automatically in this function.
-func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, success bool) {
+func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, err0 error) {
 	client := &http.Client{}
 	apiUrl := fmt.Sprintf("%s%s/%s", apiBaseUrl, b.token, method)
 
@@ -1062,7 +1062,7 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 
 					if part, err := writer.CreateFormFile(key, file.Name()); err == nil {
 						if _, err = io.Copy(part, file); err != nil {
-							b.error("could now write to multipart: %s", key)
+							b.error("could not write to multipart: %s", key)
 						}
 					} else {
 						b.error("could not create form file for parameter '%s' (%v)", key, value)
@@ -1075,7 +1075,7 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 					filename := fmt.Sprintf("%s.%s", key, getExtension(fbytes))
 					if part, err := writer.CreateFormFile(key, filename); err == nil {
 						if _, err = io.Copy(part, bytes.NewReader(fbytes)); err != nil {
-							b.error("could now write to multipart: %s", key)
+							b.error("could not write to multipart: %s", key)
 						}
 					} else {
 						b.error("could not create form file for parameter '%s' ([]byte)", key)
@@ -1100,16 +1100,23 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 			if resp, err := client.Do(req); err == nil {
 				defer resp.Body.Close()
 
+				// FIXXX: check http status code here
 				if bytes, err := ioutil.ReadAll(resp.Body); err == nil {
-					return bytes, true
+					return bytes, nil
 				} else {
-					b.error("response read error: %s", err)
+					err0 = fmt.Errorf("response read error: %s", err)
+
+					b.error(err0.Error())
 				}
 			} else {
-				b.error("request error: %s", err)
+				err0 = fmt.Errorf("request error: %s", err)
+
+				b.error(err0.Error())
 			}
 		} else {
-			b.error("building request error: %s", err)
+			err0 = fmt.Errorf("building request error: %s", err)
+
+			b.error(err0.Error())
 		}
 	} else { // www-form urlencoded
 		paramValues := url.Values{}
@@ -1127,27 +1134,34 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 			if resp, err := client.Do(req); err == nil {
 				defer resp.Body.Close()
 
+				// FIXXX: check http status code here
 				if bytes, err := ioutil.ReadAll(resp.Body); err == nil {
-					return bytes, true
+					return bytes, nil
 				} else {
-					b.error("response read error: %s", err)
+					err0 = fmt.Errorf("response read error: %s", err)
+
+					b.error(err0.Error())
 				}
 			} else {
-				b.error("request error: %s", err)
+				err0 = fmt.Errorf("request error: %s", err)
+
+				b.error(err0.Error())
 			}
 		} else {
-			b.error("building request error: %s", err)
+			err0 = fmt.Errorf("building request error: %s", err)
+
+			b.error(err0.Error())
 		}
 	}
 
-	return []byte{}, false
+	return []byte{}, err0
 }
 
 // Send request for ApiResponse and fetch its result.
 func (b *Bot) requestResponse(method string, params map[string]interface{}) (result ApiResponse) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponse
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1155,7 +1169,7 @@ func (b *Bot) requestResponse(method string, params map[string]interface{}) (res
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1167,7 +1181,7 @@ func (b *Bot) requestResponse(method string, params map[string]interface{}) (res
 func (b *Bot) requestResponseWebhookInfo() (result ApiResponseWebhookInfo) {
 	var errStr string
 
-	if bytes, success := b.request("getWebhookInfo", map[string]interface{}{}); success {
+	if bytes, err := b.request("getWebhookInfo", map[string]interface{}{}); err == nil {
 		var jsonResponse ApiResponseWebhookInfo
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1175,7 +1189,7 @@ func (b *Bot) requestResponseWebhookInfo() (result ApiResponseWebhookInfo) {
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = "getWebhookInfo failed"
+		errStr = fmt.Sprintf("getWebhookInfo failed with error: %s", err)
 	}
 
 	b.error(errStr)
@@ -1187,7 +1201,7 @@ func (b *Bot) requestResponseWebhookInfo() (result ApiResponseWebhookInfo) {
 func (b *Bot) requestResponseUser(method string, params map[string]interface{}) (result ApiResponseUser) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseUser
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1195,7 +1209,7 @@ func (b *Bot) requestResponseUser(method string, params map[string]interface{}) 
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1207,7 +1221,7 @@ func (b *Bot) requestResponseUser(method string, params map[string]interface{}) 
 func (b *Bot) requestResponseMessage(method string, params map[string]interface{}) (result ApiResponseMessage) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseMessage
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1215,7 +1229,7 @@ func (b *Bot) requestResponseMessage(method string, params map[string]interface{
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1227,7 +1241,7 @@ func (b *Bot) requestResponseMessage(method string, params map[string]interface{
 func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]interface{}) (result ApiResponseUserProfilePhotos) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseUserProfilePhotos
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1235,7 +1249,7 @@ func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1247,7 +1261,7 @@ func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]
 func (b *Bot) requestResponseUpdates(method string, params map[string]interface{}) (result ApiResponseUpdates) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseUpdates
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1255,7 +1269,7 @@ func (b *Bot) requestResponseUpdates(method string, params map[string]interface{
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1267,7 +1281,7 @@ func (b *Bot) requestResponseUpdates(method string, params map[string]interface{
 func (b *Bot) requestResponseFile(method string, params map[string]interface{}) (result ApiResponseFile) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseFile
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1275,7 +1289,7 @@ func (b *Bot) requestResponseFile(method string, params map[string]interface{}) 
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1287,7 +1301,7 @@ func (b *Bot) requestResponseFile(method string, params map[string]interface{}) 
 func (b *Bot) requestResponseChat(method string, params map[string]interface{}) (result ApiResponseChat) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseChat
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1295,7 +1309,7 @@ func (b *Bot) requestResponseChat(method string, params map[string]interface{}) 
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1307,7 +1321,7 @@ func (b *Bot) requestResponseChat(method string, params map[string]interface{}) 
 func (b *Bot) requestResponseChatAdministrators(method string, params map[string]interface{}) (result ApiResponseChatAdministrators) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseChatAdministrators
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1315,7 +1329,7 @@ func (b *Bot) requestResponseChatAdministrators(method string, params map[string
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1327,7 +1341,7 @@ func (b *Bot) requestResponseChatAdministrators(method string, params map[string
 func (b *Bot) requestResponseChatMember(method string, params map[string]interface{}) (result ApiResponseChatMember) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseChatMember
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1335,7 +1349,7 @@ func (b *Bot) requestResponseChatMember(method string, params map[string]interfa
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1347,7 +1361,7 @@ func (b *Bot) requestResponseChatMember(method string, params map[string]interfa
 func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (result ApiResponseInt) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseInt
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1355,7 +1369,7 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1367,7 +1381,7 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 func (b *Bot) requestResponseString(method string, params map[string]interface{}) (result ApiResponseString) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseString
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1375,7 +1389,7 @@ func (b *Bot) requestResponseString(method string, params map[string]interface{}
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1387,7 +1401,7 @@ func (b *Bot) requestResponseString(method string, params map[string]interface{}
 func (b *Bot) requestResponseGameHighScores(method string, params map[string]interface{}) (result ApiResponseGameHighScores) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseGameHighScores
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1395,7 +1409,7 @@ func (b *Bot) requestResponseGameHighScores(method string, params map[string]int
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
@@ -1407,7 +1421,7 @@ func (b *Bot) requestResponseGameHighScores(method string, params map[string]int
 func (b *Bot) requestResponseStickerSet(method string, params map[string]interface{}) (result ApiResponseStickerSet) {
 	var errStr string
 
-	if bytes, success := b.request(method, params); success {
+	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse ApiResponseStickerSet
 		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
 			return jsonResponse
@@ -1415,7 +1429,7 @@ func (b *Bot) requestResponseStickerSet(method string, params map[string]interfa
 			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 		}
 	} else {
-		errStr = fmt.Sprintf("%s failed", method)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
