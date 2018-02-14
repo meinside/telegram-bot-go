@@ -496,6 +496,17 @@ func (m *Message) HasPhoto() bool {
 	return len(m.Photo) > 0
 }
 
+// LargestPhoto returns a photo with the largest file size.
+func (m *Message) LargestPhoto() PhotoSize {
+	var maxIndex int = 0
+	for i, photo := range m.Photo {
+		if photo.FileSize > m.Photo[maxIndex].FileSize {
+			maxIndex = i
+		}
+	}
+	return m.Photo[maxIndex]
+}
+
 // HasSticker checks if Message has Sticker.
 func (m *Message) HasSticker() bool {
 	return m.Sticker != nil
