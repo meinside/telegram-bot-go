@@ -133,7 +133,7 @@ func (b *Bot) ForwardMessage(chatId, fromChatId ChatId, messageId int) (result A
 
 // SendPhoto sends a photo.
 //
-// options include: caption, disable_notification, reply_to_message_id, and reply_markup.
+// options include: caption, parse_mode, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatId ChatId, photo InputFile, options map[string]interface{}) (result ApiResponseMessage) {
@@ -142,7 +142,7 @@ func (b *Bot) SendPhoto(chatId ChatId, photo InputFile, options map[string]inter
 
 // SendAudio sends an audio file. (.mp3 format only, will be played with external players)
 //
-// options include: caption, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
+// options include: caption, parse_mode, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatId ChatId, audio InputFile, options map[string]interface{}) (result ApiResponseMessage) {
@@ -151,7 +151,7 @@ func (b *Bot) SendAudio(chatId ChatId, audio InputFile, options map[string]inter
 
 // SendDocument sends a general file.
 //
-// options include: disable_notification, reply_to_message_id, and reply_markup.
+// options include: caption, parse_mode, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatId ChatId, document InputFile, options map[string]interface{}) (result ApiResponseMessage) {
@@ -263,7 +263,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result ApiResponse) {
 
 // SendVideo sends a video file.
 //
-// options include: duration, caption, disable_notification, reply_to_message_id, and reply_markup.
+// options include: duration, caption, parse_mode, supports_streaming, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatId ChatId, video InputFile, options map[string]interface{}) (result ApiResponseMessage) {
@@ -272,7 +272,7 @@ func (b *Bot) SendVideo(chatId ChatId, video InputFile, options map[string]inter
 
 // SendVoice sends a voice file. (.ogg format only, will be played with Telegram itself))
 //
-// options include: caption, duration, disable_notification, reply_to_message_id, and reply_markup.
+// options include: caption, parse_mode, duration, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatId ChatId, voice InputFile, options map[string]interface{}) (result ApiResponseMessage) {
@@ -743,7 +743,7 @@ func (b *Bot) EditMessageText(text string, options map[string]interface{}) (resu
 // required options: chat_id + message_id (when inline_message_id is not given)
 //                or inline_message_id (when chat_id & message_id is not given)
 //
-// other options: reply_markup
+// other options: parse_mode, or reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagecaption
 func (b *Bot) EditMessageCaption(caption string, options map[string]interface{}) (result ApiResponseMessage) {

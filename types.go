@@ -298,12 +298,14 @@ const (
 //
 // https://core.telegram.org/bots/api#inputmedia
 type InputMedia struct {
-	Type     InputMediaType `json:"type"`
-	Media    string         `json:"media"`
-	Caption  string         `json:"caption,omitempty"`
-	Width    int            `json:"width,omitempty"`
-	Height   int            `json:"height,omitempty"`
-	Duration int            `json:"duration,omitempty"`
+	Type              InputMediaType `json:"type"`
+	Media             string         `json:"media"`
+	Caption           string         `json:"caption,omitempty"`
+	ParseMode         ParseMode      `json:"parse_mode,omitempty"`
+	Width             int            `json:"width,omitempty"`              // video only
+	Height            int            `json:"height,omitempty"`             // video only
+	Duration          int            `json:"duration,omitempty"`           // video only
+	SupportsStreaming bool           `json:"supports_streaming,omitempty"` // video only
 }
 
 // InputFile represents contents of a file to be uploaded.
@@ -639,6 +641,7 @@ type Message struct {
 	PinnedMessage         *Message           `json:"pinned_message,omitempty"`
 	Invoice               *Invoice           `json:"invoice,omitempty"`
 	SuccessfulPayment     *SuccessfulPayment `json:"successful_payment,omitempty"`
+	ConnectedWebsite      *string            `json:"connected_website,omitempty"`
 }
 
 // InlineQuery is a struct of an inline query
@@ -713,6 +716,7 @@ type InlineQueryResultPhoto struct { // https://core.telegram.org/bots/api#inlin
 	Title               *string               `json:"title,omitempty"`
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -727,6 +731,7 @@ type InlineQueryResultGif struct { // https://core.telegram.org/bots/api#inlineq
 	ThumbUrl            string                `json:"thumb_url"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -741,6 +746,7 @@ type InlineQueryResultMpeg4Gif struct { // https://core.telegram.org/bots/api#in
 	ThumbUrl            string                `json:"thumb_url"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -753,6 +759,7 @@ type InlineQueryResultVideo struct { // https://core.telegram.org/bots/api#inlin
 	ThumbUrl            string                `json:"thumb_url"`
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	VideoWidth          int                   `json:"video_width,omitempty"`
 	VideoHeight         int                   `json:"video_height,omitempty"`
 	VideoDuration       int                   `json:"video_duration,omitempty"`
@@ -767,6 +774,7 @@ type InlineQueryResultAudio struct { // https://core.telegram.org/bots/api#inlin
 	AudioUrl            string                `json:"audio_url"`
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	Performer           *string               `json:"performer,omitempty"`
 	AudioDuration       int                   `json:"audio_duration,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -779,6 +787,7 @@ type InlineQueryResultVoice struct { // https://core.telegram.org/bots/api#inlin
 	VoiceUrl            string                `json:"voice_url"`
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	VoiceDuration       int                   `json:"voice_duration,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
@@ -789,6 +798,7 @@ type InlineQueryResultDocument struct { // https://core.telegram.org/bots/api#in
 	InlineQueryResult
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	DocumentUrl         string                `json:"document_url"`
 	MimeType            DocumentMimeType      `json:"mime_type"`
 	Description         *string               `json:"description,omitempty"`
@@ -854,6 +864,7 @@ type InlineQueryResultCachedPhoto struct { // https://core.telegram.org/bots/api
 	Title               *string               `json:"title,omitempty"`
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -864,6 +875,7 @@ type InlineQueryResultCachedGif struct { // https://core.telegram.org/bots/api#i
 	GifFileId           string                `json:"gif_file_id"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -874,6 +886,7 @@ type InlineQueryResultCachedMpeg4Gif struct { // https://core.telegram.org/bots/
 	Mpeg4FileId         string                `json:"mpeg4_file_id"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -893,6 +906,7 @@ type InlineQueryResultCachedDocument struct { // https://core.telegram.org/bots/
 	DocumentFileId      string                `json:"document_file_id"`
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -904,6 +918,7 @@ type InlineQueryResultCachedVideo struct { // https://core.telegram.org/bots/api
 	Title               string                `json:"title"`
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -914,6 +929,7 @@ type InlineQueryResultCachedVoice struct { // https://core.telegram.org/bots/api
 	VoiceFileId         string                `json:"voice_file_id"`
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -923,6 +939,7 @@ type InlineQueryResultCachedAudio struct { // https://core.telegram.org/bots/api
 	InlineQueryResult
 	AudioFileId         string                `json:"audio_file_id"`
 	Caption             *string               `json:"caption,omitempty"`
+	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
