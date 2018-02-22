@@ -498,6 +498,10 @@ func (m *Message) HasPhoto() bool {
 
 // LargestPhoto returns a photo with the largest file size.
 func (m *Message) LargestPhoto() PhotoSize {
+	if !m.HasPhoto() {
+		return PhotoSize{}
+	}
+
 	var maxIndex int = 0
 	for i, photo := range m.Photo {
 		if photo.FileSize > m.Photo[maxIndex].FileSize {
