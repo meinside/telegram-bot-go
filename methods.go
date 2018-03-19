@@ -296,7 +296,7 @@ func (b *Bot) SendVideoNote(chatId ChatId, videoNote InputFile, options map[stri
 // options include: disable_notification, and reply_to_message_id
 //
 // https://core.telegram.org/bots/api#sendmediagroup
-func (b *Bot) SendMediaGroup(chatId ChatId, media []InputMedia, options map[string]interface{}) (result ApiResponseMessage) {
+func (b *Bot) SendMediaGroup(chatId ChatId, media []InputMedia, options map[string]interface{}) (result ApiResponseMessages) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatId,
@@ -309,7 +309,7 @@ func (b *Bot) SendMediaGroup(chatId ChatId, media []InputMedia, options map[stri
 		}
 	}
 
-	return b.requestResponseMessage("sendMediaGroup", params)
+	return b.requestResponseMessages("sendMediaGroup", params)
 }
 
 // SendLocation sends locations.
@@ -1235,6 +1235,26 @@ func (b *Bot) requestResponseMessage(method string, params map[string]interface{
 	b.error(errStr)
 
 	return ApiResponseMessage{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for ApiResponseMessages and fetch its result.
+func (b *Bot) requestResponseMessages(method string, params map[string]interface{}) (result ApiResponseMessages) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse ApiResponseMessages
+		if err := json.Unmarshal(bytes, &jsonResponse); err == nil {
+			return jsonResponse
+		} else {
+			errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+		}
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return ApiResponseMessages{ApiResponseBase: ApiResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for ApiResponseUserProfilePhotos and fetch its result.
