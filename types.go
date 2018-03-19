@@ -145,6 +145,12 @@ type ApiResponseUser struct {
 // ApiResponseMessage is an API response with result type: Message
 type ApiResponseMessage struct {
 	ApiResponseBase
+	Result *Message `json:"result,omitempty"`
+}
+
+// ApiResponseMessage is an API response with result type: []Message
+type ApiResponseMessages struct {
+	ApiResponseBase
 	Result []*Message `json:"result,omitempty"`
 }
 
