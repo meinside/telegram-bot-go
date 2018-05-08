@@ -52,7 +52,7 @@ Also, you can generate certificate and private key using **telegrambot.GenCertAn
 ```go
 // sample code for telegram-bot-go (receive webhooks),
 //
-// last update: 2017.08.08.
+// last update: 2018.05.08.
 package main
 
 import (
@@ -64,15 +64,15 @@ import (
 )
 
 const (
-	ApiToken     = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
-	WebhookHost  = "my.host.com"
-	WebhookPort  = 8443
-	CertFilepath = "./cert.pem"
-	KeyFilepath  = "./cert.key"
+	apiToken     = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
+	webhookHost  = "my.host.com"
+	webhookPort  = 8443
+	certFilepath = "./cert.pem"
+	keyFilepath  = "./cert.key"
 
-	TypingDelaySeconds = 3
+	typingDelaySeconds = 3
 
-	Verbose = true
+	verbose = true
 )
 
 // webhook handler function
@@ -81,15 +81,15 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 		if webhook.HasMessage() {
 			// 'is typing...'
 			b.SendChatAction(
-				webhook.Message.Chat.Id,
+				webhook.Message.Chat.ID,
 				bot.ChatActionTyping,
 			)
-			time.Sleep(TypingDelaySeconds * time.Second)
+			time.Sleep(typingDelaySeconds * time.Second)
 
 			var message string
 
 			options := map[string]interface{}{
-				"reply_to_message_id": webhook.Message.MessageId, // show original message
+				"reply_to_message_id": webhook.Message.MessageID, // show original message
 				"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
 					Keyboard: [][]bot.KeyboardButton{
 						[]bot.KeyboardButton{
@@ -140,7 +140,7 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 			}
 			// send message
 			if sent := b.SendMessage(
-				webhook.Message.Chat.Id,
+				webhook.Message.Chat.ID,
 				message,
 				options,
 			); !sent.Ok {
@@ -167,7 +167,7 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 
 			// answer inline query
 			if sent := b.AnswerInlineQuery(
-				webhook.InlineQuery.Id,
+				webhook.InlineQuery.ID,
 				results,
 				nil,
 			); !sent.Ok {
@@ -186,8 +186,8 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 }
 
 func main() {
-	client := bot.NewClient(ApiToken)
-	client.Verbose = Verbose
+	client := bot.NewClient(apiToken)
+	client.Verbose = verbose
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
@@ -201,21 +201,21 @@ func main() {
 		if unhooked := client.DeleteWebhook(); unhooked.Ok {
 			// generate certificate and private key for testing
 			if err := bot.GenCertAndKey(
-				WebhookHost,
-				CertFilepath,
-				KeyFilepath,
+				webhookHost,
+				certFilepath,
+				keyFilepath,
 				10*365,
 			); err == nil {
 				// set webhook
 				if hooked := client.SetWebhook(
-					WebhookHost,
-					WebhookPort,
-					CertFilepath,
+					webhookHost,
+					webhookPort,
+					certFilepath,
 				); hooked.Ok {
 					// on success, start webhook server
 					client.StartWebhookServerAndWait(
-						CertFilepath,
-						KeyFilepath,
+						certFilepath,
+						keyFilepath,
 						handleWebhook,
 					)
 				} else {
@@ -240,7 +240,7 @@ It would be useful when you're behind a firewall or something.
 ```go
 // sample code for telegram-bot-go (get updates),
 //
-// last update: 2017.08.09.
+// last update: 2018.05.08.
 package main
 
 import (
@@ -252,12 +252,12 @@ import (
 )
 
 const (
-	ApiToken = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
+	apiToken = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
 
-	MonitorIntervalSeconds = 3
-	TypingDelaySeconds     = 3
+	monitorIntervalSeconds = 3
+	typingDelaySeconds     = 3
 
-	Verbose = true
+	verbose = true
 )
 
 // update handler function
@@ -265,13 +265,13 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 	if err == nil {
 		if update.HasMessage() {
 			// 'is typing...'
-			b.SendChatAction(update.Message.Chat.Id, bot.ChatActionTyping)
-			time.Sleep(TypingDelaySeconds * time.Second)
+			b.SendChatAction(update.Message.Chat.ID, bot.ChatActionTyping)
+			time.Sleep(typingDelaySeconds * time.Second)
 
 			var message string
 
 			options := map[string]interface{}{
-				"reply_to_message_id": update.Message.MessageId, // show original message
+				"reply_to_message_id": update.Message.MessageID, // show original message
 				"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
 					Keyboard: [][]bot.KeyboardButton{
 						[]bot.KeyboardButton{
@@ -322,7 +322,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			}
 			// send message
 			if sent := b.SendMessage(
-				update.Message.Chat.Id,
+				update.Message.Chat.ID,
 				message,
 				options,
 			); !sent.Ok {
@@ -349,7 +349,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 
 			// answer inline query
 			if sent := b.AnswerInlineQuery(
-				update.InlineQuery.Id,
+				update.InlineQuery.ID,
 				results,
 				nil,
 			); !sent.Ok {
@@ -368,8 +368,8 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 }
 
 func main() {
-	client := bot.NewClient(ApiToken)
-	client.Verbose = Verbose
+	client := bot.NewClient(apiToken)
+	client.Verbose = verbose
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
@@ -384,7 +384,7 @@ func main() {
 			// wait for new updates
 			client.StartMonitoringUpdates(
 				0,
-				MonitorIntervalSeconds,
+				monitorIntervalSeconds,
 				handleUpdate,
 			)
 		} else {
@@ -398,7 +398,7 @@ func main() {
 
 ## License
 
-Copyright (c) 2017 Sungjin Han
+Copyright (c) 2018 Sungjin Han
 
 MIT License
 

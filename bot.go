@@ -17,8 +17,8 @@ import (
 )
 
 const (
-	apiBaseUrl  = "https://api.telegram.org/bot"
-	fileBaseUrl = "https://api.telegram.org/file/bot"
+	apiBaseURL  = "https://api.telegram.org/bot"
+	fileBaseURL = "https://api.telegram.org/file/bot"
 
 	webhookPath = "/telegram/bot/webhook"
 )
@@ -34,7 +34,7 @@ type Bot struct {
 
 	webhookHost string // webhook hostname
 	webhookPort int    // webhook port number
-	webhookUrl  string // webhook url
+	webhookURL  string // webhook url
 
 	updateHandler func(b *Bot, update Update, err error) // update(webhook) handler function
 
@@ -98,13 +98,13 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 	// set update handler
 	b.updateHandler = updateHandler
 
-	var updates ApiResponseUpdates
+	var updates APIResponseUpdates
 	for {
 		if updates = b.GetUpdates(options); updates.Ok {
 			for _, update := range updates.Result {
 				// update offset (max + 1)
-				if options["offset"].(int) <= update.UpdateId {
-					options["offset"] = update.UpdateId + 1
+				if options["offset"].(int) <= update.UpdateID {
+					options["offset"] = update.UpdateID + 1
 				}
 
 				go b.updateHandler(b, update, nil)
@@ -123,7 +123,7 @@ func (b *Bot) getWebhookPath() string {
 }
 
 // Get full URL of webhook interface.
-func (b *Bot) getWebhookUrl() string {
+func (b *Bot) getWebhookURL() string {
 	return fmt.Sprintf("https://%s:%d%s", b.webhookHost, b.webhookPort, b.getWebhookPath())
 }
 
