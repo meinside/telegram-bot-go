@@ -1044,7 +1044,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // Send request to API server and return the response as bytes(synchronously).
 //
 // NOTE: If *os.File is included in the params, it will be closed automatically in this function.
-func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, err0 error) {
+func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, err error) {
 	client := &http.Client{}
 	apiURL := fmt.Sprintf("%s%s/%s", apiBaseURL, b.token, method)
 
@@ -1060,7 +1060,9 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 				if file, ok := value.(*os.File); ok {
 					defer file.Close()
 
-					if part, err := writer.CreateFormFile(key, file.Name()); err == nil {
+					var part io.Writer
+					part, err = writer.CreateFormFile(key, file.Name())
+					if err == nil {
 						if _, err = io.Copy(part, file); err != nil {
 							b.error("could not write to multipart: %s", key)
 						}
@@ -1073,7 +1075,9 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 			case []byte:
 				if fbytes, ok := value.([]byte); ok {
 					filename := fmt.Sprintf("%s.%s", key, getExtension(fbytes))
-					if part, err := writer.CreateFormFile(key, filename); err == nil {
+					var part io.Writer
+					part, err = writer.CreateFormFile(key, filename)
+					if err == nil {
 						if _, err = io.Copy(part, bytes.NewReader(fbytes)); err != nil {
 							b.error("could not write to multipart: %s", key)
 						}
@@ -1090,34 +1094,39 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 			}
 		}
 
-		if err := writer.Close(); err != nil {
+		if err = writer.Close(); err != nil {
 			b.error("error while closing writer (%s)", err)
 		}
 
-		if req, err := http.NewRequest("POST", apiURL, body); err == nil {
+		var req *http.Request
+		req, err = http.NewRequest("POST", apiURL, body)
+		if err == nil {
 			req.Header.Add("Content-Type", writer.FormDataContentType()) // due to file parameter
 
-			if resp, err := client.Do(req); err == nil {
+			var resp *http.Response
+			resp, err = client.Do(req)
+			if err == nil {
 				defer resp.Body.Close()
 
 				// FIXXX: check http status code here
-				bytes, err := ioutil.ReadAll(resp.Body)
+				var bytes []byte
+				bytes, err = ioutil.ReadAll(resp.Body)
 				if err == nil {
 					return bytes, nil
 				}
 
-				err0 = fmt.Errorf("response read error: %s", err)
+				err = fmt.Errorf("response read error: %s", err)
 
-				b.error(err0.Error())
+				b.error(err.Error())
 			} else {
-				err0 = fmt.Errorf("request error: %s", err)
+				err = fmt.Errorf("request error: %s", err)
 
-				b.error(err0.Error())
+				b.error(err.Error())
 			}
 		} else {
-			err0 = fmt.Errorf("building request error: %s", err)
+			err = fmt.Errorf("building request error: %s", err)
 
-			b.error(err0.Error())
+			b.error(err.Error())
 		}
 	} else { // www-form urlencoded
 		paramValues := url.Values{}
@@ -1128,35 +1137,40 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 		}
 		encoded := paramValues.Encode()
 
-		if req, err := http.NewRequest("POST", apiURL, bytes.NewBufferString(encoded)); err == nil {
+		var req *http.Request
+		req, err = http.NewRequest("POST", apiURL, bytes.NewBufferString(encoded))
+		if err == nil {
 			req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 			req.Header.Add("Content-Length", strconv.Itoa(len(encoded)))
 
-			if resp, err := client.Do(req); err == nil {
+			var resp *http.Response
+			resp, err = client.Do(req)
+			if err == nil {
 				defer resp.Body.Close()
 
 				// FIXXX: check http status code here
-				bytes, err := ioutil.ReadAll(resp.Body)
+				var bytes []byte
+				bytes, err = ioutil.ReadAll(resp.Body)
 				if err == nil {
 					return bytes, nil
 				}
 
-				err0 = fmt.Errorf("response read error: %s", err)
+				err = fmt.Errorf("response read error: %s", err)
 
-				b.error(err0.Error())
+				b.error(err.Error())
 			} else {
-				err0 = fmt.Errorf("request error: %s", err)
+				err = fmt.Errorf("request error: %s", err)
 
-				b.error(err0.Error())
+				b.error(err.Error())
 			}
 		} else {
-			err0 = fmt.Errorf("building request error: %s", err)
+			err = fmt.Errorf("building request error: %s", err)
 
-			b.error(err0.Error())
+			b.error(err.Error())
 		}
 	}
 
-	return []byte{}, err0
+	return []byte{}, err
 }
 
 // Send request for APIResponse and fetch its result.
@@ -1165,7 +1179,7 @@ func (b *Bot) requestResponse(method string, params map[string]interface{}) (res
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponse
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1186,7 +1200,7 @@ func (b *Bot) requestResponseWebhookInfo() (result APIResponseWebhookInfo) {
 
 	if bytes, err := b.request("getWebhookInfo", map[string]interface{}{}); err == nil {
 		var jsonResponse APIResponseWebhookInfo
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1207,7 +1221,7 @@ func (b *Bot) requestResponseUser(method string, params map[string]interface{}) 
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseUser
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1228,7 +1242,7 @@ func (b *Bot) requestResponseMessage(method string, params map[string]interface{
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseMessage
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1249,7 +1263,7 @@ func (b *Bot) requestResponseMessages(method string, params map[string]interface
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseMessages
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1270,7 +1284,7 @@ func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseUserProfilePhotos
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1291,7 +1305,7 @@ func (b *Bot) requestResponseUpdates(method string, params map[string]interface{
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseUpdates
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1312,7 +1326,7 @@ func (b *Bot) requestResponseFile(method string, params map[string]interface{}) 
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseFile
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1333,7 +1347,7 @@ func (b *Bot) requestResponseChat(method string, params map[string]interface{}) 
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseChat
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1354,7 +1368,7 @@ func (b *Bot) requestResponseChatAdministrators(method string, params map[string
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseChatAdministrators
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1375,7 +1389,7 @@ func (b *Bot) requestResponseChatMember(method string, params map[string]interfa
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseChatMember
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1396,7 +1410,7 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseInt
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1417,7 +1431,7 @@ func (b *Bot) requestResponseString(method string, params map[string]interface{}
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseString
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1438,7 +1452,7 @@ func (b *Bot) requestResponseGameHighScores(method string, params map[string]int
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseGameHighScores
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1459,7 +1473,7 @@ func (b *Bot) requestResponseStickerSet(method string, params map[string]interfa
 
 	if bytes, err := b.request(method, params); err == nil {
 		var jsonResponse APIResponseStickerSet
-		err := json.Unmarshal(bytes, &jsonResponse)
+		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
 		}
@@ -1482,7 +1496,7 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 
 	if body, err := ioutil.ReadAll(req.Body); err == nil {
 		var webhook Update
-		if err := json.Unmarshal(body, &webhook); err != nil {
+		if err = json.Unmarshal(body, &webhook); err != nil {
 			b.error("error while parsing json (%s)", err)
 		} else {
 			b.verbose("received webhook body: %s", string(body))
