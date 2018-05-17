@@ -1105,9 +1105,10 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 
 			var resp *http.Response
 			resp, err = client.Do(req)
-			if err == nil {
+			if resp != nil { // XXX - in case of redirect
 				defer resp.Body.Close()
-
+			}
+			if err == nil {
 				// FIXXX: check http status code here
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(resp.Body)
@@ -1145,9 +1146,10 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 
 			var resp *http.Response
 			resp, err = client.Do(req)
-			if err == nil {
+			if resp != nil { // XXX - in case of redirect
 				defer resp.Body.Close()
-
+			}
+			if err == nil {
 				// FIXXX: check http status code here
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(resp.Body)
