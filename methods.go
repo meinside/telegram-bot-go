@@ -1102,6 +1102,7 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 		req, err = http.NewRequest("POST", apiURL, body)
 		if err == nil {
 			req.Header.Add("Content-Type", writer.FormDataContentType()) // due to file parameter
+			req.Close = true
 
 			var resp *http.Response
 			resp, err = client.Do(req)
@@ -1143,6 +1144,7 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 		if err == nil {
 			req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 			req.Header.Add("Content-Length", strconv.Itoa(len(encoded)))
+			req.Close = true
 
 			var resp *http.Response
 			resp, err = client.Do(req)
