@@ -18,7 +18,7 @@ import (
 
 // GetUpdates retrieves updates from Telegram bot API.
 //
-// options include: offset, limit, and timeout.
+// options include: offset, limit, timeout, and allowed_updates.
 //
 // https://core.telegram.org/bots/api#getupdates
 func (b *Bot) GetUpdates(options map[string]interface{}) (result APIResponseUpdates) {
