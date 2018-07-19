@@ -916,7 +916,7 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 
 // SendGame sends a game.
 //
-// options include: game_short_name, disable_notification, reply_to_message_id, and reply_markup.
+// options include: disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendgame
 func (b *Bot) SendGame(chatID ChatID, gameShortName string, options map[string]interface{}) (result APIResponseMessage) {
