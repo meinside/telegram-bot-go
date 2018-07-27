@@ -802,6 +802,8 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options map[string]int
 // other options: parse_mode, disable_web_page_preview, and reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagetext
+//
+// TODO: FIX: "On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned."
 func (b *Bot) EditMessageText(text string, options map[string]interface{}) (result APIResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -825,6 +827,8 @@ func (b *Bot) EditMessageText(text string, options map[string]interface{}) (resu
 // other options: parse_mode, or reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagecaption
+//
+// TODO: FIX: "On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned."
 func (b *Bot) EditMessageCaption(caption string, options map[string]interface{}) (result APIResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -848,6 +852,8 @@ func (b *Bot) EditMessageCaption(caption string, options map[string]interface{})
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagemedia
+//
+// TODO: FIX: "On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned."
 func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{}) (result APIResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -871,6 +877,8 @@ func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{})
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagereplymarkup
+//
+// TODO: FIX: "On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned."
 func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result APIResponseMessage) {
 	return b.requestResponseMessage("editMessageReplyMarkup", options)
 }
@@ -883,6 +891,8 @@ func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result API
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
+//
+// TODO: FIX: "On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned."
 func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[string]interface{}) (result APIResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
@@ -907,6 +917,8 @@ func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[s
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#stopmessagelivelocation
+//
+// TODO: FIX: "On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned."
 func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result APIResponseMessage) {
 	return b.requestResponseMessage("stopMessageLiveLocation", options)
 }
@@ -1045,6 +1057,8 @@ func (b *Bot) SendGame(chatID ChatID, gameShortName string, options map[string]i
 // other options: force, and disable_edit_message
 //
 // https://core.telegram.org/bots/api#setgamescore
+//
+// TODO: FIX: "On success, if the message was sent by the bot, returns the edited Message, otherwise returns True."
 func (b *Bot) SetGameScore(userID int, score int, options map[string]interface{}) (result APIResponseMessage) {
 	// essential params
 	params := map[string]interface{}{
