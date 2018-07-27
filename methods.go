@@ -137,7 +137,15 @@ func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int) (result A
 //
 // https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	return b.sendObjectMessage(chatID, "sendPhoto", "photo", photo, options)
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["photo"] = photo
+
+	return b.requestResponseMessage("sendPhoto", options)
 }
 
 // SendAudio sends an audio file. (.mp3 format only, will be played with external players)
@@ -146,7 +154,15 @@ func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options map[string]inter
 //
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	return b.sendObjectMessage(chatID, "sendAudio", "audio", audio, options)
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["audio"] = audio
+
+	return b.requestResponseMessage("sendAudio", options)
 }
 
 // SendDocument sends a general file.
@@ -155,7 +171,15 @@ func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options map[string]inter
 //
 // https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatID ChatID, document InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	return b.sendObjectMessage(chatID, "sendDocument", "document", document, options)
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["document"] = document
+
+	return b.requestResponseMessage("sendDocument", options)
 }
 
 // SendSticker sends a sticker.
@@ -164,7 +188,15 @@ func (b *Bot) SendDocument(chatID ChatID, document InputFile, options map[string
 //
 // https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	return b.sendObjectMessage(chatID, "sendSticker", "sticker", sticker, options)
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["sticker"] = sticker
+
+	return b.requestResponseMessage("sendSticker", options)
 }
 
 // GetStickerSet gets a sticker set.
@@ -185,10 +217,11 @@ func (b *Bot) GetStickerSet(name string) (result APIResponseStickerSet) {
 func (b *Bot) UploadStickerFile(userID int, sticker InputFile) (result APIResponseFile) {
 	// essential params
 	params := map[string]interface{}{
-		"user_id": userID,
+		"user_id":     userID,
+		"png_sticker": sticker,
 	}
 
-	return b.sendObjectFile("uploadStickerFile", "png_sticker", sticker, params)
+	return b.requestResponseFile("uploadStickerFile", params)
 }
 
 // CreateNewStickerSet creates a new sticker set.
@@ -199,11 +232,13 @@ func (b *Bot) UploadStickerFile(userID int, sticker InputFile) (result APIRespon
 func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponse) {
 	// essential params
 	params := map[string]interface{}{
-		"user_id": userID,
-		"name":    name,
-		"title":   title,
-		"emojis":  emojis,
+		"user_id":     userID,
+		"name":        name,
+		"title":       title,
+		"emojis":      emojis,
+		"png_sticker": sticker,
 	}
+
 	// optional params
 	for key, val := range options {
 		if val != nil {
@@ -211,7 +246,7 @@ func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputF
 		}
 	}
 
-	return b.sendObject("createNewStickerSet", "png_sticker", sticker, params)
+	return b.requestResponse("createNewStickerSet", params)
 }
 
 // AddStickerToSet adds a sticker to set.
@@ -222,10 +257,12 @@ func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputF
 func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponse) {
 	// essential params
 	params := map[string]interface{}{
-		"user_id": userID,
-		"name":    name,
-		"emojis":  emojis,
+		"user_id":     userID,
+		"name":        name,
+		"emojis":      emojis,
+		"png_sticker": sticker,
 	}
+
 	// optional params
 	for key, val := range options {
 		if val != nil {
@@ -233,7 +270,7 @@ func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis
 		}
 	}
 
-	return b.sendObject("addStickerToSet", "png_sticker", sticker, params)
+	return b.requestResponse("addStickerToSet", params)
 }
 
 // SetStickerPositionInSet sets sticker position in set.
@@ -267,7 +304,32 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponse) {
 //
 // https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatID ChatID, video InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	return b.sendObjectMessage(chatID, "sendVideo", "video", video, options)
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["video"] = video
+
+	return b.requestResponseMessage("sendVideo", options)
+}
+
+// SendAnimation sends an animation.
+//
+// options include: duration, width, height, thumb, caption, parse_mode, disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendanimation
+func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options map[string]interface{}) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["animation"] = animation
+
+	return b.requestResponseMessage("sendAnimation", options)
 }
 
 // SendVoice sends a voice file. (.ogg format only, will be played with Telegram itself))
@@ -276,7 +338,15 @@ func (b *Bot) SendVideo(chatID ChatID, video InputFile, options map[string]inter
 //
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	return b.sendObjectMessage(chatID, "sendVoice", "voice", voice, options)
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["voice"] = voice
+
+	return b.requestResponseMessage("sendVoice", options)
 }
 
 // SendVideoNote sends a video note.
@@ -288,7 +358,15 @@ func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options map[string]inter
 //
 // https://core.telegram.org/bots/api#sendvideonote
 func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	return b.sendObjectMessage(chatID, "sendVideoNote", "video_note", videoNote, options)
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["video_note"] = videoNote
+
+	return b.requestResponseMessage("sendVideoNote", options)
 }
 
 // SendMediaGroup sends a group of photos or videos as an album.
@@ -336,7 +414,7 @@ func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options m
 
 // SendVenue sends venues.
 //
-// options include: foursquare_id, disable_notification, reply_to_message_id, and reply_markup.
+// options include: foursquare_id, foursquare_type, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendvenue
 func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, address string, options map[string]interface{}) (result APIResponseMessage) {
@@ -360,7 +438,7 @@ func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, addre
 
 // SendContact sends contacts.
 //
-// options include: last_name, disable_notification, reply_to_message_id, and reply_markup.
+// options include: last_name, vcard, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#sendcontact
 func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options map[string]interface{}) (result APIResponseMessage) {
@@ -541,9 +619,10 @@ func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponse) 
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
+		"photo":   photo,
 	}
 
-	return b.sendObject("setChatPhoto", "photo", photo, params)
+	return b.requestResponse("setChatPhoto", params)
 }
 
 // DeleteChatPhoto deletes a chat photo
@@ -759,6 +838,29 @@ func (b *Bot) EditMessageCaption(caption string, options map[string]interface{})
 	}
 
 	return b.requestResponseMessage("editMessageCaption", params)
+}
+
+// EditMessageMedia edites a media message
+//
+// required options: chat_id + message_id (when inline_message_id is not given)
+//                or inline_message_id (when chat_id & message_id is not given)
+//
+// other options: reply_markup
+//
+// https://core.telegram.org/bots/api#editmessagemedia
+func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{}) (result APIResponseMessage) {
+	// essential params
+	params := map[string]interface{}{
+		"media": media,
+	}
+	// optional params
+	for key, val := range options {
+		if val != nil {
+			params[key] = val
+		}
+	}
+
+	return b.requestResponseMessage("editMessageMedia", params)
 }
 
 // EditMessageReplyMarkup edits reply markup of a message
@@ -986,6 +1088,10 @@ func checkIfFileParamExists(params map[string]interface{}) bool {
 		switch value.(type) {
 		case *os.File, []byte:
 			return true
+		case InputFile:
+			if len(value.(InputFile).Bytes) > 0 {
+				return true
+			}
 		}
 	}
 
@@ -997,37 +1103,50 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 	switch param.(type) {
 	case int:
 		if intValue, ok := param.(int); ok {
-			return strconv.Itoa(intValue), ok
+			return strconv.Itoa(intValue), true
 		}
 		b.error("parameter '%+v' could not be cast to int value", param)
 	case int64:
 		if intValue, ok := param.(int64); ok {
-			return strconv.FormatInt(intValue, 10), ok
+			return strconv.FormatInt(intValue, 10), true
 		}
 		b.error("parameter '%+v' could not be cast to int64 value", param)
 	case float32:
 		if floatValue, ok := param.(float32); ok {
-			return fmt.Sprintf("%.8f", floatValue), ok
+			return fmt.Sprintf("%.8f", floatValue), true
 		}
 		b.error("parameter '%+v' could not be cast to float32 value", param)
 	case bool:
 		if boolValue, ok := param.(bool); ok {
-			return strconv.FormatBool(boolValue), ok
+			return strconv.FormatBool(boolValue), true
 		}
 		b.error("parameter '%+v' could not be cast to bool value", param)
 	case string:
 		if strValue, ok := param.(string); ok {
-			return strValue, ok
+			return strValue, true
 		}
 		b.error("parameter '%+v' could not be cast to string value", param)
 	case ChatAction:
 		if value, ok := param.(ChatAction); ok {
-			return string(value), ok
+			return string(value), true
 		}
 		b.error("parameter '%+v' could not be cast to string value", param)
 	case ParseMode:
 		if value, ok := param.(ParseMode); ok {
-			return string(value), ok
+			return string(value), true
+		}
+		b.error("parameter '%+v' could not be cast to string value", param)
+	case InputFile:
+		if value, ok := param.(InputFile); ok {
+			if value.Filepath != nil {
+				return *value.Filepath, true
+			}
+			if value.URL != nil {
+				return *value.URL, true
+			}
+			if value.FileID != nil {
+				return *value.FileID, true
+			}
 		}
 		b.error("parameter '%+v' could not be cast to string value", param)
 	default:
@@ -1086,6 +1205,29 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 					}
 				} else {
 					b.error("parameter '%s' could not be cast to []byte", key)
+				}
+			case InputFile:
+				if inputFile, ok := value.(InputFile); ok {
+					if len(inputFile.Bytes) > 0 {
+						filename := fmt.Sprintf("%s.%s", key, getExtension(inputFile.Bytes))
+						var part io.Writer
+						part, err = writer.CreateFormFile(key, filename)
+						if err == nil {
+							if _, err = io.Copy(part, bytes.NewReader(inputFile.Bytes)); err != nil {
+								b.error("could not write InputFile to multipart: %s", key)
+							}
+						} else {
+							b.error("could not create form file for parameter '%s' (InputFile)", key)
+						}
+					} else {
+						if strValue, ok := b.paramToString(value); ok {
+							writer.WriteField(key, strValue)
+						} else {
+							b.error("invalid InputFile parameter '%s'", key)
+						}
+					}
+				} else {
+					b.error("parameter '%s' could not be cast to InputFile", key)
 				}
 			default:
 				if strValue, ok := b.paramToString(value); ok {
@@ -1512,166 +1654,6 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 
 		b.updateHandler(b, Update{}, err)
 	}
-}
-
-// Send file
-func (b *Bot) sendFile(chatID ChatID, apiName, paramKey, filepath string, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-	}
-	if isHTTPURL(filepath) {
-		params[paramKey] = filepath
-	} else {
-		if file, err := os.Open(filepath); err == nil {
-			params[paramKey] = file
-		} else {
-			errStr := err.Error()
-
-			b.error(errStr)
-
-			return APIResponseMessage{
-				APIResponseBase: APIResponseBase{
-					Ok:          false,
-					Description: &errStr,
-				},
-			}
-		}
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
-	}
-
-	return b.requestResponseMessage(apiName, params)
-}
-
-// Send bytes
-func (b *Bot) sendBytes(chatID ChatID, apiName, paramKey string, bytes []byte, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-		paramKey:  bytes,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
-	}
-
-	return b.requestResponseMessage(apiName, params)
-}
-
-// Send file id (which is already uploaded to Telegram server)
-func (b *Bot) sendFileID(chatID ChatID, apiName, paramKey, fileID string, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-		paramKey:  fileID,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
-	}
-
-	return b.requestResponseMessage(apiName, params)
-}
-
-// Send object (in []byte, filepath, http url, or file id) and return as APIResponse
-func (b *Bot) sendObject(apiName, paramKey string, obj InputFile, options map[string]interface{}) (result APIResponse) {
-	// params
-	params := options
-
-	if obj.Filepath != nil { // filepath
-		if file, err := os.Open(*obj.Filepath); err == nil {
-			params[paramKey] = file
-		} else {
-			errStr := err.Error()
-			return APIResponse{
-				APIResponseBase: APIResponseBase{
-					Ok:          false,
-					Description: &errStr,
-				},
-			}
-		}
-	} else if obj.URL != nil { // http url
-		params[paramKey] = *obj.URL
-	} else if obj.FileID != nil { // file id
-		params[paramKey] = *obj.FileID
-	} else if len(obj.Bytes) > 0 { // []byte
-		params[paramKey] = obj.Bytes
-	} else {
-		errorMessage := fmt.Sprintf("sendObject - failed to process parameter '%s': %v", paramKey, obj)
-		return APIResponse{
-			APIResponseBase: APIResponseBase{
-				Ok:          false,
-				Description: &errorMessage,
-			},
-		}
-	}
-
-	return b.requestResponse(apiName, params)
-}
-
-// Send object (in []byte, filepath, http url, or file id) and return as APIResponseMessage
-func (b *Bot) sendObjectMessage(chatID ChatID, apiName, paramKey string, obj InputFile, options map[string]interface{}) (result APIResponseMessage) {
-	if len(obj.Bytes) > 0 {
-		return b.sendBytes(chatID, apiName, paramKey, obj.Bytes, options)
-	} else if obj.Filepath != nil {
-		return b.sendFile(chatID, apiName, paramKey, *obj.Filepath, options)
-	} else if obj.URL != nil {
-		return b.sendFile(chatID, apiName, paramKey, *obj.URL, options)
-	} else if obj.FileID != nil {
-		return b.sendFileID(chatID, apiName, paramKey, *obj.FileID, options)
-	}
-
-	errorMessage := fmt.Sprintf("sendObjectMessage - failed to process parameter '%s': %v", paramKey, obj)
-	return APIResponseMessage{
-		APIResponseBase: APIResponseBase{
-			Ok:          false,
-			Description: &errorMessage,
-		},
-	}
-}
-
-// Send object (in []byte, filepath, http url, or file id) and return as APIResponseFile
-func (b *Bot) sendObjectFile(apiName, paramKey string, obj InputFile, options map[string]interface{}) (result APIResponseFile) {
-	params := options
-
-	if len(obj.Bytes) > 0 {
-		params[paramKey] = obj.Bytes
-	} else if obj.Filepath != nil {
-		if file, err := os.Open(*obj.Filepath); err == nil {
-			params[paramKey] = file
-		} else {
-			errStr := err.Error()
-			return APIResponseFile{
-				APIResponseBase: APIResponseBase{
-					Ok:          false,
-					Description: &errStr,
-				},
-			}
-		}
-	} else if obj.URL != nil {
-		params[paramKey] = *obj.URL
-	} else if obj.FileID != nil {
-		params[paramKey] = *obj.FileID
-	} else {
-		errorMessage := fmt.Sprintf("sendObjectFile - failed to process parameter '%s': %v", paramKey, obj)
-		return APIResponseFile{
-			APIResponseBase: APIResponseBase{
-				Ok:          false,
-				Description: &errorMessage,
-			},
-		}
-	}
-
-	return b.requestResponseFile(apiName, params)
 }
 
 // check if given path is http url

@@ -71,9 +71,11 @@ type MessageEntityType string
 const (
 	MessageEntityTypeMention     = "mention"
 	MessageEntityTypeHashTag     = "hashtag"
+	MessageEntityTypeCashTag     = "cashtag"
 	MessageEntityTypeBotCommand  = "bot_command"
 	MessageEntityTypeURL         = "url"
 	MessageEntityTypeEmail       = "email"
+	MessageEntityTypePhoneNumber = "phone_number"
 	MessageEntityTypeBold        = "bold"
 	MessageEntityTypeItalic      = "italic"
 	MessageEntityTypeCode        = "code"
@@ -296,8 +298,11 @@ type InputMediaType string
 
 // InputMediaType strings
 const (
-	InputMediaPhoto InputMediaType = "photo"
-	InputMediaVideo InputMediaType = "video"
+	InputMediaAnimation InputMediaType = "animation" // https://core.telegram.org/bots/api#inputmediaanimation
+	InputMediaDocument  InputMediaType = "document"  // https://core.telegram.org/bots/api#inputmediadocument
+	InputMediaAudio     InputMediaType = "audio"     // https://core.telegram.org/bots/api#inputmediaaudio
+	InputMediaPhoto     InputMediaType = "photo"     // https://core.telegram.org/bots/api#inputmediaphoto
+	InputMediaVideo     InputMediaType = "video"     // https://core.telegram.org/bots/api#inputmediavideo
 )
 
 // InputMedia represents the content of a media message to be sent.
@@ -306,11 +311,14 @@ const (
 type InputMedia struct {
 	Type              InputMediaType `json:"type"`
 	Media             string         `json:"media"`
+	Thumb             InputFile      `json:"thumb,omitempty"` // video, animation, audio, document
 	Caption           string         `json:"caption,omitempty"`
 	ParseMode         ParseMode      `json:"parse_mode,omitempty"`
-	Width             int            `json:"width,omitempty"`              // video only
-	Height            int            `json:"height,omitempty"`             // video only
-	Duration          int            `json:"duration,omitempty"`           // video only
+	Width             int            `json:"width,omitempty"`              // video, animation
+	Height            int            `json:"height,omitempty"`             // video, animation
+	Duration          int            `json:"duration,omitempty"`           // video, animation
+	Performer         string         `json:"performer,omitempty"`          // audio only
+	Title             string         `json:"title,omitempty"`              // audio only
 	SupportsStreaming bool           `json:"supports_streaming,omitempty"` // video only
 }
 
@@ -329,12 +337,13 @@ type InputFile struct {
 //
 // https://core.telegram.org/bots/api#audio
 type Audio struct {
-	FileID    string  `json:"file_id"`
-	Duration  int     `json:"duration"`
-	Performer *string `json:"performer,omitempty"`
-	Title     *string `json:"title,omitempty"`
-	MimeType  *string `json:"mime_type,omitempty"`
-	FileSize  int     `json:"file_size,omitempty"`
+	FileID    string    `json:"file_id"`
+	Duration  int       `json:"duration"`
+	Performer *string   `json:"performer,omitempty"`
+	Title     *string   `json:"title,omitempty"`
+	MimeType  *string   `json:"mime_type,omitempty"`
+	FileSize  int       `json:"file_size,omitempty"`
+	Thumb     PhotoSize `json:"thumb,omitempty"`
 }
 
 // MessageEntity is a struct of a message entity
@@ -445,6 +454,7 @@ type Contact struct {
 	FirstName   string  `json:"first_name"`
 	LastName    *string `json:"last_name,omitempty"`
 	UserID      int     `json:"user_id,omitempty"`
+	VCard       *string `json:"vcard,omitempty"` // https://en.wikipedia.org/wiki/VCard
 }
 
 // Location is a struct for a location
@@ -459,10 +469,11 @@ type Location struct {
 //
 // https://core.telegram.org/bots/api#venue
 type Venue struct {
-	Location     Location `json:"location"`
-	Title        string   `json:"title"`
-	Address      string   `json:"address"`
-	FoursquareID *string  `json:"foursquare_id,omitempty"`
+	Location       Location `json:"location"`
+	Title          string   `json:"title"`
+	Address        string   `json:"address"`
+	FoursquareID   *string  `json:"foursquare_id,omitempty"`
+	FoursquareType *string  `json:"foursquare_type,omitempty"`
 }
 
 // UserProfilePhotos is a struct for user profile photos
@@ -624,6 +635,7 @@ type Message struct {
 	CaptionEntities       []MessageEntity    `json:"caption_entities,omitempty"`
 	Audio                 *Audio             `json:"audio,omitempty"`
 	Document              *Document          `json:"document,omitempty"`
+	Animation             *Animation         `json:"animation,omitempty"`
 	Game                  *Game              `json:"game,omitempty"`
 	Photo                 []PhotoSize        `json:"photo,omitempty"`
 	Sticker               *Sticker           `json:"sticker,omitempty"`
@@ -836,6 +848,7 @@ type InlineQueryResultVenue struct { // https://core.telegram.org/bots/api#inlin
 	Title               string                `json:"title"`
 	Address             string                `json:"address"`
 	FoursquareID        *string               `json:"foursquare_id,omitempty"`
+	FoursquareType      *string               `json:"foursquare_type,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ThumbURL            *string               `json:"thumb_url,omitempty"`
@@ -849,6 +862,7 @@ type InlineQueryResultContact struct { // https://core.telegram.org/bots/api#inl
 	PhoneNumber         string                `json:"phone_number"`
 	FirstName           string                `json:"first_name"`
 	LastName            *string               `json:"last_name,omitempty"`
+	VCard               *string               `json:"vcard,omitempty"` // https://en.wikipedia.org/wiki/VCard
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ThumbURL            *string               `json:"thumb_url,omitempty"`
@@ -970,11 +984,12 @@ type InputLocationMessageContent struct { // https://core.telegram.org/bots/api#
 
 // InputVenueMessageContent is a struct of InputVenueMessageContent
 type InputVenueMessageContent struct { // https://core.telegram.org/bots/api#inputvenuemessagecontent
-	Latitude     float32 `json:"latitude"`
-	Longitude    float32 `json:"longitude"`
-	Title        string  `json:"title"`
-	Address      string  `json:"address"`
-	FoursquareID *string `json:"foursquare_id,omitempty"`
+	Latitude       float32 `json:"latitude"`
+	Longitude      float32 `json:"longitude"`
+	Title          string  `json:"title"`
+	Address        string  `json:"address"`
+	FoursquareID   *string `json:"foursquare_id,omitempty"`
+	FoursquareType *string `json:"foursquare_type,omitempty"`
 }
 
 // InputContactMessageContent is a struct of InputContactMessageContent
@@ -982,6 +997,7 @@ type InputContactMessageContent struct { // https://core.telegram.org/bots/api#i
 	PhoneNumber string  `json:"phone_number"`
 	FirstName   string  `json:"first_name"`
 	LastName    *string `json:"last_name,omitempty"`
+	VCard       *string `json:"vcard,omitempty"` // https://en.wikipedia.org/wiki/VCard
 }
 
 // CallbackGame is for callback of games
@@ -1008,6 +1024,9 @@ type Game struct {
 // https://core.telegram.org/bots/api#animation
 type Animation struct {
 	FileID   string     `json:"file_id"`
+	Width    int        `json:"width"`
+	Height   int        `json:"height"`
+	Duration int        `json:"duration"`
 	Thumb    *PhotoSize `json:"thumb,omitempty"`
 	FileName *string    `json:"file_name,omitempty"`
 	MimeType *string    `json:"mime_type,omitempty"`
