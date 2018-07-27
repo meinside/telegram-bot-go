@@ -1089,7 +1089,7 @@ func checkIfFileParamExists(params map[string]interface{}) bool {
 		case *os.File, []byte:
 			return true
 		case InputFile:
-			if len(value.(InputFile).Bytes) > 0 {
+			if len(value.(InputFile).Bytes) > 0 || value.(InputFile).Filepath != nil {
 				return true
 			}
 		}
@@ -1138,9 +1138,6 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 		b.error("parameter '%+v' could not be cast to string value", param)
 	case InputFile:
 		if value, ok := param.(InputFile); ok {
-			if value.Filepath != nil {
-				return *value.Filepath, true
-			}
 			if value.URL != nil {
 				return *value.URL, true
 			}
@@ -1208,7 +1205,24 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 				}
 			case InputFile:
 				if inputFile, ok := value.(InputFile); ok {
-					if len(inputFile.Bytes) > 0 {
+					if inputFile.Filepath != nil {
+						var file *os.File
+						if file, err = os.Open(*inputFile.Filepath); err == nil {
+							defer file.Close()
+
+							var part io.Writer
+							part, err = writer.CreateFormFile(key, file.Name())
+							if err == nil {
+								if _, err = io.Copy(part, file); err != nil {
+									b.error("could not write to multipart: %s", key)
+								}
+							} else {
+								b.error("could not create form file for parameter '%s' (%v)", key, value)
+							}
+						} else {
+							b.error("parameter '%s' (%v) could not be read from file: %s", key, value, err.Error())
+						}
+					} else if len(inputFile.Bytes) > 0 {
 						filename := fmt.Sprintf("%s.%s", key, getExtension(inputFile.Bytes))
 						var part io.Writer
 						part, err = writer.CreateFormFile(key, filename)
@@ -1654,14 +1668,6 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 
 		b.updateHandler(b, Update{}, err)
 	}
-}
-
-// check if given path is http url
-func isHTTPURL(path string) bool {
-	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
-		return true
-	}
-	return false
 }
 
 // get file extension from bytes array
