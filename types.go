@@ -216,6 +216,13 @@ type APIResponseStickerSet struct {
 	Result *StickerSet `json:"result,omitempty"`
 }
 
+// APIResponseMessageOrBool is an API response with result type: Message or bool
+type APIResponseMessageOrBool struct {
+	APIResponseBase
+	ResultMessage *Message
+	ResultBool    *bool
+}
+
 // UpdateType is a type of updates (for allowed_updates)
 //
 // https://core.telegram.org/bots/api#setwebhook

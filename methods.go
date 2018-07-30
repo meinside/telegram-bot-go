@@ -802,9 +802,7 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options map[string]int
 // other options: parse_mode, disable_web_page_preview, and reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagetext
-//
-// TODO: FIX: "On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned."
-func (b *Bot) EditMessageText(text string, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) EditMessageText(text string, options map[string]interface{}) (result APIResponseMessageOrBool) {
 	// essential params
 	params := map[string]interface{}{
 		"text": text,
@@ -816,7 +814,7 @@ func (b *Bot) EditMessageText(text string, options map[string]interface{}) (resu
 		}
 	}
 
-	return b.requestResponseMessage("editMessageText", params)
+	return b.requestResponseMessageOrBool("editMessageText", params)
 }
 
 // EditMessageCaption edits caption of a message
@@ -827,9 +825,7 @@ func (b *Bot) EditMessageText(text string, options map[string]interface{}) (resu
 // other options: parse_mode, or reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagecaption
-//
-// TODO: FIX: "On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned."
-func (b *Bot) EditMessageCaption(caption string, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) EditMessageCaption(caption string, options map[string]interface{}) (result APIResponseMessageOrBool) {
 	// essential params
 	params := map[string]interface{}{
 		"caption": caption,
@@ -841,7 +837,7 @@ func (b *Bot) EditMessageCaption(caption string, options map[string]interface{})
 		}
 	}
 
-	return b.requestResponseMessage("editMessageCaption", params)
+	return b.requestResponseMessageOrBool("editMessageCaption", params)
 }
 
 // EditMessageMedia edites a media message
@@ -852,9 +848,7 @@ func (b *Bot) EditMessageCaption(caption string, options map[string]interface{})
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagemedia
-//
-// TODO: FIX: "On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned."
-func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{}) (result APIResponseMessageOrBool) {
 	// essential params
 	params := map[string]interface{}{
 		"media": media,
@@ -866,7 +860,7 @@ func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{})
 		}
 	}
 
-	return b.requestResponseMessage("editMessageMedia", params)
+	return b.requestResponseMessageOrBool("editMessageMedia", params)
 }
 
 // EditMessageReplyMarkup edits reply markup of a message
@@ -877,10 +871,8 @@ func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{})
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagereplymarkup
-//
-// TODO: FIX: "On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned."
-func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result APIResponseMessage) {
-	return b.requestResponseMessage("editMessageReplyMarkup", options)
+func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result APIResponseMessageOrBool) {
+	return b.requestResponseMessageOrBool("editMessageReplyMarkup", options)
 }
 
 // EditMessageLiveLocation edits live location of a message
@@ -891,9 +883,7 @@ func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result API
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
-//
-// TODO: FIX: "On success, if the edited message was sent by the bot, the edited Message is returned, otherwise True is returned."
-func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[string]interface{}) (result APIResponseMessageOrBool) {
 	// essential params
 	params := map[string]interface{}{
 		"latitude":  latitude,
@@ -906,7 +896,7 @@ func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[s
 		}
 	}
 
-	return b.requestResponseMessage("editMessageLiveLocation", params)
+	return b.requestResponseMessageOrBool("editMessageLiveLocation", params)
 }
 
 // StopMessageLiveLocation stops live location of a message
@@ -917,10 +907,8 @@ func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[s
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#stopmessagelivelocation
-//
-// TODO: FIX: "On success, if the message was sent by the bot, the sent Message is returned, otherwise True is returned."
-func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result APIResponseMessage) {
-	return b.requestResponseMessage("stopMessageLiveLocation", options)
+func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result APIResponseMessageOrBool) {
+	return b.requestResponseMessageOrBool("stopMessageLiveLocation", options)
 }
 
 // DeleteMessage deletes a message
@@ -1057,9 +1045,7 @@ func (b *Bot) SendGame(chatID ChatID, gameShortName string, options map[string]i
 // other options: force, and disable_edit_message
 //
 // https://core.telegram.org/bots/api#setgamescore
-//
-// TODO: FIX: "On success, if the message was sent by the bot, returns the edited Message, otherwise returns True."
-func (b *Bot) SetGameScore(userID int, score int, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SetGameScore(userID int, score int, options map[string]interface{}) (result APIResponseMessageOrBool) {
 	// essential params
 	params := map[string]interface{}{
 		"user_id": userID,
@@ -1072,7 +1058,7 @@ func (b *Bot) SetGameScore(userID int, score int, options map[string]interface{}
 		}
 	}
 
-	return b.requestResponseMessage("setGameScore", params)
+	return b.requestResponseMessageOrBool("setGameScore", params)
 }
 
 // GetGameHighScores gets high scores of a game.
@@ -1660,6 +1646,41 @@ func (b *Bot) requestResponseStickerSet(method string, params map[string]interfa
 	b.error(errStr)
 
 	return APIResponseStickerSet{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseMessageOrBool and fetch its result.
+func (b *Bot) requestResponseMessageOrBool(method string, params map[string]interface{}) (result APIResponseMessageOrBool) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		// try APIResponseMessage type,
+		var jsonResponseMessage APIResponseMessage
+		err = json.Unmarshal(bytes, &jsonResponseMessage)
+		if err == nil {
+			return APIResponseMessageOrBool{
+				APIResponseBase: APIResponseBase{Ok: true, Description: jsonResponseMessage.Description},
+				ResultMessage:   jsonResponseMessage.Result,
+			}
+		}
+
+		// then try APIResponseBool type,
+		var jsonResponseBool APIResponseBool
+		err = json.Unmarshal(bytes, &jsonResponseBool)
+		if err == nil {
+			return APIResponseMessageOrBool{
+				APIResponseBase: APIResponseBase{Ok: true, Description: jsonResponseBool.Description},
+				ResultBool:      &jsonResponseBool.Result,
+			}
+		}
+
+		errStr = fmt.Sprintf("json parse error: not in Message nor bool type (%s)", string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseMessageOrBool{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.
