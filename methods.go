@@ -39,7 +39,7 @@ func (b *Bot) GetUpdates(options map[string]interface{}) (result APIResponseUpda
 // default maxConnections = 40
 //
 // https://core.telegram.org/bots/api#setwebhook
-func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, maxConnections int, allowedUpdates []UpdateType) (result APIResponse) {
+func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, maxConnections int, allowedUpdates []UpdateType) (result APIResponseBool) {
 	b.webhookHost = host
 	b.webhookPort = port
 	b.webhookURL = b.getWebhookURL()
@@ -58,11 +58,11 @@ func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, 
 
 	b.verbose("setting webhook url to: %s", b.webhookURL)
 
-	return b.requestResponse("setWebhook", params)
+	return b.requestResponseBool("setWebhook", params)
 }
 
 // SetWebhook sets webhook url and certificate for receiving incoming updates.
-func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result APIResponse) {
+func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result APIResponseBool) {
 	return b.SetWebhookWithOptions(host, port, certFilepath, 40, []UpdateType{})
 }
 
@@ -70,14 +70,14 @@ func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result API
 // (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 //
 // https://core.telegram.org/bots/api#deletewebhook
-func (b *Bot) DeleteWebhook() (result APIResponse) {
+func (b *Bot) DeleteWebhook() (result APIResponseBool) {
 	b.webhookHost = ""
 	b.webhookPort = 0
 	b.webhookURL = ""
 
 	b.verbose("deleting webhook url")
 
-	return b.requestResponse("deleteWebhook", map[string]interface{}{})
+	return b.requestResponseBool("deleteWebhook", map[string]interface{}{})
 }
 
 // GetWebhookInfo gets webhook info for this bot.
@@ -229,7 +229,7 @@ func (b *Bot) UploadStickerFile(userID int, sticker InputFile) (result APIRespon
 // options include: contains_masks and mask_position
 //
 // https://core.telegram.org/bots/api#createnewstickerset
-func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponse) {
+func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"user_id":     userID,
@@ -246,7 +246,7 @@ func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputF
 		}
 	}
 
-	return b.requestResponse("createNewStickerSet", params)
+	return b.requestResponseBool("createNewStickerSet", params)
 }
 
 // AddStickerToSet adds a sticker to set.
@@ -254,7 +254,7 @@ func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputF
 // options include: mask_position
 //
 // https://core.telegram.org/bots/api#addstickertoset
-func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponse) {
+func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"user_id":     userID,
@@ -270,32 +270,32 @@ func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis
 		}
 	}
 
-	return b.requestResponse("addStickerToSet", params)
+	return b.requestResponseBool("addStickerToSet", params)
 }
 
 // SetStickerPositionInSet sets sticker position in set.
 //
 // https://core.telegram.org/bots/api#setstickerpositioninset
-func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIResponse) {
+func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"sticker":  sticker,
 		"position": position,
 	}
 
-	return b.requestResponse("setStickerPositionInSet", params)
+	return b.requestResponseBool("setStickerPositionInSet", params)
 }
 
 // DeleteStickerFromSet deletes a sticker from set.
 //
 // https://core.telegram.org/bots/api#deletestickerfromset
-func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponse) {
+func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"sticker": sticker,
 	}
 
-	return b.requestResponse("deleteStickerFromSet", params)
+	return b.requestResponseBool("deleteStickerFromSet", params)
 }
 
 // SendVideo sends a video file.
@@ -461,14 +461,14 @@ func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options 
 // SendChatAction sends chat actions.
 //
 // https://core.telegram.org/bots/api#sendchataction
-func (b *Bot) SendChatAction(chatID ChatID, action ChatAction) (result APIResponse) {
+func (b *Bot) SendChatAction(chatID ChatID, action ChatAction) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 		"action":  action,
 	}
 
-	return b.requestResponse("sendChatAction", params)
+	return b.requestResponseBool("sendChatAction", params)
 }
 
 // GetUserProfilePhotos gets user profile photos.
@@ -511,18 +511,18 @@ func (b *Bot) GetFileURL(file File) string {
 // KickChatMember kicks a chat member
 //
 // https://core.telegram.org/bots/api#kickchatmember
-func (b *Bot) KickChatMember(chatID ChatID, userID int) (result APIResponse) {
+func (b *Bot) KickChatMember(chatID ChatID, userID int) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
 
-	return b.requestResponse("kickChatMember", params)
+	return b.requestResponseBool("kickChatMember", params)
 }
 
 // KickChatMemberUntil kicks a chat member until given date
-func (b *Bot) KickChatMemberUntil(chatID ChatID, userID int, untilDate int) (result APIResponse) {
+func (b *Bot) KickChatMemberUntil(chatID ChatID, userID int, untilDate int) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":    chatID,
@@ -530,32 +530,32 @@ func (b *Bot) KickChatMemberUntil(chatID ChatID, userID int, untilDate int) (res
 		"until_date": untilDate,
 	}
 
-	return b.requestResponse("kickChatMember", params)
+	return b.requestResponseBool("kickChatMember", params)
 }
 
 // LeaveChat leaves a chat
 //
 // https://core.telegram.org/bots/api#leavechat
-func (b *Bot) LeaveChat(chatID ChatID) (result APIResponse) {
+func (b *Bot) LeaveChat(chatID ChatID) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	return b.requestResponse("leaveChat", params)
+	return b.requestResponseBool("leaveChat", params)
 }
 
 // UnbanChatMember unbans a chat member
 //
 // https://core.telegram.org/bots/api#unbanchatmember
-func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponse) {
+func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
 
-	return b.requestResponse("unbanChatMember", params)
+	return b.requestResponseBool("unbanChatMember", params)
 }
 
 // RestrictChatMember restricts a chat member
@@ -563,7 +563,7 @@ func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponse) {
 // options include: until_date, can_send_messages, can_send_media_messages, can_send_other_messages, and can_send_web_page_previews
 //
 // https://core.telegram.org/bots/api#restrictchatmember
-func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options map[string]interface{}) (result APIResponse) {
+func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options map[string]interface{}) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
@@ -576,7 +576,7 @@ func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options map[string]i
 		}
 	}
 
-	return b.requestResponse("restrictChatMember", params)
+	return b.requestResponseBool("restrictChatMember", params)
 }
 
 // PromoteChatMember promotes a chat member
@@ -584,7 +584,7 @@ func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options map[string]i
 // options include: can_change_info, can_post_messages, can_edit_messages, can_delete_messages, can_invite_users, can_restrict_members, can_pin_messages, and can_promote_members
 //
 // https://core.telegram.org/bots/api#promotechatmember
-func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options map[string]interface{}) (result APIResponse) {
+func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options map[string]interface{}) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
@@ -597,7 +597,7 @@ func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options map[string]in
 		}
 	}
 
-	return b.requestResponse("promoteChatMember", params)
+	return b.requestResponseBool("promoteChatMember", params)
 }
 
 // ExportChatInviteLink exports a chat invite link
@@ -615,52 +615,52 @@ func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponseString) {
 // SetChatPhoto sets a chat photo
 //
 // https://core.telegram.org/bots/api#setchatphoto
-func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponse) {
+func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 		"photo":   photo,
 	}
 
-	return b.requestResponse("setChatPhoto", params)
+	return b.requestResponseBool("setChatPhoto", params)
 }
 
 // DeleteChatPhoto deletes a chat photo
 //
 // https://core.telegram.org/bots/api#deletechatphoto
-func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponse) {
+func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	return b.requestResponse("deleteChatPhoto", params)
+	return b.requestResponseBool("deleteChatPhoto", params)
 }
 
 // SetChatTitle sets a chat title
 //
 // https://core.telegram.org/bots/api#setchattitle
-func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponse) {
+func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 		"title":   title,
 	}
 
-	return b.requestResponse("setChatTitle", params)
+	return b.requestResponseBool("setChatTitle", params)
 }
 
 // SetChatDescription sets a chat description
 //
 // https://core.telegram.org/bots/api#setchatdescription
-func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIResponse) {
+func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":     chatID,
 		"description": description,
 	}
 
-	return b.requestResponse("setChatDescription", params)
+	return b.requestResponseBool("setChatDescription", params)
 }
 
 // PinChatMessage pins a chat message
@@ -668,7 +668,7 @@ func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIR
 // options include: disable_notification
 //
 // https://core.telegram.org/bots/api#pinchatmessage
-func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options map[string]interface{}) (result APIResponse) {
+func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options map[string]interface{}) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":    chatID,
@@ -681,19 +681,19 @@ func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options map[string]in
 		}
 	}
 
-	return b.requestResponse("pinChatMessage", params)
+	return b.requestResponseBool("pinChatMessage", params)
 }
 
 // UnpinChatMessage unpins a chat message
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
-func (b *Bot) UnpinChatMessage(chatID ChatID) (result APIResponse) {
+func (b *Bot) UnpinChatMessage(chatID ChatID) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	return b.requestResponse("unpinChatMessage", params)
+	return b.requestResponseBool("unpinChatMessage", params)
 }
 
 // GetChat gets a chat
@@ -748,26 +748,26 @@ func (b *Bot) GetChatMember(chatID ChatID, userID int) (result APIResponseChatMe
 // SetChatStickerSet sets a chat sticker set
 //
 // https://core.telegram.org/bots/api#setchatstickerset
-func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result APIResponse) {
+func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id":          chatID,
 		"sticker_set_name": stickerSetName,
 	}
 
-	return b.requestResponse("setChatStickerSet", params)
+	return b.requestResponseBool("setChatStickerSet", params)
 }
 
 // DeleteChatStickerSet deletes a chat sticker set
 //
 // https://core.telegram.org/bots/api#deletechatstickerset
-func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponse) {
+func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	return b.requestResponse("deleteChatStickerSet", params)
+	return b.requestResponseBool("deleteChatStickerSet", params)
 }
 
 // AnswerCallbackQuery answers a callback query
@@ -775,7 +775,7 @@ func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponse) {
 // options include: text, show_alert, url, and cache_time
 //
 // https://core.telegram.org/bots/api#answercallbackquery
-func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options map[string]interface{}) (result APIResponse) {
+func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options map[string]interface{}) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"callback_query_id": callbackQueryID,
@@ -787,7 +787,7 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options map[string]int
 		}
 	}
 
-	return b.requestResponse("answerCallbackQuery", params)
+	return b.requestResponseBool("answerCallbackQuery", params)
 }
 
 // Updating messages
@@ -926,8 +926,8 @@ func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result AP
 // DeleteMessage deletes a message
 //
 // https://core.telegram.org/bots/api#deletemessage
-func (b *Bot) DeleteMessage(chatID ChatID, messageID int) (result APIResponse) {
-	return b.requestResponse("deleteMessage", map[string]interface{}{
+func (b *Bot) DeleteMessage(chatID ChatID, messageID int) (result APIResponseBool) {
+	return b.requestResponseBool("deleteMessage", map[string]interface{}{
 		"chat_id":    chatID,
 		"message_id": messageID,
 	})
@@ -940,7 +940,7 @@ func (b *Bot) DeleteMessage(chatID ChatID, messageID int) (result APIResponse) {
 // options include: cache_time, is_personal, next_offset, switch_pm_text, and switch_pm_parameter.
 //
 // https://core.telegram.org/bots/api#answerinlinequery
-func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, options map[string]interface{}) (result APIResponse) {
+func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, options map[string]interface{}) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"inline_query_id": inlineQueryID,
@@ -953,7 +953,7 @@ func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, opt
 		}
 	}
 
-	return b.requestResponse("answerInlineQuery", params)
+	return b.requestResponseBool("answerInlineQuery", params)
 }
 
 // SendInvoice sends an invoice.
@@ -989,7 +989,7 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 // otherwise, errorMessage should be provided.
 //
 // https://core.telegram.org/bots/api#answershippingquery
-func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptions []ShippingOption, errorMessage *string) (result APIResponse) {
+func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptions []ShippingOption, errorMessage *string) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"shipping_query_id": shippingQueryID,
@@ -1006,13 +1006,13 @@ func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptio
 		}
 	}
 
-	return b.requestResponse("answerShippingQuery", params)
+	return b.requestResponseBool("answerShippingQuery", params)
 }
 
 // AnswerPreCheckoutQuery answers a pre-checkout query.
 //
 // https://core.telegram.org/bots/api#answerprecheckoutquery
-func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMessage *string) (result APIResponse) {
+func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMessage *string) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"pre_checkout_query_id": preCheckoutQueryID,
@@ -1025,7 +1025,7 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 		}
 	}
 
-	return b.requestResponse("answerPreCheckoutQuery", params)
+	return b.requestResponseBool("answerPreCheckoutQuery", params)
 }
 
 // SendGame sends a game.
@@ -1347,27 +1347,6 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 	return []byte{}, err
 }
 
-// Send request for APIResponse and fetch its result.
-func (b *Bot) requestResponse(method string, params map[string]interface{}) (result APIResponse) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
-}
-
 // Send request for APIResponseWebhookInfo and fetch its result.
 func (b *Bot) requestResponseWebhookInfo() (result APIResponseWebhookInfo) {
 	var errStr string
@@ -1597,6 +1576,27 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 	b.error(errStr)
 
 	return APIResponseInt{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseBool and fetch its result.
+func (b *Bot) requestResponseBool(method string, params map[string]interface{}) (result APIResponseBool) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseBool
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseBool{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for APIResponseString and fetch its result.

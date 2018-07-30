@@ -126,12 +126,6 @@ type APIResponseParameters struct {
 	RetryAfter      int   `json:"retry_after,omitempty"`
 }
 
-// APIResponse is an API response
-type APIResponse struct {
-	APIResponseBase
-	Result interface{} `json:"result,omitempty"`
-}
-
 // APIResponseWebhookInfo is an API response with result type: WebhookInfo
 type APIResponseWebhookInfo struct {
 	APIResponseBase
@@ -196,6 +190,12 @@ type APIResponseChatMember struct {
 type APIResponseInt struct {
 	APIResponseBase
 	Result int `json:"result,omitempty"`
+}
+
+// APIResponseBool is an API response with result type: bool
+type APIResponseBool struct {
+	APIResponseBase
+	Result bool `json:"result,omitempty"`
 }
 
 // APIResponseString is an API response with result type: string
