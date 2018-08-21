@@ -18,7 +18,8 @@ import (
 )
 
 const (
-	httpTimeoutSeconds = 5
+	httpTimeoutSeconds         = 5
+	fileTransferTimeoutSeconds = 300
 )
 
 // GetUpdates retrieves updates from Telegram bot API.
@@ -1174,6 +1175,8 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 	b.verbose("sending request to api url: %s, params: %#v", apiURL, params)
 
 	if checkIfFileParamExists(params) { // multipart form data
+		client.Timeout = fileTransferTimeoutSeconds * time.Second
+
 		body := &bytes.Buffer{}
 		writer := multipart.NewWriter(body)
 
