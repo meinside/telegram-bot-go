@@ -14,6 +14,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
+)
+
+const (
+	httpTimeoutSeconds = 5
 )
 
 // GetUpdates retrieves updates from Telegram bot API.
@@ -1161,7 +1166,9 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 //
 // NOTE: If *os.File is included in the params, it will be closed automatically in this function.
 func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, err error) {
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: httpTimeoutSeconds * time.Second,
+	}
 	apiURL := fmt.Sprintf("%s%s/%s", apiBaseURL, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiURL, params)
