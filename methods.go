@@ -9,17 +9,13 @@ import (
 	"io"
 	"io/ioutil"
 	"mime/multipart"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
 	"time"
-)
-
-const (
-	httpTimeoutSeconds         = 5
-	fileTransferTimeoutSeconds = 300
 )
 
 // GetUpdates retrieves updates from Telegram bot API.
@@ -1168,15 +1164,21 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // NOTE: If *os.File is included in the params, it will be closed automatically in this function.
 func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, err error) {
 	client := &http.Client{
-		Timeout: httpTimeoutSeconds * time.Second,
+		Transport: &http.Transport{
+			Dial: (&net.Dialer{
+				Timeout:   10 * time.Second,
+				KeepAlive: 10 * time.Second,
+			}).Dial,
+			TLSHandshakeTimeout:   5 * time.Second,
+			ResponseHeaderTimeout: 5 * time.Second,
+			ExpectContinueTimeout: 1 * time.Second,
+		},
 	}
 	apiURL := fmt.Sprintf("%s%s/%s", apiBaseURL, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiURL, params)
 
 	if checkIfFileParamExists(params) { // multipart form data
-		client.Timeout = fileTransferTimeoutSeconds * time.Second
-
 		body := &bytes.Buffer{}
 		writer := multipart.NewWriter(body)
 
