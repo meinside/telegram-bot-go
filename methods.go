@@ -1342,7 +1342,7 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 		}
 	}
 
-	return []byte{}, err
+	return []byte{}, fmt.Errorf(b.redact(err.Error()))
 }
 
 // Send request for APIResponseWebhookInfo and fetch its result.
