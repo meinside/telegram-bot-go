@@ -9,13 +9,11 @@ import (
 	"io"
 	"io/ioutil"
 	"mime/multipart"
-	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 // GetUpdates retrieves updates from Telegram bot API.
@@ -1163,18 +1161,6 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 //
 // NOTE: If *os.File is included in the params, it will be closed automatically in this function.
 func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, err error) {
-	client := &http.Client{
-		Transport: &http.Transport{
-			Dial: (&net.Dialer{
-				Timeout:   10 * time.Second,
-				KeepAlive: 300 * time.Second,
-			}).Dial,
-			IdleConnTimeout:       90 * time.Second,
-			TLSHandshakeTimeout:   10 * time.Second,
-			ResponseHeaderTimeout: 10 * time.Second,
-			ExpectContinueTimeout: 1 * time.Second,
-		},
-	}
 	apiURL := fmt.Sprintf("%s%s/%s", apiBaseURL, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiURL, params)
@@ -1274,10 +1260,12 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 			req.Close = true
 
 			var resp *http.Response
-			resp, err = client.Do(req)
-			if resp != nil { // XXX - in case of redirect
+			resp, err = b.httpClient.Do(req)
+
+			if resp != nil { // XXX - in case of http redirect
 				defer resp.Body.Close()
 			}
+
 			if err == nil {
 				// FIXXX: check http status code here
 				var bytes []byte
@@ -1316,10 +1304,12 @@ func (b *Bot) request(method string, params map[string]interface{}) (respBytes [
 			req.Close = true
 
 			var resp *http.Response
-			resp, err = client.Do(req)
+			resp, err = b.httpClient.Do(req)
+
 			if resp != nil { // XXX - in case of redirect
 				defer resp.Body.Close()
 			}
+
 			if err == nil {
 				// FIXXX: check http status code here
 				var bytes []byte
