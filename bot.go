@@ -9,6 +9,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -36,6 +37,8 @@ type Bot struct {
 	webhookPort int    // webhook port number
 	webhookURL  string // webhook url
 
+	httpClient *http.Client // http client
+
 	updateHandler func(b *Bot, update Update, err error) // update(webhook) handler function
 
 	Verbose bool // print verbose log messages or not
@@ -46,6 +49,19 @@ func NewClient(token string) *Bot {
 	return &Bot{
 		token:       token,
 		tokenHashed: fmt.Sprintf("%x", md5.Sum([]byte(token))),
+
+		httpClient: &http.Client{
+			Transport: &http.Transport{
+				Dial: (&net.Dialer{
+					Timeout:   10 * time.Second,
+					KeepAlive: 300 * time.Second,
+				}).Dial,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   10 * time.Second,
+				ResponseHeaderTimeout: 10 * time.Second,
+				ExpectContinueTimeout: 1 * time.Second,
+			},
+		},
 	}
 }
 
