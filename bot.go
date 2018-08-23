@@ -94,10 +94,19 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	b.updateHandler = webhookHandler
 
 	// routing
-	http.HandleFunc(b.getWebhookPath(), b.handleWebhook)
+	mux := http.NewServeMux()
+	mux.HandleFunc(b.getWebhookPath(), b.handleWebhook)
 
 	// start server
-	if err := http.ListenAndServeTLS(fmt.Sprintf(":%d", b.webhookPort), certFilepath, keyFilepath, nil); err != nil {
+	server := &http.Server{
+		Addr:              fmt.Sprintf(":%d", b.webhookPort),
+		Handler:           mux,
+		ReadTimeout:       10 * time.Second,
+		ReadHeaderTimeout: 10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+	if err := server.ListenAndServeTLS(certFilepath, keyFilepath); err != nil {
 		panic(err.Error())
 	}
 }
