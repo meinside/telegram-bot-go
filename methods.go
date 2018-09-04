@@ -18,19 +18,13 @@ import (
 
 // GetUpdates retrieves updates from Telegram bot API.
 //
-// options include: offset, limit, timeout, and allowed_updates.
-//
 // https://core.telegram.org/bots/api#getupdates
-func (b *Bot) GetUpdates(options map[string]interface{}) (result APIResponseUpdates) {
-	// optional params
-	params := map[string]interface{}{}
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponseUpdates) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseUpdates("getUpdates", params)
+	return b.requestResponseUpdates("getUpdates", options)
 }
 
 // SetWebhookWithOptions sets webhook url, certificate, and various options for receiving incoming updates.
@@ -96,47 +90,39 @@ func (b *Bot) GetMe() (result APIResponseUser) {
 
 // SendMessage sends a message to the bot.
 //
-// options include: parse_mode, disable_web_page_preview, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendmessage
-func (b *Bot) SendMessage(chatID ChatID, text string, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-		"text":    text,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SendMessage(chatID ChatID, text string, options OptionsSendMessage) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessage("sendMessage", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["text"] = text
+
+	return b.requestResponseMessage("sendMessage", options)
 }
 
 // ForwardMessage forwards a message.
 //
-// options include: disable_notification
-//
 // https://core.telegram.org/bots/api#forwardmessage
-func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id":      chatID,
-		"from_chat_id": fromChatID,
-		"message_id":   messageID,
+func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int, options OptionsForwardMessage) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessage("forwardMessage", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["from_chat_id"] = fromChatID
+	options["message_id"] = messageID
+
+	return b.requestResponseMessage("forwardMessage", options)
 }
 
 // SendPhoto sends a photo.
 //
-// options include: caption, parse_mode, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendphoto
-func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options OptionsSendPhoto) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -150,10 +136,8 @@ func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options map[string]inter
 
 // SendAudio sends an audio file. (.mp3 format only, will be played with external players)
 //
-// options include: caption, parse_mode, duration, performer, title, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendaudio
-func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options OptionsSendAudio) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -167,10 +151,8 @@ func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options map[string]inter
 
 // SendDocument sends a general file.
 //
-// options include: caption, parse_mode, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#senddocument
-func (b *Bot) SendDocument(chatID ChatID, document InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendDocument(chatID ChatID, document InputFile, options OptionsSendDocument) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -184,10 +166,8 @@ func (b *Bot) SendDocument(chatID ChatID, document InputFile, options map[string
 
 // SendSticker sends a sticker.
 //
-// options include: disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendsticker
-func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options OptionsSendSticker) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -226,51 +206,37 @@ func (b *Bot) UploadStickerFile(userID int, sticker InputFile) (result APIRespon
 
 // CreateNewStickerSet creates a new sticker set.
 //
-// options include: contains_masks and mask_position
-//
 // https://core.telegram.org/bots/api#createnewstickerset
-func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponseBool) {
+func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputFile, emojis string, options OptionsCreateNewStickerSet) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
 	// essential params
-	params := map[string]interface{}{
-		"user_id":     userID,
-		"name":        name,
-		"title":       title,
-		"emojis":      emojis,
-		"png_sticker": sticker,
-	}
+	options["user_id"] = userID
+	options["name"] = name
+	options["title"] = title
+	options["emojis"] = emojis
+	options["png_sticker"] = sticker
 
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
-	}
-
-	return b.requestResponseBool("createNewStickerSet", params)
+	return b.requestResponseBool("createNewStickerSet", options)
 }
 
 // AddStickerToSet adds a sticker to set.
 //
-// options include: mask_position
-//
 // https://core.telegram.org/bots/api#addstickertoset
-func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis string, options map[string]interface{}) (result APIResponseBool) {
+func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis string, options OptionsAddStickerToSet) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
 	// essential params
-	params := map[string]interface{}{
-		"user_id":     userID,
-		"name":        name,
-		"emojis":      emojis,
-		"png_sticker": sticker,
-	}
+	options["user_id"] = userID
+	options["name"] = name
+	options["emojis"] = emojis
+	options["png_sticker"] = sticker
 
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
-	}
-
-	return b.requestResponseBool("addStickerToSet", params)
+	return b.requestResponseBool("addStickerToSet", options)
 }
 
 // SetStickerPositionInSet sets sticker position in set.
@@ -300,10 +266,8 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponseBool) {
 
 // SendVideo sends a video file.
 //
-// options include: duration, caption, parse_mode, supports_streaming, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendvideo
-func (b *Bot) SendVideo(chatID ChatID, video InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendVideo(chatID ChatID, video InputFile, options OptionsSendVideo) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -317,10 +281,8 @@ func (b *Bot) SendVideo(chatID ChatID, video InputFile, options map[string]inter
 
 // SendAnimation sends an animation.
 //
-// options include: duration, width, height, thumb, caption, parse_mode, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendanimation
-func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options OptionsSendAnimation) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -334,10 +296,8 @@ func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options map[stri
 
 // SendVoice sends a voice file. (.ogg format only, will be played with Telegram itself))
 //
-// options include: caption, parse_mode, duration, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendvoice
-func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options OptionsSendVoice) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -353,11 +313,8 @@ func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options map[string]inter
 //
 // videoNote cannot be a remote http url (not supported yet)
 //
-// options include: duration, length, disable_notification, reply_to_message_id, and reply_markup.
-// (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
-//
 // https://core.telegram.org/bots/api#sendvideonote
-func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options OptionsSendVideoNote) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -371,91 +328,67 @@ func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options map[stri
 
 // SendMediaGroup sends a group of photos or videos as an album.
 //
-// options include: disable_notification, and reply_to_message_id
-//
 // https://core.telegram.org/bots/api#sendmediagroup
-func (b *Bot) SendMediaGroup(chatID ChatID, media []InputMedia, options map[string]interface{}) (result APIResponseMessages) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-		"media":   media,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SendMediaGroup(chatID ChatID, media []InputMedia, options OptionsSendMediaGroup) (result APIResponseMessages) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessages("sendMediaGroup", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["media"] = media
+
+	return b.requestResponseMessages("sendMediaGroup", options)
 }
 
 // SendLocation sends locations.
 //
-// options include: disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendlocation
-func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id":   chatID,
-		"latitude":  latitude,
-		"longitude": longitude,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options OptionsSendLocation) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessage("sendLocation", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["latitude"] = latitude
+	options["longitude"] = longitude
+
+	return b.requestResponseMessage("sendLocation", options)
 }
 
 // SendVenue sends venues.
 //
-// options include: foursquare_id, foursquare_type, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendvenue
-func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, address string, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id":   chatID,
-		"latitude":  latitude,
-		"longitude": longitude,
-		"title":     title,
-		"address":   address,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, address string, options OptionsSendVenue) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessage("sendVenue", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["latitude"] = latitude
+	options["longitude"] = longitude
+	options["title"] = title
+	options["address"] = address
+
+	return b.requestResponseMessage("sendVenue", options)
 }
 
 // SendContact sends contacts.
 //
-// options include: last_name, vcard, disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendcontact
-func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id":      chatID,
-		"phone_number": phoneNumber,
-		"first_name":   firstName,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options OptionsSendContact) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessage("sendContact", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["phone_number"] = phoneNumber
+	options["first_name"] = firstName
+
+	return b.requestResponseMessage("sendContact", options)
 }
 
 // SendChatAction sends chat actions.
@@ -473,22 +406,16 @@ func (b *Bot) SendChatAction(chatID ChatID, action ChatAction) (result APIRespon
 
 // GetUserProfilePhotos gets user profile photos.
 //
-// options include: offset and limit.
-//
 // https://core.telegram.org/bots/api#getuserprofilephotos
-func (b *Bot) GetUserProfilePhotos(userID int, options map[string]interface{}) (result APIResponseUserProfilePhotos) {
-	// essential params
-	params := map[string]interface{}{
-		"user_id": userID,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) GetUserProfilePhotos(userID int, options OptionsGetUserProfilePhotos) (result APIResponseUserProfilePhotos) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseUserProfilePhotos("getUserProfilePhotos", params)
+	// essential params
+	options["user_id"] = userID
+
+	return b.requestResponseUserProfilePhotos("getUserProfilePhotos", options)
 }
 
 // GetFile gets file info and prepare for download.
@@ -560,44 +487,32 @@ func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponseBool
 
 // RestrictChatMember restricts a chat member
 //
-// options include: until_date, can_send_messages, can_send_media_messages, can_send_other_messages, and can_send_web_page_previews
-//
 // https://core.telegram.org/bots/api#restrictchatmember
-func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options map[string]interface{}) (result APIResponseBool) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-		"user_id": userID,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options OptionsRestrictChatMember) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseBool("restrictChatMember", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["user_id"] = userID
+
+	return b.requestResponseBool("restrictChatMember", options)
 }
 
 // PromoteChatMember promotes a chat member
 //
-// options include: can_change_info, can_post_messages, can_edit_messages, can_delete_messages, can_invite_users, can_restrict_members, can_pin_messages, and can_promote_members
-//
 // https://core.telegram.org/bots/api#promotechatmember
-func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options map[string]interface{}) (result APIResponseBool) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-		"user_id": userID,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options OptionsPromoteChatMember) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseBool("promoteChatMember", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["user_id"] = userID
+
+	return b.requestResponseBool("promoteChatMember", options)
 }
 
 // ExportChatInviteLink exports a chat invite link
@@ -665,23 +580,17 @@ func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIR
 
 // PinChatMessage pins a chat message
 //
-// options include: disable_notification
-//
 // https://core.telegram.org/bots/api#pinchatmessage
-func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options map[string]interface{}) (result APIResponseBool) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id":    chatID,
-		"message_id": messageID,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options OptionsPinChatMessage) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseBool("pinChatMessage", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["message_id"] = messageID
+
+	return b.requestResponseBool("pinChatMessage", options)
 }
 
 // UnpinChatMessage unpins a chat message
@@ -772,22 +681,16 @@ func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponseBool) {
 
 // AnswerCallbackQuery answers a callback query
 //
-// options include: text, show_alert, url, and cache_time
-//
 // https://core.telegram.org/bots/api#answercallbackquery
-func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options map[string]interface{}) (result APIResponseBool) {
-	// essential params
-	params := map[string]interface{}{
-		"callback_query_id": callbackQueryID,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerCallbackQuery) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseBool("answerCallbackQuery", params)
+	// essential params
+	options["callback_query_id"] = callbackQueryID
+
+	return b.requestResponseBool("answerCallbackQuery", options)
 }
 
 // Updating messages
@@ -925,50 +828,38 @@ func (b *Bot) DeleteMessage(chatID ChatID, messageID int) (result APIResponseBoo
 //
 // results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, or InlineQueryResultVideo.
 //
-// options include: cache_time, is_personal, next_offset, switch_pm_text, and switch_pm_parameter.
-//
 // https://core.telegram.org/bots/api#answerinlinequery
-func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, options map[string]interface{}) (result APIResponseBool) {
-	// essential params
-	params := map[string]interface{}{
-		"inline_query_id": inlineQueryID,
-		"results":         results,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, options OptionsAnswerInlineQuery) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseBool("answerInlineQuery", params)
+	// essential params
+	options["inline_query_id"] = inlineQueryID
+	options["results"] = results
+
+	return b.requestResponseBool("answerInlineQuery", options)
 }
 
 // SendInvoice sends an invoice.
 //
-// options include: provider_data, photo_url, photo_size, photo_width, photo_height, need_name, need_phone_number, need_email, need_shipping_address, is_flexible, disable_notification, reply_to_message_id, and reply_markup
-//
 // https://core.telegram.org/bots/api#sendinvoice
-func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices []LabeledPrice, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id":         chatID,
-		"title":           title,
-		"description":     description,
-		"payload":         payload,
-		"provider_token":  providerToken,
-		"start_parameter": startParameter,
-		"currency":        currency,
-		"prices":          prices,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices []LabeledPrice, options OptionsSendInvoice) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessage("sendInvoice", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["title"] = title
+	options["description"] = description
+	options["payload"] = payload
+	options["provider_token"] = providerToken
+	options["start_parameter"] = startParameter
+	options["currency"] = currency
+	options["prices"] = prices
+
+	return b.requestResponseMessage("sendInvoice", options)
 }
 
 // AnswerShippingQuery answers a shipping query.
@@ -1004,7 +895,7 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 	// essential params
 	params := map[string]interface{}{
 		"pre_checkout_query_id": preCheckoutQueryID,
-		"ok": ok,
+		"ok":                    ok,
 	}
 	// optional params
 	if !ok {
@@ -1018,23 +909,17 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 
 // SendGame sends a game.
 //
-// options include: disable_notification, reply_to_message_id, and reply_markup.
-//
 // https://core.telegram.org/bots/api#sendgame
-func (b *Bot) SendGame(chatID ChatID, gameShortName string, options map[string]interface{}) (result APIResponseMessage) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id":         chatID,
-		"game_short_name": gameShortName,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendGame) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessage("sendGame", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["game_short_name"] = gameShortName
+
+	return b.requestResponseMessage("sendGame", options)
 }
 
 // SetGameScore sets score of a game.
