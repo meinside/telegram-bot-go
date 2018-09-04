@@ -116,9 +116,7 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(b *Bot, update Update, err error)) {
 	b.verbose("starting monitoring updates (interval seconds: %d) ...", interval)
 
-	options := map[string]interface{}{
-		"offset": updateOffset,
-	}
+	options := OptionsGetUpdates{}.SetOffset(updateOffset)
 
 	// set update handler
 	b.updateHandler = updateHandler
