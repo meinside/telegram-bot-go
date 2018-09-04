@@ -269,6 +269,22 @@ type Update struct {
 	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query,omitempty"`
 }
 
+// AllowedUpdate is a type for 'allowed_updates'
+type AllowedUpdate string
+
+// AllowedUpdate type constants constants constants constants
+const (
+	AllowMessage            AllowedUpdate = "message"
+	AllowEditedMessage      AllowedUpdate = "edited_message"
+	AllowChannelPost        AllowedUpdate = "channel_post"
+	AllowEditedChannelPost  AllowedUpdate = "edited_channel_post"
+	AllowInlineQuery        AllowedUpdate = "inline_query"
+	AllowChosenInlineResult AllowedUpdate = "chosen_inline_result"
+	AllowCallbackQuery      AllowedUpdate = "callback_query"
+	AllowShippingQuery      AllowedUpdate = "shipping_query"
+	AllowPreCheckoutQuery   AllowedUpdate = "pre_checkout_query"
+)
+
 // User is a struct of a user
 //
 // https://core.telegram.org/bots/api#user
