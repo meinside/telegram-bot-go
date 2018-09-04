@@ -699,82 +699,50 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerC
 
 // EditMessageText edits text of a message
 //
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
-//
-// other options: parse_mode, disable_web_page_preview, and reply_markup
-//
 // https://core.telegram.org/bots/api#editmessagetext
-func (b *Bot) EditMessageText(text string, options map[string]interface{}) (result APIResponseMessageOrBool) {
-	// essential params
-	params := map[string]interface{}{
-		"text": text,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (result APIResponseMessageOrBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessageOrBool("editMessageText", params)
+	// essential params
+	options["text"] = text
+
+	return b.requestResponseMessageOrBool("editMessageText", options)
 }
 
 // EditMessageCaption edits caption of a message
 //
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
-//
-// other options: parse_mode, or reply_markup
-//
 // https://core.telegram.org/bots/api#editmessagecaption
-func (b *Bot) EditMessageCaption(caption string, options map[string]interface{}) (result APIResponseMessageOrBool) {
-	// essential params
-	params := map[string]interface{}{
-		"caption": caption,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) EditMessageCaption(caption string, options OptionsEditMessageCaption) (result APIResponseMessageOrBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessageOrBool("editMessageCaption", params)
+	// essential params
+	options["caption"] = caption
+
+	return b.requestResponseMessageOrBool("editMessageCaption", options)
 }
 
 // EditMessageMedia edites a media message
 //
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
-//
-// other options: reply_markup
-//
 // https://core.telegram.org/bots/api#editmessagemedia
-func (b *Bot) EditMessageMedia(media InputMedia, options map[string]interface{}) (result APIResponseMessageOrBool) {
-	// essential params
-	params := map[string]interface{}{
-		"media": media,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) EditMessageMedia(media InputMedia, options OptionsEditMessageMedia) (result APIResponseMessageOrBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessageOrBool("editMessageMedia", params)
+	// essential params
+	options["media"] = media
+
+	return b.requestResponseMessageOrBool("editMessageMedia", options)
 }
 
 // EditMessageReplyMarkup edits reply markup of a message
 //
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
-//
-// other options: reply_markup
-//
 // https://core.telegram.org/bots/api#editmessagereplymarkup
-func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result APIResponseMessageOrBool) {
+func (b *Bot) EditMessageReplyMarkup(options OptionsEditMessageReplyMarkup) (result APIResponseMessageOrBool) {
 	return b.requestResponseMessageOrBool("editMessageReplyMarkup", options)
 }
 
@@ -786,20 +754,16 @@ func (b *Bot) EditMessageReplyMarkup(options map[string]interface{}) (result API
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
-func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[string]interface{}) (result APIResponseMessageOrBool) {
-	// essential params
-	params := map[string]interface{}{
-		"latitude":  latitude,
-		"longitude": longitude,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options OptionsEditMessageLiveLocation) (result APIResponseMessageOrBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessageOrBool("editMessageLiveLocation", params)
+	// essential params
+	options["latitude"] = latitude
+	options["longitude"] = longitude
+
+	return b.requestResponseMessageOrBool("editMessageLiveLocation", options)
 }
 
 // StopMessageLiveLocation stops live location of a message
@@ -810,7 +774,7 @@ func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options map[s
 // other options: reply_markup
 //
 // https://core.telegram.org/bots/api#stopmessagelivelocation
-func (b *Bot) StopMessageLiveLocation(options map[string]interface{}) (result APIResponseMessageOrBool) {
+func (b *Bot) StopMessageLiveLocation(options OptionsStopMessageLiveLocation) (result APIResponseMessageOrBool) {
 	return b.requestResponseMessageOrBool("stopMessageLiveLocation", options)
 }
 
@@ -930,20 +894,16 @@ func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendG
 // other options: force, and disable_edit_message
 //
 // https://core.telegram.org/bots/api#setgamescore
-func (b *Bot) SetGameScore(userID int, score int, options map[string]interface{}) (result APIResponseMessageOrBool) {
-	// essential params
-	params := map[string]interface{}{
-		"user_id": userID,
-		"score":   score,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) SetGameScore(userID int, score int, options OptionsSetGameScore) (result APIResponseMessageOrBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseMessageOrBool("setGameScore", params)
+	// essential params
+	options["user_id"] = userID
+	options["score"] = score
+
+	return b.requestResponseMessageOrBool("setGameScore", options)
 }
 
 // GetGameHighScores gets high scores of a game.
@@ -952,19 +912,15 @@ func (b *Bot) SetGameScore(userID int, score int, options map[string]interface{}
 //                or inline_message_id (when chat_id & message_id is not given)
 //
 // https://core.telegram.org/bots/api#getgamehighscores
-func (b *Bot) GetGameHighScores(userID int, options map[string]interface{}) (result APIResponseGameHighScores) {
-	// essential params
-	params := map[string]interface{}{
-		"user_id": userID,
-	}
-	// optional params
-	for key, val := range options {
-		if val != nil {
-			params[key] = val
-		}
+func (b *Bot) GetGameHighScores(userID int, options OptionsGetGameHighScores) (result APIResponseGameHighScores) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseGameHighScores("getGameHighScores", params)
+	// essential params
+	options["user_id"] = userID
+
+	return b.requestResponseGameHighScores("getGameHighScores", options)
 }
 
 // Check if given http params contain file or not.
