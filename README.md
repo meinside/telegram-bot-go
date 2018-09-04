@@ -52,7 +52,7 @@ Also, you can generate certificate and private key using **telegrambot.GenCertAn
 ```go
 // sample code for telegram-bot-go (receive webhooks),
 //
-// last update: 2018.05.08.
+// last update: 2018.09.04.
 package main
 
 import (
@@ -88,29 +88,6 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 
 			var message string
 
-			options := map[string]interface{}{
-				"reply_to_message_id": webhook.Message.MessageID, // show original message
-				"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
-					Keyboard: [][]bot.KeyboardButton{
-						[]bot.KeyboardButton{
-							bot.KeyboardButton{
-								Text: "Just a button",
-							},
-						},
-						[]bot.KeyboardButton{
-							bot.KeyboardButton{
-								Text:           "Request contact",
-								RequestContact: true,
-							},
-							bot.KeyboardButton{
-								Text:            "Request location",
-								RequestLocation: true,
-							},
-						},
-					},
-				},
-			}
-
 			if webhook.Message.HasContact() {
 				message = fmt.Sprintf(
 					"I received @%s's phone no.: %s",
@@ -142,7 +119,28 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 			if sent := b.SendMessage(
 				webhook.Message.Chat.ID,
 				message,
-				options,
+				// option
+				bot.OptionsSendMessage{}.
+					SetReplyToMessageID(webhook.Message.MessageID). // show original message
+					SetReplyMarkup(bot.ReplyKeyboardMarkup{         // show keyboards
+						Keyboard: [][]bot.KeyboardButton{
+							[]bot.KeyboardButton{
+								bot.KeyboardButton{
+									Text: "Just a button",
+								},
+							},
+							[]bot.KeyboardButton{
+								bot.KeyboardButton{
+									Text:           "Request contact",
+									RequestContact: true,
+								},
+								bot.KeyboardButton{
+									Text:            "Request location",
+									RequestLocation: true,
+								},
+							},
+						},
+					}),
 			); !sent.Ok {
 				log.Printf(
 					"*** failed to send message: %s\n",
@@ -240,7 +238,7 @@ It would be useful when you're behind a firewall or something.
 ```go
 // sample code for telegram-bot-go (get updates),
 //
-// last update: 2018.05.08.
+// last update: 2018.09.04.
 package main
 
 import (
@@ -269,29 +267,6 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			time.Sleep(typingDelaySeconds * time.Second)
 
 			var message string
-
-			options := map[string]interface{}{
-				"reply_to_message_id": update.Message.MessageID, // show original message
-				"reply_markup": bot.ReplyKeyboardMarkup{ // show keyboards
-					Keyboard: [][]bot.KeyboardButton{
-						[]bot.KeyboardButton{
-							bot.KeyboardButton{
-								Text: "Just a button",
-							},
-						},
-						[]bot.KeyboardButton{
-							bot.KeyboardButton{
-								Text:           "Request contact",
-								RequestContact: true,
-							},
-							bot.KeyboardButton{
-								Text:            "Request location",
-								RequestLocation: true,
-							},
-						},
-					},
-				},
-			}
 
 			if update.Message.HasContact() {
 				message = fmt.Sprintf(
@@ -324,7 +299,28 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			if sent := b.SendMessage(
 				update.Message.Chat.ID,
 				message,
-				options,
+				// option
+				bot.OptionsSendMessage{}.
+					SetReplyToMessageID(update.Message.MessageID). // show original message
+					SetReplyMarkup(bot.ReplyKeyboardMarkup{        // show keyboards
+						Keyboard: [][]bot.KeyboardButton{
+							[]bot.KeyboardButton{
+								bot.KeyboardButton{
+									Text: "Just a button",
+								},
+							},
+							[]bot.KeyboardButton{
+								bot.KeyboardButton{
+									Text:           "Request contact",
+									RequestContact: true,
+								},
+								bot.KeyboardButton{
+									Text:            "Request location",
+									RequestLocation: true,
+								},
+							},
+						},
+					}),
 			); !sent.Ok {
 				log.Printf(
 					"*** failed to send message: %s\n",
