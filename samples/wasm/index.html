@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>telegram-bot-go/samples/wasm</title>
+
+    <!-- BEGIN: for WASM -->
+    <script src="wasm_exec.js"></script>  <!-- copied from $GOROOT/misc/wasm/wasm_exec.js -->
+    <script type="text/javascript"> // copied from https://github.com/mattn/golang-wasm-example/blob/master/index.html
+      function fetchAndInstantiate(url, importObject) {
+        return fetch(url).then(response =>
+          response.arrayBuffer()
+        ).then(bytes =>
+          WebAssembly.instantiate(bytes, importObject)
+        ).then(results =>
+          results.instance
+        );
+      }
+      var go = new Go();
+      var mod = fetchAndInstantiate("/telegram.wasm", go.importObject);
+      window.onload = function() {
+        mod.then(function(instance) {
+          go.run(instance);
+        });
+      };
+    </script>
+    <!-- END: for WASM -->
+
+  </head>
+  <body>
+    <div id="info">
+      <!-- bot info will be shown here -->
+    </div>
+    <div id="content">
+      <!-- content will be shown here -->
+    </div>
+  </body>
+</html>
