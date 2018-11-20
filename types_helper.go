@@ -491,6 +491,16 @@ func (m *Message) HasDocument() bool {
 	return m.Document != nil
 }
 
+// HasAnimation checks if Message has Animation.
+func (m *Message) HasAnimation() bool {
+	return m.Animation != nil
+}
+
+// HasGame checks if Message has Game.
+func (m *Message) HasGame() bool {
+	return m.Game != nil
+}
+
 // HasPhoto checks if Message has Photo.
 func (m *Message) HasPhoto() bool {
 	return len(m.Photo) > 0
