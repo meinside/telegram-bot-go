@@ -39,6 +39,8 @@ type Bot struct {
 
 	httpClient *http.Client // http client
 
+	quitLoop chan struct{} // quit channel of monitoring loop
+
 	updateHandler func(b *Bot, update Update, err error) // update(webhook) handler function
 
 	Verbose bool // print verbose log messages or not
@@ -62,6 +64,8 @@ func NewClient(token string) *Bot {
 				ExpectContinueTimeout: 1 * time.Second,
 			},
 		},
+
+		quitLoop: make(chan struct{}, 1),
 	}
 }
 
@@ -91,6 +95,10 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.webhookPort)
 
 	// set update handler
+	if webhookHandler == nil {
+		b.error("given webhook handler is nil")
+		return
+	}
 	b.updateHandler = webhookHandler
 
 	// routing
@@ -119,25 +127,44 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandl
 	options := OptionsGetUpdates{}.SetOffset(updateOffset)
 
 	// set update handler
+	if updateHandler == nil {
+		b.error("given update handler is nil")
+		return
+	}
 	b.updateHandler = updateHandler
 
 	var updates APIResponseUpdates
+loop:
 	for {
-		if updates = b.GetUpdates(options); updates.Ok {
-			for _, update := range updates.Result {
-				// update offset (max + 1)
-				if options["offset"].(int) <= update.UpdateID {
-					options["offset"] = update.UpdateID + 1
+		select {
+		case <-b.quitLoop:
+			break loop
+		default:
+			if updates = b.GetUpdates(options); updates.Ok {
+				for _, update := range updates.Result {
+					// update offset (max + 1)
+					if options["offset"].(int) <= update.UpdateID {
+						options["offset"] = update.UpdateID + 1
+					}
+
+					go b.updateHandler(b, update, nil)
 				}
-
-				go b.updateHandler(b, update, nil)
+			} else {
+				go b.updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", *updates.Description))
 			}
-		} else {
-			go b.updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", *updates.Description))
-		}
 
-		time.Sleep(time.Duration(interval) * time.Second)
+			time.Sleep(time.Duration(interval) * time.Second)
+		}
 	}
+
+	b.verbose("stopped monitoring updates")
+}
+
+// StopMonitoringUpdates stops loop of polling updates
+func (b *Bot) StopMonitoringUpdates() {
+	b.verbose("stopping monitoring updates...")
+
+	b.quitLoop <- struct{}{}
 }
 
 // Get webhook path generated with hash.
