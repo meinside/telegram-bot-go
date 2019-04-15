@@ -244,6 +244,9 @@ const (
 	UpdateTypeInlineQuery        UpdateType = "inline_query"
 	UpdateTypeChosenInlineResult UpdateType = "chosen_inline_result"
 	UpdateTypeCallbackQuery      UpdateType = "callback_query"
+	UpdateTypeShippingQuery      UpdateType = "shipping_query"
+	UpdateTypePreCheckoutQuery   UpdateType = "pre_checkout_query"
+	UpdateTypePoll               UpdateType = "poll"
 )
 
 // WebhookInfo is a struct of webhook info
