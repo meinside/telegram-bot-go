@@ -172,6 +172,26 @@ func (o OptionsSendAudio) SetThumb(thumb interface{}) OptionsSendAudio {
 	return o
 }
 
+// SetDisableNotification sets the disable_notification value of OptionsSendAudio.
+func (o OptionsSendAudio) SetDisableNotification(disable bool) OptionsSendAudio {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetReplyToMessageID sets the reply_to_message_id value of OptionsSendAudio.
+func (o OptionsSendAudio) SetReplyToMessageID(replyToMessageID int) OptionsSendAudio {
+	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetReplyMarkup sets the reply_markup value of OptionsSendAudio.
+//
+// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
+func (o OptionsSendAudio) SetReplyMarkup(replyMarkup interface{}) OptionsSendAudio {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
 // OptionsSendDocument struct for SendDocument().
 //
 // options include: caption, parse_mode, disable_notification, reply_to_message_id, and reply_markup.
@@ -633,9 +653,7 @@ func (o OptionsSendPoll) SetReplyMarkup(replyMarkup interface{}) OptionsSendPoll
 type OptionsStopPoll MethodOptions
 
 // SetReplyMarkup sets the reply_markup value of OptionsStopPoll.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsStopPoll) SetReplyMarkup(replyMarkup interface{}) OptionsStopPoll {
+func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsStopPoll {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -858,9 +876,7 @@ func (o OptionsEditMessageText) SetDisableWebPagePreview(disable bool) OptionsEd
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsEditMessageText.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsEditMessageText) SetReplyMarkup(replyMarkup interface{}) OptionsEditMessageText {
+func (o OptionsEditMessageText) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsEditMessageText {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -901,9 +917,7 @@ func (o OptionsEditMessageCaption) SetParseMode(parseMode ParseMode) OptionsEdit
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsEditMessageCaption.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsEditMessageCaption) SetReplyMarkup(replyMarkup interface{}) OptionsEditMessageCaption {
+func (o OptionsEditMessageCaption) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsEditMessageCaption {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -932,9 +946,7 @@ func (o OptionsEditMessageMedia) SetInlineMessageID(inlineMessageID string) Opti
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsEditMessageMedia.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsEditMessageMedia) SetReplyMarkup(replyMarkup interface{}) OptionsEditMessageMedia {
+func (o OptionsEditMessageMedia) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsEditMessageMedia {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -963,9 +975,7 @@ func (o OptionsEditMessageReplyMarkup) SetInlineMessageID(inlineMessageID string
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsEditMessageReplyMarkup.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup interface{}) OptionsEditMessageReplyMarkup {
+func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsEditMessageReplyMarkup {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -994,9 +1004,7 @@ func (o OptionsEditMessageLiveLocation) SetInlineMessageID(inlineMessageID strin
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsEditMessageLiveLocation.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsEditMessageLiveLocation) SetReplyMarkup(replyMarkup interface{}) OptionsEditMessageLiveLocation {
+func (o OptionsEditMessageLiveLocation) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsEditMessageLiveLocation {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1025,9 +1033,7 @@ func (o OptionsStopMessageLiveLocation) SetInlineMessageID(inlineMessageID strin
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsStopMessageLiveLocation.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsStopMessageLiveLocation) SetReplyMarkup(replyMarkup interface{}) OptionsStopMessageLiveLocation {
+func (o OptionsStopMessageLiveLocation) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsStopMessageLiveLocation {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1161,9 +1167,7 @@ func (o OptionsSendInvoice) SetReplyToMessageID(replyToMessageID int) OptionsSen
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsSendInvoice.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup interface{}) OptionsSendInvoice {
+func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsSendInvoice {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1188,9 +1192,7 @@ func (o OptionsSendGame) SetReplyToMessageID(replyToMessageID int) OptionsSendGa
 }
 
 // SetReplyMarkup sets the reply_markup value of OptionsSendGame.
-//
-// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendGame) SetReplyMarkup(replyMarkup interface{}) OptionsSendGame {
+func (o OptionsSendGame) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsSendGame {
 	o["reply_markup"] = replyMarkup
 	return o
 }
