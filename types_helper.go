@@ -424,6 +424,11 @@ func (u *Update) HasPreCheckoutQuery() bool {
 	return u.PreCheckoutQuery != nil
 }
 
+// HasPoll checks if Update has Poll
+func (u *Update) HasPoll() bool {
+	return u.Poll != nil
+}
+
 ////////////////////////////////
 // Helper functions for User
 //
@@ -554,6 +559,11 @@ func (m *Message) HasLocation() bool {
 // HasVenue checks if Message has Venue.
 func (m *Message) HasVenue() bool {
 	return m.Venue != nil
+}
+
+// HasPoll checks if Message has Poll.
+func (m *Message) HasPoll() bool {
+	return m.Poll != nil
 }
 
 // HasNewChatMembers checks if Message has NewChatParticipant.
