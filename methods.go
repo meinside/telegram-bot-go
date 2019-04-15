@@ -391,6 +391,37 @@ func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options 
 	return b.requestResponseMessage("sendContact", options)
 }
 
+// SendPoll sends a poll.
+//
+// https://core.telegram.org/bots/api#sendpoll
+func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []string, options OptionsSendPoll) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["question"] = question
+	options["options"] = pollOptions
+
+	return b.requestResponseMessage("sendPoll", options)
+}
+
+// StopPoll stops a poll.
+//
+// https://core.telegram.org/bots/api#stoppoll
+func (b *Bot) StopPoll(chatID ChatID, messageID int, options OptionsStopPoll) (result APIResponsePoll) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["message_id"] = messageID
+
+	return b.requestResponsePoll("stopPoll", options)
+}
+
 // SendChatAction sends chat actions.
 //
 // https://core.telegram.org/bots/api#sendchataction
@@ -1525,6 +1556,27 @@ func (b *Bot) requestResponseMessageOrBool(method string, params map[string]inte
 	b.error(errStr)
 
 	return APIResponseMessageOrBool{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponsePoll and fetch its result.
+func (b *Bot) requestResponsePoll(method string, params map[string]interface{}) (result APIResponsePoll) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponsePoll
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponsePoll{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.

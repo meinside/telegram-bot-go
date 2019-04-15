@@ -598,6 +598,48 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup interface{}) OptionsSendVen
 	return o
 }
 
+// OptionsSendPoll struct for SendPoll().
+//
+// options include: disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#sendpoll
+type OptionsSendPoll MethodOptions
+
+// SetDisableNotification sets the disable_notification value of OptionsSendPoll.
+func (o OptionsSendPoll) SetDisableNotification(disable bool) OptionsSendPoll {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetReplyToMessageID sets the reply_to_message_id value of OptionsSendPoll.
+func (o OptionsSendPoll) SetReplyToMessageID(replyToMessageID int) OptionsSendPoll {
+	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetReplyMarkup sets the reply_markup value of OptionsSendPoll.
+//
+// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
+func (o OptionsSendPoll) SetReplyMarkup(replyMarkup interface{}) OptionsSendPoll {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
+// OptionsStopPoll struct for StopPoll().
+//
+// options include: reply_markup.
+//
+// https://core.telegram.org/bots/api#stoppoll
+type OptionsStopPoll MethodOptions
+
+// SetReplyMarkup sets the reply_markup value of OptionsStopPoll.
+//
+// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
+func (o OptionsStopPoll) SetReplyMarkup(replyMarkup interface{}) OptionsStopPoll {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
 // OptionsSendContact struct for SendContact()
 //
 // options include: last_name, vcard, disable_notification, reply_to_message_id, and reply_markup.

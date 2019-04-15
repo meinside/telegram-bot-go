@@ -223,6 +223,12 @@ type APIResponseMessageOrBool struct {
 	ResultBool    *bool
 }
 
+// APIResponsePoll is an API response with result type: Poll
+type APIResponsePoll struct {
+	APIResponseBase
+	Result *Poll `json:"poll,omitempty"`
+}
+
 // UpdateType is a type of updates (for allowed_updates)
 //
 // https://core.telegram.org/bots/api#setwebhook
@@ -267,6 +273,7 @@ type Update struct {
 	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
 	ShippingQuery      *ShippingQuery      `json:"shipping_query,omitempty"`
 	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query,omitempty"`
+	Poll               *Poll               `json:"poll,omitempty"`
 }
 
 // AllowedUpdate is a type for 'allowed_updates'
@@ -499,6 +506,24 @@ type Venue struct {
 	FoursquareType *string  `json:"foursquare_type,omitempty"`
 }
 
+// Poll is a struct of a poll
+//
+// https://core.telegram.org/bots/api#poll
+type Poll struct {
+	ID       string       `json:"id"`
+	Question string       `json:"question"` // 1~255 chars
+	Options  []PollOption `json:"options"`
+	IsClosed bool         `json:"is_closed"`
+}
+
+// PollOption is a struct of a poll option
+//
+// https://core.telegram.org/bots/api#polloption
+type PollOption struct {
+	Text       string `json:"text"` // 1~100 chars
+	VoterCount int    `json:"voter_count"`
+}
+
 // UserProfilePhotos is a struct for user profile photos
 //
 // https://core.telegram.org/bots/api#userprofilephotos
@@ -631,6 +656,7 @@ type ChatMember struct {
 	CanRestrictMembers    bool             `json:"can_restrict_members,omitempty"`
 	CanPinMessages        bool             `json:"can_pin_messages,omitempty"`
 	CanPromoteMembers     bool             `json:"can_promote_members,omitempty"`
+	IsMember              bool             `json:"is_member,omitempty"`
 	CanSendMessages       bool             `json:"can_send_messages,omitempty"`
 	CanSendMediaMessages  bool             `json:"can_send_media_messages,omitempty"`
 	CanSendOtherMessages  bool             `json:"can_send_other_messages,omitempty"`
@@ -649,6 +675,7 @@ type Message struct {
 	ForwardFromChat       *Chat              `json:"forward_from_chat,omitempty"`
 	ForwardFromMessageID  int                `json:"forward_from_message_id,omitempty"`
 	ForwardSignature      *string            `json:"forward_signature,omitempty"`
+	ForwardSenderName     *string            `json:"forward_sender_name,omitempty"`
 	ForwardDate           int                `json:"forward_date,omitempty"`
 	ReplyToMessage        *Message           `json:"reply_to_message,omitempty"`
 	EditDate              int                `json:"edit_date,omitempty"`
@@ -669,6 +696,7 @@ type Message struct {
 	Contact               *Contact           `json:"contact,omitempty"`
 	Location              *Location          `json:"location,omitempty"`
 	Venue                 *Venue             `json:"venue,omitempty"`
+	Poll                  *Poll              `json:"poll,omitempty"`
 	NewChatMembers        []User             `json:"new_chat_members,omitempty"`
 	LeftChatMember        *User              `json:"left_chat_member,omitempty"`
 	NewChatTitle          *string            `json:"new_chat_title,omitempty"`
