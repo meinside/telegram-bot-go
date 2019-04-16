@@ -6,6 +6,8 @@
 //
 // +build: js,wasm
 
+// $ GOOS=js GOARCH=wasm vi __FILENAME__
+
 package main
 
 import (
