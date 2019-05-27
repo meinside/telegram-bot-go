@@ -54,10 +54,10 @@ func NewClient(token string) *Bot {
 
 		httpClient: &http.Client{
 			Transport: &http.Transport{
-				Dial: (&net.Dialer{
+				DialContext: (&net.Dialer{
 					Timeout:   10 * time.Second,
 					KeepAlive: 300 * time.Second,
-				}).Dial,
+				}).DialContext,
 				IdleConnTimeout:       90 * time.Second,
 				TLSHandshakeTimeout:   10 * time.Second,
 				ResponseHeaderTimeout: 10 * time.Second,
