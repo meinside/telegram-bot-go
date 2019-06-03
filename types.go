@@ -584,11 +584,22 @@ type InlineKeyboardMarkup struct {
 type InlineKeyboardButton struct {
 	Text                         string        `json:"text"`
 	URL                          *string       `json:"url,omitempty"`
+	LoginURL                     *LoginURL     `json:"login_url,omitempty"`
 	CallbackData                 *string       `json:"callback_data,omitempty"`
 	SwitchInlineQuery            *string       `json:"switch_inline_query,omitempty"`
 	SwitchInlineQueryCurrentChat *string       `json:"switch_inline_query_current_chat,omitempty"`
 	CallbackGame                 *CallbackGame `json:"callback_game,omitempty"`
 	Pay                          bool          `json:"pay,omitempty"`
+}
+
+// LoginURL is a struct for LoginURL
+//
+// https://core.telegram.org/bots/api#loginurl
+type LoginURL struct {
+	URL                string  `json:"url"`
+	ForwardText        *string `json:"forward_text,omitempty"`
+	BotUsername        *string `json:"bot_username,omitempty"`
+	RequestWriteAccess bool    `json:"request_write_access,omitempty"`
 }
 
 // CallbackQuery is a struct for a callback query
@@ -714,6 +725,8 @@ type Message struct {
 	Invoice               *Invoice           `json:"invoice,omitempty"`
 	SuccessfulPayment     *SuccessfulPayment `json:"successful_payment,omitempty"`
 	ConnectedWebsite      *string            `json:"connected_website,omitempty"`
+	//PassportData          *PassportData         `json:"passport_data,omitempty"`	// NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
+	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
 // InlineQuery is a struct of an inline query

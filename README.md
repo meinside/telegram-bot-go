@@ -14,6 +14,11 @@ $ go get -u github.com/meinside/telegram-bot-go
 
 See codes in [samples/](https://github.com/meinside/telegram-bot-go/tree/master/samples).
 
+## Not implemented yet
+
+- [ ] [Telegram Passport](https://core.telegram.org/bots/api#telegram-passport)
+- [ ] [Seamless Telegram Login](https://telegram.org/blog/privacy-discussions-web-bots#meet-seamless-web-bots)
+
 ## License
 
 MIT
