@@ -11,6 +11,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -27,6 +28,10 @@ const (
 const (
 	redactedString = "<REDACTED>" // confidential info will be displayed as this
 )
+
+// loggers
+var _stdout = log.New(os.Stdout, "", log.LstdFlags)
+var _stderr = log.New(os.Stderr, "", log.LstdFlags)
 
 // Bot struct
 type Bot struct {
@@ -192,11 +197,11 @@ func (b *Bot) redact(str string) string {
 // Print formatted log message. (only when Bot.Verbose == true)
 func (b *Bot) verbose(str string, args ...interface{}) {
 	if b.Verbose {
-		log.Printf("> %s\n", b.redact(fmt.Sprintf(str, args...)))
+		_stdout.Printf("%s\n", b.redact(fmt.Sprintf(str, args...)))
 	}
 }
 
 // Print formatted error message.
 func (b *Bot) error(str string, args ...interface{}) {
-	log.Printf("* %s\n", b.redact(fmt.Sprintf(str, args...)))
+	_stderr.Printf("%s\n", b.redact(fmt.Sprintf(str, args...)))
 }
