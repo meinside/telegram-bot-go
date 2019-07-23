@@ -1031,181 +1031,201 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 
 // Send request to API server and return the response as bytes(synchronously).
 //
-// NOTE: If *os.File is included in the params, it will be closed automatically in this function.
-func (b *Bot) request(method string, params map[string]interface{}) (respBytes []byte, err error) {
+// NOTE: If *os.File is included in the params, it will be closed automatically by this function.
+func (b *Bot) request(method string, params map[string]interface{}) (resp []byte, err error) {
 	apiURL := fmt.Sprintf("%s%s/%s", apiBaseURL, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiURL, params)
 
-	if checkIfFileParamExists(params) { // multipart form data
-		body := &bytes.Buffer{}
-		writer := multipart.NewWriter(body)
+	if checkIfFileParamExists(params) {
+		// multipart form data
+		resp, err = b.requestMultipartFormData(apiURL, params)
+	} else {
+		// www-form urlencoded
+		resp, err = b.requestURLEncodedFormData(apiURL, params)
+	}
 
-		for key, value := range params {
-			switch value.(type) {
-			case *os.File:
-				if file, ok := value.(*os.File); ok {
-					defer file.Close()
-
-					var part io.Writer
-					part, err = writer.CreateFormFile(key, file.Name())
-					if err == nil {
-						if _, err = io.Copy(part, file); err != nil {
-							b.error("could not write to multipart: %s", key)
-						}
-					} else {
-						b.error("could not create form file for parameter '%s' (%v)", key, value)
-					}
-				} else {
-					b.error("parameter '%s' (%v) could not be cast to file", key, value)
-				}
-			case []byte:
-				if fbytes, ok := value.([]byte); ok {
-					filename := fmt.Sprintf("%s.%s", key, getExtension(fbytes))
-					var part io.Writer
-					part, err = writer.CreateFormFile(key, filename)
-					if err == nil {
-						if _, err = io.Copy(part, bytes.NewReader(fbytes)); err != nil {
-							b.error("could not write to multipart: %s", key)
-						}
-					} else {
-						b.error("could not create form file for parameter '%s' ([]byte)", key)
-					}
-				} else {
-					b.error("parameter '%s' could not be cast to []byte", key)
-				}
-			case InputFile:
-				if inputFile, ok := value.(InputFile); ok {
-					if inputFile.Filepath != nil {
-						var file *os.File
-						if file, err = os.Open(*inputFile.Filepath); err == nil {
-							defer file.Close()
-
-							var part io.Writer
-							part, err = writer.CreateFormFile(key, file.Name())
-							if err == nil {
-								if _, err = io.Copy(part, file); err != nil {
-									b.error("could not write to multipart: %s", key)
-								}
-							} else {
-								b.error("could not create form file for parameter '%s' (%v)", key, value)
-							}
-						} else {
-							b.error("parameter '%s' (%v) could not be read from file: %s", key, value, err.Error())
-						}
-					} else if len(inputFile.Bytes) > 0 {
-						filename := fmt.Sprintf("%s.%s", key, getExtension(inputFile.Bytes))
-						var part io.Writer
-						part, err = writer.CreateFormFile(key, filename)
-						if err == nil {
-							if _, err = io.Copy(part, bytes.NewReader(inputFile.Bytes)); err != nil {
-								b.error("could not write InputFile to multipart: %s", key)
-							}
-						} else {
-							b.error("could not create form file for parameter '%s' (InputFile)", key)
-						}
-					} else {
-						if strValue, ok := b.paramToString(value); ok {
-							writer.WriteField(key, strValue)
-						} else {
-							b.error("invalid InputFile parameter '%s'", key)
-						}
-					}
-				} else {
-					b.error("parameter '%s' could not be cast to InputFile", key)
-				}
-			default:
-				if strValue, ok := b.paramToString(value); ok {
-					writer.WriteField(key, strValue)
-				}
-			}
-		}
-
-		if err = writer.Close(); err != nil {
-			b.error("error while closing writer (%s)", err)
-		}
-
-		var req *http.Request
-		req, err = http.NewRequest("POST", apiURL, body)
-		if err == nil {
-			req.Header.Add("Content-Type", writer.FormDataContentType()) // due to file parameter
-			req.Close = true
-
-			var resp *http.Response
-			resp, err = b.httpClient.Do(req)
-
-			if resp != nil { // XXX - in case of http redirect
-				defer resp.Body.Close()
-			}
-
-			if err == nil {
-				// FIXXX: check http status code here
-				var bytes []byte
-				bytes, err = ioutil.ReadAll(resp.Body)
-				if err == nil {
-					return bytes, nil
-				}
-
-				err = fmt.Errorf("response read error: %s", err)
-
-				b.error(err.Error())
-			} else {
-				err = fmt.Errorf("request error: %s", err)
-
-				b.error(err.Error())
-			}
-		} else {
-			err = fmt.Errorf("building request error: %s", err)
-
-			b.error(err.Error())
-		}
-	} else { // www-form urlencoded
-		paramValues := url.Values{}
-		for key, value := range params {
-			if strValue, ok := b.paramToString(value); ok {
-				paramValues[key] = []string{strValue}
-			}
-		}
-		encoded := paramValues.Encode()
-
-		var req *http.Request
-		req, err = http.NewRequest("POST", apiURL, bytes.NewBufferString(encoded))
-		if err == nil {
-			req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-			req.Header.Add("Content-Length", strconv.Itoa(len(encoded)))
-			req.Close = true
-
-			var resp *http.Response
-			resp, err = b.httpClient.Do(req)
-
-			if resp != nil { // XXX - in case of redirect
-				defer resp.Body.Close()
-			}
-
-			if err == nil {
-				// FIXXX: check http status code here
-				var bytes []byte
-				bytes, err = ioutil.ReadAll(resp.Body)
-				if err == nil {
-					return bytes, nil
-				}
-
-				err = fmt.Errorf("response read error: %s", err)
-
-				b.error(err.Error())
-			} else {
-				err = fmt.Errorf("request error: %s", err)
-
-				b.error(err.Error())
-			}
-		} else {
-			err = fmt.Errorf("building request error: %s", err)
-
-			b.error(err.Error())
-		}
+	if err == nil {
+		return resp, nil
 	}
 
 	return []byte{}, fmt.Errorf(b.redact(err.Error()))
+}
+
+// request multipart form data
+func (b *Bot) requestMultipartFormData(apiURL string, params map[string]interface{}) (resp []byte, err error) {
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	for key, value := range params {
+		switch value.(type) {
+		case *os.File:
+			if file, ok := value.(*os.File); ok {
+				defer file.Close() // XXX - close the file
+
+				var part io.Writer
+				part, err = writer.CreateFormFile(key, file.Name())
+				if err == nil {
+					if _, err = io.Copy(part, file); err != nil {
+						b.error("could not write to multipart: %s", key)
+					}
+				} else {
+					b.error("could not create form file for parameter '%s' (%v)", key, value)
+				}
+			} else {
+				b.error("parameter '%s' (%v) could not be cast to file", key, value)
+			}
+		case []byte:
+			if fbytes, ok := value.([]byte); ok {
+				filename := fmt.Sprintf("%s.%s", key, getExtension(fbytes))
+				var part io.Writer
+				part, err = writer.CreateFormFile(key, filename)
+				if err == nil {
+					if _, err = io.Copy(part, bytes.NewReader(fbytes)); err != nil {
+						b.error("could not write to multipart: %s", key)
+					}
+				} else {
+					b.error("could not create form file for parameter '%s' ([]byte)", key)
+				}
+			} else {
+				b.error("parameter '%s' could not be cast to []byte", key)
+			}
+		case InputFile:
+			if inputFile, ok := value.(InputFile); ok {
+				if inputFile.Filepath != nil {
+					var file *os.File
+					if file, err = os.Open(*inputFile.Filepath); err == nil {
+						defer file.Close()
+
+						var part io.Writer
+						part, err = writer.CreateFormFile(key, file.Name())
+						if err == nil {
+							if _, err = io.Copy(part, file); err != nil {
+								b.error("could not write to multipart: %s", key)
+							}
+						} else {
+							b.error("could not create form file for parameter '%s' (%v)", key, value)
+						}
+					} else {
+						b.error("parameter '%s' (%v) could not be read from file: %s", key, value, err.Error())
+					}
+				} else if len(inputFile.Bytes) > 0 {
+					filename := fmt.Sprintf("%s.%s", key, getExtension(inputFile.Bytes))
+					var part io.Writer
+					part, err = writer.CreateFormFile(key, filename)
+					if err == nil {
+						if _, err = io.Copy(part, bytes.NewReader(inputFile.Bytes)); err != nil {
+							b.error("could not write InputFile to multipart: %s", key)
+						}
+					} else {
+						b.error("could not create form file for parameter '%s' (InputFile)", key)
+					}
+				} else {
+					if strValue, ok := b.paramToString(value); ok {
+						writer.WriteField(key, strValue)
+					} else {
+						b.error("invalid InputFile parameter '%s'", key)
+					}
+				}
+			} else {
+				b.error("parameter '%s' could not be cast to InputFile", key)
+			}
+		default:
+			if strValue, ok := b.paramToString(value); ok {
+				writer.WriteField(key, strValue)
+			}
+		}
+	}
+
+	if err = writer.Close(); err != nil {
+		b.error("error while closing writer (%s)", err)
+	}
+
+	var req *http.Request
+	req, err = http.NewRequest("POST", apiURL, body)
+	if err == nil {
+		req.Header.Add("Content-Type", writer.FormDataContentType()) // due to file parameter
+		req.Close = true
+
+		var resp *http.Response
+		resp, err = b.httpClient.Do(req)
+
+		if resp != nil { // XXX - in case of http redirect
+			defer resp.Body.Close()
+		}
+
+		if err == nil {
+			// FIXXX: check http status code here
+			var bytes []byte
+			bytes, err = ioutil.ReadAll(resp.Body)
+			if err == nil {
+				return bytes, nil
+			}
+
+			err = fmt.Errorf("response read error: %s", err)
+
+			b.error(err.Error())
+		} else {
+			err = fmt.Errorf("request error: %s", err)
+
+			b.error(err.Error())
+		}
+	} else {
+		err = fmt.Errorf("building request error: %s", err)
+
+		b.error(err.Error())
+	}
+
+	return []byte{}, err
+}
+
+// request urlencoded form data
+func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]interface{}) (resp []byte, err error) {
+	paramValues := url.Values{}
+	for key, value := range params {
+		if strValue, ok := b.paramToString(value); ok {
+			paramValues[key] = []string{strValue}
+		}
+	}
+	encoded := paramValues.Encode()
+
+	var req *http.Request
+	req, err = http.NewRequest("POST", apiURL, bytes.NewBufferString(encoded))
+	if err == nil {
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Add("Content-Length", strconv.Itoa(len(encoded)))
+		req.Close = true
+
+		var resp *http.Response
+		resp, err = b.httpClient.Do(req)
+
+		if resp != nil { // XXX - in case of redirect
+			defer resp.Body.Close()
+		}
+
+		if err == nil {
+			// FIXXX: check http status code here
+			var bytes []byte
+			bytes, err = ioutil.ReadAll(resp.Body)
+			if err == nil {
+				return bytes, nil
+			}
+
+			err = fmt.Errorf("response read error: %s", err)
+
+			b.error(err.Error())
+		} else {
+			err = fmt.Errorf("request error: %s", err)
+
+			b.error(err.Error())
+		}
+	} else {
+		err = fmt.Errorf("building request error: %s", err)
+
+		b.error(err.Error())
+	}
+
+	return []byte{}, err
 }
 
 // Send request for APIResponseWebhookInfo and fetch its result.

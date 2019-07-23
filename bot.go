@@ -160,7 +160,7 @@ loop:
 					go b.updateHandler(b, update, nil)
 				}
 			} else {
-				go b.updateHandler(b, Update{}, fmt.Errorf("error while retrieving updates - %s", *updates.Description))
+				go b.updateHandler(b, Update{}, fmt.Errorf("%s", *updates.Description))
 			}
 
 			time.Sleep(time.Duration(interval) * time.Second)
