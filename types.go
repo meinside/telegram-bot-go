@@ -69,19 +69,19 @@ type MessageEntityType string
 
 // MessageEntityType strings
 const (
-	MessageEntityTypeMention     = "mention"
-	MessageEntityTypeHashTag     = "hashtag"
-	MessageEntityTypeCashTag     = "cashtag"
-	MessageEntityTypeBotCommand  = "bot_command"
-	MessageEntityTypeURL         = "url"
-	MessageEntityTypeEmail       = "email"
-	MessageEntityTypePhoneNumber = "phone_number"
-	MessageEntityTypeBold        = "bold"
-	MessageEntityTypeItalic      = "italic"
-	MessageEntityTypeCode        = "code"
-	MessageEntityTypePre         = "pre"
-	MessageEntityTypeTextLink    = "text_link"
-	MessageEntityTypeTextMention = "text_mention"
+	MessageEntityTypeMention     MessageEntityType = "mention"
+	MessageEntityTypeHashTag     MessageEntityType = "hashtag"
+	MessageEntityTypeCashTag     MessageEntityType = "cashtag"
+	MessageEntityTypeBotCommand  MessageEntityType = "bot_command"
+	MessageEntityTypeURL         MessageEntityType = "url"
+	MessageEntityTypeEmail       MessageEntityType = "email"
+	MessageEntityTypePhoneNumber MessageEntityType = "phone_number"
+	MessageEntityTypeBold        MessageEntityType = "bold"
+	MessageEntityTypeItalic      MessageEntityType = "italic"
+	MessageEntityTypeCode        MessageEntityType = "code"
+	MessageEntityTypePre         MessageEntityType = "pre"
+	MessageEntityTypeTextLink    MessageEntityType = "text_link"
+	MessageEntityTypeTextMention MessageEntityType = "text_mention"
 )
 
 // ChatMemberStatus is a status of chat member
@@ -94,6 +94,7 @@ const (
 	ChatMemberStatusCreator       ChatMemberStatus = "creator"
 	ChatMemberStatusAdministrator ChatMemberStatus = "administrator"
 	ChatMemberStatusMember        ChatMemberStatus = "member"
+	ChatMemberStatusRestricted    ChatMemberStatus = "restricted"
 	ChatMemberStatusLeft          ChatMemberStatus = "left"
 	ChatMemberStatusKicked        ChatMemberStatus = "kicked"
 )
@@ -311,19 +312,19 @@ type User struct {
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
-	ID                          int64      `json:"id"`
-	Type                        ChatType   `json:"type"`
-	Title                       *string    `json:"title,omitempty"`
-	Username                    *string    `json:"username,omitempty"`
-	FirstName                   *string    `json:"first_name,omitempty"`
-	LastName                    *string    `json:"last_name,omitempty"`
-	AllMembersAreAdministrators bool       `json:"all_members_are_administrators,omitempty"`
-	Photo                       *ChatPhoto `json:"photo,omitempty"`
-	Description                 *string    `json:"description,omitempty"`
-	InviteLink                  *string    `json:"invite_link,omitempty"`
-	PinnedMessage               *Message   `json:"pinned_message,omitempty"`
-	StickerSetName              *string    `json:"sticker_set_name,omitempty"`
-	CanSetStickerSet            bool       `json:"can_set_sticker_set,omitempty"`
+	ID               int64            `json:"id"`
+	Type             ChatType         `json:"type"`
+	Title            *string          `json:"title,omitempty"`
+	Username         *string          `json:"username,omitempty"`
+	FirstName        *string          `json:"first_name,omitempty"`
+	LastName         *string          `json:"last_name,omitempty"`
+	Photo            *ChatPhoto       `json:"photo,omitempty"`
+	Description      *string          `json:"description,omitempty"`
+	InviteLink       *string          `json:"invite_link,omitempty"`
+	PinnedMessage    *Message         `json:"pinned_message,omitempty"`
+	Permissions      *ChatPermissions `json:"permissions,omitempty"`
+	StickerSetName   *string          `json:"sticker_set_name,omitempty"`
+	CanSetStickerSet bool             `json:"can_set_sticker_set,omitempty"`
 }
 
 // InputMediaType is a type of InputMedia
@@ -386,8 +387,8 @@ type MessageEntity struct {
 	Type   MessageEntityType `json:"type"`
 	Offset int               `json:"offset"`
 	Length int               `json:"length"`
-	URL    *string           `json:"url,omitempty"`  // for Type == "text_link" only,
-	User   *User             `json:"user,omitempty"` // for Type == "text_mention" only,
+	URL    *string           `json:"url,omitempty"`  // when Type == MessageEntityTypeTextLink
+	User   *User             `json:"user,omitempty"` // when Type == MessageEntityTypeTextMention
 }
 
 // PhotoSize is a struct of a photo's size
@@ -418,6 +419,7 @@ type Sticker struct {
 	FileID       string        `json:"file_id"`
 	Width        int           `json:"width"`
 	Height       int           `json:"height"`
+	IsAnimated   bool          `json:"is_animated"`
 	Thumb        *PhotoSize    `json:"thumb,omitempty"`
 	Emoji        *string       `json:"emoji,omitempty"`
 	SetName      *string       `json:"set_name,omitempty"`
@@ -429,8 +431,9 @@ type Sticker struct {
 //
 // https://core.telegram.org/bots/api#stickerset
 type StickerSet struct {
-	Name          *string   `json:"name"`
-	Title         *string   `json:"title"`
+	Name          string    `json:"name"`
+	Title         string    `json:"title"`
+	IsAnimated    bool      `json:"is_animated"`
 	ContainsMasks bool      `json:"contains_masks"`
 	Stickers      []Sticker `json:"stickers"`
 }
@@ -660,21 +663,36 @@ type ChatPhoto struct {
 type ChatMember struct {
 	User                  User             `json:"user"`
 	Status                ChatMemberStatus `json:"status"`
-	UntilDate             int              `json:"until_date,omitempty"`
-	CanBeEdited           bool             `json:"can_be_edited,omitempty"`
-	CanChangeInfo         bool             `json:"can_change_info,omitempty"`
-	CanPostMessages       bool             `json:"can_post_messages,omitempty"`
-	CanEditMessages       bool             `json:"can_edit_messages,omitempty"`
-	CanDeleteMessages     bool             `json:"can_delete_messages,omitempty"`
-	CanInviteUsers        bool             `json:"can_invite_users,omitempty"`
-	CanRestrictMembers    bool             `json:"can_restrict_members,omitempty"`
-	CanPinMessages        bool             `json:"can_pin_messages,omitempty"`
-	CanPromoteMembers     bool             `json:"can_promote_members,omitempty"`
-	IsMember              bool             `json:"is_member,omitempty"`
-	CanSendMessages       bool             `json:"can_send_messages,omitempty"`
-	CanSendMediaMessages  bool             `json:"can_send_media_messages,omitempty"`
-	CanSendOtherMessages  bool             `json:"can_send_other_messages,omitempty"`
-	CanAddWebPagePreviews bool             `json:"can_add_web_page_previews,omitempty"`
+	UntilDate             int              `json:"until_date,omitempty"`                // restricted and kicked only
+	CanBeEdited           bool             `json:"can_be_edited,omitempty"`             // administrators only
+	CanPostMessages       bool             `json:"can_post_messages,omitempty"`         // administrators only
+	CanEditMessages       bool             `json:"can_edit_messages,omitempty"`         // administrators only
+	CanDeleteMessages     bool             `json:"can_delete_messages,omitempty"`       // administrators only
+	CanRestrictMembers    bool             `json:"can_restrict_members,omitempty"`      // administrators only
+	CanPromoteMembers     bool             `json:"can_promote_members,omitempty"`       // administrators only
+	CanChangeInfo         bool             `json:"can_change_info,omitempty"`           // administrators and restricted only
+	CanInviteUsers        bool             `json:"can_invite_users,omitempty"`          // administrators and restricted only
+	CanPinMessages        bool             `json:"can_pin_messages,omitempty"`          // administrators and restricted only
+	IsMember              bool             `json:"is_member,omitempty"`                 // restricted only
+	CanSendMessages       bool             `json:"can_send_messages,omitempty"`         // restricted only
+	CanSendMediaMessages  bool             `json:"can_send_media_messages,omitempty"`   // restricted only
+	CanSendPolls          bool             `json:"can_send_polls,omitempty"`            // restricted only
+	CanSendOtherMessages  bool             `json:"can_send_other_messages,omitempty"`   // restricted only
+	CanAddWebPagePreviews bool             `json:"can_add_web_page_previews,omitempty"` // restricted only
+}
+
+// ChatPermissions is a struct of chat permissions
+//
+// https://core.telegram.org/bots/api#chatpermissions
+type ChatPermissions struct {
+	CanSendMessages       bool `json:"can_send_messages,omitempty"`
+	CanSendMediaMessages  bool `json:"can_send_media_messages,omitempty"`
+	CanSendPolls          bool `json:"can_send_polls,omitempty"`
+	CanSendOtherMessages  bool `json:"can_send_other_messages,omitempty"`
+	CanAddWebPagePreviews bool `json:"can_add_web_page_previews,omitempty"`
+	CanChangeInfo         bool `json:"can_change_info,omitempty"`
+	CanInviteUsers        bool `json:"can_invite_users,omitempty"`
+	CanPinMessages        bool `json:"can_pin_messages,omitempty"`
 }
 
 // Message is a struct of a message
@@ -725,7 +743,7 @@ type Message struct {
 	Invoice               *Invoice           `json:"invoice,omitempty"`
 	SuccessfulPayment     *SuccessfulPayment `json:"successful_payment,omitempty"`
 	ConnectedWebsite      *string            `json:"connected_website,omitempty"`
-	//PassportData          *PassportData         `json:"passport_data,omitempty"`	// NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
+	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 

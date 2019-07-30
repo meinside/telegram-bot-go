@@ -519,7 +519,7 @@ func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponseBool
 // RestrictChatMember restricts a chat member
 //
 // https://core.telegram.org/bots/api#restrictchatmember
-func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options OptionsRestrictChatMember) (result APIResponseBool) {
+func (b *Bot) RestrictChatMember(chatID ChatID, userID int, permissions ChatPermissions, options OptionsRestrictChatMember) (result APIResponseBool) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -527,6 +527,7 @@ func (b *Bot) RestrictChatMember(chatID ChatID, userID int, options OptionsRestr
 	// essential params
 	options["chat_id"] = chatID
 	options["user_id"] = userID
+	options["permissions"] = permissions
 
 	return b.requestResponseBool("restrictChatMember", options)
 }
@@ -544,6 +545,16 @@ func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options OptionsPromot
 	options["user_id"] = userID
 
 	return b.requestResponseBool("promoteChatMember", options)
+}
+
+// SetChatPermissions sets permissions of a chat
+//
+// https://core.telegram.org/bots/api#setchatpermissions
+func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions) (result APIResponseBool) {
+	return b.requestResponseBool("setChatPermissions", map[string]interface{}{
+		"chat_id":     chatID,
+		"permissions": permissions,
+	})
 }
 
 // ExportChatInviteLink exports a chat invite link
