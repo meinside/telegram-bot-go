@@ -729,30 +729,6 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 	return o
 }
 
-// SetCanSendMessages sets the can_send_messages value of OptionsRestrictChatMember.
-func (o OptionsRestrictChatMember) SetCanSendMessages(can bool) OptionsRestrictChatMember {
-	o["can_send_messages"] = can
-	return o
-}
-
-// SetCanSendMediaMessages sets the can_send_media_messages value of OptionsRestrictChatMember.
-func (o OptionsRestrictChatMember) SetCanSendMediaMessages(can bool) OptionsRestrictChatMember {
-	o["can_send_media_messages"] = can
-	return o
-}
-
-// SetCanSendOtherMessages sets the can_send_other_messages value of OptionsRestrictChatMember.
-func (o OptionsRestrictChatMember) SetCanSendOtherMessages(can bool) OptionsRestrictChatMember {
-	o["can_send_other_messages"] = can
-	return o
-}
-
-// SetCanAddWebPagePreviews sets the can_add_web_page_previews value of OptionsRestrictChatMember.
-func (o OptionsRestrictChatMember) SetCanAddWebPagePreviews(can bool) OptionsRestrictChatMember {
-	o["can_add_web_page_previews"] = can
-	return o
-}
-
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
 // options include: can_change_info, can_post_messages, can_edit_messages, can_delete_messages, can_invite_users, can_restrict_members, can_pin_messages, and can_promote_members
