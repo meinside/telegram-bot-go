@@ -1173,16 +1173,16 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]interfac
 				return bytes, nil
 			}
 
-			err = fmt.Errorf("response read error: %s", err)
+			err = fmt.Errorf("response read error: %w", err)
 
 			b.error(err.Error())
 		} else {
-			err = fmt.Errorf("request error: %s", err)
+			err = fmt.Errorf("request error: %w", err)
 
 			b.error(err.Error())
 		}
 	} else {
-		err = fmt.Errorf("building request error: %s", err)
+		err = fmt.Errorf("building request error: %w", err)
 
 		b.error(err.Error())
 	}
@@ -1222,16 +1222,16 @@ func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]interfa
 				return bytes, nil
 			}
 
-			err = fmt.Errorf("response read error: %s", err)
+			err = fmt.Errorf("response read error: %w", err)
 
 			b.error(err.Error())
 		} else {
-			err = fmt.Errorf("request error: %s", err)
+			err = fmt.Errorf("request error: %w", err)
 
 			b.error(err.Error())
 		}
 	} else {
-		err = fmt.Errorf("building request error: %s", err)
+		err = fmt.Errorf("building request error: %w", err)
 
 		b.error(err.Error())
 	}
