@@ -547,6 +547,17 @@ func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options OptionsPromot
 	return b.requestResponseBool("promoteChatMember", options)
 }
 
+// SetChatAdministratorCustomTitle sets chat administrator's custom title
+//
+// https://core.telegram.org/bots/api#setchatadministratorcustomtitle
+func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int, customTitle string) (result APIResponseBool) {
+	return b.requestResponseBool("setChatAdministratorCustomTitle", map[string]interface{}{
+		"chat_id":      chatID,
+		"user_id":      userID,
+		"custom_title": customTitle,
+	})
+}
+
 // SetChatPermissions sets permissions of a chat
 //
 // https://core.telegram.org/bots/api#setchatpermissions

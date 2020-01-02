@@ -718,7 +718,7 @@ func (o OptionsGetUserProfilePhotos) SetLimit(limit int) OptionsGetUserProfilePh
 
 // OptionsRestrictChatMember struct for RestrictChatMember()
 //
-// options include: until_date, can_send_messages, can_send_media_messages, can_send_other_messages, and can_add_web_page_previews
+// options include: until_date
 //
 // https://core.telegram.org/bots/api#restrictchatmember
 type OptionsRestrictChatMember MethodOptions
