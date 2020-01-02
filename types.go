@@ -21,8 +21,14 @@ type ParseMode string // parse_mode
 
 // ParseMode strings
 const (
+	// (legacy) https://core.telegram.org/bots/api#markdown-style
 	ParseModeMarkdown ParseMode = "Markdown"
-	ParseModeHTML     ParseMode = "HTML"
+
+	// https://core.telegram.org/bots/api#markdownv2-style
+	ParseModeMarkdownV2 ParseMode = "MarkdownV2"
+
+	// https://core.telegram.org/bots/api#html-style
+	ParseModeHTML ParseMode = "HTML"
 )
 
 // ChatAction is a type of action in chats
@@ -69,19 +75,21 @@ type MessageEntityType string
 
 // MessageEntityType strings
 const (
-	MessageEntityTypeMention     MessageEntityType = "mention"
-	MessageEntityTypeHashTag     MessageEntityType = "hashtag"
-	MessageEntityTypeCashTag     MessageEntityType = "cashtag"
-	MessageEntityTypeBotCommand  MessageEntityType = "bot_command"
-	MessageEntityTypeURL         MessageEntityType = "url"
-	MessageEntityTypeEmail       MessageEntityType = "email"
-	MessageEntityTypePhoneNumber MessageEntityType = "phone_number"
-	MessageEntityTypeBold        MessageEntityType = "bold"
-	MessageEntityTypeItalic      MessageEntityType = "italic"
-	MessageEntityTypeCode        MessageEntityType = "code"
-	MessageEntityTypePre         MessageEntityType = "pre"
-	MessageEntityTypeTextLink    MessageEntityType = "text_link"
-	MessageEntityTypeTextMention MessageEntityType = "text_mention"
+	MessageEntityTypeMention       MessageEntityType = "mention"
+	MessageEntityTypeHashTag       MessageEntityType = "hashtag"
+	MessageEntityTypeCashTag       MessageEntityType = "cashtag"
+	MessageEntityTypeBotCommand    MessageEntityType = "bot_command"
+	MessageEntityTypeURL           MessageEntityType = "url"
+	MessageEntityTypeEmail         MessageEntityType = "email"
+	MessageEntityTypePhoneNumber   MessageEntityType = "phone_number"
+	MessageEntityTypeBold          MessageEntityType = "bold"
+	MessageEntityTypeItalic        MessageEntityType = "italic"
+	MessageEntityTypeUnderline     MessageEntityType = "underline"
+	MessageEntityTypeStrikethrough MessageEntityType = "strikethrough"
+	MessageEntityTypeCode          MessageEntityType = "code"
+	MessageEntityTypePre           MessageEntityType = "pre"
+	MessageEntityTypeTextLink      MessageEntityType = "text_link"
+	MessageEntityTypeTextMention   MessageEntityType = "text_mention"
 )
 
 // ChatMemberStatus is a status of chat member
@@ -323,6 +331,7 @@ type Chat struct {
 	InviteLink       *string          `json:"invite_link,omitempty"`
 	PinnedMessage    *Message         `json:"pinned_message,omitempty"`
 	Permissions      *ChatPermissions `json:"permissions,omitempty"`
+	SlowModeDelay    int              `json:"slow_mode_delay,omitempty"`
 	StickerSetName   *string          `json:"sticker_set_name,omitempty"`
 	CanSetStickerSet bool             `json:"can_set_sticker_set,omitempty"`
 }
@@ -371,13 +380,14 @@ type InputFile struct {
 //
 // https://core.telegram.org/bots/api#audio
 type Audio struct {
-	FileID    string    `json:"file_id"`
-	Duration  int       `json:"duration"`
-	Performer *string   `json:"performer,omitempty"`
-	Title     *string   `json:"title,omitempty"`
-	MimeType  *string   `json:"mime_type,omitempty"`
-	FileSize  int       `json:"file_size,omitempty"`
-	Thumb     PhotoSize `json:"thumb,omitempty"`
+	FileID       string    `json:"file_id"`
+	FileUniqueID string    `json:"file_unique_id"`
+	Duration     int       `json:"duration"`
+	Performer    *string   `json:"performer,omitempty"`
+	Title        *string   `json:"title,omitempty"`
+	MimeType     *string   `json:"mime_type,omitempty"`
+	FileSize     int       `json:"file_size,omitempty"`
+	Thumb        PhotoSize `json:"thumb,omitempty"`
 }
 
 // MessageEntity is a struct of a message entity
@@ -395,21 +405,23 @@ type MessageEntity struct {
 //
 // https://core.telegram.org/bots/api#photosize
 type PhotoSize struct {
-	FileID   string `json:"file_id"`
-	Width    int    `json:"width"`
-	Height   int    `json:"height"`
-	FileSize int    `json:"file_size,omitempty"`
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
+	FileSize     int    `json:"file_size,omitempty"`
 }
 
 // Document is a struct for an ordinary file
 //
 // https://core.telegram.org/bots/api#document
 type Document struct {
-	FileID   string     `json:"file_id"`
-	Thumb    *PhotoSize `json:"thumb,omitempty"`
-	FileName *string    `json:"file_name,omitempty"`
-	MimeType *string    `json:"mime_type,omitempty"`
-	FileSize int        `json:"file_size,omitempty"`
+	FileID       string     `json:"file_id"`
+	FileUniqueID string     `json:"file_unique_id"`
+	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	FileName     *string    `json:"file_name,omitempty"`
+	MimeType     *string    `json:"mime_type,omitempty"`
+	FileSize     int        `json:"file_size,omitempty"`
 }
 
 // Sticker is a struct of a sticker
@@ -417,6 +429,7 @@ type Document struct {
 // https://core.telegram.org/bots/api#sticker
 type Sticker struct {
 	FileID       string        `json:"file_id"`
+	FileUniqueID string        `json:"file_unique_id"`
 	Width        int           `json:"width"`
 	Height       int           `json:"height"`
 	IsAnimated   bool          `json:"is_animated"`
@@ -452,34 +465,37 @@ type MaskPosition struct {
 //
 // https://core.telegram.org/bots/api#video
 type Video struct {
-	FileID   string     `json:"file_id"`
-	Width    int        `json:"width"`
-	Height   int        `json:"height"`
-	Duration int        `json:"duration"`
-	Thumb    *PhotoSize `json:"thumb,omitempty"`
-	MimeType *string    `json:"mime_type,omitempty"`
-	FileSize int        `json:"file_size,omitempty"`
+	FileID       string     `json:"file_id"`
+	FileUniqueID string     `json:"file_unique_id"`
+	Width        int        `json:"width"`
+	Height       int        `json:"height"`
+	Duration     int        `json:"duration"`
+	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	MimeType     *string    `json:"mime_type,omitempty"`
+	FileSize     int        `json:"file_size,omitempty"`
 }
 
 // Voice is a struct for a voice file
 //
 // https://core.telegram.org/bots/api#voice
 type Voice struct {
-	FileID   string  `json:"file_id"`
-	Duration int     `json:"duration"`
-	MimeType *string `json:"mime_type,omitempty"`
-	FileSize int     `json:"file_size,omitempty"`
+	FileID       string  `json:"file_id"`
+	FileUniqueID string  `json:"file_unique_id"`
+	Duration     int     `json:"duration"`
+	MimeType     *string `json:"mime_type,omitempty"`
+	FileSize     int     `json:"file_size,omitempty"`
 }
 
 // VideoNote is a struct for a video note
 //
 // https://core.telegram.org/bots/api#videonote
 type VideoNote struct {
-	FileID   string     `json:"file_id"`
-	Length   int        `json:"length"`
-	Duration int        `json:"duration"`
-	Thumb    *PhotoSize `json:"thumb,omitempty"`
-	FileSize int        `json:"file_size,omitempty"`
+	FileID       string     `json:"file_id"`
+	FileUniqueID string     `json:"file_unique_id"`
+	Length       int        `json:"length"`
+	Duration     int        `json:"duration"`
+	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	FileSize     int        `json:"file_size,omitempty"`
 }
 
 // Contact is a struct for a contact info
@@ -542,9 +558,10 @@ type UserProfilePhotos struct {
 //
 // https://core.telegram.org/bots/api#file
 type File struct {
-	FileID   string  `json:"file_id"`
-	FileSize int     `json:"file_size,omitempty"`
-	FilePath *string `json:"file_path,omitempty"`
+	FileID       string  `json:"file_id"`
+	FileUniqueID string  `json:"file_unique_id"`
+	FileSize     int     `json:"file_size,omitempty"`
+	FilePath     *string `json:"file_path,omitempty"`
 }
 
 // ReplyKeyboardMarkup is a struct for reply keyboard markups
@@ -653,8 +670,10 @@ type ForceReply struct {
 //
 // https://core.telegram.org/bots/api#chatphoto
 type ChatPhoto struct {
-	SmallFileID string `json:"small_file_id"`
-	BigFileID   string `json:"big_file_id"`
+	SmallFileID       string `json:"small_file_id"`
+	SmallFileUniqueID string `json:"small_file_unique_id"`
+	BigFileID         string `json:"big_file_id"`
+	BigFileUniqueID   string `json:"big_file_unique_id"`
 }
 
 // ChatMember is a struct of a chat member
@@ -663,6 +682,7 @@ type ChatPhoto struct {
 type ChatMember struct {
 	User                  User             `json:"user"`
 	Status                ChatMemberStatus `json:"status"`
+	CustomTitle           string           `json:"custom_title,omitempty"`              // owner and administrators only
 	UntilDate             int              `json:"until_date,omitempty"`                // restricted and kicked only
 	CanBeEdited           bool             `json:"can_be_edited,omitempty"`             // administrators only
 	CanPostMessages       bool             `json:"can_post_messages,omitempty"`         // administrators only
@@ -1108,14 +1128,15 @@ type Game struct {
 //
 // https://core.telegram.org/bots/api#animation
 type Animation struct {
-	FileID   string     `json:"file_id"`
-	Width    int        `json:"width"`
-	Height   int        `json:"height"`
-	Duration int        `json:"duration"`
-	Thumb    *PhotoSize `json:"thumb,omitempty"`
-	FileName *string    `json:"file_name,omitempty"`
-	MimeType *string    `json:"mime_type,omitempty"`
-	FileSize int        `json:"file_size,omitempty"`
+	FileID       string     `json:"file_id"`
+	FileUniqueID string     `json:"file_unique_id"`
+	Width        int        `json:"width"`
+	Height       int        `json:"height"`
+	Duration     int        `json:"duration"`
+	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	FileName     *string    `json:"file_name,omitempty"`
+	MimeType     *string    `json:"mime_type,omitempty"`
+	FileSize     int        `json:"file_size,omitempty"`
 }
 
 // GameHighScore is a struct of GameHighScore
