@@ -156,7 +156,7 @@ type APIResponseMessage struct {
 // APIResponseMessages is an API response with result type: []Message
 type APIResponseMessages struct {
 	APIResponseBase
-	Result []*Message `json:"result,omitempty"`
+	Result []Message `json:"result,omitempty"`
 }
 
 // APIResponseUserProfilePhotos is an API response with result type: UserProfilePhotos
@@ -286,6 +286,7 @@ type Update struct {
 	ShippingQuery      *ShippingQuery      `json:"shipping_query,omitempty"`
 	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query,omitempty"`
 	Poll               *Poll               `json:"poll,omitempty"`
+	PollAnswer         *PollAnswer         `json:"poll_answer,omitempty"`
 }
 
 // AllowedUpdate is a type for 'allowed_updates'
@@ -308,12 +309,15 @@ const (
 //
 // https://core.telegram.org/bots/api#user
 type User struct {
-	ID           int     `json:"id"`
-	IsBot        bool    `json:"is_bot"`
-	FirstName    string  `json:"first_name"`
-	LastName     *string `json:"last_name,omitempty"`
-	Username     *string `json:"username,omitempty"`
-	LanguageCode *string `json:"language_code,omitempty"` // https://en.wikipedia.org/wiki/IETF_language_tag
+	ID                      int     `json:"id"`
+	IsBot                   bool    `json:"is_bot"`
+	FirstName               string  `json:"first_name"`
+	LastName                *string `json:"last_name,omitempty"`
+	Username                *string `json:"username,omitempty"`
+	LanguageCode            *string `json:"language_code,omitempty"`               // https://en.wikipedia.org/wiki/IETF_language_tag
+	CanJoinGroups           bool    `json:"can_join_groups,omitempty"`             // returned only in GetMe()
+	CanReadAllGroupMessages bool    `json:"can_read_all_group_messages,omitempty"` // returned only in GetMe()
+	SupportsInlineQueries   bool    `json:"supports_inline_queries,omitempty"`     // returned only in GetMe()
 }
 
 // Chat is a struct of a chat
@@ -354,14 +358,14 @@ const (
 type InputMedia struct {
 	Type              InputMediaType `json:"type"`
 	Media             string         `json:"media"`
-	Thumb             InputFile      `json:"thumb,omitempty"` // video, animation, audio, document
-	Caption           string         `json:"caption,omitempty"`
-	ParseMode         ParseMode      `json:"parse_mode,omitempty"`
+	Thumb             *InputFile     `json:"thumb,omitempty"` // video, animation, audio, document
+	Caption           *string        `json:"caption,omitempty"`
+	ParseMode         *ParseMode     `json:"parse_mode,omitempty"`
 	Width             int            `json:"width,omitempty"`              // video, animation
 	Height            int            `json:"height,omitempty"`             // video, animation
 	Duration          int            `json:"duration,omitempty"`           // video, animation
-	Performer         string         `json:"performer,omitempty"`          // audio only
-	Title             string         `json:"title,omitempty"`              // audio only
+	Performer         *string        `json:"performer,omitempty"`          // audio only
+	Title             *string        `json:"title,omitempty"`              // audio only
 	SupportsStreaming bool           `json:"supports_streaming,omitempty"` // video only
 }
 
@@ -380,25 +384,26 @@ type InputFile struct {
 //
 // https://core.telegram.org/bots/api#audio
 type Audio struct {
-	FileID       string    `json:"file_id"`
-	FileUniqueID string    `json:"file_unique_id"`
-	Duration     int       `json:"duration"`
-	Performer    *string   `json:"performer,omitempty"`
-	Title        *string   `json:"title,omitempty"`
-	MimeType     *string   `json:"mime_type,omitempty"`
-	FileSize     int       `json:"file_size,omitempty"`
-	Thumb        PhotoSize `json:"thumb,omitempty"`
+	FileID       string     `json:"file_id"`
+	FileUniqueID string     `json:"file_unique_id"`
+	Duration     int        `json:"duration"`
+	Performer    *string    `json:"performer,omitempty"`
+	Title        *string    `json:"title,omitempty"`
+	MimeType     *string    `json:"mime_type,omitempty"`
+	FileSize     int        `json:"file_size,omitempty"`
+	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
 
 // MessageEntity is a struct of a message entity
 //
 // https://core.telegram.org/bots/api#messageentity
 type MessageEntity struct {
-	Type   MessageEntityType `json:"type"`
-	Offset int               `json:"offset"`
-	Length int               `json:"length"`
-	URL    *string           `json:"url,omitempty"`  // when Type == MessageEntityTypeTextLink
-	User   *User             `json:"user,omitempty"` // when Type == MessageEntityTypeTextMention
+	Type     MessageEntityType `json:"type"`
+	Offset   int               `json:"offset"`
+	Length   int               `json:"length"`
+	URL      *string           `json:"url,omitempty"`      // when Type == MessageEntityTypeTextLink
+	User     *User             `json:"user,omitempty"`     // when Type == MessageEntityTypeTextMention
+	Language *string           `json:"language,omitempty"` // when Type == MessageEntityTypePre
 }
 
 // PhotoSize is a struct of a photo's size
@@ -532,10 +537,14 @@ type Venue struct {
 //
 // https://core.telegram.org/bots/api#poll
 type Poll struct {
-	ID       string       `json:"id"`
-	Question string       `json:"question"` // 1~255 chars
-	Options  []PollOption `json:"options"`
-	IsClosed bool         `json:"is_closed"`
+	ID                    string       `json:"id"`
+	Question              string       `json:"question"` // 1~255 chars
+	Options               []PollOption `json:"options"`
+	TotalVoterCount       int          `json:"total_voter_count"`
+	IsClosed              bool         `json:"is_closed"`
+	IsAnonymous           bool         `json:"is_anonymous"`
+	Type                  string       `json:"type"` // "quiz" or "regular"
+	AllowsMultipleAnswers bool         `json:"allows_multiple_answers"`
 }
 
 // PollOption is a struct of a poll option
@@ -544,6 +553,15 @@ type Poll struct {
 type PollOption struct {
 	Text       string `json:"text"` // 1~100 chars
 	VoterCount int    `json:"voter_count"`
+}
+
+// PollAnswer is a struct of a poll answer
+//
+// https://core.telegram.org/bots/api#pollanswer
+type PollAnswer struct {
+	PollID    string `json:"poll_id"`
+	User      User   `json:"user"`
+	OptionIDs []int  `json:"option_ids"`
 }
 
 // UserProfilePhotos is a struct for user profile photos
@@ -578,9 +596,17 @@ type ReplyKeyboardMarkup struct {
 //
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
-	Text            string `json:"text"`
-	RequestContact  bool   `json:"request_contact,omitempty"`
-	RequestLocation bool   `json:"request_location,omitempty"`
+	Text            string                  `json:"text"`
+	RequestContact  bool                    `json:"request_contact,omitempty"`
+	RequestLocation bool                    `json:"request_location,omitempty"`
+	RequestPoll     *KeyboardButtonPollType `json:"request_poll,omitempty"`
+}
+
+// KeyboardButtonPollType is a struct for KeyboardButtonPollType
+//
+// https://core.telegram.org/bots/api#keyboardbuttonpolltype
+type KeyboardButtonPollType struct {
+	Type *string `json:"type,omitempty"` // "quiz", "regular", or anything
 }
 
 // ReplyKeyboardRemove is a struct for ReplyKeyboardRemove
@@ -682,7 +708,7 @@ type ChatPhoto struct {
 type ChatMember struct {
 	User                  User             `json:"user"`
 	Status                ChatMemberStatus `json:"status"`
-	CustomTitle           string           `json:"custom_title,omitempty"`              // owner and administrators only
+	CustomTitle           *string          `json:"custom_title,omitempty"`              // owner and administrators only
 	UntilDate             int              `json:"until_date,omitempty"`                // restricted and kicked only
 	CanBeEdited           bool             `json:"can_be_edited,omitempty"`             // administrators only
 	CanPostMessages       bool             `json:"can_post_messages,omitempty"`         // administrators only
@@ -901,7 +927,7 @@ type InlineQueryResultAudio struct { // https://core.telegram.org/bots/api#inlin
 	Performer           *string               `json:"performer,omitempty"`
 	AudioDuration       int                   `json:"audio_duration,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	InputMessageContent InputMessageContent   `json:"input_message_content,omitempty"`
+	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
 
 // InlineQueryResultVoice is a struct of InlineQueryResultVoice
