@@ -620,7 +620,7 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup interface{}) OptionsSendVen
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: disable_notification, reply_to_message_id, and reply_markup.
+// options include: disable_notification, reply_to_message_id, reply_markup, is_anonymous, type, allows_multiple_answers, correct_option_id, and is_closed.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
@@ -642,6 +642,36 @@ func (o OptionsSendPoll) SetReplyToMessageID(replyToMessageID int) OptionsSendPo
 // replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
 func (o OptionsSendPoll) SetReplyMarkup(replyMarkup interface{}) OptionsSendPoll {
 	o["reply_markup"] = replyMarkup
+	return o
+}
+
+// SetIsAnonymous sets the is_anonymous value of OptionsSendPoll.
+func (o OptionsSendPoll) SetIsAnonymous(isAnonymous bool) OptionsSendPoll {
+	o["is_anonymous"] = isAnonymous
+	return o
+}
+
+// SetType sets the type value of OptionsSendPoll.
+func (o OptionsSendPoll) SetType(newType string) OptionsSendPoll {
+	o["type"] = newType
+	return o
+}
+
+// SetAllowsMultipleAnswers sets the allows_multiple_answers value of OptionsSendPoll.
+func (o OptionsSendPoll) SetAllowsMultipleAnswers(allowsMultipleAnswers bool) OptionsSendPoll {
+	o["allows_multiple_answers"] = allowsMultipleAnswers
+	return o
+}
+
+// SetCorrectOptionID sets the correct_option_id value of OptionsSendPoll.
+func (o OptionsSendPoll) SetCorrectOptionID(correctOptionID int) OptionsSendPoll {
+	o["correct_option_id"] = correctOptionID
+	return o
+}
+
+// SetIsClosed sets the is_closed value of OptionsSendPoll.
+func (o OptionsSendPoll) SetIsClosed(isClosed bool) OptionsSendPoll {
+	o["is_closed"] = isClosed
 	return o
 }
 
