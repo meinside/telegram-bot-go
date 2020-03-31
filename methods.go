@@ -207,7 +207,7 @@ func (b *Bot) UploadStickerFile(userID int, sticker InputFile) (result APIRespon
 // CreateNewStickerSet creates a new sticker set.
 //
 // https://core.telegram.org/bots/api#createnewstickerset
-func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputFile, emojis string, options OptionsCreateNewStickerSet) (result APIResponseBool) {
+func (b *Bot) CreateNewStickerSet(userID int, name, title string, emojis string, options OptionsCreateNewStickerSet) (result APIResponseBool) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -217,7 +217,6 @@ func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputF
 	options["name"] = name
 	options["title"] = title
 	options["emojis"] = emojis
-	options["png_sticker"] = sticker
 
 	return b.requestResponseBool("createNewStickerSet", options)
 }
@@ -225,7 +224,7 @@ func (b *Bot) CreateNewStickerSet(userID int, name, title string, sticker InputF
 // AddStickerToSet adds a sticker to set.
 //
 // https://core.telegram.org/bots/api#addstickertoset
-func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis string, options OptionsAddStickerToSet) (result APIResponseBool) {
+func (b *Bot) AddStickerToSet(userID int, name string, emojis string, options OptionsAddStickerToSet) (result APIResponseBool) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -234,7 +233,6 @@ func (b *Bot) AddStickerToSet(userID int, name string, sticker InputFile, emojis
 	options["user_id"] = userID
 	options["name"] = name
 	options["emojis"] = emojis
-	options["png_sticker"] = sticker
 
 	return b.requestResponseBool("addStickerToSet", options)
 }
@@ -262,6 +260,21 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponseBool) {
 	}
 
 	return b.requestResponseBool("deleteStickerFromSet", params)
+}
+
+// SetStickerSetThumb sets a thumbnail of a sticker set.
+//
+// https://core.telegram.org/bots/api#setstickersetthumb
+func (b *Bot) SetStickerSetThumb(name string, userID int, options OptionsSetStickerSetThumb) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["name"] = name
+	options["user_id"] = userID
+
+	return b.requestResponseBool("setStickerSetThumb", options)
 }
 
 // SendVideo sends a video file.
@@ -422,6 +435,20 @@ func (b *Bot) StopPoll(chatID ChatID, messageID int, options OptionsStopPoll) (r
 	return b.requestResponsePoll("stopPoll", options)
 }
 
+// SendDice sends a random dice.
+//
+// https://core.telegram.org/bots/api#senddice
+func (b *Bot) SendDice(chatID ChatID, options OptionsSendDice) (result APIResponseMessage) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+
+	return b.requestResponseMessage("sendDice", options)
+}
+
 // SendChatAction sends chat actions.
 //
 // https://core.telegram.org/bots/api#sendchataction
@@ -466,7 +493,7 @@ func (b *Bot) GetFileURL(file File) string {
 	return fmt.Sprintf("%s%s/%s", fileBaseURL, b.token, *file.FilePath)
 }
 
-// KickChatMember kicks a chat member
+// KickChatMember kicks a chat member.
 //
 // https://core.telegram.org/bots/api#kickchatmember
 func (b *Bot) KickChatMember(chatID ChatID, userID int) (result APIResponseBool) {
@@ -479,7 +506,7 @@ func (b *Bot) KickChatMember(chatID ChatID, userID int) (result APIResponseBool)
 	return b.requestResponseBool("kickChatMember", params)
 }
 
-// KickChatMemberUntil kicks a chat member until given date
+// KickChatMemberUntil kicks a chat member until given date.
 func (b *Bot) KickChatMemberUntil(chatID ChatID, userID int, untilDate int) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
@@ -491,7 +518,7 @@ func (b *Bot) KickChatMemberUntil(chatID ChatID, userID int, untilDate int) (res
 	return b.requestResponseBool("kickChatMember", params)
 }
 
-// LeaveChat leaves a chat
+// LeaveChat leaves a chat.
 //
 // https://core.telegram.org/bots/api#leavechat
 func (b *Bot) LeaveChat(chatID ChatID) (result APIResponseBool) {
@@ -503,7 +530,7 @@ func (b *Bot) LeaveChat(chatID ChatID) (result APIResponseBool) {
 	return b.requestResponseBool("leaveChat", params)
 }
 
-// UnbanChatMember unbans a chat member
+// UnbanChatMember unbans a chat member.
 //
 // https://core.telegram.org/bots/api#unbanchatmember
 func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponseBool) {
@@ -516,7 +543,7 @@ func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponseBool
 	return b.requestResponseBool("unbanChatMember", params)
 }
 
-// RestrictChatMember restricts a chat member
+// RestrictChatMember restricts a chat member.
 //
 // https://core.telegram.org/bots/api#restrictchatmember
 func (b *Bot) RestrictChatMember(chatID ChatID, userID int, permissions ChatPermissions, options OptionsRestrictChatMember) (result APIResponseBool) {
@@ -532,7 +559,7 @@ func (b *Bot) RestrictChatMember(chatID ChatID, userID int, permissions ChatPerm
 	return b.requestResponseBool("restrictChatMember", options)
 }
 
-// PromoteChatMember promotes a chat member
+// PromoteChatMember promotes a chat member.
 //
 // https://core.telegram.org/bots/api#promotechatmember
 func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options OptionsPromoteChatMember) (result APIResponseBool) {
@@ -547,7 +574,7 @@ func (b *Bot) PromoteChatMember(chatID ChatID, userID int, options OptionsPromot
 	return b.requestResponseBool("promoteChatMember", options)
 }
 
-// SetChatAdministratorCustomTitle sets chat administrator's custom title
+// SetChatAdministratorCustomTitle sets chat administrator's custom title.
 //
 // https://core.telegram.org/bots/api#setchatadministratorcustomtitle
 func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int, customTitle string) (result APIResponseBool) {
@@ -558,7 +585,7 @@ func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int, customT
 	})
 }
 
-// SetChatPermissions sets permissions of a chat
+// SetChatPermissions sets permissions of a chat.
 //
 // https://core.telegram.org/bots/api#setchatpermissions
 func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions) (result APIResponseBool) {
@@ -568,7 +595,7 @@ func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions) (re
 	})
 }
 
-// ExportChatInviteLink exports a chat invite link
+// ExportChatInviteLink exports a chat invite link.
 //
 // https://core.telegram.org/bots/api#exportchatinvitelink
 func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponseString) {
@@ -580,7 +607,7 @@ func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponseString) {
 	return b.requestResponseString("exportChatInviteLink", params)
 }
 
-// SetChatPhoto sets a chat photo
+// SetChatPhoto sets a chat photo.
 //
 // https://core.telegram.org/bots/api#setchatphoto
 func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponseBool) {
@@ -593,7 +620,7 @@ func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponseBo
 	return b.requestResponseBool("setChatPhoto", params)
 }
 
-// DeleteChatPhoto deletes a chat photo
+// DeleteChatPhoto deletes a chat photo.
 //
 // https://core.telegram.org/bots/api#deletechatphoto
 func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponseBool) {
@@ -605,7 +632,7 @@ func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponseBool) {
 	return b.requestResponseBool("deleteChatPhoto", params)
 }
 
-// SetChatTitle sets a chat title
+// SetChatTitle sets a chat title.
 //
 // https://core.telegram.org/bots/api#setchattitle
 func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponseBool) {
@@ -618,7 +645,7 @@ func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponseBool)
 	return b.requestResponseBool("setChatTitle", params)
 }
 
-// SetChatDescription sets a chat description
+// SetChatDescription sets a chat description.
 //
 // https://core.telegram.org/bots/api#setchatdescription
 func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIResponseBool) {
@@ -631,7 +658,7 @@ func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIR
 	return b.requestResponseBool("setChatDescription", params)
 }
 
-// PinChatMessage pins a chat message
+// PinChatMessage pins a chat message.
 //
 // https://core.telegram.org/bots/api#pinchatmessage
 func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options OptionsPinChatMessage) (result APIResponseBool) {
@@ -646,7 +673,7 @@ func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options OptionsPinCha
 	return b.requestResponseBool("pinChatMessage", options)
 }
 
-// UnpinChatMessage unpins a chat message
+// UnpinChatMessage unpins a chat message.
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
 func (b *Bot) UnpinChatMessage(chatID ChatID) (result APIResponseBool) {
@@ -658,7 +685,7 @@ func (b *Bot) UnpinChatMessage(chatID ChatID) (result APIResponseBool) {
 	return b.requestResponseBool("unpinChatMessage", params)
 }
 
-// GetChat gets a chat
+// GetChat gets a chat.
 //
 // https://core.telegram.org/bots/api#getchat
 func (b *Bot) GetChat(chatID ChatID) (result APIResponseChat) {
@@ -670,7 +697,7 @@ func (b *Bot) GetChat(chatID ChatID) (result APIResponseChat) {
 	return b.requestResponseChat("getChat", params)
 }
 
-// GetChatAdministrators gets chat administrators
+// GetChatAdministrators gets chat administrators.
 //
 // https://core.telegram.org/bots/api#getchatadministrators
 func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponseChatAdministrators) {
@@ -682,7 +709,7 @@ func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponseChatAdmini
 	return b.requestResponseChatAdministrators("getChatAdministrators", params)
 }
 
-// GetChatMembersCount gets chat members' count
+// GetChatMembersCount gets chat members' count.
 //
 // https://core.telegram.org/bots/api#getchatmemberscount
 func (b *Bot) GetChatMembersCount(chatID ChatID) (result APIResponseInt) {
@@ -694,7 +721,7 @@ func (b *Bot) GetChatMembersCount(chatID ChatID) (result APIResponseInt) {
 	return b.requestResponseInt("getChatMembersCount", params)
 }
 
-// GetChatMember gets a chat member
+// GetChatMember gets a chat member.
 //
 // https://core.telegram.org/bots/api#getchatmember
 func (b *Bot) GetChatMember(chatID ChatID, userID int) (result APIResponseChatMember) {
@@ -707,7 +734,7 @@ func (b *Bot) GetChatMember(chatID ChatID, userID int) (result APIResponseChatMe
 	return b.requestResponseChatMember("getChatMember", params)
 }
 
-// SetChatStickerSet sets a chat sticker set
+// SetChatStickerSet sets a chat sticker set.
 //
 // https://core.telegram.org/bots/api#setchatstickerset
 func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result APIResponseBool) {
@@ -720,7 +747,7 @@ func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result AP
 	return b.requestResponseBool("setChatStickerSet", params)
 }
 
-// DeleteChatStickerSet deletes a chat sticker set
+// DeleteChatStickerSet deletes a chat sticker set.
 //
 // https://core.telegram.org/bots/api#deletechatstickerset
 func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponseBool) {
@@ -732,7 +759,7 @@ func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponseBool) {
 	return b.requestResponseBool("deleteChatStickerSet", params)
 }
 
-// AnswerCallbackQuery answers a callback query
+// AnswerCallbackQuery answers a callback query.
 //
 // https://core.telegram.org/bots/api#answercallbackquery
 func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerCallbackQuery) (result APIResponseBool) {
@@ -746,11 +773,27 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerC
 	return b.requestResponseBool("answerCallbackQuery", options)
 }
 
+// GetMyCommands fetches commands of this bot.
+//
+// https://core.telegram.org/bots/api#getmycommands
+func (b *Bot) GetMyCommands() (result APIResponseBotCommands) {
+	return b.requestResponseBotCommands("getMyCommands", nil)
+}
+
+// SetMyCommands sets commands of this bot.
+//
+// https://core.telegram.org/bots/api#setmycommands
+func (b *Bot) SetMyCommands(commands []BotCommand) (result APIResponseBool) {
+	return b.requestResponseBool("setMyCommands", map[string]interface{}{
+		"commands": commands,
+	})
+}
+
 // Updating messages
 //
 // https://core.telegram.org/bots/api#updating-messages
 
-// EditMessageText edits text of a message
+// EditMessageText edits text of a message.
 //
 // https://core.telegram.org/bots/api#editmessagetext
 func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (result APIResponseMessageOrBool) {
@@ -764,7 +807,7 @@ func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (resu
 	return b.requestResponseMessageOrBool("editMessageText", options)
 }
 
-// EditMessageCaption edits caption of a message
+// EditMessageCaption edits caption of a message.
 //
 // https://core.telegram.org/bots/api#editmessagecaption
 func (b *Bot) EditMessageCaption(caption string, options OptionsEditMessageCaption) (result APIResponseMessageOrBool) {
@@ -778,7 +821,7 @@ func (b *Bot) EditMessageCaption(caption string, options OptionsEditMessageCapti
 	return b.requestResponseMessageOrBool("editMessageCaption", options)
 }
 
-// EditMessageMedia edites a media message
+// EditMessageMedia edites a media message.
 //
 // https://core.telegram.org/bots/api#editmessagemedia
 func (b *Bot) EditMessageMedia(media InputMedia, options OptionsEditMessageMedia) (result APIResponseMessageOrBool) {
@@ -792,19 +835,14 @@ func (b *Bot) EditMessageMedia(media InputMedia, options OptionsEditMessageMedia
 	return b.requestResponseMessageOrBool("editMessageMedia", options)
 }
 
-// EditMessageReplyMarkup edits reply markup of a message
+// EditMessageReplyMarkup edits reply markup of a message.
 //
 // https://core.telegram.org/bots/api#editmessagereplymarkup
 func (b *Bot) EditMessageReplyMarkup(options OptionsEditMessageReplyMarkup) (result APIResponseMessageOrBool) {
 	return b.requestResponseMessageOrBool("editMessageReplyMarkup", options)
 }
 
-// EditMessageLiveLocation edits live location of a message
-//
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
-//
-// other options: reply_markup
+// EditMessageLiveLocation edits live location of a message.
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
 func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options OptionsEditMessageLiveLocation) (result APIResponseMessageOrBool) {
@@ -819,19 +857,14 @@ func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options Optio
 	return b.requestResponseMessageOrBool("editMessageLiveLocation", options)
 }
 
-// StopMessageLiveLocation stops live location of a message
-//
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
-//
-// other options: reply_markup
+// StopMessageLiveLocation stops live location of a message.
 //
 // https://core.telegram.org/bots/api#stopmessagelivelocation
 func (b *Bot) StopMessageLiveLocation(options OptionsStopMessageLiveLocation) (result APIResponseMessageOrBool) {
 	return b.requestResponseMessageOrBool("stopMessageLiveLocation", options)
 }
 
-// DeleteMessage deletes a message
+// DeleteMessage deletes a message.
 //
 // https://core.telegram.org/bots/api#deletemessage
 func (b *Bot) DeleteMessage(chatID ChatID, messageID int) (result APIResponseBool) {
@@ -941,11 +974,6 @@ func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendG
 
 // SetGameScore sets score of a game.
 //
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
-//
-// other options: force, and disable_edit_message
-//
 // https://core.telegram.org/bots/api#setgamescore
 func (b *Bot) SetGameScore(userID int, score int, options OptionsSetGameScore) (result APIResponseMessageOrBool) {
 	if options == nil {
@@ -960,9 +988,6 @@ func (b *Bot) SetGameScore(userID int, score int, options OptionsSetGameScore) (
 }
 
 // GetGameHighScores gets high scores of a game.
-//
-// required options: chat_id + message_id (when inline_message_id is not given)
-//                or inline_message_id (when chat_id & message_id is not given)
 //
 // https://core.telegram.org/bots/api#getgamehighscores
 func (b *Bot) GetGameHighScores(userID int, options OptionsGetGameHighScores) (result APIResponseGameHighScores) {
@@ -1040,7 +1065,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 			}
 		}
 		b.error("parameter '%+v' could not be cast to string value", param)
-	default:
+	default: // fallback: encode to JSON string
 		json, err := json.Marshal(param)
 		if err == nil {
 			return string(json), true
@@ -1619,6 +1644,27 @@ func (b *Bot) requestResponsePoll(method string, params map[string]interface{}) 
 	b.error(errStr)
 
 	return APIResponsePoll{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseBotCommands and fetch its result.
+func (b *Bot) requestResponseBotCommands(method string, params map[string]interface{}) (result APIResponseBotCommands) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseBotCommands
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseBotCommands{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.

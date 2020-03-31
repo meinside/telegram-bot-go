@@ -235,7 +235,13 @@ type APIResponseMessageOrBool struct {
 // APIResponsePoll is an API response with result type: Poll
 type APIResponsePoll struct {
 	APIResponseBase
-	Result *Poll `json:"poll,omitempty"`
+	Result *Poll `json:"result,omitempty"`
+}
+
+// APIResponseBotCommands is an API response with result type: []BotCommand
+type APIResponseBotCommands struct {
+	APIResponseBase
+	Result []BotCommand `json:"result,omitempty"`
 }
 
 // UpdateType is a type of updates (for allowed_updates)
@@ -449,11 +455,12 @@ type Sticker struct {
 //
 // https://core.telegram.org/bots/api#stickerset
 type StickerSet struct {
-	Name          string    `json:"name"`
-	Title         string    `json:"title"`
-	IsAnimated    bool      `json:"is_animated"`
-	ContainsMasks bool      `json:"contains_masks"`
-	Stickers      []Sticker `json:"stickers"`
+	Name          string     `json:"name"`
+	Title         string     `json:"title"`
+	IsAnimated    bool       `json:"is_animated"`
+	ContainsMasks bool       `json:"contains_masks"`
+	Stickers      []Sticker  `json:"stickers"`
+	Thumb         *PhotoSize `json:"thumb,omitempty"`
 }
 
 // MaskPosition is a struct for a mask position
@@ -562,6 +569,13 @@ type PollAnswer struct {
 	PollID    string `json:"poll_id"`
 	User      User   `json:"user"`
 	OptionIDs []int  `json:"option_ids"`
+}
+
+// Dice is a struct for dice in message
+//
+// https://core.telegram.org/bots/api#senddice
+type Dice struct {
+	Value int `json:"value"` // 1-6
 }
 
 // UserProfilePhotos is a struct for user profile photos
@@ -741,6 +755,14 @@ type ChatPermissions struct {
 	CanPinMessages        bool `json:"can_pin_messages,omitempty"`
 }
 
+// BotCommand is a struct of a bot command
+//
+// https://core.telegram.org/bots/api#botcommand
+type BotCommand struct {
+	Command     string `json:"command"`
+	Description string `json:"description"`
+}
+
 // Message is a struct of a message
 //
 // https://core.telegram.org/bots/api#message
@@ -775,6 +797,7 @@ type Message struct {
 	Location              *Location          `json:"location,omitempty"`
 	Venue                 *Venue             `json:"venue,omitempty"`
 	Poll                  *Poll              `json:"poll,omitempty"`
+	Dice                  *Dice              `json:"dice,omitempty"`
 	NewChatMembers        []User             `json:"new_chat_members,omitempty"`
 	LeftChatMember        *User              `json:"left_chat_member,omitempty"`
 	NewChatTitle          *string            `json:"new_chat_title,omitempty"`

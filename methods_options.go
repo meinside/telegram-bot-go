@@ -268,10 +268,30 @@ func (o OptionsSendSticker) SetReplyMarkup(replyMarkup interface{}) OptionsSendS
 
 // OptionsCreateNewStickerSet struct for CreateNewStickerSet().
 //
-// options include: contains_masks and mask_position
+// options include: `png_sticker`, `tgs_sticker`, `contains_masks`, and `mask_position`
 //
 // https://core.telegram.org/bots/api#createnewstickerset
 type OptionsCreateNewStickerSet MethodOptions
+
+// SetPNGSticker sets the `png_sticker` value of OptionsCreateNewStickerSet.
+func (o OptionsCreateNewStickerSet) SetPNGSticker(pngSticker InputFile) OptionsCreateNewStickerSet {
+	o["png_sticker"] = pngSticker
+	return o
+}
+
+// SetPNGStickerString sets the `png_sticker` value of OptionsCreateNewStickerSet.
+//
+// `thumb` can be a file_id or a http url to a file
+func (o OptionsCreateNewStickerSet) SetPNGStickerString(pngSticker string) OptionsCreateNewStickerSet {
+	o["png_sticker"] = pngSticker
+	return o
+}
+
+// SetTGSSticker sets the `tgs_sticker` value of OptionsCreateNewStickerSet.
+func (o OptionsCreateNewStickerSet) SetTGSSticker(tgsSticker InputFile) OptionsCreateNewStickerSet {
+	o["tgs_sticker"] = tgsSticker
+	return o
+}
 
 // SetContainsMasks sets the contains_masks value of OptionsCreateNewStickerSet.
 func (o OptionsCreateNewStickerSet) SetContainsMasks(containsMasks bool) OptionsCreateNewStickerSet {
@@ -287,14 +307,55 @@ func (o OptionsCreateNewStickerSet) SetMaskPosition(maskPosition MaskPosition) O
 
 // OptionsAddStickerToSet struct for AddStickerToSet()
 //
-// options include: mask_position
+// options include: `png_sticker`, `tgs_sticker`, and `mask_position`
 //
 // https://core.telegram.org/bots/api#addstickertoset
 type OptionsAddStickerToSet MethodOptions
 
+// SetPNGSticker sets the `png_sticker` value of OptionsCreateNew.
+func (o OptionsAddStickerToSet) SetPNGSticker(pngSticker InputFile) OptionsAddStickerToSet {
+	o["png_sticker"] = pngSticker
+	return o
+}
+
+// SetPNGStickerString sets the `png_sticker` value of OptionsCreateNew.
+//
+// `thumb` can be a file_id or a http url to a file
+func (o OptionsAddStickerToSet) SetPNGStickerString(pngSticker string) OptionsAddStickerToSet {
+	o["png_sticker"] = pngSticker
+	return o
+}
+
+// SetTGSSticker sets the `tgs_sticker` value of OptionsCreateNewStickerSet.
+func (o OptionsAddStickerToSet) SetTGSSticker(tgsSticker InputFile) OptionsAddStickerToSet {
+	o["tgs_sticker"] = tgsSticker
+	return o
+}
+
 // SetMaskPosition sets the mask_position value of OptionsAddStickerToSet.
 func (o OptionsAddStickerToSet) SetMaskPosition(maskPosition MaskPosition) OptionsAddStickerToSet {
 	o["mask_position"] = maskPosition
+	return o
+}
+
+// OptionsSetStickerSetThumb struct for SetStickerSetThumb()
+//
+// options include: `thumb`
+//
+// https://core.telegram.org/bots/api#setstickersetthumb
+type OptionsSetStickerSetThumb MethodOptions
+
+// SetThumb sets the `thumb` value of OptionsSetStickerSetThumb.
+func (o OptionsSetStickerSetThumb) SetThumb(thumb InputFile) OptionsSetStickerSetThumb {
+	o["thumb"] = thumb
+	return o
+}
+
+// SetThumbString sets the `thumb` value of OptionsSetStickerSetThumb.
+//
+// `thumb` can be a file_id or a http url to a file
+func (o OptionsSetStickerSetThumb) SetThumbString(thumb string) OptionsSetStickerSetThumb {
+	o["thumb"] = thumb
 	return o
 }
 
@@ -688,6 +749,33 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 	return o
 }
 
+// OptionsSendDice struct for SendDice().
+//
+// options include: disable_notification, reply_to_message_id, and reply_markup.
+//
+// https://core.telegram.org/bots/api#senddice
+type OptionsSendDice MethodOptions
+
+// SetDisableNotification sets the disable_notification value of OptionsSendDice.
+func (o OptionsSendDice) SetDisableNotification(disable bool) OptionsSendDice {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetReplyToMessageID sets the reply_to_message_id value of OptionsSendDice.
+func (o OptionsSendDice) SetReplyToMessageID(replyToMessageID int) OptionsSendDice {
+	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetReplyMarkup sets the reply_markup value of OptionsSendDice.
+//
+// replyMarkup can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
+func (o OptionsSendDice) SetReplyMarkup(replyMarkup interface{}) OptionsSendDice {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
 // OptionsSendContact struct for SendContact()
 //
 // options include: last_name, vcard, disable_notification, reply_to_message_id, and reply_markup.
@@ -746,7 +834,7 @@ func (o OptionsGetUserProfilePhotos) SetLimit(limit int) OptionsGetUserProfilePh
 	return o
 }
 
-// OptionsRestrictChatMember struct for RestrictChatMember()
+// OptionsRestrictChatMember struct for RestrictChatMember().
 //
 // options include: until_date
 //
