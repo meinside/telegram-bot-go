@@ -1,6 +1,6 @@
 # Telegram Bot API helper for Golang
 
-This package is for building a simple Telegram Bot with or without webhook interface.
+This package is for building simple Telegram Bots with or without webhook interface.
 
 View the [documentation here](https://godoc.org/github.com/meinside/telegram-bot-go).
 
