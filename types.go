@@ -544,14 +544,19 @@ type Venue struct {
 //
 // https://core.telegram.org/bots/api#poll
 type Poll struct {
-	ID                    string       `json:"id"`
-	Question              string       `json:"question"` // 1~255 chars
-	Options               []PollOption `json:"options"`
-	TotalVoterCount       int          `json:"total_voter_count"`
-	IsClosed              bool         `json:"is_closed"`
-	IsAnonymous           bool         `json:"is_anonymous"`
-	Type                  string       `json:"type"` // "quiz" or "regular"
-	AllowsMultipleAnswers bool         `json:"allows_multiple_answers"`
+	ID                    string          `json:"id"`
+	Question              string          `json:"question"` // 1~255 chars
+	Options               []PollOption    `json:"options"`
+	TotalVoterCount       int             `json:"total_voter_count"`
+	IsClosed              bool            `json:"is_closed"`
+	IsAnonymous           bool            `json:"is_anonymous"`
+	Type                  string          `json:"type"` // "quiz" or "regular"
+	AllowsMultipleAnswers bool            `json:"allows_multiple_answers"`
+	CorrectOptionID       int             `json:"correct_option_id,omitempty"`
+	Explanation           string          `json:"explanation,omitempty"`
+	ExplanationEntities   []MessageEntity `json:"explanation_entities,omitempty"`
+	OpenPeriod            int             `json:"open_period,omitempty"`
+	CloseDate             int             `json:"close_date,omitempty"`
 }
 
 // PollOption is a struct of a poll option
@@ -575,7 +580,8 @@ type PollAnswer struct {
 //
 // https://core.telegram.org/bots/api#senddice
 type Dice struct {
-	Value int `json:"value"` // 1-6
+	Emoji string `json:"emoji"`
+	Value int    `json:"value"` // 1-6
 }
 
 // UserProfilePhotos is a struct for user profile photos
