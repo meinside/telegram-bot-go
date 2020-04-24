@@ -681,7 +681,7 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup interface{}) OptionsSendVen
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: disable_notification, reply_to_message_id, reply_markup, is_anonymous, type, allows_multiple_answers, correct_option_id, and is_closed.
+// options include: disable_notification, reply_to_message_id, reply_markup, is_anonymous, type, allows_multiple_answers, correct_option_id, explanation, explanation_parse_mode, open_period, close_date, and is_closed.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
@@ -730,6 +730,30 @@ func (o OptionsSendPoll) SetCorrectOptionID(correctOptionID int) OptionsSendPoll
 	return o
 }
 
+// SetExplanation sets the explanation value of OptionsSendPoll.
+func (o OptionsSendPoll) SetExplanation(explanation string) OptionsSendPoll {
+	o["explanation"] = explanation
+	return o
+}
+
+// SetExplanationParseMode sets the explanation_parse_mode value of OptionsSendPoll.
+func (o OptionsSendPoll) SetExplanationParseMode(explanationParseMode string) OptionsSendPoll {
+	o["explanation_parse_mode"] = explanationParseMode
+	return o
+}
+
+// SetOpenPeriod sets the open_period value of OptionsSendPoll.
+func (o OptionsSendPoll) SetOpenPeriod(openPeriod int) OptionsSendPoll {
+	o["open_period"] = openPeriod
+	return o
+}
+
+// SetCloseDate sets the close_date value of OptionsSendPoll.
+func (o OptionsSendPoll) SetCloseDate(closeDate int) OptionsSendPoll {
+	o["close_date"] = closeDate
+	return o
+}
+
 // SetIsClosed sets the is_closed value of OptionsSendPoll.
 func (o OptionsSendPoll) SetIsClosed(isClosed bool) OptionsSendPoll {
 	o["is_closed"] = isClosed
@@ -751,10 +775,16 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 
 // OptionsSendDice struct for SendDice().
 //
-// options include: disable_notification, reply_to_message_id, and reply_markup.
+// options include: emoji, disable_notification, reply_to_message_id, and reply_markup.
 //
 // https://core.telegram.org/bots/api#senddice
 type OptionsSendDice MethodOptions
+
+// SetEmoji sets the emoji value of OptionsSendDice.
+func (o OptionsSendDice) SetEmoji(emoji string) OptionsSendDice {
+	o["emoji"] = emoji
+	return o
+}
 
 // SetDisableNotification sets the disable_notification value of OptionsSendDice.
 func (o OptionsSendDice) SetDisableNotification(disable bool) OptionsSendDice {
