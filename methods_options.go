@@ -781,6 +781,8 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 type OptionsSendDice MethodOptions
 
 // SetEmoji sets the emoji value of OptionsSendDice.
+//
+// `emoji` can be one of: 🎲, 🎯, or 🏀
 func (o OptionsSendDice) SetEmoji(emoji string) OptionsSendDice {
 	o["emoji"] = emoji
 	return o

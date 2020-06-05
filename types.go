@@ -68,6 +68,16 @@ const (
 	InlineQueryResultTypeGame     InlineQueryResultType = "game"
 )
 
+// ThumbnailMimeType is a type of inline query result's thumbnail mime type
+type ThumbnailMimeType string
+
+// ThumbnailMimeType strings
+const (
+	ThumbnailMimeTypeImageJpeg ThumbnailMimeType = "image/jpeg"
+	ThumbnailMimeTypeImageGif  ThumbnailMimeType = "image/gif"
+	ThumbnailMimeTypeVideoMp4  ThumbnailMimeType = "video/mp4"
+)
+
 // MessageEntityType is a type of MessageEntity
 //
 // https://core.telegram.org/bots/api#messageentity
@@ -581,7 +591,7 @@ type PollAnswer struct {
 // https://core.telegram.org/bots/api#senddice
 type Dice struct {
 	Emoji string `json:"emoji"`
-	Value int    `json:"value"` // 1-6
+	Value int    `json:"value"` // 1-6 for dice and dart, 1-5 for basketball
 }
 
 // UserProfilePhotos is a struct for user profile photos
@@ -784,6 +794,7 @@ type Message struct {
 	ForwardSenderName     *string            `json:"forward_sender_name,omitempty"`
 	ForwardDate           int                `json:"forward_date,omitempty"`
 	ReplyToMessage        *Message           `json:"reply_to_message,omitempty"`
+	ViaBot                *User              `json:"via_bot,omitempty"`
 	EditDate              int                `json:"edit_date,omitempty"`
 	AuthorSignature       *string            `json:"author_signature,omitempty"`
 	Text                  *string            `json:"text,omitempty"`
@@ -907,6 +918,7 @@ type InlineQueryResultGif struct { // https://core.telegram.org/bots/api#inlineq
 	GifHeight           int                   `json:"gif_height,omitempty"`
 	GifDuration         int                   `json:"gif_duration,omitempty"`
 	ThumbURL            string                `json:"thumb_url"`
+	ThumbMimeType       ThumbnailMimeType     `json:"thumb_mime_type,omitempty"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
@@ -922,6 +934,7 @@ type InlineQueryResultMpeg4Gif struct { // https://core.telegram.org/bots/api#in
 	Mpeg4Height         int                   `json:"mpeg4_height,omitempty"`
 	Mpeg4Duration       int                   `json:"mpeg4_duration,omitempty"`
 	ThumbURL            string                `json:"thumb_url"`
+	ThumbMimeType       ThumbnailMimeType     `json:"thumb_mime_type,omitempty"`
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
