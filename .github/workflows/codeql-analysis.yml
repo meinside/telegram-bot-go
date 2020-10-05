@@ -63,10 +63,17 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - run: |
-        cd samples/polling && go build
-        cd samples/webhook && go build
-        cd samples/wasm && GOOS=js GOARCH=wasm go build -o telegram.wasm main.go
+    - name: Build sample application (polling)
+      run: go build
+      working-directory: ./samples/polling
+
+    - name: Build sample application (webhook)
+      run: go build
+      working-directory: ./samples/webhook
+
+    - name: Build sample application (wasm)
+      run: GOOS=js GOARCH=wasm go build -o out.wasm main.go
+      working-directory: ./samples/wasm
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
