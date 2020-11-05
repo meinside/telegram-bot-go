@@ -702,7 +702,7 @@ func NewInlineKeyboardButtonsAsRowsWithCallbackData(values map[string]string) []
 	for text, data := range values {
 		callbackData := data
 		keyboards = append(keyboards, []InlineKeyboardButton{
-			InlineKeyboardButton{
+			{
 				Text:         text,
 				CallbackData: &callbackData,
 			},
