@@ -574,11 +574,12 @@ func (b *Bot) LeaveChat(chatID ChatID) (result APIResponseBool) {
 // UnbanChatMember unbans a chat member.
 //
 // https://core.telegram.org/bots/api#unbanchatmember
-func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponseBool) {
+func (b *Bot) UnbanChatMember(chatID ChatID, userID int, onlyIfBanned bool) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
-		"chat_id": chatID,
-		"user_id": userID,
+		"chat_id":        chatID,
+		"user_id":        userID,
+		"only_if_banned": onlyIfBanned,
 	}
 
 	return b.requestResponseBool("unbanChatMember", params)

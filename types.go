@@ -355,6 +355,8 @@ type Chat struct {
 	SlowModeDelay    int              `json:"slow_mode_delay,omitempty"`
 	StickerSetName   *string          `json:"sticker_set_name,omitempty"`
 	CanSetStickerSet bool             `json:"can_set_sticker_set,omitempty"`
+	LinkedChatID     int64            `json:"linked_chat_id,omitempty"`
+	Location         *ChatLocation    `json:"location,omitempty"`
 }
 
 // InputMediaType is a type of InputMedia
@@ -536,8 +538,12 @@ type Contact struct {
 //
 // https://core.telegram.org/bots/api#location
 type Location struct {
-	Longitude float32 `json:"longitude"`
-	Latitude  float32 `json:"latitude"`
+	Longitude            float32 `json:"longitude"`
+	Latitude             float32 `json:"latitude"`
+	HorizontalAccuracy   float32 `json:"horizontal_accuracy,omitempty"`
+	LivePeriod           int     `json:"live_period,omitempty"`
+	Heading              int     `json:"heading,omitempty"`
+	ProximityAlertRadius int     `json:"proximity_alert_radius,omitempty"`
 }
 
 // Venue is a struct of a venue
@@ -770,6 +776,14 @@ type ChatPermissions struct {
 	CanChangeInfo         bool `json:"can_change_info,omitempty"`
 	CanInviteUsers        bool `json:"can_invite_users,omitempty"`
 	CanPinMessages        bool `json:"can_pin_messages,omitempty"`
+}
+
+// ChatLocation is a struct of chat location
+//
+// https://core.telegram.org/bots/api#chatlocation
+type ChatLocation struct {
+	Location Location `json:"location"`
+	Address  string   `json:"address"`
 }
 
 // BotCommand is a struct of a bot command
