@@ -169,6 +169,12 @@ type APIResponseMessages struct {
 	Result []Message `json:"result,omitempty"`
 }
 
+// APIResponseMessageID is an API response with result type: MessageID
+type APIResponseMessageID struct {
+	APIResponseBase
+	Result *MessageID `json:"result,omitempty"`
+}
+
 // APIResponseUserProfilePhotos is an API response with result type: UserProfilePhotos
 type APIResponseUserProfilePhotos struct {
 	APIResponseBase
@@ -554,11 +560,22 @@ type Location struct {
 //
 // https://core.telegram.org/bots/api#venue
 type Venue struct {
-	Location       Location `json:"location"`
-	Title          string   `json:"title"`
-	Address        string   `json:"address"`
-	FoursquareID   *string  `json:"foursquare_id,omitempty"`
-	FoursquareType *string  `json:"foursquare_type,omitempty"`
+	Location        Location `json:"location"`
+	Title           string   `json:"title"`
+	Address         string   `json:"address"`
+	FoursquareID    *string  `json:"foursquare_id,omitempty"`
+	FoursquareType  *string  `json:"foursquare_type,omitempty"`
+	GooglePlaceID   *string  `json:"google_place_id,omitempty"`
+	GooglePlaceType *string  `json:"google_place_type,omitempty"`
+}
+
+// ProximityAlertTriggered is a struct of priximity alert triggered object
+//
+// https://core.telegram.org/bots/api#proximityalerttriggered
+type ProximityAlertTriggered struct {
+	Traveler User `json:"traveler"`
+	Watcher  User `json:"watcher"`
+	Distance int  `json:"distance"`
 }
 
 // Poll is a struct of a poll
@@ -750,7 +767,7 @@ type ChatMember struct {
 	User                  User             `json:"user"`
 	Status                ChatMemberStatus `json:"status"`
 	CustomTitle           *string          `json:"custom_title,omitempty"`              // owner and administrators only
-	UntilDate             int              `json:"until_date,omitempty"`                // restricted and kicked only
+	IsAnonymous           bool             `json:"is_anonymous,omitempty"`              // owner and administrators only
 	CanBeEdited           bool             `json:"can_be_edited,omitempty"`             // administrators only
 	CanPostMessages       bool             `json:"can_post_messages,omitempty"`         // administrators only
 	CanEditMessages       bool             `json:"can_edit_messages,omitempty"`         // administrators only
@@ -766,6 +783,7 @@ type ChatMember struct {
 	CanSendPolls          bool             `json:"can_send_polls,omitempty"`            // restricted only
 	CanSendOtherMessages  bool             `json:"can_send_other_messages,omitempty"`   // restricted only
 	CanAddWebPagePreviews bool             `json:"can_add_web_page_previews,omitempty"` // restricted only
+	UntilDate             int              `json:"until_date,omitempty"`                // restricted and kicked only
 }
 
 // ChatPermissions is a struct of chat permissions
@@ -804,6 +822,7 @@ type BotCommand struct {
 type Message struct {
 	MessageID             int                `json:"message_id"`
 	From                  *User              `json:"from,omitempty"`
+	SenderChat            *Chat              `json:"sender_chat,omitempty"`
 	Date                  int                `json:"date"`
 	Chat                  Chat               `json:"chat"`
 	ForwardFrom           *User              `json:"forward_from,omitempty"`
@@ -815,25 +834,26 @@ type Message struct {
 	ReplyToMessage        *Message           `json:"reply_to_message,omitempty"`
 	ViaBot                *User              `json:"via_bot,omitempty"`
 	EditDate              int                `json:"edit_date,omitempty"`
+	MediaGroupID          *string            `json:"media_group_id,omitempty"`
 	AuthorSignature       *string            `json:"author_signature,omitempty"`
 	Text                  *string            `json:"text,omitempty"`
 	Entities              []MessageEntity    `json:"entities,omitempty"`
-	CaptionEntities       []MessageEntity    `json:"caption_entities,omitempty"`
+	Animation             *Animation         `json:"animation,omitempty"`
 	Audio                 *Audio             `json:"audio,omitempty"`
 	Document              *Document          `json:"document,omitempty"`
-	Animation             *Animation         `json:"animation,omitempty"`
-	Game                  *Game              `json:"game,omitempty"`
 	Photo                 []PhotoSize        `json:"photo,omitempty"`
 	Sticker               *Sticker           `json:"sticker,omitempty"`
 	Video                 *Video             `json:"video,omitempty"`
-	Voice                 *Voice             `json:"voice,omitempty"`
 	VideoNote             *VideoNote         `json:"video_note,omitempty"`
+	Voice                 *Voice             `json:"voice,omitempty"`
 	Caption               *string            `json:"caption,omitempty"`
+	CaptionEntities       []MessageEntity    `json:"caption_entities,omitempty"`
 	Contact               *Contact           `json:"contact,omitempty"`
-	Location              *Location          `json:"location,omitempty"`
-	Venue                 *Venue             `json:"venue,omitempty"`
-	Poll                  *Poll              `json:"poll,omitempty"`
 	Dice                  *Dice              `json:"dice,omitempty"`
+	Game                  *Game              `json:"game,omitempty"`
+	Poll                  *Poll              `json:"poll,omitempty"`
+	Venue                 *Venue             `json:"venue,omitempty"`
+	Location              *Location          `json:"location,omitempty"`
 	NewChatMembers        []User             `json:"new_chat_members,omitempty"`
 	LeftChatMember        *User              `json:"left_chat_member,omitempty"`
 	NewChatTitle          *string            `json:"new_chat_title,omitempty"`
@@ -849,7 +869,15 @@ type Message struct {
 	SuccessfulPayment     *SuccessfulPayment `json:"successful_payment,omitempty"`
 	ConnectedWebsite      *string            `json:"connected_website,omitempty"`
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
-	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	ProximityAlertTriggered *ProximityAlertTriggered `json:"proximity_alert_triggered,omitempty"`
+	ReplyMarkup             *InlineKeyboardMarkup    `json:"reply_markup,omitempty"`
+}
+
+// MessageID is a struct of message id
+//
+// https://core.telegram.org/bots/api#messageid
+type MessageID struct {
+	MessageID int `json:"message_id"`
 }
 
 // InlineQuery is a struct of an inline query
@@ -925,6 +953,7 @@ type InlineQueryResultPhoto struct { // https://core.telegram.org/bots/api#inlin
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -941,6 +970,7 @@ type InlineQueryResultGif struct { // https://core.telegram.org/bots/api#inlineq
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -957,6 +987,7 @@ type InlineQueryResultMpeg4Gif struct { // https://core.telegram.org/bots/api#in
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -970,6 +1001,7 @@ type InlineQueryResultVideo struct { // https://core.telegram.org/bots/api#inlin
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	VideoWidth          int                   `json:"video_width,omitempty"`
 	VideoHeight         int                   `json:"video_height,omitempty"`
 	VideoDuration       int                   `json:"video_duration,omitempty"`
@@ -985,6 +1017,7 @@ type InlineQueryResultAudio struct { // https://core.telegram.org/bots/api#inlin
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	Performer           *string               `json:"performer,omitempty"`
 	AudioDuration       int                   `json:"audio_duration,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -998,6 +1031,7 @@ type InlineQueryResultVoice struct { // https://core.telegram.org/bots/api#inlin
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	VoiceDuration       int                   `json:"voice_duration,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
@@ -1009,6 +1043,7 @@ type InlineQueryResultDocument struct { // https://core.telegram.org/bots/api#in
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	DocumentURL         string                `json:"document_url"`
 	MimeType            DocumentMimeType      `json:"mime_type"`
 	Description         *string               `json:"description,omitempty"`
@@ -1022,14 +1057,18 @@ type InlineQueryResultDocument struct { // https://core.telegram.org/bots/api#in
 // InlineQueryResultLocation is a struct of InlineQueryResultLocation
 type InlineQueryResultLocation struct { // https://core.telegram.org/bots/api#inlinequeryresultlocation
 	InlineQueryResult
-	Latitude            float32               `json:"latitude"`
-	Longitude           float32               `json:"longitude"`
-	Title               string                `json:"title"`
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
-	ThumbURL            *string               `json:"thumb_url,omitempty"`
-	ThumbWidth          int                   `json:"thumb_width,omitempty"`
-	ThumbHeight         int                   `json:"thumb_height,omitempty"`
+	Latitude             float32               `json:"latitude"`
+	Longitude            float32               `json:"longitude"`
+	Title                string                `json:"title"`
+	HorizontalAccuracy   float32               `json:"horizontal_accuracy,omitempty"`
+	LivePeriod           int                   `json:"live_period,omitempty"`
+	Heading              int                   `json:"heading,omitempty"`
+	ProximityAlertRadius int                   `json:"proximity_alert_radius,omitempty"`
+	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+	InputMessageContent  *InputMessageContent  `json:"input_message_content,omitempty"`
+	ThumbURL             *string               `json:"thumb_url,omitempty"`
+	ThumbWidth           int                   `json:"thumb_width,omitempty"`
+	ThumbHeight          int                   `json:"thumb_height,omitempty"`
 }
 
 // InlineQueryResultVenue is a struct of InlineQueryResultVenue
@@ -1041,6 +1080,8 @@ type InlineQueryResultVenue struct { // https://core.telegram.org/bots/api#inlin
 	Address             string                `json:"address"`
 	FoursquareID        *string               `json:"foursquare_id,omitempty"`
 	FoursquareType      *string               `json:"foursquare_type,omitempty"`
+	GooglePlaceID       *string               `json:"google_place_id,omitempty"`
+	GooglePlaceType     *string               `json:"google_place_type,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ThumbURL            *string               `json:"thumb_url,omitempty"`
@@ -1077,6 +1118,7 @@ type InlineQueryResultCachedPhoto struct { // https://core.telegram.org/bots/api
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -1088,6 +1130,7 @@ type InlineQueryResultCachedGif struct { // https://core.telegram.org/bots/api#i
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -1099,6 +1142,7 @@ type InlineQueryResultCachedMpeg4Gif struct { // https://core.telegram.org/bots/
 	Title               *string               `json:"title,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -1119,6 +1163,7 @@ type InlineQueryResultCachedDocument struct { // https://core.telegram.org/bots/
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -1131,6 +1176,7 @@ type InlineQueryResultCachedVideo struct { // https://core.telegram.org/bots/api
 	Description         *string               `json:"description,omitempty"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -1142,6 +1188,7 @@ type InlineQueryResultCachedVoice struct { // https://core.telegram.org/bots/api
 	Title               string                `json:"title"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -1152,6 +1199,7 @@ type InlineQueryResultCachedAudio struct { // https://core.telegram.org/bots/api
 	AudioFileID         string                `json:"audio_file_id"`
 	Caption             *string               `json:"caption,omitempty"`
 	ParseMode           *ParseMode            `json:"parse_mode,omitempty"`
+	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 }
@@ -1163,25 +1211,32 @@ type InputMessageContent interface{}
 
 // InputTextMessageContent is a struct of InputTextMessageContent
 type InputTextMessageContent struct { // https://core.telegram.org/bots/api#inputtextmessagecontent
-	MessageText           string     `json:"message_text"`
-	ParseMode             *ParseMode `json:"parse_mode,omitempty"`
-	DisableWebPagePreview bool       `json:"disable_web_page_preview,omitempty"`
+	MessageText           string          `json:"message_text"`
+	ParseMode             *ParseMode      `json:"parse_mode,omitempty"`
+	CaptionEntities       []MessageEntity `json:"caption_entities,omitempty"`
+	DisableWebPagePreview bool            `json:"disable_web_page_preview,omitempty"`
 }
 
 // InputLocationMessageContent is a struct of InputLocationMessageContent
 type InputLocationMessageContent struct { // https://core.telegram.org/bots/api#inputlocationmessagecontent
-	Latitude  float32 `json:"latitude"`
-	Longitude float32 `json:"longitude"`
+	Latitude             float32 `json:"latitude"`
+	Longitude            float32 `json:"longitude"`
+	HorizontalAccuracy   float32 `json:"horizontal_accuracy,omitempty"`
+	LivePeriod           int     `json:"live_period,omitempty"`
+	Heading              int     `json:"heading,omitempty"`
+	ProximityAlertRadius int     `json:"proximity_alert_radius,omitempty"`
 }
 
 // InputVenueMessageContent is a struct of InputVenueMessageContent
 type InputVenueMessageContent struct { // https://core.telegram.org/bots/api#inputvenuemessagecontent
-	Latitude       float32 `json:"latitude"`
-	Longitude      float32 `json:"longitude"`
-	Title          string  `json:"title"`
-	Address        string  `json:"address"`
-	FoursquareID   *string `json:"foursquare_id,omitempty"`
-	FoursquareType *string `json:"foursquare_type,omitempty"`
+	Latitude        float32 `json:"latitude"`
+	Longitude       float32 `json:"longitude"`
+	Title           string  `json:"title"`
+	Address         string  `json:"address"`
+	FoursquareID    *string `json:"foursquare_id,omitempty"`
+	FoursquareType  *string `json:"foursquare_type,omitempty"`
+	GooglePlaceID   *string `json:"google_place_id,omitempty"`
+	GooglePlaceType *string `json:"google_place_type,omitempty"`
 }
 
 // InputContactMessageContent is a struct of InputContactMessageContent

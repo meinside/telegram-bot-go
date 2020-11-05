@@ -160,6 +160,22 @@ func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int, options O
 	return b.requestResponseMessage("forwardMessage", options)
 }
 
+// CopyMessage copies a message.
+//
+// https://core.telegram.org/bots/api#copymessage
+func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int, options OptionsCopyMessage) (result APIResponseMessageID) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["from_chat_id"] = fromChatID
+	options["message_id"] = messageID
+
+	return b.requestResponseMessageID("copyMessage", options)
+}
+
 // SendPhoto sends a photo.
 //
 // https://core.telegram.org/bots/api#sendphoto
@@ -1413,6 +1429,27 @@ func (b *Bot) requestResponseMessages(method string, params map[string]interface
 	b.error(errStr)
 
 	return APIResponseMessages{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseMessageID and fetch its result.
+func (b *Bot) requestResponseMessageID(method string, params map[string]interface{}) (result APIResponseMessageID) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseMessageID
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseMessageID{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for APIResponseUserProfilePhotos and fetch its result.

@@ -88,6 +88,12 @@ func (o OptionsSendMessage) SetParseMode(parseMode ParseMode) OptionsSendMessage
 	return o
 }
 
+// SetEntities sets the `entities` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetEntities(entities []MessageEntity) OptionsSendMessage {
+	o["entities"] = entities
+	return o
+}
+
 // SetDisableWebPagePreview sets the `disable_web_page_preview` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetDisableWebPagePreview(disable bool) OptionsSendMessage {
 	o["disable_web_page_preview"] = disable
@@ -103,6 +109,12 @@ func (o OptionsSendMessage) SetDisableNotification(disable bool) OptionsSendMess
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetReplyToMessageID(replyToMessageID int) OptionsSendMessage {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetAllowSendingWithoutReply(allow bool) OptionsSendMessage {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -127,6 +139,57 @@ func (o OptionsForwardMessage) SetDisableNotification(disable bool) OptionsForwa
 	return o
 }
 
+// OptionsCopyMessage struct for CopyMessage().
+//
+// options include: `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, `reply_markup`
+//
+// https://core.telegram.org/bots/api#copymessage
+type OptionsCopyMessage MethodOptions
+
+// SetCaption sets the `caption` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetCaption(caption string) OptionsCopyMessage {
+	o["caption"] = caption
+	return o
+}
+
+// SetParseMode sets the `parse_mode` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetParseMode(parseMode ParseMode) OptionsCopyMessage {
+	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetCaptionEntities sets the `caption_entities` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetCaptionEntities(entities []MessageEntity) OptionsCopyMessage {
+	o["caption_entities"] = entities
+	return o
+}
+
+// SetDisableNotification sets the `disable_notification` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetDisableNotification(disable bool) OptionsCopyMessage {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetReplyToMessageID sets the `reply_to_message_id` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetReplyToMessageID(replyToMessageID int) OptionsCopyMessage {
+	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetAllowSendingWithoutReply(allow bool) OptionsCopyMessage {
+	o["allow_sending_without_reply"] = allow
+	return o
+}
+
+// SetReplyMarkup sets the reply_markup value of OptionsCopyMessage.
+//
+// `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
+func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup interface{}) OptionsCopyMessage {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
 // OptionsSendPhoto struct for SendPhoto().
 //
 // options include: `caption`, `parse_mode`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
@@ -146,6 +209,12 @@ func (o OptionsSendPhoto) SetParseMode(parseMode ParseMode) OptionsSendPhoto {
 	return o
 }
 
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetCaptionEntities(entities []MessageEntity) OptionsSendPhoto {
+	o["caption_entities"] = entities
+	return o
+}
+
 // SetDisableNotification sets the `disable_notification` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetDisableNotification(disable bool) OptionsSendPhoto {
 	o["disable_notification"] = disable
@@ -155,6 +224,12 @@ func (o OptionsSendPhoto) SetDisableNotification(disable bool) OptionsSendPhoto 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetReplyToMessageID(replyToMessageID int) OptionsSendPhoto {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetAllowSendingWithoutReply(allow bool) OptionsSendPhoto {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -182,6 +257,12 @@ func (o OptionsSendAudio) SetCaption(caption string) OptionsSendAudio {
 // SetParseMode sets the `parse_mode` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetParseMode(parseMode ParseMode) OptionsSendAudio {
 	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetCaptionEntities(entities []MessageEntity) OptionsSendAudio {
+	o["caption_entities"] = entities
 	return o
 }
 
@@ -220,6 +301,12 @@ func (o OptionsSendAudio) SetDisableNotification(disable bool) OptionsSendAudio 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetReplyToMessageID(replyToMessageID int) OptionsSendAudio {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetAllowSendingWithoutReply(allow bool) OptionsSendAudio {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -312,6 +399,12 @@ func (o OptionsSendSticker) SetDisableNotification(disable bool) OptionsSendStic
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetReplyToMessageID(replyToMessageID int) OptionsSendSticker {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetAllowSendingWithoutReply(allow bool) OptionsSendSticker {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -457,6 +550,12 @@ func (o OptionsSendVideo) SetParseMode(parseMode ParseMode) OptionsSendVideo {
 	return o
 }
 
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetCaptionEntities(entities []MessageEntity) OptionsSendVideo {
+	o["caption_entities"] = entities
+	return o
+}
+
 // SetSupportsStreaming sets the `supports_streaming` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetSupportsStreaming(supportsStreaming bool) OptionsSendVideo {
 	o["supports_streaming"] = supportsStreaming
@@ -472,6 +571,12 @@ func (o OptionsSendVideo) SetDisableNotification(disable bool) OptionsSendVideo 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetReplyToMessageID(replyToMessageID int) OptionsSendVideo {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetAllowSendingWithoutReply(allow bool) OptionsSendVideo {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -528,6 +633,12 @@ func (o OptionsSendAnimation) SetParseMode(parseMode ParseMode) OptionsSendAnima
 	return o
 }
 
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetCaptionEntities(entities []MessageEntity) OptionsSendAnimation {
+	o["caption_entities"] = entities
+	return o
+}
+
 // SetDisableNotification sets the `disable_notification` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetDisableNotification(disable bool) OptionsSendAnimation {
 	o["disable_notification"] = disable
@@ -537,6 +648,12 @@ func (o OptionsSendAnimation) SetDisableNotification(disable bool) OptionsSendAn
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetReplyToMessageID(replyToMessageID int) OptionsSendAnimation {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetAllowSendingWithoutReply(allow bool) OptionsSendAnimation {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -567,6 +684,12 @@ func (o OptionsSendVoice) SetParseMode(parseMode ParseMode) OptionsSendVoice {
 	return o
 }
 
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetCaptionEntities(entities []MessageEntity) OptionsSendVoice {
+	o["caption_entities"] = entities
+	return o
+}
+
 // SetDuration sets the `duration` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetDuration(duration int) OptionsSendVoice {
 	o["duration"] = duration
@@ -582,6 +705,12 @@ func (o OptionsSendVoice) SetDisableNotification(disable bool) OptionsSendVoice 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetReplyToMessageID(replyToMessageID int) OptionsSendVoice {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetAllowSendingWithoutReply(allow bool) OptionsSendVoice {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -633,6 +762,12 @@ func (o OptionsSendVideoNote) SetReplyToMessageID(replyToMessageID int) OptionsS
 	return o
 }
 
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetAllowSendingWithoutReply(allow bool) OptionsSendVideoNote {
+	o["allow_sending_without_reply"] = allow
+	return o
+}
+
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendVideoNote.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
@@ -660,6 +795,12 @@ func (o OptionsSendMediaGroup) SetReplyToMessageID(replyToMessageID int) Options
 	return o
 }
 
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendMediaGroup.
+func (o OptionsSendMediaGroup) SetAllowSendingWithoutReply(allow bool) OptionsSendMediaGroup {
+	o["allow_sending_without_reply"] = allow
+	return o
+}
+
 // OptionsSendLocation struct for SendLocation()
 //
 // options include: `disable_notification`, `reply_to_message_id`, and `reply_markup`.
@@ -667,9 +808,27 @@ func (o OptionsSendMediaGroup) SetReplyToMessageID(replyToMessageID int) Options
 // https://core.telegram.org/bots/api#sendlocation
 type OptionsSendLocation MethodOptions
 
+// SetHorizontalAccuracy sets the `horizontal_accuracy` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetHorizontalAccuracy(horizontalAccuracy float32) OptionsSendLocation {
+	o["horizontal_accuracy"] = horizontalAccuracy
+	return o
+}
+
 // SetLivePeriod sets the `live_period` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetLivePeriod(livePeriod int) OptionsSendLocation {
 	o["live_period"] = livePeriod
+	return o
+}
+
+// SetHeading sets the `heading` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetHeading(heading int) OptionsSendLocation {
+	o["heading"] = heading
+	return o
+}
+
+// SetProximityAlertRadius sets the `proximity_alert_radius` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetProximityAlertRadius(proximityAlertRadius int) OptionsSendLocation {
+	o["proximity_alert_radius"] = proximityAlertRadius
 	return o
 }
 
@@ -682,6 +841,12 @@ func (o OptionsSendLocation) SetDisableNotification(disable bool) OptionsSendLoc
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetReplyToMessageID(replyToMessageID int) OptionsSendLocation {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetAllowSendingWithoutReply(allow bool) OptionsSendLocation {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -712,6 +877,18 @@ func (o OptionsSendVenue) SetFoursquareType(foursquareType string) OptionsSendVe
 	return o
 }
 
+// SetGooglePlaceID sets the `google_place_id` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetGooglePlaceID(googlePlaceID string) OptionsSendVenue {
+	o["google_place_id"] = googlePlaceID
+	return o
+}
+
+// SetGooglePlaceType sets the `google_place_type` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetGooglePlaceType(googlePlaceType string) OptionsSendVenue {
+	o["google_place_type"] = googlePlaceType
+	return o
+}
+
 // SetDisableNotification sets the `disable_notification` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetDisableNotification(disable bool) OptionsSendVenue {
 	o["disable_notification"] = disable
@@ -721,6 +898,12 @@ func (o OptionsSendVenue) SetDisableNotification(disable bool) OptionsSendVenue 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetReplyToMessageID(replyToMessageID int) OptionsSendVenue {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetAllowSendingWithoutReply(allow bool) OptionsSendVenue {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -738,26 +921,6 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup interface{}) OptionsSendVen
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
-
-// SetDisableNotification sets the `disable_notification` value of OptionsSendPoll.
-func (o OptionsSendPoll) SetDisableNotification(disable bool) OptionsSendPoll {
-	o["disable_notification"] = disable
-	return o
-}
-
-// SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendPoll.
-func (o OptionsSendPoll) SetReplyToMessageID(replyToMessageID int) OptionsSendPoll {
-	o["reply_to_message_id"] = replyToMessageID
-	return o
-}
-
-// SetReplyMarkup sets the `reply_markup` value of OptionsSendPoll.
-//
-// `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendPoll) SetReplyMarkup(replyMarkup interface{}) OptionsSendPoll {
-	o["reply_markup"] = replyMarkup
-	return o
-}
 
 // SetIsAnonymous sets the `is_anonymous` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetIsAnonymous(isAnonymous bool) OptionsSendPoll {
@@ -795,6 +958,12 @@ func (o OptionsSendPoll) SetExplanationParseMode(explanationParseMode string) Op
 	return o
 }
 
+// SetExplanationEntities sets the `explanation_entities` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetExplanationEntities(entities []MessageEntity) OptionsSendPoll {
+	o["explanation_entities"] = entities
+	return o
+}
+
 // SetOpenPeriod sets the `open_period` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetOpenPeriod(openPeriod int) OptionsSendPoll {
 	o["open_period"] = openPeriod
@@ -810,6 +979,32 @@ func (o OptionsSendPoll) SetCloseDate(closeDate int) OptionsSendPoll {
 // SetIsClosed sets the `is_closed` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetIsClosed(isClosed bool) OptionsSendPoll {
 	o["is_closed"] = isClosed
+	return o
+}
+
+// SetDisableNotification sets the `disable_notification` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetDisableNotification(disable bool) OptionsSendPoll {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetReplyToMessageID(replyToMessageID int) OptionsSendPoll {
+	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetAllowSendingWithoutReply(allow bool) OptionsSendPoll {
+	o["allow_sending_without_reply"] = allow
+	return o
+}
+
+// SetReplyMarkup sets the `reply_markup` value of OptionsSendPoll.
+//
+// `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
+func (o OptionsSendPoll) SetReplyMarkup(replyMarkup interface{}) OptionsSendPoll {
+	o["reply_markup"] = replyMarkup
 	return o
 }
 
@@ -835,7 +1030,7 @@ type OptionsSendDice MethodOptions
 
 // SetEmoji sets the `emoji` value of OptionsSendDice.
 //
-// `emoji` can be one of: 🎲, 🎯, or 🏀
+// `emoji` can be one of: 🎲 (1~6), 🎯 (1~6), 🏀 (1~5), ⚽ (1~5), or 🎰 (1~64); default: 🎲
 func (o OptionsSendDice) SetEmoji(emoji string) OptionsSendDice {
 	o["emoji"] = emoji
 	return o
@@ -850,6 +1045,12 @@ func (o OptionsSendDice) SetDisableNotification(disable bool) OptionsSendDice {
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendDice.
 func (o OptionsSendDice) SetReplyToMessageID(replyToMessageID int) OptionsSendDice {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendDice.
+func (o OptionsSendDice) SetAllowSendingWithoutReply(allow bool) OptionsSendDice {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -889,6 +1090,12 @@ func (o OptionsSendContact) SetDisableNotification(disable bool) OptionsSendCont
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendContact.
 func (o OptionsSendContact) SetReplyToMessageID(replyToMessageID int) OptionsSendContact {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendContact.
+func (o OptionsSendContact) SetAllowSendingWithoutReply(allow bool) OptionsSendContact {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
@@ -938,6 +1145,12 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
+
+// SetIsAnonymous sets the `is_anonymous` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetIsAnonymous(anonymous bool) OptionsPromoteChatMember {
+	o["is_anonymous"] = anonymous
+	return o
+}
 
 // SetCanChangeInfo sets the `can_change_info` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanChangeInfo(can bool) OptionsPromoteChatMember {
@@ -1061,6 +1274,12 @@ func (o OptionsEditMessageText) SetParseMode(parseMode ParseMode) OptionsEditMes
 	return o
 }
 
+// SetEntities sets the `entities` value of OptionsEditMessageText.
+func (o OptionsEditMessageText) SetEntities(entities []MessageEntity) OptionsEditMessageText {
+	o["entities"] = entities
+	return o
+}
+
 // SetDisableWebPagePreview sets the `disable_web_page_preview` value of OptionsEditMessageText.
 func (o OptionsEditMessageText) SetDisableWebPagePreview(disable bool) OptionsEditMessageText {
 	o["disable_web_page_preview"] = disable
@@ -1105,6 +1324,12 @@ func (o OptionsEditMessageCaption) SetCaption(caption string) OptionsEditMessage
 // SetParseMode sets the `parse_mode` value of OptionsEditMessageCaption.
 func (o OptionsEditMessageCaption) SetParseMode(parseMode ParseMode) OptionsEditMessageCaption {
 	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetCaptionEntities sets the `caption_entities` value of OptionsEditMessageCaption.
+func (o OptionsEditMessageCaption) SetCaptionEntities(entities []MessageEntity) OptionsEditMessageCaption {
+	o["caption_entities"] = entities
 	return o
 }
 
@@ -1192,6 +1417,24 @@ func (o OptionsEditMessageLiveLocation) SetIDs(chatID ChatID, messageID int) Opt
 // SetInlineMessageID sets the `inline_message_id` value of OptionsEditMessageLiveLocation.
 func (o OptionsEditMessageLiveLocation) SetInlineMessageID(inlineMessageID string) OptionsEditMessageLiveLocation {
 	o["inline_message_id"] = inlineMessageID
+	return o
+}
+
+// SetHorizontalAccuracy sets the `horizontal_accuracy` value of OptionsEditMessageLiveLocation.
+func (o OptionsEditMessageLiveLocation) SetHorizontalAccuracy(horizontalAccuracy float32) OptionsEditMessageLiveLocation {
+	o["horizontal_accuracy"] = horizontalAccuracy
+	return o
+}
+
+// SetHeading sets the `heading` value of OptionsEditMessageLiveLocation.
+func (o OptionsEditMessageLiveLocation) SetHeading(heading int) OptionsEditMessageLiveLocation {
+	o["heading"] = heading
+	return o
+}
+
+// SetProximityAlertRadius sets the `proximity_alert_radius` value of OptionsEditMessageLiveLocation.
+func (o OptionsEditMessageLiveLocation) SetProximityAlertRadius(proximityAlertRadius int) OptionsEditMessageLiveLocation {
+	o["proximity_alert_radius"] = proximityAlertRadius
 	return o
 }
 
@@ -1358,6 +1601,12 @@ func (o OptionsSendInvoice) SetReplyToMessageID(replyToMessageID int) OptionsSen
 	return o
 }
 
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetAllowSendingWithoutReply(allow bool) OptionsSendInvoice {
+	o["allow_sending_without_reply"] = allow
+	return o
+}
+
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendInvoice.
 func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsSendInvoice {
 	o["reply_markup"] = replyMarkup
@@ -1380,6 +1629,12 @@ func (o OptionsSendGame) SetDisableNotification(disable bool) OptionsSendGame {
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendGame.
 func (o OptionsSendGame) SetReplyToMessageID(replyToMessageID int) OptionsSendGame {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendGame.
+func (o OptionsSendGame) SetAllowSendingWithoutReply(allow bool) OptionsSendGame {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
