@@ -7,7 +7,7 @@ type MethodOptions map[string]interface{}
 
 // OptionsSetWebhook struct for SetWebhook().
 //
-// options include: certificate, ip_address, max_connections, allowed_updates, and drop_pending_updates.
+// options include: `certificate`, `ip_address`, `max_connections`, `allowed_updates`, and `drop_pending_updates`.
 //
 // https://core.telegram.org/bots/api#setwebhook
 type OptionsSetWebhook MethodOptions
@@ -46,7 +46,7 @@ func (o OptionsSetWebhook) SetDropPendingUpdates(drop bool) OptionsSetWebhook {
 
 // OptionsGetUpdates struct for GetUpdates().
 //
-// options include: offset, limit, timeout, and allowed_updates.
+// options include: `offset`, `limit`, `timeout`, and `allowed_updates`.
 //
 // https://core.telegram.org/bots/api#getupdates
 type OptionsGetUpdates MethodOptions
@@ -77,7 +77,7 @@ func (o OptionsGetUpdates) SetAllowedUpdates(allowedUpdates []AllowedUpdate) Opt
 
 // OptionsSendMessage struct for SendMessage().
 //
-// options include: `parse_mode`, `disable_web_page_preview`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `parse_mode`, `entities`, `disable_web_page_preview`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendmessage
 type OptionsSendMessage MethodOptions
@@ -192,7 +192,7 @@ func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup interface{}) OptionsCopyM
 
 // OptionsSendPhoto struct for SendPhoto().
 //
-// options include: `caption`, `parse_mode`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `caption`, `parse_mode`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
@@ -243,7 +243,7 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup interface{}) OptionsSendPho
 
 // OptionsSendAudio struct for SendAudio().
 //
-// options include: `caption`, `parse_mode`, `duration`, `performer`, `title`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumb`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendaudio
 type OptionsSendAudio MethodOptions
@@ -320,7 +320,7 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup interface{}) OptionsSendAud
 
 // OptionsSendDocument struct for SendDocument().
 //
-// options include: `caption`, `parse_mode`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddocument
 type OptionsSendDocument MethodOptions
@@ -385,7 +385,7 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup interface{}) OptionsSend
 
 // OptionsSendSticker struct for SendSticker().
 //
-// options include: `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendsticker
 type OptionsSendSticker MethodOptions
@@ -507,7 +507,7 @@ func (o OptionsSetStickerSetThumb) SetThumbString(thumb string) OptionsSetSticke
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `duration`, `caption`, `parse_mode`, `supports_streaming`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `duration`, `caption`, `parse_mode`, `caption_entities`, `supports_streaming`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
@@ -590,7 +590,7 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup interface{}) OptionsSendVid
 
 // OptionsSendAnimation struct for SendAnimation().
 //
-// options include: `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
@@ -667,7 +667,7 @@ func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup interface{}) OptionsSen
 
 // OptionsSendVoice struct for SendVoice().
 //
-// options include: `caption`, `parse_mode`, `duration`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvoice
 type OptionsSendVoice MethodOptions
@@ -724,7 +724,7 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup interface{}) OptionsSendVoi
 
 // OptionsSendVideoNote struct for SendVideoNote().
 //
-// options include: `duration`, `length`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `duration`, `length`, `thumb`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
@@ -778,7 +778,7 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup interface{}) OptionsSen
 
 // OptionsSendMediaGroup struct for SendMediaGroup().
 //
-// options include: `disable_notification`, and `reply_to_message_id`
+// options include: `disable_notification`, `reply_to_message_id`, and `allow_sending_without_reply`
 //
 // https://core.telegram.org/bots/api#sendmediagroup
 type OptionsSendMediaGroup MethodOptions
@@ -803,7 +803,7 @@ func (o OptionsSendMediaGroup) SetAllowSendingWithoutReply(allow bool) OptionsSe
 
 // OptionsSendLocation struct for SendLocation()
 //
-// options include: `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendlocation
 type OptionsSendLocation MethodOptions
@@ -860,7 +860,7 @@ func (o OptionsSendLocation) SetReplyMarkup(replyMarkup interface{}) OptionsSend
 
 // OptionsSendVenue struct for SendVenue().
 //
-// options include: `foursquare_id`, `foursquare_type`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvenue
 type OptionsSendVenue MethodOptions
@@ -917,7 +917,7 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup interface{}) OptionsSendVen
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: `disable_notification`, `reply_to_message_id`, `reply_markup`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `open_period`, `close_date`, and `is_closed`.
+// options include: `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
@@ -1023,7 +1023,7 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 
 // OptionsSendDice struct for SendDice().
 //
-// options include: `emoji`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `emoji`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddice
 type OptionsSendDice MethodOptions
@@ -1064,7 +1064,7 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup interface{}) OptionsSendDice
 
 // OptionsSendContact struct for SendContact()
 //
-// options include: `last_name`, `vcard`, `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `last_name`, `vcard`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendcontact
 type OptionsSendContact MethodOptions
@@ -1141,7 +1141,7 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `can_change_info`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
+// options include: `is_anonymous`, `can_change_info`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -1250,7 +1250,7 @@ func (o OptionsAnswerCallbackQuery) SetCacheTime(cacheTime int) OptionsAnswerCal
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
 //                or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `parse_mode`, `disable_web_page_preview`, and `reply_markup`
+// other options: `parse_mode`, `entities`, `disable_web_page_preview`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagetext
 type OptionsEditMessageText MethodOptions
@@ -1297,7 +1297,7 @@ func (o OptionsEditMessageText) SetReplyMarkup(replyMarkup InlineKeyboardMarkup)
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
 //                or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `parse_mode`, or `reply_markup`
+// other options: `caption`, `parse_mode`, `caption_entities`, or `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagecaption
 type OptionsEditMessageCaption MethodOptions
@@ -1402,7 +1402,7 @@ func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup InlineKeyboard
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
 //                or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `reply_markup`
+// other options: `horizontal_accuracy`, `heading`, `proximity_alert_radius`, `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
 type OptionsEditMessageLiveLocation MethodOptions
@@ -1512,7 +1512,7 @@ func (o OptionsAnswerInlineQuery) SetSwitchPmParameter(switchPmParam string) Opt
 
 // OptionsSendInvoice struct for SendInvoice().
 //
-// options include: `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `reply_to_message_id`, and `reply_markup`
+// options include: `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#sendinvoice
 type OptionsSendInvoice MethodOptions
@@ -1615,7 +1615,7 @@ func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Opt
 
 // OptionsSendGame struct for SendGame()
 //
-// options include: `disable_notification`, `reply_to_message_id`, and `reply_markup`.
+// options include: `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendgame
 type OptionsSendGame MethodOptions

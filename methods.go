@@ -29,7 +29,7 @@ func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponseUpdates) 
 
 // SetWebhook sets various options for receiving incoming updates.
 //
-// port should be one of: 443, 80, 88, or 8443.
+// `port` should be one of: 443, 80, 88, or 8443.
 //
 // https://core.telegram.org/bots/api#setwebhook
 func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (result APIResponseBool) {
