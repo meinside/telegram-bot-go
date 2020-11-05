@@ -88,6 +88,20 @@ func (b *Bot) GetMe() (result APIResponseUser) {
 	return b.requestResponseUser("getMe", map[string]interface{}{}) // no params
 }
 
+// LogOut logs this bot from cloud Bot API server.
+//
+// https://core.telegram.org/bots/api#logout
+func (b *Bot) LogOut() (result APIResponseBool) {
+	return b.requestResponseBool("logOut", map[string]interface{}{}) // no params
+}
+
+// Close closes this bot from local Bot API server.
+//
+// https://core.telegram.org/bots/api#close
+func (b *Bot) Close() (result APIResponseBool) {
+	return b.requestResponseBool("close", map[string]interface{}{}) // no params
+}
+
 // SendMessage sends a message to the bot.
 //
 // https://core.telegram.org/bots/api#sendmessage
