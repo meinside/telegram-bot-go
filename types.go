@@ -375,17 +375,19 @@ const (
 //
 // https://core.telegram.org/bots/api#inputmedia
 type InputMedia struct {
-	Type              InputMediaType `json:"type"`
-	Media             string         `json:"media"`
-	Thumb             *InputFile     `json:"thumb,omitempty"` // video, animation, audio, document
-	Caption           *string        `json:"caption,omitempty"`
-	ParseMode         *ParseMode     `json:"parse_mode,omitempty"`
-	Width             int            `json:"width,omitempty"`              // video, animation
-	Height            int            `json:"height,omitempty"`             // video, animation
-	Duration          int            `json:"duration,omitempty"`           // video, animation
-	Performer         *string        `json:"performer,omitempty"`          // audio only
-	Title             *string        `json:"title,omitempty"`              // audio only
-	SupportsStreaming bool           `json:"supports_streaming,omitempty"` // video only
+	Type                        InputMediaType  `json:"type"`
+	Media                       string          `json:"media"`
+	Thumb                       *InputFile      `json:"thumb,omitempty"` // video, animation, audio, document
+	Caption                     *string         `json:"caption,omitempty"`
+	CaptionEntities             []MessageEntity `json:"caption_entities,omitempty"`
+	ParseMode                   *ParseMode      `json:"parse_mode,omitempty"`
+	Width                       int             `json:"width,omitempty"`                          // video, animation
+	Height                      int             `json:"height,omitempty"`                         // video, animation
+	Duration                    int             `json:"duration,omitempty"`                       // video, animation
+	Performer                   *string         `json:"performer,omitempty"`                      // audio only
+	Title                       *string         `json:"title,omitempty"`                          // audio only
+	SupportsStreaming           bool            `json:"supports_streaming,omitempty"`             // video only
+	DisableContentTypeDetection bool            `json:"disable_content_type_detection,omitempty"` // document only
 }
 
 // InputFile represents contents of a file to be uploaded.
@@ -408,6 +410,7 @@ type Audio struct {
 	Duration     int        `json:"duration"`
 	Performer    *string    `json:"performer,omitempty"`
 	Title        *string    `json:"title,omitempty"`
+	FileName     *string    `json:"file_name,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	FileSize     int        `json:"file_size,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
@@ -496,6 +499,7 @@ type Video struct {
 	Height       int        `json:"height"`
 	Duration     int        `json:"duration"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	FileName     *string    `json:"file_name,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	FileSize     int        `json:"file_size,omitempty"`
 }

@@ -258,6 +258,18 @@ func (o OptionsSendDocument) SetParseMode(parseMode ParseMode) OptionsSendDocume
 	return o
 }
 
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetCaptionEntities(entities []MessageEntity) OptionsSendDocument {
+	o["caption_entities"] = entities
+	return o
+}
+
+// SetDisableContentTypeDetection sets the `disable_content_type_detection` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetDisableContentTypeDetection(disable bool) OptionsSendDocument {
+	o["disable_content_type_detection"] = disable
+	return o
+}
+
 // SetDisableNotification sets the `disable_notification` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetDisableNotification(disable bool) OptionsSendDocument {
 	o["disable_notification"] = disable
@@ -267,6 +279,12 @@ func (o OptionsSendDocument) SetDisableNotification(disable bool) OptionsSendDoc
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetReplyToMessageID(replyToMessageID int) OptionsSendDocument {
 	o["reply_to_message_id"] = replyToMessageID
+	return o
+}
+
+// SetAllowSendingWithoutReply sets the `allow_sending_without_reply` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetAllowSendingWithoutReply(allow bool) OptionsSendDocument {
+	o["allow_sending_without_reply"] = allow
 	return o
 }
 
