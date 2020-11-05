@@ -27,27 +27,57 @@ func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponseUpdates) 
 	return b.requestResponseUpdates("getUpdates", options)
 }
 
-// SetWebhookWithOptions sets webhook url, certificate, and various options for receiving incoming updates.
+// SetWebhook sets various options for receiving incoming updates.
 //
 // port should be one of: 443, 80, 88, or 8443.
-// default maxConnections = 40
 //
 // https://core.telegram.org/bots/api#setwebhook
-func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, maxConnections int, allowedUpdates []UpdateType) (result APIResponseBool) {
+func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (result APIResponseBool) {
 	b.webhookHost = host
 	b.webhookPort = port
 	b.webhookURL = b.getWebhookURL()
 
-	file, err := os.Open(certFilepath)
-	if err != nil {
-		panic(err)
+	params := map[string]interface{}{
+		"url": b.webhookURL,
 	}
 
-	params := map[string]interface{}{
-		"url":             b.webhookURL,
-		"certificate":     file,
-		"max_connections": maxConnections,
-		"allowed_updates": allowedUpdates,
+	if cert, exists := options["certificate"]; exists {
+		var errStr string = ""
+
+		if filepath, ok := cert.(string); ok {
+			if file, err := os.Open(filepath); err == nil {
+				params["certificate"] = file
+			} else {
+				errStr = fmt.Sprintf("failed to open certificate: %s", err)
+			}
+		} else {
+			errStr = fmt.Sprintf("given filepath of certificate is not a string")
+		}
+
+		if errStr != "" {
+			return APIResponseBool{
+				APIResponseBase: APIResponseBase{
+					Ok:          false,
+					Description: &errStr,
+				},
+			}
+		}
+	}
+
+	if ipAddress, exists := options["ip_address"]; exists {
+		params["ip_address"] = ipAddress
+	}
+
+	if maxConnections, exists := options["max_connections"]; exists {
+		params["max_connections"] = maxConnections
+	}
+
+	if allowedUpdates, exists := options["allowed_updates"]; exists {
+		params["allowed_updates"] = allowedUpdates
+	}
+
+	if dropPendingUpdates, exists := options["drop_pending_updates"]; exists {
+		params["drop_pending_updates"] = dropPendingUpdates
 	}
 
 	b.verbose("setting webhook url to: %s", b.webhookURL)
@@ -55,23 +85,20 @@ func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, 
 	return b.requestResponseBool("setWebhook", params)
 }
 
-// SetWebhook sets webhook url and certificate for receiving incoming updates.
-func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result APIResponseBool) {
-	return b.SetWebhookWithOptions(host, port, certFilepath, 40, []UpdateType{})
-}
-
 // DeleteWebhook deletes webhook for this bot.
 // (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 //
 // https://core.telegram.org/bots/api#deletewebhook
-func (b *Bot) DeleteWebhook() (result APIResponseBool) {
+func (b *Bot) DeleteWebhook(dropPendingUpdates bool) (result APIResponseBool) {
 	b.webhookHost = ""
 	b.webhookPort = 0
 	b.webhookURL = ""
 
 	b.verbose("deleting webhook url")
 
-	return b.requestResponseBool("deleteWebhook", map[string]interface{}{})
+	return b.requestResponseBool("deleteWebhook", map[string]interface{}{
+		"drop_pending_updates": dropPendingUpdates,
+	})
 }
 
 // GetWebhookInfo gets webhook info for this bot.
@@ -86,6 +113,20 @@ func (b *Bot) GetWebhookInfo() (result APIResponseWebhookInfo) {
 // https://core.telegram.org/bots/api#getme
 func (b *Bot) GetMe() (result APIResponseUser) {
 	return b.requestResponseUser("getMe", map[string]interface{}{}) // no params
+}
+
+// LogOut logs this bot from cloud Bot API server.
+//
+// https://core.telegram.org/bots/api#logout
+func (b *Bot) LogOut() (result APIResponseBool) {
+	return b.requestResponseBool("logOut", map[string]interface{}{}) // no params
+}
+
+// Close closes this bot from local Bot API server.
+//
+// https://core.telegram.org/bots/api#close
+func (b *Bot) Close() (result APIResponseBool) {
+	return b.requestResponseBool("close", map[string]interface{}{}) // no params
 }
 
 // SendMessage sends a message to the bot.
@@ -117,6 +158,22 @@ func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int, options O
 	options["message_id"] = messageID
 
 	return b.requestResponseMessage("forwardMessage", options)
+}
+
+// CopyMessage copies a message.
+//
+// https://core.telegram.org/bots/api#copymessage
+func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int, options OptionsCopyMessage) (result APIResponseMessageID) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["from_chat_id"] = fromChatID
+	options["message_id"] = messageID
+
+	return b.requestResponseMessageID("copyMessage", options)
 }
 
 // SendPhoto sends a photo.
@@ -533,11 +590,12 @@ func (b *Bot) LeaveChat(chatID ChatID) (result APIResponseBool) {
 // UnbanChatMember unbans a chat member.
 //
 // https://core.telegram.org/bots/api#unbanchatmember
-func (b *Bot) UnbanChatMember(chatID ChatID, userID int) (result APIResponseBool) {
+func (b *Bot) UnbanChatMember(chatID ChatID, userID int, onlyIfBanned bool) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
-		"chat_id": chatID,
-		"user_id": userID,
+		"chat_id":        chatID,
+		"user_id":        userID,
+		"only_if_banned": onlyIfBanned,
 	}
 
 	return b.requestResponseBool("unbanChatMember", params)
@@ -676,13 +734,27 @@ func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options OptionsPinCha
 // UnpinChatMessage unpins a chat message.
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
-func (b *Bot) UnpinChatMessage(chatID ChatID) (result APIResponseBool) {
+func (b *Bot) UnpinChatMessage(chatID ChatID, options OptionsUnpinChatMessage) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+
+	return b.requestResponseBool("unpinChatMessage", options)
+}
+
+// UnpinAllChatMessages unpins all chat messages.
+//
+// https://core.telegram.org/bots/api#unpinallchatmessages
+func (b *Bot) UnpinAllChatMessages(chatID ChatID) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	return b.requestResponseBool("unpinChatMessage", params)
+	return b.requestResponseBool("unpinAllChatMessages", params)
 }
 
 // GetChat gets a chat.
@@ -1357,6 +1429,27 @@ func (b *Bot) requestResponseMessages(method string, params map[string]interface
 	b.error(errStr)
 
 	return APIResponseMessages{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseMessageID and fetch its result.
+func (b *Bot) requestResponseMessageID(method string, params map[string]interface{}) (result APIResponseMessageID) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseMessageID
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseMessageID{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for APIResponseUserProfilePhotos and fetch its result.

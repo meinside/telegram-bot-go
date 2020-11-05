@@ -1,6 +1,7 @@
 // sample code for telegram-bot-go (get updates),
 //
-// last update: 2018.11.20.
+// last update: 2020.11.05.
+
 package main
 
 import (
@@ -66,17 +67,17 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 					SetReplyToMessageID(update.Message.MessageID). // show original message
 					SetReplyMarkup(bot.ReplyKeyboardMarkup{        // show keyboards
 						Keyboard: [][]bot.KeyboardButton{
-							[]bot.KeyboardButton{
-								bot.KeyboardButton{
+							{
+								{
 									Text: "Just a button",
 								},
 							},
-							[]bot.KeyboardButton{
-								bot.KeyboardButton{
+							{
+								{
 									Text:           "Request contact",
 									RequestContact: true,
 								},
-								bot.KeyboardButton{
+								{
 									Text:            "Request location",
 									RequestLocation: true,
 								},
@@ -85,7 +86,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 					}),
 			); !sent.Ok {
 				log.Printf(
-					"*** failed to send message: %s\n",
+					"*** failed to send message: %s",
 					*sent.Description,
 				)
 			}
@@ -112,14 +113,14 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 				nil,
 			); !sent.Ok {
 				log.Printf(
-					"*** failed to answer inline query: %s\n",
+					"*** failed to answer inline query: %s",
 					*sent.Description,
 				)
 			}
 		}
 	} else {
 		log.Printf(
-			"*** error while receiving update (%s)\n",
+			"*** error while receiving update (%s)",
 			err.Error(),
 		)
 	}
@@ -132,13 +133,13 @@ func main() {
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
 		log.Printf(
-			"Bot information: @%s (%s)\n",
+			"Bot information: @%s (%s)",
 			*me.Result.Username,
 			me.Result.FirstName,
 		)
 
 		// delete webhook (getting updates will not work when wehbook is set up)
-		if unhooked := client.DeleteWebhook(); unhooked.Ok {
+		if unhooked := client.DeleteWebhook(true); unhooked.Ok {
 			// wait for new updates
 			client.StartMonitoringUpdates(
 				0,
