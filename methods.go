@@ -27,27 +27,57 @@ func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponseUpdates) 
 	return b.requestResponseUpdates("getUpdates", options)
 }
 
-// SetWebhookWithOptions sets webhook url, certificate, and various options for receiving incoming updates.
+// SetWebhook sets various options for receiving incoming updates.
 //
 // port should be one of: 443, 80, 88, or 8443.
-// default maxConnections = 40
 //
 // https://core.telegram.org/bots/api#setwebhook
-func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, maxConnections int, allowedUpdates []UpdateType) (result APIResponseBool) {
+func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (result APIResponseBool) {
 	b.webhookHost = host
 	b.webhookPort = port
 	b.webhookURL = b.getWebhookURL()
 
-	file, err := os.Open(certFilepath)
-	if err != nil {
-		panic(err)
+	params := map[string]interface{}{
+		"url": b.webhookURL,
 	}
 
-	params := map[string]interface{}{
-		"url":             b.webhookURL,
-		"certificate":     file,
-		"max_connections": maxConnections,
-		"allowed_updates": allowedUpdates,
+	if cert, exists := options["certificate"]; exists {
+		var errStr string = ""
+
+		if filepath, ok := cert.(string); ok {
+			if file, err := os.Open(filepath); err == nil {
+				params["certificate"] = file
+			} else {
+				errStr = fmt.Sprintf("failed to open certificate: %s", err)
+			}
+		} else {
+			errStr = fmt.Sprintf("given filepath of certificate is not a string")
+		}
+
+		if errStr != "" {
+			return APIResponseBool{
+				APIResponseBase: APIResponseBase{
+					Ok:          false,
+					Description: &errStr,
+				},
+			}
+		}
+	}
+
+	if ipAddress, exists := options["ip_address"]; exists {
+		params["ip_address"] = ipAddress
+	}
+
+	if maxConnections, exists := options["max_connections"]; exists {
+		params["max_connections"] = maxConnections
+	}
+
+	if allowedUpdates, exists := options["allowed_updates"]; exists {
+		params["allowed_updates"] = allowedUpdates
+	}
+
+	if dropPendingUpdates, exists := options["drop_pending_updates"]; exists {
+		params["drop_pending_updates"] = dropPendingUpdates
 	}
 
 	b.verbose("setting webhook url to: %s", b.webhookURL)
@@ -55,23 +85,20 @@ func (b *Bot) SetWebhookWithOptions(host string, port int, certFilepath string, 
 	return b.requestResponseBool("setWebhook", params)
 }
 
-// SetWebhook sets webhook url and certificate for receiving incoming updates.
-func (b *Bot) SetWebhook(host string, port int, certFilepath string) (result APIResponseBool) {
-	return b.SetWebhookWithOptions(host, port, certFilepath, 40, []UpdateType{})
-}
-
 // DeleteWebhook deletes webhook for this bot.
 // (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 //
 // https://core.telegram.org/bots/api#deletewebhook
-func (b *Bot) DeleteWebhook() (result APIResponseBool) {
+func (b *Bot) DeleteWebhook(dropPendingUpdates bool) (result APIResponseBool) {
 	b.webhookHost = ""
 	b.webhookPort = 0
 	b.webhookURL = ""
 
 	b.verbose("deleting webhook url")
 
-	return b.requestResponseBool("deleteWebhook", map[string]interface{}{})
+	return b.requestResponseBool("deleteWebhook", map[string]interface{}{
+		"drop_pending_updates": dropPendingUpdates,
+	})
 }
 
 // GetWebhookInfo gets webhook info for this bot.

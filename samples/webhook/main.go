@@ -144,7 +144,7 @@ func main() {
 		)
 
 		// delete webhook
-		if unhooked := client.DeleteWebhook(); unhooked.Ok {
+		if unhooked := client.DeleteWebhook(true); unhooked.Ok {
 			// generate certificate and private key for testing
 			if err := bot.GenCertAndKey(
 				webhookHost,
@@ -156,7 +156,8 @@ func main() {
 				if hooked := client.SetWebhook(
 					webhookHost,
 					webhookPort,
-					certFilepath,
+					bot.OptionsSetWebhook{}.
+						SetCertificate(certFilepath),
 				); hooked.Ok {
 					// on success, start webhook server
 					client.StartWebhookServerAndWait(

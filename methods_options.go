@@ -5,6 +5,45 @@ package telegrambot
 // MethodOptions is a type for methods' options parameter.
 type MethodOptions map[string]interface{}
 
+// OptionsSetWebhook struct for SetWebhook().
+//
+// options include: certificate, ip_address, max_connections, allowed_updates, and drop_pending_updates.
+//
+// https://core.telegram.org/bots/api#setwebhook
+type OptionsSetWebhook MethodOptions
+
+// SetCertificate sets the `certificate` value of OptionsSetWebhook.
+func (o OptionsSetWebhook) SetCertificate(filepath string) OptionsSetWebhook {
+	o["certificate"] = filepath
+	return o
+}
+
+// SetIPAddress sets the `ip_address` value of OptionsSetWebhook.
+func (o OptionsSetWebhook) SetIPAddress(address string) OptionsSetWebhook {
+	o["ip_address"] = address
+	return o
+}
+
+// SetMaxConnections sets the `max_connections` value of OptionsSetWebhook.
+//
+// maxConnections: 1 ~ 100 (default: 40)
+func (o OptionsSetWebhook) SetMaxConnections(maxConnections int) OptionsSetWebhook {
+	o["max_connections"] = maxConnections
+	return o
+}
+
+// SetAllowedUpdates sets the `allowed_updates` value of OptionsSetWebhook.
+func (o OptionsSetWebhook) SetAllowedUpdates(allowedUpdates []UpdateType) OptionsSetWebhook {
+	o["allowed_updates"] = allowedUpdates
+	return o
+}
+
+// SetDropPendingUpdates sets the `drop_pending_updates` value of OptionsSetWebhook.
+func (o OptionsSetWebhook) SetDropPendingUpdates(drop bool) OptionsSetWebhook {
+	o["drop_pending_updates"] = drop
+	return o
+}
+
 // OptionsGetUpdates struct for GetUpdates().
 //
 // options include: offset, limit, timeout, and allowed_updates.
