@@ -718,13 +718,27 @@ func (b *Bot) PinChatMessage(chatID ChatID, messageID int, options OptionsPinCha
 // UnpinChatMessage unpins a chat message.
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
-func (b *Bot) UnpinChatMessage(chatID ChatID) (result APIResponseBool) {
+func (b *Bot) UnpinChatMessage(chatID ChatID, options OptionsUnpinChatMessage) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+
+	return b.requestResponseBool("unpinChatMessage", options)
+}
+
+// UnpinAllChatMessages unpins all chat messages.
+//
+// https://core.telegram.org/bots/api#unpinallchatmessages
+func (b *Bot) UnpinAllChatMessages(chatID ChatID) (result APIResponseBool) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	return b.requestResponseBool("unpinChatMessage", params)
+	return b.requestResponseBool("unpinAllChatMessages", params)
 }
 
 // GetChat gets a chat.

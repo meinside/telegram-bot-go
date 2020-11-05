@@ -1000,6 +1000,19 @@ func (o OptionsPinChatMessage) SetDisableNotification(disable bool) OptionsPinCh
 	return o
 }
 
+// OptionsUnpinChatMessage struct for UnpinChatMessage
+//
+// options include: `message_id`
+//
+// https://core.telegram.org/bots/api#unpinchatmessage
+type OptionsUnpinChatMessage MethodOptions
+
+// SetMessageID set the `message_id` value of OptionsUnpinChatMessage.
+func (o OptionsUnpinChatMessage) SetMessageID(messageID int) OptionsUnpinChatMessage {
+	o["message_id"] = messageID
+	return o
+}
+
 // OptionsAnswerCallbackQuery struct for AnswerCallbackQuery().
 //
 // options include: `text`, `show_alert`, `url`, and `cache_time`
