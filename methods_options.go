@@ -1030,7 +1030,7 @@ type OptionsSendDice MethodOptions
 
 // SetEmoji sets the `emoji` value of OptionsSendDice.
 //
-// `emoji` can be one of: 🎲 (1~6), 🎯 (1~6), 🏀 (1~5), ⚽ (1~5), or 🎰 (1~64); default: 🎲
+// `emoji` can be one of: 🎲 (1~6), 🎯 (1~6), 🎳 (1~6), 🏀 (1~5), ⚽ (1~5), or 🎰 (1~64); default: 🎲
 func (o OptionsSendDice) SetEmoji(emoji string) OptionsSendDice {
 	o["emoji"] = emoji
 	return o
@@ -1126,6 +1126,25 @@ func (o OptionsGetUserProfilePhotos) SetLimit(limit int) OptionsGetUserProfilePh
 	return o
 }
 
+// OptionsKickChatMember struct for KickChatMember().
+//
+// options include: `until_date` and `revoke_messages`.
+//
+// https://core.telegram.org/bots/api#kickchatmember
+type OptionsKickChatMember MethodOptions
+
+// SetUntilDate sets the `until_date` value of OptionsKickChatMember.
+func (o OptionsKickChatMember) SetUntilDate(untilDate int) OptionsKickChatMember {
+	o["until_date"] = untilDate
+	return o
+}
+
+// SetRevokeMessages sets the `revoke_messages` value of OptionsKickChatMember.
+func (o OptionsKickChatMember) SetRevokeMessages(revokeMessages bool) OptionsKickChatMember {
+	o["revoke_messages"] = revokeMessages
+	return o
+}
+
 // OptionsRestrictChatMember struct for RestrictChatMember().
 //
 // options include: `until_date`
@@ -1141,7 +1160,7 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `is_anonymous`, `can_change_info`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
+// options include: `is_anonymous`, `can_change_info`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_voice_chats`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -1155,6 +1174,12 @@ func (o OptionsPromoteChatMember) SetIsAnonymous(anonymous bool) OptionsPromoteC
 // SetCanChangeInfo sets the `can_change_info` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanChangeInfo(can bool) OptionsPromoteChatMember {
 	o["can_change_info"] = can
+	return o
+}
+
+// SetCanManageChat sets the `can_manage_chat` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageChat(can bool) OptionsPromoteChatMember {
+	o["can_manage_chat"] = can
 	return o
 }
 
@@ -1173,6 +1198,12 @@ func (o OptionsPromoteChatMember) SetCanEditMessages(can bool) OptionsPromoteCha
 // SetCanDeleteMessages sets the `can_delete_messages` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanDeleteMessages(can bool) OptionsPromoteChatMember {
 	o["can_delete_messages"] = can
+	return o
+}
+
+// SetCanManageVoiceChats sets the `can_manage_voice_chats` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageVoiceChats(can bool) OptionsPromoteChatMember {
+	o["can_manage_voice_chats"] = can
 	return o
 }
 
@@ -1197,6 +1228,25 @@ func (o OptionsPromoteChatMember) SetCanPinMessages(can bool) OptionsPromoteChat
 // SetCanPromoteMembers sets the `can_promote_members` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanPromoteMembers(can bool) OptionsPromoteChatMember {
 	o["can_promote_members"] = can
+	return o
+}
+
+// OptionsCreateChatInviteLink struct for CreateChatInviteLink
+//
+// options include: `expire_date` and `member_limit`
+//
+// https://core.telegram.org/bots/api#createchatinvitelink
+type OptionsCreateChatInviteLink MethodOptions
+
+// SetExpireDate sets the `expire_date` value of OptionsCreateChatInviteLink
+func (o OptionsCreateChatInviteLink) SetExpireDate(expireDate int) OptionsCreateChatInviteLink {
+	o["expire_date"] = expireDate
+	return o
+}
+
+// SetMemberLimit sets the `member_limit` value of OptionsCreateChatInviteLink
+func (o OptionsCreateChatInviteLink) SetMemberLimit(memberLimit int) OptionsCreateChatInviteLink {
+	o["member_limit"] = memberLimit
 	return o
 }
 

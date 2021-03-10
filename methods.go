@@ -553,26 +553,16 @@ func (b *Bot) GetFileURL(file File) string {
 // KickChatMember kicks a chat member.
 //
 // https://core.telegram.org/bots/api#kickchatmember
-func (b *Bot) KickChatMember(chatID ChatID, userID int) (result APIResponseBool) {
-	// essential params
-	params := map[string]interface{}{
-		"chat_id": chatID,
-		"user_id": userID,
+func (b *Bot) KickChatMember(chatID ChatID, userID int, options OptionsKickChatMember) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
 	}
 
-	return b.requestResponseBool("kickChatMember", params)
-}
-
-// KickChatMemberUntil kicks a chat member until given date.
-func (b *Bot) KickChatMemberUntil(chatID ChatID, userID int, untilDate int) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
-		"chat_id":    chatID,
-		"user_id":    userID,
-		"until_date": untilDate,
-	}
+	options["chat_id"] = chatID
+	options["user_id"] = userID
 
-	return b.requestResponseBool("kickChatMember", params)
+	return b.requestResponseBool("kickChatMember", options)
 }
 
 // LeaveChat leaves a chat.
@@ -663,6 +653,45 @@ func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponseString) {
 	}
 
 	return b.requestResponseString("exportChatInviteLink", params)
+}
+
+// CreateChatInviteLink creates a chat invite link.
+//
+// https://core.telegram.org/bots/api#createchatinvitelink
+func (b *Bot) CreateChatInviteLink(chatID ChatID, options OptionsCreateChatInviteLink) (result APIResponseChatInviteLink) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+
+	return b.requestResponseChatInviteLink("createChatInviteLink", options)
+}
+
+// EditChatInviteLink edits a chat invite link.
+//
+// https://core.telegram.org/bots/api#editchatinvitelink
+func (b *Bot) EditChatInviteLink(chatID ChatID, inviteLink string, options OptionsCreateChatInviteLink) (result APIResponseChatInviteLink) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["invite_link"] = inviteLink
+
+	return b.requestResponseChatInviteLink("editChatInviteLink", options)
+}
+
+// RevokeChatInviteLink revoks a chat invite link.
+//
+// https://core.telegram.org/bots/api#revokechatinvitelink
+func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result APIResponseChatInviteLink) {
+	return b.requestResponseChatInviteLink("revokeChatInviteLink", map[string]interface{}{
+		"chat_id":     chatID,
+		"invite_link": inviteLink,
+	})
 }
 
 // SetChatPhoto sets a chat photo.
@@ -1758,6 +1787,27 @@ func (b *Bot) requestResponseBotCommands(method string, params map[string]interf
 	b.error(errStr)
 
 	return APIResponseBotCommands{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseChatInviteLink and fetch its result.
+func (b *Bot) requestResponseChatInviteLink(method string, params map[string]interface{}) (result APIResponseChatInviteLink) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseChatInviteLink
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseChatInviteLink{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.
