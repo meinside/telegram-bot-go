@@ -52,7 +52,7 @@ func (o OptionsSetWebhook) SetDropPendingUpdates(drop bool) OptionsSetWebhook {
 type OptionsGetUpdates MethodOptions
 
 // SetOffset sets the `offset` value of OptionsGetUpdates.
-func (o OptionsGetUpdates) SetOffset(offset int) OptionsGetUpdates {
+func (o OptionsGetUpdates) SetOffset(offset int64) OptionsGetUpdates {
 	o["offset"] = offset
 	return o
 }
