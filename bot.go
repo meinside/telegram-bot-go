@@ -128,7 +128,7 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 // StartMonitoringUpdates retrieves updates from API server constantly.
 //
 // If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
-func (b *Bot) StartMonitoringUpdates(updateOffset int, interval int, updateHandler func(b *Bot, update Update, err error)) {
+func (b *Bot) StartMonitoringUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error)) {
 	b.verbose("starting monitoring updates (interval seconds: %d) ...", interval)
 
 	// https://core.telegram.org/bots/api#getupdates
