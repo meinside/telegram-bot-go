@@ -304,7 +304,7 @@ type WebhookInfo struct {
 //
 // https://core.telegram.org/bots/api#update
 type Update struct {
-	UpdateID           int                 `json:"update_id"`
+	UpdateID           int64               `json:"update_id"`
 	Message            *Message            `json:"message,omitempty"`
 	EditedMessage      *Message            `json:"edited_message,omitempty"`
 	ChannelPost        *Message            `json:"channel_post,omitempty"`
@@ -340,7 +340,7 @@ const (
 //
 // https://core.telegram.org/bots/api#user
 type User struct {
-	ID                      int     `json:"id"`
+	ID                      int64   `json:"id"`
 	IsBot                   bool    `json:"is_bot"`
 	FirstName               string  `json:"first_name"`
 	LastName                *string `json:"last_name,omitempty"`
@@ -548,7 +548,7 @@ type Contact struct {
 	PhoneNumber string  `json:"phone_number"`
 	FirstName   string  `json:"first_name"`
 	LastName    *string `json:"last_name,omitempty"`
-	UserID      int     `json:"user_id,omitempty"`
+	UserID      int64   `json:"user_id,omitempty"`
 	VCard       *string `json:"vcard,omitempty"` // https://en.wikipedia.org/wiki/VCard
 }
 
@@ -880,14 +880,14 @@ type BotCommand struct {
 //
 // https://core.telegram.org/bots/api#message
 type Message struct {
-	MessageID                     int                            `json:"message_id"`
+	MessageID                     int64                          `json:"message_id"`
 	From                          *User                          `json:"from,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	Date                          int                            `json:"date"`
 	Chat                          Chat                           `json:"chat"`
 	ForwardFrom                   *User                          `json:"forward_from,omitempty"`
 	ForwardFromChat               *Chat                          `json:"forward_from_chat,omitempty"`
-	ForwardFromMessageID          int                            `json:"forward_from_message_id,omitempty"`
+	ForwardFromMessageID          int64                          `json:"forward_from_message_id,omitempty"`
 	ForwardSignature              *string                        `json:"forward_signature,omitempty"`
 	ForwardSenderName             *string                        `json:"forward_sender_name,omitempty"`
 	ForwardDate                   int                            `json:"forward_date,omitempty"`
@@ -941,7 +941,7 @@ type Message struct {
 //
 // https://core.telegram.org/bots/api#messageid
 type MessageID struct {
-	MessageID int `json:"message_id"`
+	MessageID int64 `json:"message_id"`
 }
 
 // InlineQuery is a struct of an inline query
