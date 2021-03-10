@@ -154,7 +154,7 @@ loop:
 			if updates = b.GetUpdates(options); updates.Ok {
 				for _, update := range updates.Result {
 					// update offset (max + 1)
-					if options["offset"].(int) <= update.UpdateID {
+					if options["offset"].(int64) <= update.UpdateID {
 						options["offset"] = update.UpdateID + 1
 					}
 

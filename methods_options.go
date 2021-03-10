@@ -107,7 +107,7 @@ func (o OptionsSendMessage) SetDisableNotification(disable bool) OptionsSendMess
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendMessage.
-func (o OptionsSendMessage) SetReplyToMessageID(replyToMessageID int) OptionsSendMessage {
+func (o OptionsSendMessage) SetReplyToMessageID(replyToMessageID int64) OptionsSendMessage {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -171,7 +171,7 @@ func (o OptionsCopyMessage) SetDisableNotification(disable bool) OptionsCopyMess
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsCopyMessage.
-func (o OptionsCopyMessage) SetReplyToMessageID(replyToMessageID int) OptionsCopyMessage {
+func (o OptionsCopyMessage) SetReplyToMessageID(replyToMessageID int64) OptionsCopyMessage {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -222,7 +222,7 @@ func (o OptionsSendPhoto) SetDisableNotification(disable bool) OptionsSendPhoto 
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendPhoto.
-func (o OptionsSendPhoto) SetReplyToMessageID(replyToMessageID int) OptionsSendPhoto {
+func (o OptionsSendPhoto) SetReplyToMessageID(replyToMessageID int64) OptionsSendPhoto {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -299,7 +299,7 @@ func (o OptionsSendAudio) SetDisableNotification(disable bool) OptionsSendAudio 
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendAudio.
-func (o OptionsSendAudio) SetReplyToMessageID(replyToMessageID int) OptionsSendAudio {
+func (o OptionsSendAudio) SetReplyToMessageID(replyToMessageID int64) OptionsSendAudio {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -364,7 +364,7 @@ func (o OptionsSendDocument) SetDisableNotification(disable bool) OptionsSendDoc
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendDocument.
-func (o OptionsSendDocument) SetReplyToMessageID(replyToMessageID int) OptionsSendDocument {
+func (o OptionsSendDocument) SetReplyToMessageID(replyToMessageID int64) OptionsSendDocument {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -397,7 +397,7 @@ func (o OptionsSendSticker) SetDisableNotification(disable bool) OptionsSendStic
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendSticker.
-func (o OptionsSendSticker) SetReplyToMessageID(replyToMessageID int) OptionsSendSticker {
+func (o OptionsSendSticker) SetReplyToMessageID(replyToMessageID int64) OptionsSendSticker {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -569,7 +569,7 @@ func (o OptionsSendVideo) SetDisableNotification(disable bool) OptionsSendVideo 
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVideo.
-func (o OptionsSendVideo) SetReplyToMessageID(replyToMessageID int) OptionsSendVideo {
+func (o OptionsSendVideo) SetReplyToMessageID(replyToMessageID int64) OptionsSendVideo {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -646,7 +646,7 @@ func (o OptionsSendAnimation) SetDisableNotification(disable bool) OptionsSendAn
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendAnimation.
-func (o OptionsSendAnimation) SetReplyToMessageID(replyToMessageID int) OptionsSendAnimation {
+func (o OptionsSendAnimation) SetReplyToMessageID(replyToMessageID int64) OptionsSendAnimation {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -703,7 +703,7 @@ func (o OptionsSendVoice) SetDisableNotification(disable bool) OptionsSendVoice 
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVoice.
-func (o OptionsSendVoice) SetReplyToMessageID(replyToMessageID int) OptionsSendVoice {
+func (o OptionsSendVoice) SetReplyToMessageID(replyToMessageID int64) OptionsSendVoice {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -757,7 +757,7 @@ func (o OptionsSendVideoNote) SetDisableNotification(disable bool) OptionsSendVi
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVideoNote.
-func (o OptionsSendVideoNote) SetReplyToMessageID(replyToMessageID int) OptionsSendVideoNote {
+func (o OptionsSendVideoNote) SetReplyToMessageID(replyToMessageID int64) OptionsSendVideoNote {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -790,7 +790,7 @@ func (o OptionsSendMediaGroup) SetDisableNotification(disable bool) OptionsSendM
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendMediaGroup.
-func (o OptionsSendMediaGroup) SetReplyToMessageID(replyToMessageID int) OptionsSendMediaGroup {
+func (o OptionsSendMediaGroup) SetReplyToMessageID(replyToMessageID int64) OptionsSendMediaGroup {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -839,7 +839,7 @@ func (o OptionsSendLocation) SetDisableNotification(disable bool) OptionsSendLoc
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendLocation.
-func (o OptionsSendLocation) SetReplyToMessageID(replyToMessageID int) OptionsSendLocation {
+func (o OptionsSendLocation) SetReplyToMessageID(replyToMessageID int64) OptionsSendLocation {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -896,7 +896,7 @@ func (o OptionsSendVenue) SetDisableNotification(disable bool) OptionsSendVenue 
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVenue.
-func (o OptionsSendVenue) SetReplyToMessageID(replyToMessageID int) OptionsSendVenue {
+func (o OptionsSendVenue) SetReplyToMessageID(replyToMessageID int64) OptionsSendVenue {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -989,7 +989,7 @@ func (o OptionsSendPoll) SetDisableNotification(disable bool) OptionsSendPoll {
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendPoll.
-func (o OptionsSendPoll) SetReplyToMessageID(replyToMessageID int) OptionsSendPoll {
+func (o OptionsSendPoll) SetReplyToMessageID(replyToMessageID int64) OptionsSendPoll {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -1030,7 +1030,7 @@ type OptionsSendDice MethodOptions
 
 // SetEmoji sets the `emoji` value of OptionsSendDice.
 //
-// `emoji` can be one of: 🎲 (1~6), 🎯 (1~6), 🏀 (1~5), ⚽ (1~5), or 🎰 (1~64); default: 🎲
+// `emoji` can be one of: 🎲 (1~6), 🎯 (1~6), 🎳 (1~6), 🏀 (1~5), ⚽ (1~5), or 🎰 (1~64); default: 🎲
 func (o OptionsSendDice) SetEmoji(emoji string) OptionsSendDice {
 	o["emoji"] = emoji
 	return o
@@ -1043,7 +1043,7 @@ func (o OptionsSendDice) SetDisableNotification(disable bool) OptionsSendDice {
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendDice.
-func (o OptionsSendDice) SetReplyToMessageID(replyToMessageID int) OptionsSendDice {
+func (o OptionsSendDice) SetReplyToMessageID(replyToMessageID int64) OptionsSendDice {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -1088,7 +1088,7 @@ func (o OptionsSendContact) SetDisableNotification(disable bool) OptionsSendCont
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendContact.
-func (o OptionsSendContact) SetReplyToMessageID(replyToMessageID int) OptionsSendContact {
+func (o OptionsSendContact) SetReplyToMessageID(replyToMessageID int64) OptionsSendContact {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -1126,6 +1126,25 @@ func (o OptionsGetUserProfilePhotos) SetLimit(limit int) OptionsGetUserProfilePh
 	return o
 }
 
+// OptionsKickChatMember struct for KickChatMember().
+//
+// options include: `until_date` and `revoke_messages`.
+//
+// https://core.telegram.org/bots/api#kickchatmember
+type OptionsKickChatMember MethodOptions
+
+// SetUntilDate sets the `until_date` value of OptionsKickChatMember.
+func (o OptionsKickChatMember) SetUntilDate(untilDate int) OptionsKickChatMember {
+	o["until_date"] = untilDate
+	return o
+}
+
+// SetRevokeMessages sets the `revoke_messages` value of OptionsKickChatMember.
+func (o OptionsKickChatMember) SetRevokeMessages(revokeMessages bool) OptionsKickChatMember {
+	o["revoke_messages"] = revokeMessages
+	return o
+}
+
 // OptionsRestrictChatMember struct for RestrictChatMember().
 //
 // options include: `until_date`
@@ -1141,7 +1160,7 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `is_anonymous`, `can_change_info`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
+// options include: `is_anonymous`, `can_change_info`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_voice_chats`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -1155,6 +1174,12 @@ func (o OptionsPromoteChatMember) SetIsAnonymous(anonymous bool) OptionsPromoteC
 // SetCanChangeInfo sets the `can_change_info` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanChangeInfo(can bool) OptionsPromoteChatMember {
 	o["can_change_info"] = can
+	return o
+}
+
+// SetCanManageChat sets the `can_manage_chat` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageChat(can bool) OptionsPromoteChatMember {
+	o["can_manage_chat"] = can
 	return o
 }
 
@@ -1173,6 +1198,12 @@ func (o OptionsPromoteChatMember) SetCanEditMessages(can bool) OptionsPromoteCha
 // SetCanDeleteMessages sets the `can_delete_messages` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanDeleteMessages(can bool) OptionsPromoteChatMember {
 	o["can_delete_messages"] = can
+	return o
+}
+
+// SetCanManageVoiceChats sets the `can_manage_voice_chats` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageVoiceChats(can bool) OptionsPromoteChatMember {
+	o["can_manage_voice_chats"] = can
 	return o
 }
 
@@ -1200,6 +1231,25 @@ func (o OptionsPromoteChatMember) SetCanPromoteMembers(can bool) OptionsPromoteC
 	return o
 }
 
+// OptionsCreateChatInviteLink struct for CreateChatInviteLink
+//
+// options include: `expire_date` and `member_limit`
+//
+// https://core.telegram.org/bots/api#createchatinvitelink
+type OptionsCreateChatInviteLink MethodOptions
+
+// SetExpireDate sets the `expire_date` value of OptionsCreateChatInviteLink
+func (o OptionsCreateChatInviteLink) SetExpireDate(expireDate int) OptionsCreateChatInviteLink {
+	o["expire_date"] = expireDate
+	return o
+}
+
+// SetMemberLimit sets the `member_limit` value of OptionsCreateChatInviteLink
+func (o OptionsCreateChatInviteLink) SetMemberLimit(memberLimit int) OptionsCreateChatInviteLink {
+	o["member_limit"] = memberLimit
+	return o
+}
+
 // OptionsPinChatMessage struct for PinChatMessage
 //
 // options include: `disable_notification`
@@ -1221,7 +1271,7 @@ func (o OptionsPinChatMessage) SetDisableNotification(disable bool) OptionsPinCh
 type OptionsUnpinChatMessage MethodOptions
 
 // SetMessageID set the `message_id` value of OptionsUnpinChatMessage.
-func (o OptionsUnpinChatMessage) SetMessageID(messageID int) OptionsUnpinChatMessage {
+func (o OptionsUnpinChatMessage) SetMessageID(messageID int64) OptionsUnpinChatMessage {
 	o["message_id"] = messageID
 	return o
 }
@@ -1256,7 +1306,7 @@ func (o OptionsAnswerCallbackQuery) SetCacheTime(cacheTime int) OptionsAnswerCal
 type OptionsEditMessageText MethodOptions
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageText.
-func (o OptionsEditMessageText) SetIDs(chatID ChatID, messageID int) OptionsEditMessageText {
+func (o OptionsEditMessageText) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageText {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o
@@ -1303,7 +1353,7 @@ func (o OptionsEditMessageText) SetReplyMarkup(replyMarkup InlineKeyboardMarkup)
 type OptionsEditMessageCaption MethodOptions
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageCaption.
-func (o OptionsEditMessageCaption) SetIDs(chatID ChatID, messageID int) OptionsEditMessageCaption {
+func (o OptionsEditMessageCaption) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageCaption {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o
@@ -1350,7 +1400,7 @@ func (o OptionsEditMessageCaption) SetReplyMarkup(replyMarkup InlineKeyboardMark
 type OptionsEditMessageMedia MethodOptions
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageMedia.
-func (o OptionsEditMessageMedia) SetIDs(chatID ChatID, messageID int) OptionsEditMessageMedia {
+func (o OptionsEditMessageMedia) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageMedia {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o
@@ -1379,7 +1429,7 @@ func (o OptionsEditMessageMedia) SetReplyMarkup(replyMarkup InlineKeyboardMarkup
 type OptionsEditMessageReplyMarkup MethodOptions
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageReplyMarkup.
-func (o OptionsEditMessageReplyMarkup) SetIDs(chatID ChatID, messageID int) OptionsEditMessageReplyMarkup {
+func (o OptionsEditMessageReplyMarkup) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageReplyMarkup {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o
@@ -1408,7 +1458,7 @@ func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup InlineKeyboard
 type OptionsEditMessageLiveLocation MethodOptions
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageLiveLocation.
-func (o OptionsEditMessageLiveLocation) SetIDs(chatID ChatID, messageID int) OptionsEditMessageLiveLocation {
+func (o OptionsEditMessageLiveLocation) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageLiveLocation {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o
@@ -1455,7 +1505,7 @@ func (o OptionsEditMessageLiveLocation) SetReplyMarkup(replyMarkup InlineKeyboar
 type OptionsStopMessageLiveLocation MethodOptions
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsStopMessageLiveLocation.
-func (o OptionsStopMessageLiveLocation) SetIDs(chatID ChatID, messageID int) OptionsStopMessageLiveLocation {
+func (o OptionsStopMessageLiveLocation) SetIDs(chatID ChatID, messageID int64) OptionsStopMessageLiveLocation {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o
@@ -1596,7 +1646,7 @@ func (o OptionsSendInvoice) SetDisableNotification(disable bool) OptionsSendInvo
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendInvoice.
-func (o OptionsSendInvoice) SetReplyToMessageID(replyToMessageID int) OptionsSendInvoice {
+func (o OptionsSendInvoice) SetReplyToMessageID(replyToMessageID int64) OptionsSendInvoice {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -1627,7 +1677,7 @@ func (o OptionsSendGame) SetDisableNotification(disable bool) OptionsSendGame {
 }
 
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendGame.
-func (o OptionsSendGame) SetReplyToMessageID(replyToMessageID int) OptionsSendGame {
+func (o OptionsSendGame) SetReplyToMessageID(replyToMessageID int64) OptionsSendGame {
 	o["reply_to_message_id"] = replyToMessageID
 	return o
 }
@@ -1667,7 +1717,7 @@ func (o OptionsSetGameScore) SetDisableEditMessage(disableEditMessage bool) Opti
 }
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsSetGameScore.
-func (o OptionsSetGameScore) SetIDs(chatID ChatID, messageID int) OptionsSetGameScore {
+func (o OptionsSetGameScore) SetIDs(chatID ChatID, messageID int64) OptionsSetGameScore {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o
@@ -1688,7 +1738,7 @@ func (o OptionsSetGameScore) SetInlineMessageID(inlineMessageID string) OptionsS
 type OptionsGetGameHighScores MethodOptions
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsGetGameHighScores.
-func (o OptionsGetGameHighScores) SetIDs(chatID ChatID, messageID int) OptionsGetGameHighScores {
+func (o OptionsGetGameHighScores) SetIDs(chatID ChatID, messageID int64) OptionsGetGameHighScores {
 	o["chat_id"] = chatID
 	o["message_id"] = messageID
 	return o

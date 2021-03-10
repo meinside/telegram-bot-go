@@ -1,3 +1,3 @@
 module github.com/meinside/telegram-bot-go
 
-go 1.15
+go 1.16
