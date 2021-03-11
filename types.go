@@ -839,7 +839,7 @@ type ChatMember struct {
 // https://core.telegram.org/bots/api#chatmemberupdated
 type ChatMemberUpdated struct {
 	Chat          Chat            `json:"chat"`
-	From          User            `json:"user"`
+	From          User            `json:"from"`
 	Date          int             `json:"date"`
 	OldChatMember ChatMember      `json:"old_chat_member"`
 	NewChatMember ChatMember      `json:"new_chat_member"`
