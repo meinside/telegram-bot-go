@@ -995,7 +995,7 @@ func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, opt
 // SendInvoice sends an invoice.
 //
 // https://core.telegram.org/bots/api#sendinvoice
-func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerToken, startParameter, currency string, prices []LabeledPrice, options OptionsSendInvoice) (result APIResponseMessage) {
+func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerToken, currency string, prices []LabeledPrice, options OptionsSendInvoice) (result APIResponseMessage) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -1006,7 +1006,6 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 	options["description"] = description
 	options["payload"] = payload
 	options["provider_token"] = providerToken
-	options["start_parameter"] = startParameter
 	options["currency"] = currency
 	options["prices"] = prices
 
