@@ -18,6 +18,7 @@ See codes in [samples/](https://github.com/meinside/telegram-bot-go/tree/master/
 
 - [ ] [Telegram Passport](https://core.telegram.org/bots/api#telegram-passport)
 - [ ] [Seamless Telegram Login](https://telegram.org/blog/privacy-discussions-web-bots#meet-seamless-web-bots)
+- [ ] [Payments 2.0](https://core.telegram.org/bots/payments)
 
 ## License
 
