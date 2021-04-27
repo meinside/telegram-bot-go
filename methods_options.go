@@ -1562,10 +1562,28 @@ func (o OptionsAnswerInlineQuery) SetSwitchPmParameter(switchPmParam string) Opt
 
 // OptionsSendInvoice struct for SendInvoice().
 //
-// options include: `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`
+// options include: `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#sendinvoice
 type OptionsSendInvoice MethodOptions
+
+// SetMaxTipAmount sets the `max_tip_amount` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetMaxTipAmount(maxTipAmount int) OptionsSendInvoice {
+	o["max_tip_amount"] = maxTipAmount
+	return o
+}
+
+// SetSuggestedTipAmounts sets the `suggested_tip_amounts` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetSuggestedTipAmounts(suggestedTipAmounts []int) OptionsSendInvoice {
+	o["suggested_tip_amounts"] = suggestedTipAmounts
+	return o
+}
+
+// SetStartParameter sets the `start_parameter` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetStartParameter(startParameter string) OptionsSendInvoice {
+	o["start_parameter"] = startParameter
+	return o
+}
 
 // SetProviderData sets the `provider_data` value of OptionsSendInvoice.
 func (o OptionsSendInvoice) SetProviderData(providerData string) OptionsSendInvoice {

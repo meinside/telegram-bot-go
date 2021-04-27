@@ -40,8 +40,8 @@ const (
 	ChatActionUploadPhoto     ChatAction = "upload_photo"
 	ChatActionRecordVideo     ChatAction = "record_video"
 	ChatActionUploadVideo     ChatAction = "upload_video"
-	ChatActionRecordAudio     ChatAction = "record_audio"
-	ChatActionUploadAudio     ChatAction = "upload_audio"
+	ChatActionRecordVoice     ChatAction = "record_voice"
+	ChatActionUploadVoice     ChatAction = "upload_voice"
 	ChatActionUploadDocument  ChatAction = "upload_document"
 	ChatActionFindLocation    ChatAction = "find_location"
 	ChatActionRecordVideoNote ChatAction = "record_video_note"
@@ -649,6 +649,13 @@ type VoiceChatEnded struct {
 	Duration int `json:"duration"`
 }
 
+// VoiceChatScheduled is a struct for servoice message: voice chat scheduled
+//
+// https://core.telegram.org/bots/api#voicechatscheduled
+type VoiceChatScheduled struct {
+	StartDate int `json:"start_date"`
+}
+
 // VoiceChatParticipantsInvited is a struct for service message: new members invited to voice chat
 //
 // https://core.telegram.org/bots/api#voicechatparticipantsinvited
@@ -931,6 +938,7 @@ type Message struct {
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
+	VoiceChatScheduled           *VoiceChatScheduled           `json:"voice_chat_scheduled,omitempty"`
 	VoiceChatStarted             *VoiceChatStarted             `json:"voice_chat_started,omitempty"`
 	VoiceChatEnded               *VoiceChatEnded               `json:"voice_chat_ended,omitempty"`
 	VoiceChatParticipantsInvited *VoiceChatParticipantsInvited `json:"voice_chat_participants_invited,omitempty"`
@@ -950,9 +958,10 @@ type MessageID struct {
 type InlineQuery struct {
 	ID       string    `json:"id"`
 	From     User      `json:"from"`
-	Location *Location `json:"location,omitempty"`
 	Query    string    `json:"query"`
 	Offset   string    `json:"offset"`
+	ChatType *string   `json:"chat_type,omitempty"`
+	Location *Location `json:"location,omitempty"`
 }
 
 // ChosenInlineResult is a struct for a chosen inline result
@@ -1309,6 +1318,30 @@ type InputContactMessageContent struct { // https://core.telegram.org/bots/api#i
 	FirstName   string  `json:"first_name"`
 	LastName    *string `json:"last_name,omitempty"`
 	VCard       *string `json:"vcard,omitempty"` // https://en.wikipedia.org/wiki/VCard
+}
+
+// InputInvoiceMessageContent is a struct of InputInvoiceMessageContent
+type InputInvoiceMessageContent struct { // https://core.telegram.org/bots/api#inputinvoicemessagecontent
+	Title                     string         `json:"title"`
+	Description               string         `json:"description"`
+	Payload                   string         `json:"payload"`
+	ProviderToken             string         `json:"provider_token"`
+	Currency                  string         `json:"currency"`
+	Prices                    []LabeledPrice `json:"prices"`
+	MaxTipAmount              int            `json:"max_tip_amount"`
+	SuggestedTipAmounts       []int          `json:"suggested_tip_amounts,omitempty"`
+	ProviderData              *string        `json:"provider_data,omitempty"`
+	PhotoURL                  *string        `json:"photo_url,omitempty"`
+	PhotoSize                 int            `json:"photo_size,omitempty"`
+	PhotoWidth                int            `json:"photo_width,omitempty"`
+	PhotoHeight               int            `json:"photo_height,omitempty"`
+	NeedName                  bool           `json:"need_name,omitempty"`
+	NeedPhoneNumber           bool           `json:"need_phone_number,omitempty"`
+	NeedEmail                 bool           `json:"need_email,omitempty"`
+	NeedShippingAddress       bool           `json:"need_shipping_address,omitempty"`
+	SendPhoneNumberToProvider bool           `json:"send_phone_number_to_provider,omitempty"`
+	SendEmailToProvider       bool           `json:"send_email_to_provider,omitempty"`
+	IsFlexible                bool           `json:"is_flexible,omitempty"`
 }
 
 // CallbackGame is for callback of games
