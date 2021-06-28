@@ -114,7 +114,7 @@ const (
 	ChatMemberStatusMember        ChatMemberStatus = "member"
 	ChatMemberStatusRestricted    ChatMemberStatus = "restricted"
 	ChatMemberStatusLeft          ChatMemberStatus = "left"
-	ChatMemberStatusKicked        ChatMemberStatus = "kicked"
+	ChatMemberStatusBanned        ChatMemberStatus = "kicked"
 )
 
 // MaskPositionPoint is a point in MaskPosition
@@ -685,10 +685,11 @@ type File struct {
 //
 // https://core.telegram.org/bots/api#replykeyboardmarkup
 type ReplyKeyboardMarkup struct {
-	Keyboard        [][]KeyboardButton `json:"keyboard"`
-	ResizeKeyboard  bool               `json:"resize_keyboard,omitempty"`
-	OneTimeKeyboard bool               `json:"one_time_keyboard,omitempty"`
-	Selective       bool               `json:"selective,omitempty"`
+	Keyboard              [][]KeyboardButton `json:"keyboard"`
+	ResizeKeyboard        bool               `json:"resize_keyboard,omitempty"`
+	OneTimeKeyboard       bool               `json:"one_time_keyboard,omitempty"`
+	InputFieldPlaceholder *string            `json:"input_field_placeholder,omitempty"` // 1-64 characters
+	Selective             bool               `json:"selective,omitempty"`
 }
 
 // KeyboardButton is a struct of a keyboard button
@@ -787,8 +788,9 @@ type PreCheckoutQuery struct {
 //
 // https://core.telegram.org/bots/api#forcereply
 type ForceReply struct {
-	ForceReply bool `json:"force_reply"`
-	Selective  bool `json:"selective,omitempty"`
+	ForceReply            bool    `json:"force_reply"`
+	InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"` // 1-64 characters
+	Selective             bool    `json:"selective,omitempty"`
 }
 
 // ChatPhoto is a struct for a chat photo
@@ -881,6 +883,69 @@ type ChatLocation struct {
 type BotCommand struct {
 	Command     string `json:"command"`
 	Description string `json:"description"`
+}
+
+// BotCommandScopeType type
+//
+// https://core.telegram.org/bots/api#botcommandscope
+type BotCommandScopeType string
+
+// BotCommandScopeType constants
+const (
+	BotCommandScopeTypeDefault               BotCommandScopeType = "default"
+	BotCommandScopeTypeAllPrivateChats       BotCommandScopeType = "all_private_chats"
+	BotCommandScopeTypeAllGroupChats         BotCommandScopeType = "all_group_chats"
+	BotCommandScopeTypeAllChatAdministrators BotCommandScopeType = "all_chat_administrators"
+	BotCommandScopeTypeChat                  BotCommandScopeType = "chat"
+	BotCommandScopeTypeChatAdministrators    BotCommandScopeType = "chat_administrators"
+	BotCommandScopeTypeChatMember            BotCommandScopeType = "chat_member"
+)
+
+// BotCommandScopeDefault represents the bot command scopes
+//
+// https://core.telegram.org/bots/api#botcommandscopedefault
+type BotCommandScopeDefault struct {
+	Type BotCommandScopeType `json:"type"` // = "default"
+}
+
+// BotCommandScopeAllPrivateChats represents the bot command scopes
+//
+// https://core.telegram.org/bots/api#botcommandscopeallprivatechats
+type BotCommandScopeAllPrivateChats BotCommandScopeDefault // = "all_private_chats"
+
+// BotCommandScopeAllGroupChats represents the bot command scopes
+//
+// https://core.telegram.org/bots/api#botcommandscopeallgroupchats
+type BotCommandScopeAllGroupChats BotCommandScopeDefault // = "all_group_chats"
+
+// BotCommandScopeAllChatAdministrators represents the bot command scopes
+//
+// https://core.telegram.org/bots/api#botcommandscopeallchatadministrators
+type BotCommandScopeAllChatAdministrators BotCommandScopeDefault // = "all_chat_administrators"
+
+// BotCommandScopeChat represents the bot command scopes
+//
+// https://core.telegram.org/bots/api#botcommandscopechat
+type BotCommandScopeChat struct {
+	BotCommandScopeDefault        // = "chat"
+	ChatID                 ChatID `json:"chat_id"`
+}
+
+// BotCommandScopeChatAdministrators represents the bot command scopes
+//
+// https://core.telegram.org/bots/api#botcommandscopechatadministrators
+type BotCommandScopeChatAdministrators struct {
+	BotCommandScopeDefault        // = "chat_administrators"
+	ChatID                 ChatID `json:"chat_id"`
+}
+
+// BotCommandScopeChatMember represents the bot command scopes
+//
+// https://core.telegram.org/bots/api#botcommandscopechatmember
+type BotCommandScopeChatMember struct {
+	BotCommandScopeDefault        // = "chat_member"
+	ChatID                 ChatID `json:"chat_id"`
+	UserID                 int64  `json:"user_id"`
 }
 
 // Message is a struct of a message

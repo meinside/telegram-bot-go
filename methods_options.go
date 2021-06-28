@@ -1126,21 +1126,21 @@ func (o OptionsGetUserProfilePhotos) SetLimit(limit int) OptionsGetUserProfilePh
 	return o
 }
 
-// OptionsKickChatMember struct for KickChatMember().
+// OptionsBanChatMember struct for BanChatMember().
 //
 // options include: `until_date` and `revoke_messages`.
 //
-// https://core.telegram.org/bots/api#kickchatmember
-type OptionsKickChatMember MethodOptions
+// https://core.telegram.org/bots/api#banchatmember
+type OptionsBanChatMember MethodOptions
 
-// SetUntilDate sets the `until_date` value of OptionsKickChatMember.
-func (o OptionsKickChatMember) SetUntilDate(untilDate int) OptionsKickChatMember {
+// SetUntilDate sets the `until_date` value of OptionsBanChatMember.
+func (o OptionsBanChatMember) SetUntilDate(untilDate int) OptionsBanChatMember {
 	o["until_date"] = untilDate
 	return o
 }
 
-// SetRevokeMessages sets the `revoke_messages` value of OptionsKickChatMember.
-func (o OptionsKickChatMember) SetRevokeMessages(revokeMessages bool) OptionsKickChatMember {
+// SetRevokeMessages sets the `revoke_messages` value of OptionsBanChatMember.
+func (o OptionsBanChatMember) SetRevokeMessages(revokeMessages bool) OptionsBanChatMember {
 	o["revoke_messages"] = revokeMessages
 	return o
 }
@@ -1295,7 +1295,76 @@ func (o OptionsAnswerCallbackQuery) SetCacheTime(cacheTime int) OptionsAnswerCal
 	return o
 }
 
-// OptionsEditMessageText struct for EditMessageText()
+// OptionsGetMyCommands struct for GetMyCommands().
+//
+// options include: `scope`, and `language_code`
+//
+// https://core.telegram.org/bots/api#getmycommands
+type OptionsGetMyCommands MethodOptions
+
+// SetScope sets the `scope` value of OptionsGetMyCommands.
+//
+// `scope` can be one of: BotCommandScopeDefault, BotCommandScopeAllPrivateChats, BotCommandScopeAllGroupChats, BotCommandScopeAllChatAdministrators, BotCommandScopeChat, BotCommandScopeChatAdministrators, or BotCommandScopeChatMember.
+func (o OptionsGetMyCommands) SetScope(scope interface{}) OptionsGetMyCommands {
+	o["scope"] = scope
+	return o
+}
+
+// SetLanguageCode sets the `language_code` value of OptionsGetMyCommands.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsGetMyCommands) SetLanguageCode(languageCode string) OptionsGetMyCommands {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsSetMyCommands struct for SetMyCommands().
+//
+// options include: `scope`, and `language_code`
+//
+// https://core.telegram.org/bots/api#setmycommands
+type OptionsSetMyCommands MethodOptions
+
+// SetScope sets the `scope` value of OptionsSetMyCommands.
+//
+// `scope` can be one of: BotCommandScopeDefault, BotCommandScopeAllPrivateChats, BotCommandScopeAllGroupChats, BotCommandScopeAllChatAdministrators, BotCommandScopeChat, BotCommandScopeChatAdministrators, or BotCommandScopeChatMember.
+func (o OptionsSetMyCommands) SetScope(scope interface{}) OptionsSetMyCommands {
+	o["scope"] = scope
+	return o
+}
+
+// SetLanguageCode sets the `language_code` value of OptionsSetMyCommands.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsSetMyCommands) SetLanguageCode(languageCode string) OptionsSetMyCommands {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsDeleteMyCommands struct for DeleteMyCommands().
+//
+// options include: `scope`, and `language_code`
+//
+// https://core.telegram.org/bots/api#deletemycommands
+type OptionsDeleteMyCommands MethodOptions
+
+// SetScope sets the `scope` value of OptionsDeleteMyCommands.
+//
+// `scope` can be one of: BotCommandScopeDefault, BotCommandScopeAllPrivateChats, BotCommandScopeAllGroupChats, BotCommandScopeAllChatAdministrators, BotCommandScopeChat, BotCommandScopeChatAdministrators, or BotCommandScopeChatMember.
+func (o OptionsDeleteMyCommands) SetScope(scope interface{}) OptionsDeleteMyCommands {
+	o["scope"] = scope
+	return o
+}
+
+// SetLanguageCode sets the `language_code` value of OptionsDeleteMyCommands.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsDeleteMyCommands) SetLanguageCode(languageCode string) OptionsDeleteMyCommands {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsEditMessageText struct for EditMessageText().
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
 //                or `inline_message_id` (when `chat_id` & `message_id` is not given)
