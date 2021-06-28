@@ -550,10 +550,10 @@ func (b *Bot) GetFileURL(file File) string {
 	return fmt.Sprintf("%s%s/%s", fileBaseURL, b.token, *file.FilePath)
 }
 
-// KickChatMember kicks a chat member.
+// BanChatMember bans a chat member.
 //
-// https://core.telegram.org/bots/api#kickchatmember
-func (b *Bot) KickChatMember(chatID ChatID, userID int64, options OptionsKickChatMember) (result APIResponseBool) {
+// https://core.telegram.org/bots/api#banchatmember
+func (b *Bot) BanChatMember(chatID ChatID, userID int64, options OptionsBanChatMember) (result APIResponseBool) {
 	if options == nil {
 		options = map[string]interface{}{}
 	}
@@ -562,7 +562,7 @@ func (b *Bot) KickChatMember(chatID ChatID, userID int64, options OptionsKickCha
 	options["chat_id"] = chatID
 	options["user_id"] = userID
 
-	return b.requestResponseBool("kickChatMember", options)
+	return b.requestResponseBool("banChatMember", options)
 }
 
 // LeaveChat leaves a chat.
@@ -810,16 +810,16 @@ func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponseChatAdmini
 	return b.requestResponseChatAdministrators("getChatAdministrators", params)
 }
 
-// GetChatMembersCount gets chat members' count.
+// GetChatMemberCount gets chat members' count.
 //
-// https://core.telegram.org/bots/api#getchatmemberscount
-func (b *Bot) GetChatMembersCount(chatID ChatID) (result APIResponseInt) {
+// https://core.telegram.org/bots/api#getchatmembercount
+func (b *Bot) GetChatMemberCount(chatID ChatID) (result APIResponseInt) {
 	// essential params
 	params := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	return b.requestResponseInt("getChatMembersCount", params)
+	return b.requestResponseInt("getChatMemberCount", params)
 }
 
 // GetChatMember gets a chat member.
@@ -877,17 +877,29 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerC
 // GetMyCommands fetches commands of this bot.
 //
 // https://core.telegram.org/bots/api#getmycommands
-func (b *Bot) GetMyCommands() (result APIResponseBotCommands) {
-	return b.requestResponseBotCommands("getMyCommands", nil)
+func (b *Bot) GetMyCommands(options OptionsGetMyCommands) (result APIResponseBotCommands) {
+	return b.requestResponseBotCommands("getMyCommands", options)
 }
 
 // SetMyCommands sets commands of this bot.
 //
 // https://core.telegram.org/bots/api#setmycommands
-func (b *Bot) SetMyCommands(commands []BotCommand) (result APIResponseBool) {
-	return b.requestResponseBool("setMyCommands", map[string]interface{}{
-		"commands": commands,
-	})
+func (b *Bot) SetMyCommands(commands []BotCommand, options OptionsSetMyCommands) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]interface{}{}
+	}
+
+	// essential params
+	options["commands"] = commands
+
+	return b.requestResponseBool("setMyCommands", options)
+}
+
+// DeleteMyCommands deletes commands of this bot.
+//
+// https://core.telegram.org/bots/api#deletemycommands
+func (b *Bot) DeleteMyCommands(options OptionsDeleteMyCommands) (result APIResponseBool) {
+	return b.requestResponseBool("deleteMyCommands", options)
 }
 
 // Updating messages
