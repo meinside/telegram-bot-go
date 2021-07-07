@@ -42,7 +42,7 @@ func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (resu
 	}
 
 	if cert, exists := options["certificate"]; exists {
-		var errStr string = ""
+		var errStr string
 
 		if filepath, ok := cert.(string); ok {
 			if file, err := os.Open(filepath); err == nil {
@@ -51,7 +51,7 @@ func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (resu
 				errStr = fmt.Sprintf("failed to open certificate: %s", err)
 			}
 		} else {
-			errStr = fmt.Sprintf("given filepath of certificate is not a string")
+			errStr = "given filepath of certificate is not a string"
 		}
 
 		if errStr != "" {
@@ -1116,11 +1116,11 @@ func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) 
 // Check if given http params contain file or not.
 func checkIfFileParamExists(params map[string]interface{}) bool {
 	for _, value := range params {
-		switch value.(type) {
+		switch val := value.(type) {
 		case *os.File, []byte:
 			return true
 		case InputFile:
-			if len(value.(InputFile).Bytes) > 0 || value.(InputFile).Filepath != nil {
+			if len(val.Bytes) > 0 || val.Filepath != nil {
 				return true
 			}
 		}
@@ -1131,50 +1131,27 @@ func checkIfFileParamExists(params map[string]interface{}) bool {
 
 // Convert given interface to string. (for HTTP params)
 func (b *Bot) paramToString(param interface{}) (result string, success bool) {
-	switch param.(type) {
+	switch val := param.(type) {
 	case int:
-		if intValue, ok := param.(int); ok {
-			return strconv.Itoa(intValue), true
-		}
-		b.error("parameter '%+v' could not be cast to int value", param)
+		return strconv.Itoa(val), true
 	case int64:
-		if intValue, ok := param.(int64); ok {
-			return strconv.FormatInt(intValue, 10), true
-		}
-		b.error("parameter '%+v' could not be cast to int64 value", param)
+		return strconv.FormatInt(val, 10), true
 	case float32:
-		if floatValue, ok := param.(float32); ok {
-			return fmt.Sprintf("%.8f", floatValue), true
-		}
-		b.error("parameter '%+v' could not be cast to float32 value", param)
+		return fmt.Sprintf("%.8f", val), true
 	case bool:
-		if boolValue, ok := param.(bool); ok {
-			return strconv.FormatBool(boolValue), true
-		}
-		b.error("parameter '%+v' could not be cast to bool value", param)
+		return strconv.FormatBool(val), true
 	case string:
-		if strValue, ok := param.(string); ok {
-			return strValue, true
-		}
-		b.error("parameter '%+v' could not be cast to string value", param)
+		return val, true
 	case ChatAction:
-		if value, ok := param.(ChatAction); ok {
-			return string(value), true
-		}
-		b.error("parameter '%+v' could not be cast to string value", param)
+		return string(val), true
 	case ParseMode:
-		if value, ok := param.(ParseMode); ok {
-			return string(value), true
-		}
-		b.error("parameter '%+v' could not be cast to string value", param)
+		return string(val), true
 	case InputFile:
-		if value, ok := param.(InputFile); ok {
-			if value.URL != nil {
-				return *value.URL, true
-			}
-			if value.FileID != nil {
-				return *value.FileID, true
-			}
+		if val.URL != nil {
+			return *val.URL, true
+		}
+		if val.FileID != nil {
+			return *val.FileID, true
 		}
 		b.error("parameter '%+v' could not be cast to string value", param)
 	default: // fallback: encode to JSON string
@@ -1217,22 +1194,18 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]interfac
 	writer := multipart.NewWriter(body)
 
 	for key, value := range params {
-		switch value.(type) {
+		switch val := value.(type) {
 		case *os.File:
-			if file, ok := value.(*os.File); ok {
-				defer file.Close() // XXX - close the file
+			defer val.Close() // XXX - close the file
 
-				var part io.Writer
-				part, err = writer.CreateFormFile(key, file.Name())
-				if err == nil {
-					if _, err = io.Copy(part, file); err != nil {
-						b.error("could not write to multipart: %s", key)
-					}
-				} else {
-					b.error("could not create form file for parameter '%s' (%v)", key, value)
+			var part io.Writer
+			part, err = writer.CreateFormFile(key, val.Name())
+			if err == nil {
+				if _, err = io.Copy(part, val); err != nil {
+					b.error("could not write to multipart: %s", key)
 				}
 			} else {
-				b.error("parameter '%s' (%v) could not be cast to file", key, value)
+				b.error("could not create form file for parameter '%s' (%v)", key, value)
 			}
 		case []byte:
 			if fbytes, ok := value.([]byte); ok {
@@ -1281,7 +1254,9 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]interfac
 					}
 				} else {
 					if strValue, ok := b.paramToString(value); ok {
-						writer.WriteField(key, strValue)
+						if err := writer.WriteField(key, strValue); err != nil {
+							b.error("failed to write field with key: %s, value: %s (%s)", key, strValue, err)
+						}
 					} else {
 						b.error("invalid InputFile parameter '%s'", key)
 					}
@@ -1291,7 +1266,9 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]interfac
 			}
 		default:
 			if strValue, ok := b.paramToString(value); ok {
-				writer.WriteField(key, strValue)
+				if err := writer.WriteField(key, strValue); err != nil {
+					b.error("failed to write filed with key: %s, value: %s (%s)", key, strValue, err)
+				}
 			}
 		}
 	}
