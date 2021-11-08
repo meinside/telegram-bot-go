@@ -1233,10 +1233,16 @@ func (o OptionsPromoteChatMember) SetCanPromoteMembers(can bool) OptionsPromoteC
 
 // OptionsCreateChatInviteLink struct for CreateChatInviteLink
 //
-// options include: `expire_date` and `member_limit`
+// options include: `name`, `expire_date`, `member_limit`, and `creates_join_request`
 //
 // https://core.telegram.org/bots/api#createchatinvitelink
 type OptionsCreateChatInviteLink MethodOptions
+
+// SetName sets the `name` value of OptionsCreateChatInviteLink
+func (o OptionsCreateChatInviteLink) SetName(name string) OptionsCreateChatInviteLink {
+	o["name"] = name
+	return o
+}
 
 // SetExpireDate sets the `expire_date` value of OptionsCreateChatInviteLink
 func (o OptionsCreateChatInviteLink) SetExpireDate(expireDate int) OptionsCreateChatInviteLink {
@@ -1247,6 +1253,12 @@ func (o OptionsCreateChatInviteLink) SetExpireDate(expireDate int) OptionsCreate
 // SetMemberLimit sets the `member_limit` value of OptionsCreateChatInviteLink
 func (o OptionsCreateChatInviteLink) SetMemberLimit(memberLimit int) OptionsCreateChatInviteLink {
 	o["member_limit"] = memberLimit
+	return o
+}
+
+// SetCreatesJoinRequests sets the `creates_join_request` value of OptionsCreateChatInviteLink
+func (o OptionsCreateChatInviteLink) SetCreatesJoinRequest(createsJoinRequest bool) OptionsCreateChatInviteLink {
+	o["creates_join_request"] = createsJoinRequest
 	return o
 }
 

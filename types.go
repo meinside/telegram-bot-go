@@ -43,6 +43,7 @@ const (
 	ChatActionRecordVoice     ChatAction = "record_voice"
 	ChatActionUploadVoice     ChatAction = "upload_voice"
 	ChatActionUploadDocument  ChatAction = "upload_document"
+	ChatActionChooseSticker   ChatAction = "choose_sticker"
 	ChatActionFindLocation    ChatAction = "find_location"
 	ChatActionRecordVideoNote ChatAction = "record_video_note"
 	ChatActionUploadVideoNote ChatAction = "upload_video_note"
@@ -318,6 +319,7 @@ type Update struct {
 	PollAnswer         *PollAnswer         `json:"poll_answer,omitempty"`
 	MyChatMember       *ChatMemberUpdated  `json:"my_chat_member,omitempty"`
 	ChatMember         *ChatMemberUpdated  `json:"chat_member,omitempty"`
+	ChatJoinRequest    *ChatJoinRequest    `json:"chat_join_request,omitempty"`
 }
 
 // AllowedUpdate is a type for 'allowed_updates'
@@ -807,12 +809,15 @@ type ChatPhoto struct {
 //
 // https://core.telegram.org/bots/api#chatinvitelink
 type ChatInviteLink struct {
-	InviteLink  string `json:"invite_link"`
-	Creator     User   `json:"creator"`
-	IsPrimary   bool   `json:"is_primary"`
-	IsRevoked   bool   `json:"is_revoked"`
-	ExpireDate  int    `json:"expire_date,omitempty"`
-	MemberLimit int    `json:"member_limit,omitempty"`
+	InviteLink              string  `json:"invite_link"`
+	Creator                 User    `json:"creator"`
+	CreatesJoinRequest      bool    `json:"creates_join_request"`
+	IsPrimary               bool    `json:"is_primary"`
+	IsRevoked               bool    `json:"is_revoked"`
+	Name                    *string `json:"name,omitempty"`
+	ExpireDate              int     `json:"expire_date,omitempty"`
+	MemberLimit             int     `json:"member_limit,omitempty"`
+	PendingJoinRequestCount int     `json:"pending_join_request_count"`
 }
 
 // ChatMember is a struct of a chat member
@@ -875,6 +880,17 @@ type ChatPermissions struct {
 type ChatLocation struct {
 	Location Location `json:"location"`
 	Address  string   `json:"address"`
+}
+
+// ChatJoinRequest is a struct of chat join request
+//
+// https://core.telegram.org/bots/api#chatjoinrequest
+type ChatJoinRequest struct {
+	Chat       Chat            `json:"chat"`
+	From       User            `json:"from"`
+	Date       int             `json:"date"`
+	Bio        *string         `json:"bio,omitempty"`
+	InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
 }
 
 // BotCommand is a struct of a bot command
