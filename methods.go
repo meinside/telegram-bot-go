@@ -694,6 +694,32 @@ func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result API
 	})
 }
 
+// ApproveChatJoinRequest approves chat join request.
+//
+// https://core.telegram.org/bots/api#approvechatjoinrequest
+func (b *Bot) ApproveChatJoinRequest(chatID ChatID, userID int64) (result APIResponseBool) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatID,
+		"user_id": userID,
+	}
+
+	return b.requestResponseBool("approveChatJoinRequest", params)
+}
+
+// DeclineChatJoinRequest declines chat join request.
+//
+// https://core.telegram.org/bots/api#declinechatjoinrequest
+func (b *Bot) DeclineChatJoinRequest(chatID ChatID, userID int64) (result APIResponseBool) {
+	// essential params
+	params := map[string]interface{}{
+		"chat_id": chatID,
+		"user_id": userID,
+	}
+
+	return b.requestResponseBool("declineChatJoinRequest", params)
+}
+
 // SetChatPhoto sets a chat photo.
 //
 // https://core.telegram.org/bots/api#setchatphoto
