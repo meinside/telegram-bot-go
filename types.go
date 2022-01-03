@@ -97,6 +97,7 @@ const (
 	MessageEntityTypeItalic        MessageEntityType = "italic"
 	MessageEntityTypeUnderline     MessageEntityType = "underline"
 	MessageEntityTypeStrikethrough MessageEntityType = "strikethrough"
+	MessageEntityTypeSpoiler       MessageEntityType = "spoiler"
 	MessageEntityTypeCode          MessageEntityType = "code"
 	MessageEntityTypePre           MessageEntityType = "pre"
 	MessageEntityTypeTextLink      MessageEntityType = "text_link"

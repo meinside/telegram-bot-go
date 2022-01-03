@@ -77,7 +77,7 @@ func (o OptionsGetUpdates) SetAllowedUpdates(allowedUpdates []AllowedUpdate) Opt
 
 // OptionsSendMessage struct for SendMessage().
 //
-// options include: `parse_mode`, `entities`, `disable_web_page_preview`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `parse_mode`, `entities`, `disable_web_page_preview`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendmessage
 type OptionsSendMessage MethodOptions
@@ -106,6 +106,12 @@ func (o OptionsSendMessage) SetDisableNotification(disable bool) OptionsSendMess
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsCopyMessage.
+func (o OptionsSendMessage) SetProtectContent(protect bool) OptionsSendMessage {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetReplyToMessageID(replyToMessageID int64) OptionsSendMessage {
 	o["reply_to_message_id"] = replyToMessageID
@@ -128,7 +134,7 @@ func (o OptionsSendMessage) SetReplyMarkup(replyMarkup interface{}) OptionsSendM
 
 // OptionsForwardMessage struct for ForwardMessage().
 //
-// options include: `disable_notification`
+// options include: `disable_notification` and `protect_content`.
 //
 // https://core.telegram.org/bots/api#forwardmessage
 type OptionsForwardMessage MethodOptions
@@ -139,9 +145,15 @@ func (o OptionsForwardMessage) SetDisableNotification(disable bool) OptionsForwa
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsForwardMessage.
+func (o OptionsForwardMessage) SetProtectContent(protect bool) OptionsForwardMessage {
+	o["protect_content"] = protect
+	return o
+}
+
 // OptionsCopyMessage struct for CopyMessage().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, `reply_markup`
+// options include: `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, `reply_markup`
 //
 // https://core.telegram.org/bots/api#copymessage
 type OptionsCopyMessage MethodOptions
@@ -170,6 +182,12 @@ func (o OptionsCopyMessage) SetDisableNotification(disable bool) OptionsCopyMess
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetProtectContent(protect bool) OptionsCopyMessage {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsCopyMessage.
 func (o OptionsCopyMessage) SetReplyToMessageID(replyToMessageID int64) OptionsCopyMessage {
 	o["reply_to_message_id"] = replyToMessageID
@@ -192,7 +210,7 @@ func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup interface{}) OptionsCopyM
 
 // OptionsSendPhoto struct for SendPhoto().
 //
-// options include: `caption`, `parse_mode`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
@@ -221,6 +239,12 @@ func (o OptionsSendPhoto) SetDisableNotification(disable bool) OptionsSendPhoto 
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetProtectContent(protect bool) OptionsSendPhoto {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetReplyToMessageID(replyToMessageID int64) OptionsSendPhoto {
 	o["reply_to_message_id"] = replyToMessageID
@@ -243,7 +267,7 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup interface{}) OptionsSendPho
 
 // OptionsSendAudio struct for SendAudio().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumb`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendaudio
 type OptionsSendAudio MethodOptions
@@ -298,6 +322,12 @@ func (o OptionsSendAudio) SetDisableNotification(disable bool) OptionsSendAudio 
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetProtectContent(protect bool) OptionsSendAudio {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetReplyToMessageID(replyToMessageID int64) OptionsSendAudio {
 	o["reply_to_message_id"] = replyToMessageID
@@ -320,7 +350,7 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup interface{}) OptionsSendAud
 
 // OptionsSendDocument struct for SendDocument().
 //
-// options include: `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddocument
 type OptionsSendDocument MethodOptions
@@ -363,6 +393,12 @@ func (o OptionsSendDocument) SetDisableNotification(disable bool) OptionsSendDoc
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetProtectContent(protect bool) OptionsSendDocument {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetReplyToMessageID(replyToMessageID int64) OptionsSendDocument {
 	o["reply_to_message_id"] = replyToMessageID
@@ -385,7 +421,7 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup interface{}) OptionsSend
 
 // OptionsSendSticker struct for SendSticker().
 //
-// options include: `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendsticker
 type OptionsSendSticker MethodOptions
@@ -393,6 +429,12 @@ type OptionsSendSticker MethodOptions
 // SetDisableNotification sets the `disable_notification` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetDisableNotification(disable bool) OptionsSendSticker {
 	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetProtectContent(protect bool) OptionsSendSticker {
+	o["protect_content"] = protect
 	return o
 }
 
@@ -507,7 +549,7 @@ func (o OptionsSetStickerSetThumb) SetThumbString(thumb string) OptionsSetSticke
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `duration`, `caption`, `parse_mode`, `caption_entities`, `supports_streaming`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `duration`, `caption`, `parse_mode`, `caption_entities`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
@@ -568,6 +610,12 @@ func (o OptionsSendVideo) SetDisableNotification(disable bool) OptionsSendVideo 
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetProtectContent(protect bool) OptionsSendVideo {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetReplyToMessageID(replyToMessageID int64) OptionsSendVideo {
 	o["reply_to_message_id"] = replyToMessageID
@@ -590,7 +638,7 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup interface{}) OptionsSendVid
 
 // OptionsSendAnimation struct for SendAnimation().
 //
-// options include: `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
@@ -645,6 +693,12 @@ func (o OptionsSendAnimation) SetDisableNotification(disable bool) OptionsSendAn
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetProtectContent(protect bool) OptionsSendAnimation {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetReplyToMessageID(replyToMessageID int64) OptionsSendAnimation {
 	o["reply_to_message_id"] = replyToMessageID
@@ -667,7 +721,7 @@ func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup interface{}) OptionsSen
 
 // OptionsSendVoice struct for SendVoice().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvoice
 type OptionsSendVoice MethodOptions
@@ -702,6 +756,12 @@ func (o OptionsSendVoice) SetDisableNotification(disable bool) OptionsSendVoice 
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetProtectContent(protect bool) OptionsSendVoice {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetReplyToMessageID(replyToMessageID int64) OptionsSendVoice {
 	o["reply_to_message_id"] = replyToMessageID
@@ -724,7 +784,7 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup interface{}) OptionsSendVoi
 
 // OptionsSendVideoNote struct for SendVideoNote().
 //
-// options include: `duration`, `length`, `thumb`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `duration`, `length`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
@@ -756,6 +816,12 @@ func (o OptionsSendVideoNote) SetDisableNotification(disable bool) OptionsSendVi
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetProtectContent(protect bool) OptionsSendVideoNote {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVideoNote.
 func (o OptionsSendVideoNote) SetReplyToMessageID(replyToMessageID int64) OptionsSendVideoNote {
 	o["reply_to_message_id"] = replyToMessageID
@@ -778,7 +844,7 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup interface{}) OptionsSen
 
 // OptionsSendMediaGroup struct for SendMediaGroup().
 //
-// options include: `disable_notification`, `reply_to_message_id`, and `allow_sending_without_reply`
+// options include: `disable_notification`, `protect_content`, `reply_to_message_id`, and `allow_sending_without_reply`
 //
 // https://core.telegram.org/bots/api#sendmediagroup
 type OptionsSendMediaGroup MethodOptions
@@ -786,6 +852,12 @@ type OptionsSendMediaGroup MethodOptions
 // SetDisableNotification sets the `disable_notification` value of OptionsSendMediaGroup.
 func (o OptionsSendMediaGroup) SetDisableNotification(disable bool) OptionsSendMediaGroup {
 	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendMediaGroup.
+func (o OptionsSendMediaGroup) SetProtectContent(protect bool) OptionsSendMediaGroup {
+	o["protect_content"] = protect
 	return o
 }
 
@@ -803,7 +875,7 @@ func (o OptionsSendMediaGroup) SetAllowSendingWithoutReply(allow bool) OptionsSe
 
 // OptionsSendLocation struct for SendLocation()
 //
-// options include: `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendlocation
 type OptionsSendLocation MethodOptions
@@ -838,6 +910,12 @@ func (o OptionsSendLocation) SetDisableNotification(disable bool) OptionsSendLoc
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetProtectContent(protect bool) OptionsSendLocation {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetReplyToMessageID(replyToMessageID int64) OptionsSendLocation {
 	o["reply_to_message_id"] = replyToMessageID
@@ -860,7 +938,7 @@ func (o OptionsSendLocation) SetReplyMarkup(replyMarkup interface{}) OptionsSend
 
 // OptionsSendVenue struct for SendVenue().
 //
-// options include: `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvenue
 type OptionsSendVenue MethodOptions
@@ -895,6 +973,12 @@ func (o OptionsSendVenue) SetDisableNotification(disable bool) OptionsSendVenue 
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetProtectContent(protect bool) OptionsSendVenue {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetReplyToMessageID(replyToMessageID int64) OptionsSendVenue {
 	o["reply_to_message_id"] = replyToMessageID
@@ -917,7 +1001,7 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup interface{}) OptionsSendVen
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
@@ -988,6 +1072,12 @@ func (o OptionsSendPoll) SetDisableNotification(disable bool) OptionsSendPoll {
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetProtectContent(protect bool) OptionsSendPoll {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetReplyToMessageID(replyToMessageID int64) OptionsSendPoll {
 	o["reply_to_message_id"] = replyToMessageID
@@ -1023,7 +1113,7 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 
 // OptionsSendDice struct for SendDice().
 //
-// options include: `emoji`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `emoji`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddice
 type OptionsSendDice MethodOptions
@@ -1039,6 +1129,12 @@ func (o OptionsSendDice) SetEmoji(emoji string) OptionsSendDice {
 // SetDisableNotification sets the `disable_notification` value of OptionsSendDice.
 func (o OptionsSendDice) SetDisableNotification(disable bool) OptionsSendDice {
 	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendDice.
+func (o OptionsSendDice) SetProtectContent(protect bool) OptionsSendDice {
+	o["protect_content"] = protect
 	return o
 }
 
@@ -1064,7 +1160,7 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup interface{}) OptionsSendDice
 
 // OptionsSendContact struct for SendContact()
 //
-// options include: `last_name`, `vcard`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `last_name`, `vcard`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendcontact
 type OptionsSendContact MethodOptions
@@ -1084,6 +1180,12 @@ func (o OptionsSendContact) SetVCard(vCard string) OptionsSendContact {
 // SetDisableNotification sets the `disable_notification` value of OptionsSendContact.
 func (o OptionsSendContact) SetDisableNotification(disable bool) OptionsSendContact {
 	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendContact.
+func (o OptionsSendContact) SetProtectContent(protect bool) OptionsSendContact {
+	o["protect_content"] = protect
 	return o
 }
 
@@ -1643,7 +1745,7 @@ func (o OptionsAnswerInlineQuery) SetSwitchPmParameter(switchPmParam string) Opt
 
 // OptionsSendInvoice struct for SendInvoice().
 //
-// options include: `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`
+// options include: `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#sendinvoice
 type OptionsSendInvoice MethodOptions
@@ -1744,6 +1846,12 @@ func (o OptionsSendInvoice) SetDisableNotification(disable bool) OptionsSendInvo
 	return o
 }
 
+// SetProtectContent sets the `protect_content` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetProtectContent(protect bool) OptionsSendInvoice {
+	o["protect_content"] = protect
+	return o
+}
+
 // SetReplyToMessageID sets the `reply_to_message_id` value of OptionsSendInvoice.
 func (o OptionsSendInvoice) SetReplyToMessageID(replyToMessageID int64) OptionsSendInvoice {
 	o["reply_to_message_id"] = replyToMessageID
@@ -1764,7 +1872,7 @@ func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Opt
 
 // OptionsSendGame struct for SendGame()
 //
-// options include: `disable_notification`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendgame
 type OptionsSendGame MethodOptions
@@ -1772,6 +1880,12 @@ type OptionsSendGame MethodOptions
 // SetDisableNotification sets the `disable_notification` value of OptionsSendGame.
 func (o OptionsSendGame) SetDisableNotification(disable bool) OptionsSendGame {
 	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendGame.
+func (o OptionsSendGame) SetProtectContent(protect bool) OptionsSendGame {
+	o["protect_content"] = protect
 	return o
 }
 
