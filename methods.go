@@ -633,6 +633,26 @@ func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int64, custo
 	})
 }
 
+// BanChatSenderChat bans a channel chat in a supergroup or a channel.
+//
+// https://core.telegram.org/bots/api#banchatsenderchat
+func (b *Bot) BanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponseBool) {
+	return b.requestResponseBool("banChatSenderChat", map[string]interface{}{
+		"chat_id":        chatID,
+		"sender_chat_id": senderChatID,
+	})
+}
+
+// UnbanChatSenderChat unbans a previously banned channel chat in a supergroup or a channel.
+//
+// https://core.telegram.org/bots/api#unbanchatsenderchat
+func (b *Bot) UnbanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponseBool) {
+	return b.requestResponseBool("unbanChatSenderChat", map[string]interface{}{
+		"chat_id":        chatID,
+		"sender_chat_id": senderChatID,
+	})
+}
+
 // SetChatPermissions sets permissions of a chat.
 //
 // https://core.telegram.org/bots/api#setchatpermissions

@@ -357,22 +357,26 @@ type User struct {
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
-	ID               int64            `json:"id"`
-	Type             ChatType         `json:"type"`
-	Title            *string          `json:"title,omitempty"`
-	Username         *string          `json:"username,omitempty"`
-	FirstName        *string          `json:"first_name,omitempty"`
-	LastName         *string          `json:"last_name,omitempty"`
-	Photo            *ChatPhoto       `json:"photo,omitempty"`
-	Description      *string          `json:"description,omitempty"`
-	InviteLink       *string          `json:"invite_link,omitempty"`
-	PinnedMessage    *Message         `json:"pinned_message,omitempty"`
-	Permissions      *ChatPermissions `json:"permissions,omitempty"`
-	SlowModeDelay    int              `json:"slow_mode_delay,omitempty"`
-	StickerSetName   *string          `json:"sticker_set_name,omitempty"`
-	CanSetStickerSet bool             `json:"can_set_sticker_set,omitempty"`
-	LinkedChatID     int64            `json:"linked_chat_id,omitempty"`
-	Location         *ChatLocation    `json:"location,omitempty"`
+	ID                    int64            `json:"id"`
+	Type                  ChatType         `json:"type"`
+	Title                 *string          `json:"title,omitempty"`
+	Username              *string          `json:"username,omitempty"`
+	FirstName             *string          `json:"first_name,omitempty"`
+	LastName              *string          `json:"last_name,omitempty"`
+	Photo                 *ChatPhoto       `json:"photo,omitempty"`
+	Bio                   *string          `json:"bio,omitempty"`
+	HasPrivateForwards    bool             `json:"has_private_forwards,omitempty"`
+	Description           *string          `json:"description,omitempty"`
+	InviteLink            *string          `json:"invite_link,omitempty"`
+	PinnedMessage         *Message         `json:"pinned_message,omitempty"`
+	Permissions           *ChatPermissions `json:"permissions,omitempty"`
+	SlowModeDelay         int              `json:"slow_mode_delay,omitempty"`
+	MessageAutoDeleteTime int              `json:"message_auto_delete_time,omitempty"`
+	HasProtectedContent   bool             `json:"has_protected_content,omitempty"`
+	StickerSetName        *string          `json:"sticker_set_name,omitempty"`
+	CanSetStickerSet      bool             `json:"can_set_sticker_set,omitempty"`
+	LinkedChatID          int64            `json:"linked_chat_id,omitempty"`
+	Location              *ChatLocation    `json:"location,omitempty"`
 }
 
 // InputMediaType is a type of InputMedia
@@ -979,9 +983,11 @@ type Message struct {
 	ForwardSignature              *string                        `json:"forward_signature,omitempty"`
 	ForwardSenderName             *string                        `json:"forward_sender_name,omitempty"`
 	ForwardDate                   int                            `json:"forward_date,omitempty"`
+	IsAutomaticForward            bool                           `json:"is_automatic_forward,omitempty"`
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
 	EditDate                      int                            `json:"edit_date,omitempty"`
+	HasProtectedContent           bool                           `json:"has_protected_content,omitempty"`
 	MediaGroupID                  *string                        `json:"media_group_id,omitempty"`
 	AuthorSignature               *string                        `json:"author_signature,omitempty"`
 	Text                          *string                        `json:"text,omitempty"`
