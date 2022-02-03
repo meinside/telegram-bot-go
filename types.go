@@ -481,6 +481,7 @@ type Sticker struct {
 	Width        int           `json:"width"`
 	Height       int           `json:"height"`
 	IsAnimated   bool          `json:"is_animated"`
+	IsVideo      bool          `json:"is_video"`
 	Thumb        *PhotoSize    `json:"thumb,omitempty"`
 	Emoji        *string       `json:"emoji,omitempty"`
 	SetName      *string       `json:"set_name,omitempty"`
@@ -495,6 +496,7 @@ type StickerSet struct {
 	Name          string     `json:"name"`
 	Title         string     `json:"title"`
 	IsAnimated    bool       `json:"is_animated"`
+	IsVideo       bool       `json:"is_video"`
 	ContainsMasks bool       `json:"contains_masks"`
 	Stickers      []Sticker  `json:"stickers"`
 	Thumb         *PhotoSize `json:"thumb,omitempty"`

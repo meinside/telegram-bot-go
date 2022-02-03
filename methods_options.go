@@ -460,7 +460,7 @@ func (o OptionsSendSticker) SetReplyMarkup(replyMarkup interface{}) OptionsSendS
 
 // OptionsCreateNewStickerSet struct for CreateNewStickerSet().
 //
-// options include: `png_sticker`, `tgs_sticker`, `contains_masks`, and `mask_position`
+// options include: `png_sticker`, `tgs_sticker`, `webm_sticker`, `contains_masks`, and `mask_position`
 //
 // https://core.telegram.org/bots/api#createnewstickerset
 type OptionsCreateNewStickerSet MethodOptions
@@ -483,6 +483,12 @@ func (o OptionsCreateNewStickerSet) SetTGSSticker(tgsSticker InputFile) OptionsC
 	return o
 }
 
+// SetWebmSticker sets the `webm_sticker` value of OptionsCreateNewStickerSet.
+func (o OptionsCreateNewStickerSet) SetWebmSticker(webmSticker InputFile) OptionsCreateNewStickerSet {
+	o["webm_sticker"] = webmSticker
+	return o
+}
+
 // SetContainsMasks sets the `contains_masks` value of OptionsCreateNewStickerSet.
 func (o OptionsCreateNewStickerSet) SetContainsMasks(containsMasks bool) OptionsCreateNewStickerSet {
 	o["contains_masks"] = containsMasks
@@ -497,26 +503,32 @@ func (o OptionsCreateNewStickerSet) SetMaskPosition(maskPosition MaskPosition) O
 
 // OptionsAddStickerToSet struct for AddStickerToSet()
 //
-// options include: `png_sticker`, `tgs_sticker`, and `mask_position`
+// options include: `png_sticker`, `tgs_sticker`, `webm_sticker`, and `mask_position`
 //
 // https://core.telegram.org/bots/api#addstickertoset
 type OptionsAddStickerToSet MethodOptions
 
-// SetPNGSticker sets the `png_sticker` value of OptionsCreateNew.
+// SetPNGSticker sets the `png_sticker` value of OptionsAddStickerToSet.
 func (o OptionsAddStickerToSet) SetPNGSticker(pngSticker InputFile) OptionsAddStickerToSet {
 	o["png_sticker"] = pngSticker
 	return o
 }
 
-// SetPNGStickerString sets the `png_sticker` value of OptionsCreateNew.
+// SetPNGStickerString sets the `png_sticker` value of OptionsAddStickerToSet.
 func (o OptionsAddStickerToSet) SetPNGStickerString(pngSticker string) OptionsAddStickerToSet {
 	o["png_sticker"] = pngSticker
 	return o
 }
 
-// SetTGSSticker sets the `tgs_sticker` value of OptionsCreateNewStickerSet.
+// SetTGSSticker sets the `tgs_sticker` value of OptionsAddStickerToSet.
 func (o OptionsAddStickerToSet) SetTGSSticker(tgsSticker InputFile) OptionsAddStickerToSet {
 	o["tgs_sticker"] = tgsSticker
+	return o
+}
+
+// SetWebmSticker sets the `webm_sticker` value of OptionsAddStickerToSet.
+func (o OptionsAddStickerToSet) SetWebmSticker(webmSticker InputFile) OptionsAddStickerToSet {
+	o["webm_sticker"] = webmSticker
 	return o
 }
 
