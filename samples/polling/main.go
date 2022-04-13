@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (get updates),
 //
-// last update: 2020.11.05.
+// last update: 2022.04.13.
 
 package main
 
@@ -101,7 +101,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 				"I know.",
 				"Han Solo")
 
-			results := []interface{}{
+			results := []any{
 				article1,
 				article2,
 			}

@@ -740,7 +740,7 @@ func (q CallbackQuery) String() string {
 // Other helper functions
 
 // interface to string (in JSON format)
-func structToString(v interface{}) string {
+func structToString(v any) string {
 	json, err := json.Marshal(v)
 
 	if err == nil {

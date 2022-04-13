@@ -3,7 +3,7 @@ package telegrambot
 // https://core.telegram.org/bots/api#available-methods
 
 // MethodOptions is a type for methods' options parameter.
-type MethodOptions map[string]interface{}
+type MethodOptions map[string]any
 
 // OptionsSetWebhook struct for SetWebhook().
 //
@@ -127,7 +127,7 @@ func (o OptionsSendMessage) SetAllowSendingWithoutReply(allow bool) OptionsSendM
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendMessage.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendMessage) SetReplyMarkup(replyMarkup interface{}) OptionsSendMessage {
+func (o OptionsSendMessage) SetReplyMarkup(replyMarkup any) OptionsSendMessage {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -203,7 +203,7 @@ func (o OptionsCopyMessage) SetAllowSendingWithoutReply(allow bool) OptionsCopyM
 // SetReplyMarkup sets the reply_markup value of OptionsCopyMessage.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup interface{}) OptionsCopyMessage {
+func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup any) OptionsCopyMessage {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -260,7 +260,7 @@ func (o OptionsSendPhoto) SetAllowSendingWithoutReply(allow bool) OptionsSendPho
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendPhoto.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup interface{}) OptionsSendPhoto {
+func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -311,7 +311,7 @@ func (o OptionsSendAudio) SetTitle(title string) OptionsSendAudio {
 // SetThumb sets the `thumb` value of OptionsSendAudio.
 //
 // thumb can be one of InputFile or string.
-func (o OptionsSendAudio) SetThumb(thumb interface{}) OptionsSendAudio {
+func (o OptionsSendAudio) SetThumb(thumb any) OptionsSendAudio {
 	o["thumb"] = thumb
 	return o
 }
@@ -343,7 +343,7 @@ func (o OptionsSendAudio) SetAllowSendingWithoutReply(allow bool) OptionsSendAud
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendAudio.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendAudio) SetReplyMarkup(replyMarkup interface{}) OptionsSendAudio {
+func (o OptionsSendAudio) SetReplyMarkup(replyMarkup any) OptionsSendAudio {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -358,7 +358,7 @@ type OptionsSendDocument MethodOptions
 // SetThumb sets the thumb value of OptionsSendDocument.
 //
 // `thumb` can be one of InputFile or string.
-func (o OptionsSendDocument) SetThumb(thumb interface{}) OptionsSendDocument {
+func (o OptionsSendDocument) SetThumb(thumb any) OptionsSendDocument {
 	o["thumb"] = thumb
 	return o
 }
@@ -414,7 +414,7 @@ func (o OptionsSendDocument) SetAllowSendingWithoutReply(allow bool) OptionsSend
 // SetReplyMarkup sets the reply_markup value of OptionsSendDocument.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendDocument) SetReplyMarkup(replyMarkup interface{}) OptionsSendDocument {
+func (o OptionsSendDocument) SetReplyMarkup(replyMarkup any) OptionsSendDocument {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -453,7 +453,7 @@ func (o OptionsSendSticker) SetAllowSendingWithoutReply(allow bool) OptionsSendS
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendSticker.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendSticker) SetReplyMarkup(replyMarkup interface{}) OptionsSendSticker {
+func (o OptionsSendSticker) SetReplyMarkup(replyMarkup any) OptionsSendSticker {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -587,7 +587,7 @@ func (o OptionsSendVideo) SetHeight(height int) OptionsSendVideo {
 // SetThumb sets the `thumb` value of OptionsSendVideo.
 //
 // `thumb` can be one of InputFile or string.
-func (o OptionsSendVideo) SetThumb(thumb interface{}) OptionsSendVideo {
+func (o OptionsSendVideo) SetThumb(thumb any) OptionsSendVideo {
 	o["thumb"] = thumb
 	return o
 }
@@ -643,7 +643,7 @@ func (o OptionsSendVideo) SetAllowSendingWithoutReply(allow bool) OptionsSendVid
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendVideo.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendVideo) SetReplyMarkup(replyMarkup interface{}) OptionsSendVideo {
+func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -676,7 +676,7 @@ func (o OptionsSendAnimation) SetHeight(height int) OptionsSendAnimation {
 // SetThumb sets the `thumb` value of OptionsSendAnimation.
 //
 // `thumb` can be one of InputFile or string.
-func (o OptionsSendAnimation) SetThumb(thumb interface{}) OptionsSendAnimation {
+func (o OptionsSendAnimation) SetThumb(thumb any) OptionsSendAnimation {
 	o["thumb"] = thumb
 	return o
 }
@@ -726,7 +726,7 @@ func (o OptionsSendAnimation) SetAllowSendingWithoutReply(allow bool) OptionsSen
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendAnimation.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup interface{}) OptionsSendAnimation {
+func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup any) OptionsSendAnimation {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -789,7 +789,7 @@ func (o OptionsSendVoice) SetAllowSendingWithoutReply(allow bool) OptionsSendVoi
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendVoice.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendVoice) SetReplyMarkup(replyMarkup interface{}) OptionsSendVoice {
+func (o OptionsSendVoice) SetReplyMarkup(replyMarkup any) OptionsSendVoice {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -817,7 +817,7 @@ func (o OptionsSendVideoNote) SetLength(length int) OptionsSendVideoNote {
 // SetThumb sets the `thumb` value of OptionsSendVideoNote.
 //
 // `thumb` can be one of InputFile or string.
-func (o OptionsSendVideoNote) SetThumb(thumb interface{}) OptionsSendVideoNote {
+func (o OptionsSendVideoNote) SetThumb(thumb any) OptionsSendVideoNote {
 	o["thumb"] = thumb
 	return o
 }
@@ -849,7 +849,7 @@ func (o OptionsSendVideoNote) SetAllowSendingWithoutReply(allow bool) OptionsSen
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendVideoNote.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup interface{}) OptionsSendVideoNote {
+func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNote {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -943,7 +943,7 @@ func (o OptionsSendLocation) SetAllowSendingWithoutReply(allow bool) OptionsSend
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendLocation.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendLocation) SetReplyMarkup(replyMarkup interface{}) OptionsSendLocation {
+func (o OptionsSendLocation) SetReplyMarkup(replyMarkup any) OptionsSendLocation {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1006,7 +1006,7 @@ func (o OptionsSendVenue) SetAllowSendingWithoutReply(allow bool) OptionsSendVen
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendVenue.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendVenue) SetReplyMarkup(replyMarkup interface{}) OptionsSendVenue {
+func (o OptionsSendVenue) SetReplyMarkup(replyMarkup any) OptionsSendVenue {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1105,7 +1105,7 @@ func (o OptionsSendPoll) SetAllowSendingWithoutReply(allow bool) OptionsSendPoll
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendPoll.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendPoll) SetReplyMarkup(replyMarkup interface{}) OptionsSendPoll {
+func (o OptionsSendPoll) SetReplyMarkup(replyMarkup any) OptionsSendPoll {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1165,7 +1165,7 @@ func (o OptionsSendDice) SetAllowSendingWithoutReply(allow bool) OptionsSendDice
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendDice.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendDice) SetReplyMarkup(replyMarkup interface{}) OptionsSendDice {
+func (o OptionsSendDice) SetReplyMarkup(replyMarkup any) OptionsSendDice {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1216,7 +1216,7 @@ func (o OptionsSendContact) SetAllowSendingWithoutReply(allow bool) OptionsSendC
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendContact.
 //
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
-func (o OptionsSendContact) SetReplyMarkup(replyMarkup interface{}) OptionsSendContact {
+func (o OptionsSendContact) SetReplyMarkup(replyMarkup any) OptionsSendContact {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -1431,7 +1431,7 @@ type OptionsGetMyCommands MethodOptions
 // SetScope sets the `scope` value of OptionsGetMyCommands.
 //
 // `scope` can be one of: BotCommandScopeDefault, BotCommandScopeAllPrivateChats, BotCommandScopeAllGroupChats, BotCommandScopeAllChatAdministrators, BotCommandScopeChat, BotCommandScopeChatAdministrators, or BotCommandScopeChatMember.
-func (o OptionsGetMyCommands) SetScope(scope interface{}) OptionsGetMyCommands {
+func (o OptionsGetMyCommands) SetScope(scope any) OptionsGetMyCommands {
 	o["scope"] = scope
 	return o
 }
@@ -1454,7 +1454,7 @@ type OptionsSetMyCommands MethodOptions
 // SetScope sets the `scope` value of OptionsSetMyCommands.
 //
 // `scope` can be one of: BotCommandScopeDefault, BotCommandScopeAllPrivateChats, BotCommandScopeAllGroupChats, BotCommandScopeAllChatAdministrators, BotCommandScopeChat, BotCommandScopeChatAdministrators, or BotCommandScopeChatMember.
-func (o OptionsSetMyCommands) SetScope(scope interface{}) OptionsSetMyCommands {
+func (o OptionsSetMyCommands) SetScope(scope any) OptionsSetMyCommands {
 	o["scope"] = scope
 	return o
 }
@@ -1477,7 +1477,7 @@ type OptionsDeleteMyCommands MethodOptions
 // SetScope sets the `scope` value of OptionsDeleteMyCommands.
 //
 // `scope` can be one of: BotCommandScopeDefault, BotCommandScopeAllPrivateChats, BotCommandScopeAllGroupChats, BotCommandScopeAllChatAdministrators, BotCommandScopeChat, BotCommandScopeChatAdministrators, or BotCommandScopeChatMember.
-func (o OptionsDeleteMyCommands) SetScope(scope interface{}) OptionsDeleteMyCommands {
+func (o OptionsDeleteMyCommands) SetScope(scope any) OptionsDeleteMyCommands {
 	o["scope"] = scope
 	return o
 }

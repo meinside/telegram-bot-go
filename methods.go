@@ -21,7 +21,7 @@ import (
 // https://core.telegram.org/bots/api#getupdates
 func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponseUpdates) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	return b.requestResponseUpdates("getUpdates", options)
@@ -37,7 +37,7 @@ func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (resu
 	b.webhookPort = port
 	b.webhookURL = b.getWebhookURL()
 
-	params := map[string]interface{}{
+	params := map[string]any{
 		"url": b.webhookURL,
 	}
 
@@ -96,7 +96,7 @@ func (b *Bot) DeleteWebhook(dropPendingUpdates bool) (result APIResponseBool) {
 
 	b.verbose("deleting webhook url")
 
-	return b.requestResponseBool("deleteWebhook", map[string]interface{}{
+	return b.requestResponseBool("deleteWebhook", map[string]any{
 		"drop_pending_updates": dropPendingUpdates,
 	})
 }
@@ -112,21 +112,21 @@ func (b *Bot) GetWebhookInfo() (result APIResponseWebhookInfo) {
 //
 // https://core.telegram.org/bots/api#getme
 func (b *Bot) GetMe() (result APIResponseUser) {
-	return b.requestResponseUser("getMe", map[string]interface{}{}) // no params
+	return b.requestResponseUser("getMe", map[string]any{}) // no params
 }
 
 // LogOut logs this bot from cloud Bot API server.
 //
 // https://core.telegram.org/bots/api#logout
 func (b *Bot) LogOut() (result APIResponseBool) {
-	return b.requestResponseBool("logOut", map[string]interface{}{}) // no params
+	return b.requestResponseBool("logOut", map[string]any{}) // no params
 }
 
 // Close closes this bot from local Bot API server.
 //
 // https://core.telegram.org/bots/api#close
 func (b *Bot) Close() (result APIResponseBool) {
-	return b.requestResponseBool("close", map[string]interface{}{}) // no params
+	return b.requestResponseBool("close", map[string]any{}) // no params
 }
 
 // SendMessage sends a message to the bot.
@@ -134,7 +134,7 @@ func (b *Bot) Close() (result APIResponseBool) {
 // https://core.telegram.org/bots/api#sendmessage
 func (b *Bot) SendMessage(chatID ChatID, text string, options OptionsSendMessage) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -149,7 +149,7 @@ func (b *Bot) SendMessage(chatID ChatID, text string, options OptionsSendMessage
 // https://core.telegram.org/bots/api#forwardmessage
 func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int64, options OptionsForwardMessage) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -165,7 +165,7 @@ func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int64, options
 // https://core.telegram.org/bots/api#copymessage
 func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int64, options OptionsCopyMessage) (result APIResponseMessageID) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -181,7 +181,7 @@ func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int64, options Op
 // https://core.telegram.org/bots/api#sendphoto
 func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options OptionsSendPhoto) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -196,7 +196,7 @@ func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options OptionsSendPhoto
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options OptionsSendAudio) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -211,7 +211,7 @@ func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options OptionsSendAudio
 // https://core.telegram.org/bots/api#senddocument
 func (b *Bot) SendDocument(chatID ChatID, document InputFile, options OptionsSendDocument) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -226,7 +226,7 @@ func (b *Bot) SendDocument(chatID ChatID, document InputFile, options OptionsSen
 // https://core.telegram.org/bots/api#sendsticker
 func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options OptionsSendSticker) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -241,7 +241,7 @@ func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options OptionsSendS
 // https://core.telegram.org/bots/api#getstickerset
 func (b *Bot) GetStickerSet(name string) (result APIResponseStickerSet) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"name": name,
 	}
 
@@ -253,7 +253,7 @@ func (b *Bot) GetStickerSet(name string) (result APIResponseStickerSet) {
 // https://core.telegram.org/bots/api#uploadstickerfile
 func (b *Bot) UploadStickerFile(userID int64, sticker InputFile) (result APIResponseFile) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"user_id":     userID,
 		"png_sticker": sticker,
 	}
@@ -266,7 +266,7 @@ func (b *Bot) UploadStickerFile(userID int64, sticker InputFile) (result APIResp
 // https://core.telegram.org/bots/api#createnewstickerset
 func (b *Bot) CreateNewStickerSet(userID int64, name, title string, emojis string, options OptionsCreateNewStickerSet) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -283,7 +283,7 @@ func (b *Bot) CreateNewStickerSet(userID int64, name, title string, emojis strin
 // https://core.telegram.org/bots/api#addstickertoset
 func (b *Bot) AddStickerToSet(userID int64, name string, emojis string, options OptionsAddStickerToSet) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -299,7 +299,7 @@ func (b *Bot) AddStickerToSet(userID int64, name string, emojis string, options 
 // https://core.telegram.org/bots/api#setstickerpositioninset
 func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"sticker":  sticker,
 		"position": position,
 	}
@@ -312,7 +312,7 @@ func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIR
 // https://core.telegram.org/bots/api#deletestickerfromset
 func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"sticker": sticker,
 	}
 
@@ -324,7 +324,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponseBool) {
 // https://core.telegram.org/bots/api#setstickersetthumb
 func (b *Bot) SetStickerSetThumb(name string, userID int64, options OptionsSetStickerSetThumb) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -339,7 +339,7 @@ func (b *Bot) SetStickerSetThumb(name string, userID int64, options OptionsSetSt
 // https://core.telegram.org/bots/api#sendvideo
 func (b *Bot) SendVideo(chatID ChatID, video InputFile, options OptionsSendVideo) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -354,7 +354,7 @@ func (b *Bot) SendVideo(chatID ChatID, video InputFile, options OptionsSendVideo
 // https://core.telegram.org/bots/api#sendanimation
 func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options OptionsSendAnimation) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -369,7 +369,7 @@ func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options OptionsS
 // https://core.telegram.org/bots/api#sendvoice
 func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options OptionsSendVoice) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -386,7 +386,7 @@ func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options OptionsSendVoice
 // https://core.telegram.org/bots/api#sendvideonote
 func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options OptionsSendVideoNote) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -401,7 +401,7 @@ func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options OptionsS
 // https://core.telegram.org/bots/api#sendmediagroup
 func (b *Bot) SendMediaGroup(chatID ChatID, media []InputMedia, options OptionsSendMediaGroup) (result APIResponseMessages) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -416,7 +416,7 @@ func (b *Bot) SendMediaGroup(chatID ChatID, media []InputMedia, options OptionsS
 // https://core.telegram.org/bots/api#sendlocation
 func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options OptionsSendLocation) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -432,7 +432,7 @@ func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options O
 // https://core.telegram.org/bots/api#sendvenue
 func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, address string, options OptionsSendVenue) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -450,7 +450,7 @@ func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, addre
 // https://core.telegram.org/bots/api#sendcontact
 func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options OptionsSendContact) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -466,7 +466,7 @@ func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options 
 // https://core.telegram.org/bots/api#sendpoll
 func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []string, options OptionsSendPoll) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -482,7 +482,7 @@ func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []string, opt
 // https://core.telegram.org/bots/api#stoppoll
 func (b *Bot) StopPoll(chatID ChatID, messageID int64, options OptionsStopPoll) (result APIResponsePoll) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -497,7 +497,7 @@ func (b *Bot) StopPoll(chatID ChatID, messageID int64, options OptionsStopPoll) 
 // https://core.telegram.org/bots/api#senddice
 func (b *Bot) SendDice(chatID ChatID, options OptionsSendDice) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -511,7 +511,7 @@ func (b *Bot) SendDice(chatID ChatID, options OptionsSendDice) (result APIRespon
 // https://core.telegram.org/bots/api#sendchataction
 func (b *Bot) SendChatAction(chatID ChatID, action ChatAction) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 		"action":  action,
 	}
@@ -524,7 +524,7 @@ func (b *Bot) SendChatAction(chatID ChatID, action ChatAction) (result APIRespon
 // https://core.telegram.org/bots/api#getuserprofilephotos
 func (b *Bot) GetUserProfilePhotos(userID int64, options OptionsGetUserProfilePhotos) (result APIResponseUserProfilePhotos) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -538,7 +538,7 @@ func (b *Bot) GetUserProfilePhotos(userID int64, options OptionsGetUserProfilePh
 // https://core.telegram.org/bots/api#getfile
 func (b *Bot) GetFile(fileID string) (result APIResponseFile) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"file_id": fileID,
 	}
 
@@ -555,7 +555,7 @@ func (b *Bot) GetFileURL(file File) string {
 // https://core.telegram.org/bots/api#banchatmember
 func (b *Bot) BanChatMember(chatID ChatID, userID int64, options OptionsBanChatMember) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -570,7 +570,7 @@ func (b *Bot) BanChatMember(chatID ChatID, userID int64, options OptionsBanChatM
 // https://core.telegram.org/bots/api#leavechat
 func (b *Bot) LeaveChat(chatID ChatID) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -582,7 +582,7 @@ func (b *Bot) LeaveChat(chatID ChatID) (result APIResponseBool) {
 // https://core.telegram.org/bots/api#unbanchatmember
 func (b *Bot) UnbanChatMember(chatID ChatID, userID int64, onlyIfBanned bool) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id":        chatID,
 		"user_id":        userID,
 		"only_if_banned": onlyIfBanned,
@@ -596,7 +596,7 @@ func (b *Bot) UnbanChatMember(chatID ChatID, userID int64, onlyIfBanned bool) (r
 // https://core.telegram.org/bots/api#restrictchatmember
 func (b *Bot) RestrictChatMember(chatID ChatID, userID int64, permissions ChatPermissions, options OptionsRestrictChatMember) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -612,7 +612,7 @@ func (b *Bot) RestrictChatMember(chatID ChatID, userID int64, permissions ChatPe
 // https://core.telegram.org/bots/api#promotechatmember
 func (b *Bot) PromoteChatMember(chatID ChatID, userID int64, options OptionsPromoteChatMember) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -626,7 +626,7 @@ func (b *Bot) PromoteChatMember(chatID ChatID, userID int64, options OptionsProm
 //
 // https://core.telegram.org/bots/api#setchatadministratorcustomtitle
 func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int64, customTitle string) (result APIResponseBool) {
-	return b.requestResponseBool("setChatAdministratorCustomTitle", map[string]interface{}{
+	return b.requestResponseBool("setChatAdministratorCustomTitle", map[string]any{
 		"chat_id":      chatID,
 		"user_id":      userID,
 		"custom_title": customTitle,
@@ -637,7 +637,7 @@ func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int64, custo
 //
 // https://core.telegram.org/bots/api#banchatsenderchat
 func (b *Bot) BanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponseBool) {
-	return b.requestResponseBool("banChatSenderChat", map[string]interface{}{
+	return b.requestResponseBool("banChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
 	})
@@ -647,7 +647,7 @@ func (b *Bot) BanChatSenderChat(chatID ChatID, senderChatID int64) (result APIRe
 //
 // https://core.telegram.org/bots/api#unbanchatsenderchat
 func (b *Bot) UnbanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponseBool) {
-	return b.requestResponseBool("unbanChatSenderChat", map[string]interface{}{
+	return b.requestResponseBool("unbanChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
 	})
@@ -657,7 +657,7 @@ func (b *Bot) UnbanChatSenderChat(chatID ChatID, senderChatID int64) (result API
 //
 // https://core.telegram.org/bots/api#setchatpermissions
 func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions) (result APIResponseBool) {
-	return b.requestResponseBool("setChatPermissions", map[string]interface{}{
+	return b.requestResponseBool("setChatPermissions", map[string]any{
 		"chat_id":     chatID,
 		"permissions": permissions,
 	})
@@ -668,7 +668,7 @@ func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions) (re
 // https://core.telegram.org/bots/api#exportchatinvitelink
 func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponseString) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -680,7 +680,7 @@ func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponseString) {
 // https://core.telegram.org/bots/api#createchatinvitelink
 func (b *Bot) CreateChatInviteLink(chatID ChatID, options OptionsCreateChatInviteLink) (result APIResponseChatInviteLink) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -694,7 +694,7 @@ func (b *Bot) CreateChatInviteLink(chatID ChatID, options OptionsCreateChatInvit
 // https://core.telegram.org/bots/api#editchatinvitelink
 func (b *Bot) EditChatInviteLink(chatID ChatID, inviteLink string, options OptionsCreateChatInviteLink) (result APIResponseChatInviteLink) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -708,7 +708,7 @@ func (b *Bot) EditChatInviteLink(chatID ChatID, inviteLink string, options Optio
 //
 // https://core.telegram.org/bots/api#revokechatinvitelink
 func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result APIResponseChatInviteLink) {
-	return b.requestResponseChatInviteLink("revokeChatInviteLink", map[string]interface{}{
+	return b.requestResponseChatInviteLink("revokeChatInviteLink", map[string]any{
 		"chat_id":     chatID,
 		"invite_link": inviteLink,
 	})
@@ -719,7 +719,7 @@ func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result API
 // https://core.telegram.org/bots/api#approvechatjoinrequest
 func (b *Bot) ApproveChatJoinRequest(chatID ChatID, userID int64) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
@@ -732,7 +732,7 @@ func (b *Bot) ApproveChatJoinRequest(chatID ChatID, userID int64) (result APIRes
 // https://core.telegram.org/bots/api#declinechatjoinrequest
 func (b *Bot) DeclineChatJoinRequest(chatID ChatID, userID int64) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
@@ -745,7 +745,7 @@ func (b *Bot) DeclineChatJoinRequest(chatID ChatID, userID int64) (result APIRes
 // https://core.telegram.org/bots/api#setchatphoto
 func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 		"photo":   photo,
 	}
@@ -758,7 +758,7 @@ func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponseBo
 // https://core.telegram.org/bots/api#deletechatphoto
 func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -770,7 +770,7 @@ func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponseBool) {
 // https://core.telegram.org/bots/api#setchattitle
 func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 		"title":   title,
 	}
@@ -783,7 +783,7 @@ func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponseBool)
 // https://core.telegram.org/bots/api#setchatdescription
 func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id":     chatID,
 		"description": description,
 	}
@@ -796,7 +796,7 @@ func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIR
 // https://core.telegram.org/bots/api#pinchatmessage
 func (b *Bot) PinChatMessage(chatID ChatID, messageID int64, options OptionsPinChatMessage) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -811,7 +811,7 @@ func (b *Bot) PinChatMessage(chatID ChatID, messageID int64, options OptionsPinC
 // https://core.telegram.org/bots/api#unpinchatmessage
 func (b *Bot) UnpinChatMessage(chatID ChatID, options OptionsUnpinChatMessage) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -825,7 +825,7 @@ func (b *Bot) UnpinChatMessage(chatID ChatID, options OptionsUnpinChatMessage) (
 // https://core.telegram.org/bots/api#unpinallchatmessages
 func (b *Bot) UnpinAllChatMessages(chatID ChatID) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -837,7 +837,7 @@ func (b *Bot) UnpinAllChatMessages(chatID ChatID) (result APIResponseBool) {
 // https://core.telegram.org/bots/api#getchat
 func (b *Bot) GetChat(chatID ChatID) (result APIResponseChat) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -849,7 +849,7 @@ func (b *Bot) GetChat(chatID ChatID) (result APIResponseChat) {
 // https://core.telegram.org/bots/api#getchatadministrators
 func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponseChatAdministrators) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -861,7 +861,7 @@ func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponseChatAdmini
 // https://core.telegram.org/bots/api#getchatmembercount
 func (b *Bot) GetChatMemberCount(chatID ChatID) (result APIResponseInt) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -873,7 +873,7 @@ func (b *Bot) GetChatMemberCount(chatID ChatID) (result APIResponseInt) {
 // https://core.telegram.org/bots/api#getchatmember
 func (b *Bot) GetChatMember(chatID ChatID, userID int64) (result APIResponseChatMember) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
@@ -886,7 +886,7 @@ func (b *Bot) GetChatMember(chatID ChatID, userID int64) (result APIResponseChat
 // https://core.telegram.org/bots/api#setchatstickerset
 func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id":          chatID,
 		"sticker_set_name": stickerSetName,
 	}
@@ -899,7 +899,7 @@ func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result AP
 // https://core.telegram.org/bots/api#deletechatstickerset
 func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"chat_id": chatID,
 	}
 
@@ -911,7 +911,7 @@ func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponseBool) {
 // https://core.telegram.org/bots/api#answercallbackquery
 func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerCallbackQuery) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -932,7 +932,7 @@ func (b *Bot) GetMyCommands(options OptionsGetMyCommands) (result APIResponseBot
 // https://core.telegram.org/bots/api#setmycommands
 func (b *Bot) SetMyCommands(commands []BotCommand, options OptionsSetMyCommands) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -957,7 +957,7 @@ func (b *Bot) DeleteMyCommands(options OptionsDeleteMyCommands) (result APIRespo
 // https://core.telegram.org/bots/api#editmessagetext
 func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (result APIResponseMessageOrBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -971,7 +971,7 @@ func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (resu
 // https://core.telegram.org/bots/api#editmessagecaption
 func (b *Bot) EditMessageCaption(caption string, options OptionsEditMessageCaption) (result APIResponseMessageOrBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -985,7 +985,7 @@ func (b *Bot) EditMessageCaption(caption string, options OptionsEditMessageCapti
 // https://core.telegram.org/bots/api#editmessagemedia
 func (b *Bot) EditMessageMedia(media InputMedia, options OptionsEditMessageMedia) (result APIResponseMessageOrBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -1006,7 +1006,7 @@ func (b *Bot) EditMessageReplyMarkup(options OptionsEditMessageReplyMarkup) (res
 // https://core.telegram.org/bots/api#editmessagelivelocation
 func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options OptionsEditMessageLiveLocation) (result APIResponseMessageOrBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -1027,7 +1027,7 @@ func (b *Bot) StopMessageLiveLocation(options OptionsStopMessageLiveLocation) (r
 //
 // https://core.telegram.org/bots/api#deletemessage
 func (b *Bot) DeleteMessage(chatID ChatID, messageID int64) (result APIResponseBool) {
-	return b.requestResponseBool("deleteMessage", map[string]interface{}{
+	return b.requestResponseBool("deleteMessage", map[string]any{
 		"chat_id":    chatID,
 		"message_id": messageID,
 	})
@@ -1038,9 +1038,9 @@ func (b *Bot) DeleteMessage(chatID ChatID, messageID int64) (result APIResponseB
 // results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, or InlineQueryResultVideo.
 //
 // https://core.telegram.org/bots/api#answerinlinequery
-func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, options OptionsAnswerInlineQuery) (result APIResponseBool) {
+func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []any, options OptionsAnswerInlineQuery) (result APIResponseBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -1055,7 +1055,7 @@ func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []interface{}, opt
 // https://core.telegram.org/bots/api#sendinvoice
 func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerToken, currency string, prices []LabeledPrice, options OptionsSendInvoice) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -1078,7 +1078,7 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 // https://core.telegram.org/bots/api#answershippingquery
 func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptions []ShippingOption, errorMessage *string) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"shipping_query_id": shippingQueryID,
 		"ok":                ok,
 	}
@@ -1101,7 +1101,7 @@ func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptio
 // https://core.telegram.org/bots/api#answerprecheckoutquery
 func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMessage *string) (result APIResponseBool) {
 	// essential params
-	params := map[string]interface{}{
+	params := map[string]any{
 		"pre_checkout_query_id": preCheckoutQueryID,
 		"ok":                    ok,
 	}
@@ -1120,7 +1120,7 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 // https://core.telegram.org/bots/api#sendgame
 func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendGame) (result APIResponseMessage) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -1135,7 +1135,7 @@ func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendG
 // https://core.telegram.org/bots/api#setgamescore
 func (b *Bot) SetGameScore(userID int64, score int, options OptionsSetGameScore) (result APIResponseMessageOrBool) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -1150,7 +1150,7 @@ func (b *Bot) SetGameScore(userID int64, score int, options OptionsSetGameScore)
 // https://core.telegram.org/bots/api#getgamehighscores
 func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) (result APIResponseGameHighScores) {
 	if options == nil {
-		options = map[string]interface{}{}
+		options = map[string]any{}
 	}
 
 	// essential params
@@ -1160,7 +1160,7 @@ func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) 
 }
 
 // Check if given http params contain file or not.
-func checkIfFileParamExists(params map[string]interface{}) bool {
+func checkIfFileParamExists(params map[string]any) bool {
 	for _, value := range params {
 		switch val := value.(type) {
 		case *os.File, []byte:
@@ -1176,7 +1176,7 @@ func checkIfFileParamExists(params map[string]interface{}) bool {
 }
 
 // Convert given interface to string. (for HTTP params)
-func (b *Bot) paramToString(param interface{}) (result string, success bool) {
+func (b *Bot) paramToString(param any) (result string, success bool) {
 	switch val := param.(type) {
 	case int:
 		return strconv.Itoa(val), true
@@ -1214,7 +1214,7 @@ func (b *Bot) paramToString(param interface{}) (result string, success bool) {
 // Send request to API server and return the response as bytes(synchronously).
 //
 // NOTE: If *os.File is included in the params, it will be closed automatically by this function.
-func (b *Bot) request(method string, params map[string]interface{}) (resp []byte, err error) {
+func (b *Bot) request(method string, params map[string]any) (resp []byte, err error) {
 	apiURL := fmt.Sprintf("%s%s/%s", apiBaseURL, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiURL, params)
@@ -1235,7 +1235,7 @@ func (b *Bot) request(method string, params map[string]interface{}) (resp []byte
 }
 
 // request multipart form data
-func (b *Bot) requestMultipartFormData(apiURL string, params map[string]interface{}) (resp []byte, err error) {
+func (b *Bot) requestMultipartFormData(apiURL string, params map[string]any) (resp []byte, err error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -1362,7 +1362,7 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]interfac
 }
 
 // request urlencoded form data
-func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]interface{}) (resp []byte, err error) {
+func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]any) (resp []byte, err error) {
 	paramValues := url.Values{}
 	for key, value := range params {
 		if strValue, ok := b.paramToString(value); ok {
@@ -1414,7 +1414,7 @@ func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]interfa
 func (b *Bot) requestResponseWebhookInfo() (result APIResponseWebhookInfo) {
 	var errStr string
 
-	if bytes, err := b.request("getWebhookInfo", map[string]interface{}{}); err == nil {
+	if bytes, err := b.request("getWebhookInfo", map[string]any{}); err == nil {
 		var jsonResponse APIResponseWebhookInfo
 		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
@@ -1432,7 +1432,7 @@ func (b *Bot) requestResponseWebhookInfo() (result APIResponseWebhookInfo) {
 }
 
 // Send request for APIResponseUser and fetch its result.
-func (b *Bot) requestResponseUser(method string, params map[string]interface{}) (result APIResponseUser) {
+func (b *Bot) requestResponseUser(method string, params map[string]any) (result APIResponseUser) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1453,7 +1453,7 @@ func (b *Bot) requestResponseUser(method string, params map[string]interface{}) 
 }
 
 // Send request for APIResponseMessage and fetch its result.
-func (b *Bot) requestResponseMessage(method string, params map[string]interface{}) (result APIResponseMessage) {
+func (b *Bot) requestResponseMessage(method string, params map[string]any) (result APIResponseMessage) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1474,7 +1474,7 @@ func (b *Bot) requestResponseMessage(method string, params map[string]interface{
 }
 
 // Send request for APIResponseMessages and fetch its result.
-func (b *Bot) requestResponseMessages(method string, params map[string]interface{}) (result APIResponseMessages) {
+func (b *Bot) requestResponseMessages(method string, params map[string]any) (result APIResponseMessages) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1495,7 +1495,7 @@ func (b *Bot) requestResponseMessages(method string, params map[string]interface
 }
 
 // Send request for APIResponseMessageID and fetch its result.
-func (b *Bot) requestResponseMessageID(method string, params map[string]interface{}) (result APIResponseMessageID) {
+func (b *Bot) requestResponseMessageID(method string, params map[string]any) (result APIResponseMessageID) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1516,7 +1516,7 @@ func (b *Bot) requestResponseMessageID(method string, params map[string]interfac
 }
 
 // Send request for APIResponseUserProfilePhotos and fetch its result.
-func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]interface{}) (result APIResponseUserProfilePhotos) {
+func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]any) (result APIResponseUserProfilePhotos) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1537,7 +1537,7 @@ func (b *Bot) requestResponseUserProfilePhotos(method string, params map[string]
 }
 
 // Send request for APIResponseUpdates and fetch its result.
-func (b *Bot) requestResponseUpdates(method string, params map[string]interface{}) (result APIResponseUpdates) {
+func (b *Bot) requestResponseUpdates(method string, params map[string]any) (result APIResponseUpdates) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1558,7 +1558,7 @@ func (b *Bot) requestResponseUpdates(method string, params map[string]interface{
 }
 
 // Send request for APIResponseFile and fetch its result.
-func (b *Bot) requestResponseFile(method string, params map[string]interface{}) (result APIResponseFile) {
+func (b *Bot) requestResponseFile(method string, params map[string]any) (result APIResponseFile) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1579,7 +1579,7 @@ func (b *Bot) requestResponseFile(method string, params map[string]interface{}) 
 }
 
 // Send request for APIResponseChat and fetch its result.
-func (b *Bot) requestResponseChat(method string, params map[string]interface{}) (result APIResponseChat) {
+func (b *Bot) requestResponseChat(method string, params map[string]any) (result APIResponseChat) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1600,7 +1600,7 @@ func (b *Bot) requestResponseChat(method string, params map[string]interface{}) 
 }
 
 // Send request for APIResponseChatAdministrator and fetch its result.
-func (b *Bot) requestResponseChatAdministrators(method string, params map[string]interface{}) (result APIResponseChatAdministrators) {
+func (b *Bot) requestResponseChatAdministrators(method string, params map[string]any) (result APIResponseChatAdministrators) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1621,7 +1621,7 @@ func (b *Bot) requestResponseChatAdministrators(method string, params map[string
 }
 
 // Send request for APIResponseChatMember and fetch its result.
-func (b *Bot) requestResponseChatMember(method string, params map[string]interface{}) (result APIResponseChatMember) {
+func (b *Bot) requestResponseChatMember(method string, params map[string]any) (result APIResponseChatMember) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1642,7 +1642,7 @@ func (b *Bot) requestResponseChatMember(method string, params map[string]interfa
 }
 
 // Send request for APIResponseInt and fetch its result.
-func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (result APIResponseInt) {
+func (b *Bot) requestResponseInt(method string, params map[string]any) (result APIResponseInt) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1663,7 +1663,7 @@ func (b *Bot) requestResponseInt(method string, params map[string]interface{}) (
 }
 
 // Send request for APIResponseBool and fetch its result.
-func (b *Bot) requestResponseBool(method string, params map[string]interface{}) (result APIResponseBool) {
+func (b *Bot) requestResponseBool(method string, params map[string]any) (result APIResponseBool) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1684,7 +1684,7 @@ func (b *Bot) requestResponseBool(method string, params map[string]interface{}) 
 }
 
 // Send request for APIResponseString and fetch its result.
-func (b *Bot) requestResponseString(method string, params map[string]interface{}) (result APIResponseString) {
+func (b *Bot) requestResponseString(method string, params map[string]any) (result APIResponseString) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1705,7 +1705,7 @@ func (b *Bot) requestResponseString(method string, params map[string]interface{}
 }
 
 // Send request for APIResponseGameHighScores and fetch its result.
-func (b *Bot) requestResponseGameHighScores(method string, params map[string]interface{}) (result APIResponseGameHighScores) {
+func (b *Bot) requestResponseGameHighScores(method string, params map[string]any) (result APIResponseGameHighScores) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1726,7 +1726,7 @@ func (b *Bot) requestResponseGameHighScores(method string, params map[string]int
 }
 
 // Send request for APIResponseStickerSet and fetch its result.
-func (b *Bot) requestResponseStickerSet(method string, params map[string]interface{}) (result APIResponseStickerSet) {
+func (b *Bot) requestResponseStickerSet(method string, params map[string]any) (result APIResponseStickerSet) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1747,7 +1747,7 @@ func (b *Bot) requestResponseStickerSet(method string, params map[string]interfa
 }
 
 // Send request for APIResponseMessageOrBool and fetch its result.
-func (b *Bot) requestResponseMessageOrBool(method string, params map[string]interface{}) (result APIResponseMessageOrBool) {
+func (b *Bot) requestResponseMessageOrBool(method string, params map[string]any) (result APIResponseMessageOrBool) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1782,7 +1782,7 @@ func (b *Bot) requestResponseMessageOrBool(method string, params map[string]inte
 }
 
 // Send request for APIResponsePoll and fetch its result.
-func (b *Bot) requestResponsePoll(method string, params map[string]interface{}) (result APIResponsePoll) {
+func (b *Bot) requestResponsePoll(method string, params map[string]any) (result APIResponsePoll) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1803,7 +1803,7 @@ func (b *Bot) requestResponsePoll(method string, params map[string]interface{}) 
 }
 
 // Send request for APIResponseBotCommands and fetch its result.
-func (b *Bot) requestResponseBotCommands(method string, params map[string]interface{}) (result APIResponseBotCommands) {
+func (b *Bot) requestResponseBotCommands(method string, params map[string]any) (result APIResponseBotCommands) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -1824,7 +1824,7 @@ func (b *Bot) requestResponseBotCommands(method string, params map[string]interf
 }
 
 // Send request for APIResponseChatInviteLink and fetch its result.
-func (b *Bot) requestResponseChatInviteLink(method string, params map[string]interface{}) (result APIResponseChatInviteLink) {
+func (b *Bot) requestResponseChatInviteLink(method string, params map[string]any) (result APIResponseChatInviteLink) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
