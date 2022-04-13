@@ -4,7 +4,7 @@ package telegrambot
 
 // ChatID can be `Message.Chat.Id`,
 // or target channel name (in string, eg. "@channelusername")
-type ChatID interface{}
+type ChatID any
 
 // ChatType is a type of Chat
 type ChatType string
@@ -1370,7 +1370,7 @@ type InlineQueryResultCachedAudio struct { // https://core.telegram.org/bots/api
 // InputMessageContent is a generic type of input message content types
 //
 // https://core.telegram.org/bots/api#inputmessagecontent
-type InputMessageContent interface{}
+type InputMessageContent any
 
 // InputTextMessageContent is a struct of InputTextMessageContent
 type InputTextMessageContent struct { // https://core.telegram.org/bots/api#inputtextmessagecontent

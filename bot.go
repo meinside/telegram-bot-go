@@ -196,13 +196,13 @@ func (b *Bot) redact(str string) string {
 }
 
 // Print formatted log message. (only when Bot.Verbose == true)
-func (b *Bot) verbose(str string, args ...interface{}) {
+func (b *Bot) verbose(str string, args ...any) {
 	if b.Verbose {
 		_stdout.Printf("%s\n", b.redact(fmt.Sprintf(str, args...)))
 	}
 }
 
 // Print formatted error message.
-func (b *Bot) error(str string, args ...interface{}) {
+func (b *Bot) error(str string, args ...any) {
 	_stderr.Printf("%s\n", b.redact(fmt.Sprintf(str, args...)))
 }
