@@ -237,6 +237,12 @@ type APIResponseGameHighScores struct {
 	Result []GameHighScore `json:"result,omitempty"`
 }
 
+// APIResponseSentWebAppMessage is an API response with result type: SentWebAppMessage
+type APIResponseSentWebAppMessage struct {
+	APIResponseBase
+	Result *SentWebAppMessage `json:"result,omitempty"`
+}
+
 // APIResponseStickerSet is an API response with result type: StickerSet
 type APIResponseStickerSet struct {
 	APIResponseBase
@@ -268,6 +274,12 @@ type APIResponseChatInviteLink struct {
 	Result *ChatInviteLink `json:"result,omitempty"`
 }
 
+// APIResponseMenuButton is an API response with result type: MenuButton
+type APIResponseMenuButton struct {
+	APIResponseBase
+	Result *MenuButton `json:"result,omitempty"`
+}
+
 // UpdateType is a type of updates (for allowed_updates)
 //
 // https://core.telegram.org/bots/api#setwebhook
@@ -292,14 +304,15 @@ const (
 //
 // https://core.telegram.org/bots/api#webhookinfo
 type WebhookInfo struct {
-	URL                  *string      `json:"url"`
-	HasCustomCertificate bool         `json:"has_custom_certificate"`
-	PendingUpdateCount   int          `json:"pending_update_count"`
-	IPAddress            string       `json:"ip_address,omitempty"`
-	LastErrorDate        int          `json:"last_error_date,omitempty"`
-	LastErrorMessage     *string      `json:"last_error_message,omitempty"`
-	MaxConnections       int          `json:"max_connections,omitempty"`
-	AllowedUpdates       []UpdateType `json:"allowed_updates,omitempty"`
+	URL                          *string      `json:"url"`
+	HasCustomCertificate         bool         `json:"has_custom_certificate"`
+	PendingUpdateCount           int          `json:"pending_update_count"`
+	IPAddress                    string       `json:"ip_address,omitempty"`
+	LastErrorDate                int          `json:"last_error_date,omitempty"`
+	LastErrorMessage             *string      `json:"last_error_message,omitempty"`
+	LastSynchronizationErrorDate int          `json:"last_synchronization_error_date,omitempty"`
+	MaxConnections               int          `json:"max_connections,omitempty"`
+	AllowedUpdates               []UpdateType `json:"allowed_updates,omitempty"`
 }
 
 // Update is a struct of an update
@@ -586,6 +599,14 @@ type Venue struct {
 	GooglePlaceType *string  `json:"google_place_type,omitempty"`
 }
 
+// WebAppData is a struct of a web app data
+//
+// https://core.telegram.org/bots/api#webappdata
+type WebAppData struct {
+	Data       string `json:"data"`
+	ButtonText string `json:"button_text"`
+}
+
 // ProximityAlertTriggered is a struct of priximity alert triggered object
 //
 // https://core.telegram.org/bots/api#proximityalerttriggered
@@ -646,29 +667,29 @@ type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"`
 }
 
-// VoiceChatStarted is a struct for service message: voice chat started
+// VideoChatStarted is a struct for service message: video chat started
 //
-// https://core.telegram.org/bots/api#voicechatstarted
-type VoiceChatStarted struct{}
+// https://core.telegram.org/bots/api#videochatstarted
+type VideoChatStarted struct{}
 
-// VoiceChatEnded is a struct for service message: voice chat ended
+// VideoChatEnded is a struct for service message: video chat ended
 //
-// https://core.telegram.org/bots/api#voicechatended
-type VoiceChatEnded struct {
+// https://core.telegram.org/bots/api#videochatended
+type VideoChatEnded struct {
 	Duration int `json:"duration"`
 }
 
-// VoiceChatScheduled is a struct for servoice message: voice chat scheduled
+// VideoChatScheduled is a struct for servoice message: video chat scheduled
 //
-// https://core.telegram.org/bots/api#voicechatscheduled
-type VoiceChatScheduled struct {
+// https://core.telegram.org/bots/api#videochatscheduled
+type VideoChatScheduled struct {
 	StartDate int `json:"start_date"`
 }
 
-// VoiceChatParticipantsInvited is a struct for service message: new members invited to voice chat
+// VideoChatParticipantsInvited is a struct for service message: new members invited to video chat
 //
-// https://core.telegram.org/bots/api#voicechatparticipantsinvited
-type VoiceChatParticipantsInvited struct {
+// https://core.telegram.org/bots/api#videochatparticipantsinvited
+type VideoChatParticipantsInvited struct {
 	Users []User `json:"users,omitempty"`
 }
 
@@ -709,6 +730,7 @@ type KeyboardButton struct {
 	RequestContact  bool                    `json:"request_contact,omitempty"`
 	RequestLocation bool                    `json:"request_location,omitempty"`
 	RequestPoll     *KeyboardButtonPollType `json:"request_poll,omitempty"`
+	WebApp          *WebAppInfo             `json:"web_app,omitempty"`
 }
 
 // KeyboardButtonPollType is a struct for KeyboardButtonPollType
@@ -741,6 +763,7 @@ type InlineKeyboardButton struct {
 	URL                          *string       `json:"url,omitempty"`
 	LoginURL                     *LoginURL     `json:"login_url,omitempty"`
 	CallbackData                 *string       `json:"callback_data,omitempty"`
+	WebApp                       *WebAppInfo   `json:"web_app,omitempty"`
 	SwitchInlineQuery            *string       `json:"switch_inline_query,omitempty"`
 	SwitchInlineQueryCurrentChat *string       `json:"switch_inline_query_current_chat,omitempty"`
 	CallbackGame                 *CallbackGame `json:"callback_game,omitempty"`
@@ -827,20 +850,37 @@ type ChatInviteLink struct {
 	PendingJoinRequestCount int     `json:"pending_join_request_count"`
 }
 
+// ChatAdministratorRights is a struct of chat administrator's rights
+//
+// https://core.telegram.org/bots/api#chatadministratorrights
+type ChatAdministratorRights struct {
+	IsAnonymous         bool `json:"is_anonymous"`
+	CanManageChat       bool `json:"can_manage_chat"`
+	CanDeleteMessages   bool `json:"can_delete_messages"`
+	CanManageVideoChats bool `json:"can_manage_video_chats"`
+	CanRestrictMembers  bool `json:"can_restrict_members"`
+	CanPromoteMembers   bool `json:"can_promote_members"`
+	CanChangeInfo       bool `json:"can_change_info"`
+	CanInviteUsers      bool `json:"can_invite_users"`
+	CanPostMessages     bool `json:"can_post_messages,omitempty"`
+	CanEditMessages     bool `json:"can_edit_messages,omitempty"`
+	CanPinMessages      bool `json:"can_pin_messages,omitempty"`
+}
+
 // ChatMember is a struct of a chat member
 //
 // https://core.telegram.org/bots/api#chatmember
 type ChatMember struct {
 	User                  User             `json:"user"`
 	Status                ChatMemberStatus `json:"status"`
-	CustomTitle           *string          `json:"custom_title,omitempty"`              // owner and administrators only
 	IsAnonymous           bool             `json:"is_anonymous,omitempty"`              // owner and administrators only
+	CustomTitle           *string          `json:"custom_title,omitempty"`              // owner and administrators only
 	CanBeEdited           bool             `json:"can_be_edited,omitempty"`             // administrators only
 	CanManageChat         bool             `json:"can_manage_chat,omitempty"`           // administrators only
 	CanPostMessages       bool             `json:"can_post_messages,omitempty"`         // administrators only
 	CanEditMessages       bool             `json:"can_edit_messages,omitempty"`         // administrators only
 	CanDeleteMessages     bool             `json:"can_delete_messages,omitempty"`       // administrators only
-	CanManageVoiceChats   bool             `json:"can_manage_voice_chats,omitempty"`    // administrators only
+	CanManageVideoChats   bool             `json:"can_manage_video_chats,omitempty"`    // administrators only
 	CanRestrictMembers    bool             `json:"can_restrict_members,omitempty"`      // administrators only
 	CanPromoteMembers     bool             `json:"can_promote_members,omitempty"`       // administrators only
 	CanChangeInfo         bool             `json:"can_change_info,omitempty"`           // administrators and restricted only
@@ -1028,10 +1068,11 @@ type Message struct {
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
-	VoiceChatScheduled           *VoiceChatScheduled           `json:"voice_chat_scheduled,omitempty"`
-	VoiceChatStarted             *VoiceChatStarted             `json:"voice_chat_started,omitempty"`
-	VoiceChatEnded               *VoiceChatEnded               `json:"voice_chat_ended,omitempty"`
-	VoiceChatParticipantsInvited *VoiceChatParticipantsInvited `json:"voice_chat_participants_invited,omitempty"`
+	VideoChatScheduled           *VideoChatScheduled           `json:"video_chat_scheduled,omitempty"`
+	VideoChatStarted             *VideoChatStarted             `json:"video_chat_started,omitempty"`
+	VideoChatEnded               *VideoChatEnded               `json:"video_chat_ended,omitempty"`
+	VideoChatParticipantsInvited *VideoChatParticipantsInvited `json:"video_chat_participants_invited,omitempty"`
+	WebAppData                   *WebAppData                   `json:"web_app_data,omitempty"`
 	ReplyMarkup                  *InlineKeyboardMarkup         `json:"reply_markup,omitempty"`
 }
 
@@ -1538,4 +1579,46 @@ type ShippingAddress struct {
 	StreetLine1 string `json:"street_line1"`
 	StreetLine2 string `json:"street_line2"`
 	PostCode    string `json:"post_code"`
+}
+
+// WebAppInfo is a struct of web app's information
+//
+// https://core.telegram.org/bots/api#webappinfo
+type WebAppInfo struct {
+	URL string `json:"url"`
+}
+
+// SentWebAppMessage is a struct for an inline message sent by web app
+//
+// https://core.telegram.org/bots/api#sentwebappmessage
+type SentWebAppMessage struct {
+	InlineMessageID *string `json:"inline_message_id,omitempty"`
+}
+
+// MenuButton is a generic type of the bot's menu buttons
+//
+// https://core.telegram.org/bots/api#menubutton
+type MenuButton any
+
+// MenuButtonCommands is a struct for a menu button which opens the bot's commands list
+//
+// https://core.telegram.org/bots/api#menubuttoncommands
+type MenuButtonCommands struct {
+	Type string `json:"type"` // = "commands"
+}
+
+// MenuButtonWebApp is a struct for a menu button which launches a web app
+//
+// https://core.telegram.org/bots/api#menubuttonwebapp
+type MenuButtonWebApp struct {
+	Type   string     `json:"type"` // = "web_app"
+	Text   string     `json:"text"`
+	WebApp WebAppInfo `json:"web_app"`
+}
+
+// MenuButtonDefault is a struct for a menu button with no specific value
+//
+// https://core.telegram.org/bots/api#menubuttondefault
+type MenuButtonDefault struct {
+	Type string `json:"type"` // = "default"
 }
