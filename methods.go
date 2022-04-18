@@ -948,6 +948,34 @@ func (b *Bot) DeleteMyCommands(options OptionsDeleteMyCommands) (result APIRespo
 	return b.requestResponseBool("deleteMyCommands", options)
 }
 
+// SetChatMenuButton sets chat menu button.
+//
+// https://core.telegram.org/bots/api#setchatmenubutton
+func (b *Bot) SetChatMenuButton(options OptionsSetChatMenuButton) (result APIResponseBool) {
+	return b.requestResponseBool("setChatMenuButton", options)
+}
+
+// GetChatMenuButton fetches current chat menu button.
+//
+// https://core.telegram.org/bots/api#getchatmenubutton
+func (b *Bot) GetChatMenuButton(options OptionsGetChatMenuButton) (result APIResponseMenuButton) {
+	return b.requestResponseMenuButton("getChatMenuButton", options)
+}
+
+// SetMyDefaultAdministratorRights sets my default administrator rights.
+//
+// https://core.telegram.org/bots/api#setmydefaultadministratorrights
+func (b *Bot) SetMyDefaultAdministratorRights(options OptionsSetMyDefaultAdministratorRights) (result APIResponseBool) {
+	return b.requestResponseBool("setMyDefaultAdministratorRights", options)
+}
+
+// GetMyDefaultAdministratorRights gets my default administrator rights.
+//
+// https://core.telegram.org/bots/api#getmydefaultadministratorrights
+func (b *Bot) GetMyDefaultAdministratorRights(options OptionsGetMyDefaultAdministratorRights) (result APIResponseBool) {
+	return b.requestResponseBool("getMyDefaultAdministratorRights", options)
+}
+
 // Updating messages
 //
 // https://core.telegram.org/bots/api#updating-messages
@@ -1157,6 +1185,18 @@ func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) 
 	options["user_id"] = userID
 
 	return b.requestResponseGameHighScores("getGameHighScores", options)
+}
+
+// AnswerWebAppQuery answers a web app's query
+//
+// https://core.telegram.org/bots/api#answerwebappquery
+func (b *Bot) AnswerWebAppQuery(webAppQueryID string, res InlineQueryResult) (result APIResponseSentWebAppMessage) {
+	options := map[string]any{
+		"web_app_query_id": webAppQueryID,
+		"result":           res,
+	}
+
+	return b.requestResponseSentWebAppMessage("answerWebAppQuery", options)
 }
 
 // Check if given http params contain file or not.
@@ -1725,6 +1765,27 @@ func (b *Bot) requestResponseGameHighScores(method string, params map[string]any
 	return APIResponseGameHighScores{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
+// Send request for APIResponseSentWebAppMessage and fetch its result.
+func (b *Bot) requestResponseSentWebAppMessage(method string, params map[string]any) (result APIResponseSentWebAppMessage) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseSentWebAppMessage
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseSentWebAppMessage{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
 // Send request for APIResponseStickerSet and fetch its result.
 func (b *Bot) requestResponseStickerSet(method string, params map[string]any) (result APIResponseStickerSet) {
 	var errStr string
@@ -1842,6 +1903,27 @@ func (b *Bot) requestResponseChatInviteLink(method string, params map[string]any
 	b.error(errStr)
 
 	return APIResponseChatInviteLink{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseMenuButton and fetch its result.
+func (b *Bot) requestResponseMenuButton(method string, params map[string]any) (result APIResponseMenuButton) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseMenuButton
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseMenuButton{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.

@@ -1274,7 +1274,7 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `is_anonymous`, `can_change_info`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_voice_chats`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
+// options include: `is_anonymous`, `can_change_info`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -1315,9 +1315,9 @@ func (o OptionsPromoteChatMember) SetCanDeleteMessages(can bool) OptionsPromoteC
 	return o
 }
 
-// SetCanManageVoiceChats sets the `can_manage_voice_chats` value of OptionsPromoteChatMember.
-func (o OptionsPromoteChatMember) SetCanManageVoiceChats(can bool) OptionsPromoteChatMember {
-	o["can_manage_voice_chats"] = can
+// SetCanManageVideoChats sets the `can_manage_video_chats` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageVideoChats(can bool) OptionsPromoteChatMember {
+	o["can_manage_video_chats"] = can
 	return o
 }
 
@@ -1487,6 +1487,70 @@ func (o OptionsDeleteMyCommands) SetScope(scope any) OptionsDeleteMyCommands {
 // `language_code` is a two-letter ISO 639-1 language code and can be empty.
 func (o OptionsDeleteMyCommands) SetLanguageCode(languageCode string) OptionsDeleteMyCommands {
 	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsSetChatMenuButton struct for SetChatMenuButton().
+//
+// options include: `chat_id`, and `menu_button`
+//
+// https://core.telegram.org/bots/api#setchatmenubutton
+type OptionsSetChatMenuButton MethodOptions
+
+// SetChatID sets the `chat_id` value of OptionsSetChatMenuButton.
+func (o OptionsSetChatMenuButton) SetChatID(chatID ChatID) OptionsSetChatMenuButton {
+	o["chat_id"] = chatID
+	return o
+}
+
+// SetMenuButton sets the `menu_button` value of OptionsSetChatMenuButton.
+func (o OptionsSetChatMenuButton) SetMenuButton(menuButton MenuButton) OptionsSetChatMenuButton {
+	o["menu_button"] = menuButton
+	return o
+}
+
+// OptionsGetChatMenuButton struct for GetChatMenuButton().
+//
+// options include: `chat_id`
+//
+// https://core.telegram.org/bots/api#getchatmenubutton
+type OptionsGetChatMenuButton MethodOptions
+
+// SetChatID sets the `chat_id` value of OptionsGetChatMenuButton.
+func (o OptionsGetChatMenuButton) SetChatID(chatID ChatID) OptionsGetChatMenuButton {
+	o["chat_id"] = chatID
+	return o
+}
+
+// OptionsSetMyDefaultAdministratorRights struct for SetMyDefaultAdministratorRights().
+//
+// options include: `rights`, and `for_channels`
+//
+// https://core.telegram.org/bots/api#setmydefaultadministratorrights
+type OptionsSetMyDefaultAdministratorRights MethodOptions
+
+// SetRights sets the `rights` value of OptionsSetMyDefaultAdministratorRights.
+func (o OptionsSetMyDefaultAdministratorRights) SetRights(rights ChatAdministratorRights) OptionsSetMyDefaultAdministratorRights {
+	o["rights"] = rights
+	return o
+}
+
+// SetForChannels sets the `for_channels` value of OptionsSetMyDefaultAdministratorRights.
+func (o OptionsSetMyDefaultAdministratorRights) SetForChannels(forChannels bool) OptionsSetMyDefaultAdministratorRights {
+	o["for_channels"] = forChannels
+	return o
+}
+
+// OptionsGetMyDefaultAdministratorRights struct for GetMyDefaultAdministratorRights().
+//
+// options include: `for_channels`
+//
+// https://core.telegram.org/bots/api#getmydefaultadministratorrights
+type OptionsGetMyDefaultAdministratorRights MethodOptions
+
+// SetForChannels sets the `for_channels` value of OptionsGetMyDefaultAdministratorRights.
+func (o OptionsGetMyDefaultAdministratorRights) SetForChannels(forChannels bool) OptionsGetMyDefaultAdministratorRights {
+	o["for_channels"] = forChannels
 	return o
 }
 
