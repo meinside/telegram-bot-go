@@ -15,7 +15,7 @@ Generate self-signed certificate & private key with following script:
 # created on : 2015.10.08.
 # last update: 2015.10.11.
 # 
-# by meinside@gmail.com
+# by meinside@duck.com
 
 DOMAIN="my.host.com"	# XXX - edit
 EXPIRE_IN=3650	# XXX - edit
