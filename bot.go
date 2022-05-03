@@ -2,7 +2,7 @@
 //
 // https://core.telegram.org/bots/api
 //
-// Created on : 2015.10.06, meinside@gmail.com
+// Created on : 2015.10.06, meinside@duck.com
 //
 package telegrambot
 
