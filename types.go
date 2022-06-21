@@ -361,7 +361,9 @@ type User struct {
 	FirstName               string  `json:"first_name"`
 	LastName                *string `json:"last_name,omitempty"`
 	Username                *string `json:"username,omitempty"`
-	LanguageCode            *string `json:"language_code,omitempty"`               // https://en.wikipedia.org/wiki/IETF_language_tag
+	LanguageCode            *string `json:"language_code,omitempty"` // https://en.wikipedia.org/wiki/IETF_language_tag
+	IsPremium               bool    `json:"is_premium,omitempty"`
+	AddedToAttachmentMenu   bool    `json:"added_to_attachment_menu,omitempty"`
 	CanJoinGroups           bool    `json:"can_join_groups,omitempty"`             // returned only in GetMe()
 	CanReadAllGroupMessages bool    `json:"can_read_all_group_messages,omitempty"` // returned only in GetMe()
 	SupportsInlineQueries   bool    `json:"supports_inline_queries,omitempty"`     // returned only in GetMe()
@@ -380,6 +382,8 @@ type Chat struct {
 	Photo                 *ChatPhoto       `json:"photo,omitempty"`
 	Bio                   *string          `json:"bio,omitempty"`
 	HasPrivateForwards    bool             `json:"has_private_forwards,omitempty"`
+	JoinToSendMessages    bool             `json:"join_to_send_messages,omitempty"`
+	JoinByRequest         bool             `json:"join_by_request,omitempty"`
 	Description           *string          `json:"description,omitempty"`
 	InviteLink            *string          `json:"invite_link,omitempty"`
 	PinnedMessage         *Message         `json:"pinned_message,omitempty"`
@@ -489,17 +493,18 @@ type Document struct {
 //
 // https://core.telegram.org/bots/api#sticker
 type Sticker struct {
-	FileID       string        `json:"file_id"`
-	FileUniqueID string        `json:"file_unique_id"`
-	Width        int           `json:"width"`
-	Height       int           `json:"height"`
-	IsAnimated   bool          `json:"is_animated"`
-	IsVideo      bool          `json:"is_video"`
-	Thumb        *PhotoSize    `json:"thumb,omitempty"`
-	Emoji        *string       `json:"emoji,omitempty"`
-	SetName      *string       `json:"set_name,omitempty"`
-	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
-	FileSize     int           `json:"file_size,omitempty"`
+	FileID           string        `json:"file_id"`
+	FileUniqueID     string        `json:"file_unique_id"`
+	Width            int           `json:"width"`
+	Height           int           `json:"height"`
+	IsAnimated       bool          `json:"is_animated"`
+	IsVideo          bool          `json:"is_video"`
+	Thumb            *PhotoSize    `json:"thumb,omitempty"`
+	Emoji            *string       `json:"emoji,omitempty"`
+	SetName          *string       `json:"set_name,omitempty"`
+	PremiumAnimation *File         `json:"premium_animation"`
+	MaskPosition     *MaskPosition `json:"mask_position,omitempty"`
+	FileSize         int           `json:"file_size,omitempty"`
 }
 
 // StickerSet is a struct of a sticker set

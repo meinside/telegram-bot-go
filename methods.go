@@ -1098,6 +1098,25 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 	return b.requestResponseMessage("sendInvoice", options)
 }
 
+// CreateInvoiceLink creates a link for an invoice.
+//
+// https://core.telegram.org/bots/api#createinvoicelink
+func (b *Bot) CreateInvoiceLink(title, description, payload, providerToken, currency string, prices []LabeledPrice, options OptionsCreateInvoiceLink) (result APIResponseString) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["title"] = title
+	options["description"] = description
+	options["payload"] = payload
+	options["provider_token"] = providerToken
+	options["currency"] = currency
+	options["prices"] = prices
+
+	return b.requestResponseString("createInvoiceLink", options)
+}
+
 // AnswerShippingQuery answers a shipping query.
 //
 // if ok is true, shippingOptions should be provided.

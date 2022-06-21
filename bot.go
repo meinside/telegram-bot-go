@@ -111,6 +111,9 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	mux := http.NewServeMux()
 	mux.HandleFunc(b.getWebhookPath(), b.handleWebhook)
 
+	// TODO: check http header: `X-Telegram-Bot-Api-Secret-Token` if `secret_token` is provided
+	// (https://core.telegram.org/bots/api#setwebhook)
+
 	// start server
 	server := &http.Server{
 		Addr:              fmt.Sprintf(":%d", b.webhookPort),

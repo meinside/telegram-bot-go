@@ -7,7 +7,7 @@ type MethodOptions map[string]any
 
 // OptionsSetWebhook struct for SetWebhook().
 //
-// options include: `certificate`, `ip_address`, `max_connections`, `allowed_updates`, and `drop_pending_updates`.
+// options include: `certificate`, `ip_address`, `max_connections`, `allowed_updates`, `drop_pending_updates`, and `secret_token`.
 //
 // https://core.telegram.org/bots/api#setwebhook
 type OptionsSetWebhook MethodOptions
@@ -41,6 +41,12 @@ func (o OptionsSetWebhook) SetAllowedUpdates(allowedUpdates []UpdateType) Option
 // SetDropPendingUpdates sets the `drop_pending_updates` value of OptionsSetWebhook.
 func (o OptionsSetWebhook) SetDropPendingUpdates(drop bool) OptionsSetWebhook {
 	o["drop_pending_updates"] = drop
+	return o
+}
+
+// SetSecretToken sets the `secret_token` value of OptionsSetWebhook.
+func (o OptionsSetWebhook) SetSecretToken(token string) OptionsSetWebhook {
+	o["secret_token"] = token
 	return o
 }
 
@@ -1943,6 +1949,97 @@ func (o OptionsSendInvoice) SetAllowSendingWithoutReply(allow bool) OptionsSendI
 // SetReplyMarkup sets the `reply_markup` value of OptionsSendInvoice.
 func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsSendInvoice {
 	o["reply_markup"] = replyMarkup
+	return o
+}
+
+// OptionsCreateInvoiceLink struct for CreateInvoiceLink().
+//
+// options include: `max_tip_amount`, `suggested_tip_amounts`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, and `is_flexible`.
+//
+// https://core.telegram.org/bots/api#createinvoicelink
+type OptionsCreateInvoiceLink MethodOptions
+
+// SetMaxTipAmount sets the `max_tip_amount` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetMaxTipAmount(maxTipAmount int) OptionsCreateInvoiceLink {
+	o["max_tip_amount"] = maxTipAmount
+	return o
+}
+
+// SetSuggestedTipAmounts sets the `suggested_tip_amounts` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetSuggestedTipAmounts(suggestedTipAmounts []int) OptionsCreateInvoiceLink {
+	o["suggested_tip_amounts"] = suggestedTipAmounts
+	return o
+}
+
+// SetProviderData sets the `provider_data` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetProviderData(providerData string) OptionsCreateInvoiceLink {
+	o["provider_data"] = providerData
+	return o
+}
+
+// SetPhotoURL sets the `photo_url` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetPhotoURL(photoURL string) OptionsCreateInvoiceLink {
+	o["photo_url"] = photoURL
+	return o
+}
+
+// SetPhotoSize sets the `photo_size` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetPhotoSize(photoSize int) OptionsCreateInvoiceLink {
+	o["photo_size"] = photoSize
+	return o
+}
+
+// SetPhotoWidth sets the `photoWidth` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetPhotoWidth(photoWidth int) OptionsCreateInvoiceLink {
+	o["photo_width"] = photoWidth
+	return o
+}
+
+// SetPhotoHeight sets the `photo_height` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetPhotoHeight(photoHeight int) OptionsCreateInvoiceLink {
+	o["photo_height"] = photoHeight
+	return o
+}
+
+// SetNeedName sets the `need_name` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetNeedName(needName bool) OptionsCreateInvoiceLink {
+	o["need_name"] = needName
+	return o
+}
+
+// SetNeedPhoneNumber sets the `need_phone_number` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetNeedPhoneNumber(needPhoneNumber bool) OptionsCreateInvoiceLink {
+	o["need_phone_number"] = needPhoneNumber
+	return o
+}
+
+// SetNeedEmail sets the `need_email` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetNeedEmail(needEmail bool) OptionsCreateInvoiceLink {
+	o["need_email"] = needEmail
+	return o
+}
+
+// SetNeedShippingAddress sets the `need_shipping_address` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetNeedShippingAddress(needShippingAddr bool) OptionsCreateInvoiceLink {
+	o["need_shipping_address"] = needShippingAddr
+	return o
+}
+
+// SetSendPhoneNumberToProvider sets the `send_phone_number_to_provider` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetSendPhoneNumberToProvider(sendPhoneNumberToProvider bool) OptionsCreateInvoiceLink {
+	o["send_phone_number_to_provider"] = sendPhoneNumberToProvider
+	return o
+}
+
+// SetSendEmailToProvider sets the `send_email_to_provider` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetSendEmailToProvider(sendEmailToProvider bool) OptionsCreateInvoiceLink {
+	o["send_email_to_provider"] = sendEmailToProvider
+	return o
+}
+
+// SetIsFlexible sets the `is_flexible` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetIsFlexible(isFlexible bool) OptionsCreateInvoiceLink {
+	o["is_flexible"] = isFlexible
 	return o
 }
 
