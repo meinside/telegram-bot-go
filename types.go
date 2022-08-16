@@ -102,6 +102,7 @@ const (
 	MessageEntityTypePre           MessageEntityType = "pre"
 	MessageEntityTypeTextLink      MessageEntityType = "text_link"
 	MessageEntityTypeTextMention   MessageEntityType = "text_mention"
+	MessageEntityTypeCustomEmoji   MessageEntityType = "custom_emoji"
 )
 
 // ChatMemberStatus is a status of chat member
@@ -249,6 +250,12 @@ type APIResponseStickerSet struct {
 	Result *StickerSet `json:"result,omitempty"`
 }
 
+// APIResponseStickers is an API response with result type: []Sticker
+type APIResponseStickers struct {
+	APIResponseBase
+	Result []Sticker `json:"result,omitempty"`
+}
+
 // APIResponseMessageOrBool is an API response with result type: Message or bool
 type APIResponseMessageOrBool struct {
 	APIResponseBase
@@ -373,28 +380,29 @@ type User struct {
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
-	ID                    int64            `json:"id"`
-	Type                  ChatType         `json:"type"`
-	Title                 *string          `json:"title,omitempty"`
-	Username              *string          `json:"username,omitempty"`
-	FirstName             *string          `json:"first_name,omitempty"`
-	LastName              *string          `json:"last_name,omitempty"`
-	Photo                 *ChatPhoto       `json:"photo,omitempty"`
-	Bio                   *string          `json:"bio,omitempty"`
-	HasPrivateForwards    bool             `json:"has_private_forwards,omitempty"`
-	JoinToSendMessages    bool             `json:"join_to_send_messages,omitempty"`
-	JoinByRequest         bool             `json:"join_by_request,omitempty"`
-	Description           *string          `json:"description,omitempty"`
-	InviteLink            *string          `json:"invite_link,omitempty"`
-	PinnedMessage         *Message         `json:"pinned_message,omitempty"`
-	Permissions           *ChatPermissions `json:"permissions,omitempty"`
-	SlowModeDelay         int              `json:"slow_mode_delay,omitempty"`
-	MessageAutoDeleteTime int              `json:"message_auto_delete_time,omitempty"`
-	HasProtectedContent   bool             `json:"has_protected_content,omitempty"`
-	StickerSetName        *string          `json:"sticker_set_name,omitempty"`
-	CanSetStickerSet      bool             `json:"can_set_sticker_set,omitempty"`
-	LinkedChatID          int64            `json:"linked_chat_id,omitempty"`
-	Location              *ChatLocation    `json:"location,omitempty"`
+	ID                                 int64            `json:"id"`
+	Type                               ChatType         `json:"type"`
+	Title                              *string          `json:"title,omitempty"`
+	Username                           *string          `json:"username,omitempty"`
+	FirstName                          *string          `json:"first_name,omitempty"`
+	LastName                           *string          `json:"last_name,omitempty"`
+	Photo                              *ChatPhoto       `json:"photo,omitempty"`
+	Bio                                *string          `json:"bio,omitempty"`
+	HasPrivateForwards                 bool             `json:"has_private_forwards,omitempty"`
+	HasRestrictedVoiceAndVideoMessages bool             `json:"has_restricted_voice_and_video_messages,omitempty"`
+	JoinToSendMessages                 bool             `json:"join_to_send_messages,omitempty"`
+	JoinByRequest                      bool             `json:"join_by_request,omitempty"`
+	Description                        *string          `json:"description,omitempty"`
+	InviteLink                         *string          `json:"invite_link,omitempty"`
+	PinnedMessage                      *Message         `json:"pinned_message,omitempty"`
+	Permissions                        *ChatPermissions `json:"permissions,omitempty"`
+	SlowModeDelay                      int              `json:"slow_mode_delay,omitempty"`
+	MessageAutoDeleteTime              int              `json:"message_auto_delete_time,omitempty"`
+	HasProtectedContent                bool             `json:"has_protected_content,omitempty"`
+	StickerSetName                     *string          `json:"sticker_set_name,omitempty"`
+	CanSetStickerSet                   bool             `json:"can_set_sticker_set,omitempty"`
+	LinkedChatID                       int64            `json:"linked_chat_id,omitempty"`
+	Location                           *ChatLocation    `json:"location,omitempty"`
 }
 
 // InputMediaType is a type of InputMedia
@@ -458,12 +466,13 @@ type Audio struct {
 //
 // https://core.telegram.org/bots/api#messageentity
 type MessageEntity struct {
-	Type     MessageEntityType `json:"type"`
-	Offset   int               `json:"offset"`
-	Length   int               `json:"length"`
-	URL      *string           `json:"url,omitempty"`      // when Type == MessageEntityTypeTextLink
-	User     *User             `json:"user,omitempty"`     // when Type == MessageEntityTypeTextMention
-	Language *string           `json:"language,omitempty"` // when Type == MessageEntityTypePre
+	Type          MessageEntityType `json:"type"`
+	Offset        int               `json:"offset"`
+	Length        int               `json:"length"`
+	URL           *string           `json:"url,omitempty"`      // when Type == MessageEntityTypeTextLink
+	User          *User             `json:"user,omitempty"`     // when Type == MessageEntityTypeTextMention
+	Language      *string           `json:"language,omitempty"` // when Type == MessageEntityTypePre
+	CustomEmojiID *string           `json:"custom_emoji_id"`    // when Type == MessageEntityTypeCustomEmoji
 }
 
 // PhotoSize is a struct of a photo's size
@@ -495,6 +504,7 @@ type Document struct {
 type Sticker struct {
 	FileID           string        `json:"file_id"`
 	FileUniqueID     string        `json:"file_unique_id"`
+	Type             string        `json:"type"` // "regular", "mask", or "custom_emoji"
 	Width            int           `json:"width"`
 	Height           int           `json:"height"`
 	IsAnimated       bool          `json:"is_animated"`
@@ -504,6 +514,7 @@ type Sticker struct {
 	SetName          *string       `json:"set_name,omitempty"`
 	PremiumAnimation *File         `json:"premium_animation"`
 	MaskPosition     *MaskPosition `json:"mask_position,omitempty"`
+	CustomEmojiID    *string       `json:"custom_emoji_id,omitempty"`
 	FileSize         int           `json:"file_size,omitempty"`
 }
 
@@ -511,13 +522,13 @@ type Sticker struct {
 //
 // https://core.telegram.org/bots/api#stickerset
 type StickerSet struct {
-	Name          string     `json:"name"`
-	Title         string     `json:"title"`
-	IsAnimated    bool       `json:"is_animated"`
-	IsVideo       bool       `json:"is_video"`
-	ContainsMasks bool       `json:"contains_masks"`
-	Stickers      []Sticker  `json:"stickers"`
-	Thumb         *PhotoSize `json:"thumb,omitempty"`
+	Name        string     `json:"name"`
+	Title       string     `json:"title"`
+	StickerType string     `json:"sticker_type"` // "regular", "mask", or "custom_emoji"
+	IsAnimated  bool       `json:"is_animated"`
+	IsVideo     bool       `json:"is_video"`
+	Stickers    []Sticker  `json:"stickers"`
+	Thumb       *PhotoSize `json:"thumb,omitempty"`
 }
 
 // MaskPosition is a struct for a mask position

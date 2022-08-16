@@ -466,7 +466,7 @@ func (o OptionsSendSticker) SetReplyMarkup(replyMarkup any) OptionsSendSticker {
 
 // OptionsCreateNewStickerSet struct for CreateNewStickerSet().
 //
-// options include: `png_sticker`, `tgs_sticker`, `webm_sticker`, `contains_masks`, and `mask_position`
+// options include: `png_sticker`, `tgs_sticker`, `webm_sticker`, `sticker_type`, and `mask_position`
 //
 // https://core.telegram.org/bots/api#createnewstickerset
 type OptionsCreateNewStickerSet MethodOptions
@@ -495,9 +495,9 @@ func (o OptionsCreateNewStickerSet) SetWebmSticker(webmSticker InputFile) Option
 	return o
 }
 
-// SetContainsMasks sets the `contains_masks` value of OptionsCreateNewStickerSet.
-func (o OptionsCreateNewStickerSet) SetContainsMasks(containsMasks bool) OptionsCreateNewStickerSet {
-	o["contains_masks"] = containsMasks
+// SetStickerType sets the `sticker_type` value of OptionsCreateNewStickerSet. ("regular" or "mask")
+func (o OptionsCreateNewStickerSet) SetStickerType(stickerType string) OptionsCreateNewStickerSet {
+	o["sticker_type"] = stickerType
 	return o
 }
 
@@ -1563,7 +1563,8 @@ func (o OptionsGetMyDefaultAdministratorRights) SetForChannels(forChannels bool)
 // OptionsEditMessageText struct for EditMessageText().
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // other options: `parse_mode`, `entities`, `disable_web_page_preview`, and `reply_markup`
 //
@@ -1610,7 +1611,8 @@ func (o OptionsEditMessageText) SetReplyMarkup(replyMarkup InlineKeyboardMarkup)
 // OptionsEditMessageCaption struct for EditMessageCaption().
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // other options: `caption`, `parse_mode`, `caption_entities`, or `reply_markup`
 //
@@ -1657,7 +1659,8 @@ func (o OptionsEditMessageCaption) SetReplyMarkup(replyMarkup InlineKeyboardMark
 // OptionsEditMessageMedia struct for EditMessageMedia()
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // other options: `reply_markup`
 //
@@ -1686,7 +1689,8 @@ func (o OptionsEditMessageMedia) SetReplyMarkup(replyMarkup InlineKeyboardMarkup
 // OptionsEditMessageReplyMarkup struct for EditMessageReplyMarkup()
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // other options: `reply_markup`
 //
@@ -1715,7 +1719,8 @@ func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup InlineKeyboard
 // OptionsEditMessageLiveLocation struct for EditMessageLiveLocation()
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // other options: `horizontal_accuracy`, `heading`, `proximity_alert_radius`, `reply_markup`
 //
@@ -1762,7 +1767,8 @@ func (o OptionsEditMessageLiveLocation) SetReplyMarkup(replyMarkup InlineKeyboar
 // OptionsStopMessageLiveLocation struct for StopMessageLiveLocation()
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // other options: `reply_markup`
 //
@@ -2083,7 +2089,8 @@ func (o OptionsSendGame) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 // OptionsSetGameScore struct for SetGameScore().
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // other options: `force`, and `disable_edit_message`
 //
@@ -2118,7 +2125,8 @@ func (o OptionsSetGameScore) SetInlineMessageID(inlineMessageID string) OptionsS
 // OptionsGetGameHighScores struct for GetGameHighScores().
 //
 // required options: `chat_id` + `message_id` (when `inline_message_id` is not given)
-//                or `inline_message_id` (when `chat_id` & `message_id` is not given)
+//
+//	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
 // https://core.telegram.org/bots/api#getgamehighscores
 type OptionsGetGameHighScores MethodOptions
