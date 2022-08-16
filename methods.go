@@ -248,6 +248,18 @@ func (b *Bot) GetStickerSet(name string) (result APIResponseStickerSet) {
 	return b.requestResponseStickerSet("getStickerSet", params)
 }
 
+// GetCustomEmojiStickers gets custom emoji stickers.
+//
+// https://core.telegram.org/bots/api#getcustomemojistickers
+func (b *Bot) GetCustomEmojiStickers(customEmojiIDs []string) (result APIResponseStickers) {
+	// essential params
+	params := map[string]any{
+		"custom_emoji_ids": customEmojiIDs,
+	}
+
+	return b.requestResponseStickers("getCustomEmojiStickers", params)
+}
+
 // UploadStickerFile uploads a sticker file.
 //
 // https://core.telegram.org/bots/api#uploadstickerfile
@@ -1824,6 +1836,27 @@ func (b *Bot) requestResponseStickerSet(method string, params map[string]any) (r
 	b.error(errStr)
 
 	return APIResponseStickerSet{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseStickers and fetch its result.
+func (b *Bot) requestResponseStickers(method string, params map[string]any) (result APIResponseStickers) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseStickers
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseStickers{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for APIResponseMessageOrBool and fetch its result.
