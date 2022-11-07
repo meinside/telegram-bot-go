@@ -83,10 +83,16 @@ func (o OptionsGetUpdates) SetAllowedUpdates(allowedUpdates []AllowedUpdate) Opt
 
 // OptionsSendMessage struct for SendMessage().
 //
-// options include: `parse_mode`, `entities`, `disable_web_page_preview`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `parse_mode`, `entities`, `disable_web_page_preview`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendmessage
 type OptionsSendMessage MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetMessageThreadID(messageThreadID int64) OptionsSendMessage {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetParseMode sets the `parse_mode` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetParseMode(parseMode ParseMode) OptionsSendMessage {
@@ -112,7 +118,7 @@ func (o OptionsSendMessage) SetDisableNotification(disable bool) OptionsSendMess
 	return o
 }
 
-// SetProtectContent sets the `protect_content` value of OptionsCopyMessage.
+// SetProtectContent sets the `protect_content` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetProtectContent(protect bool) OptionsSendMessage {
 	o["protect_content"] = protect
 	return o
@@ -140,10 +146,16 @@ func (o OptionsSendMessage) SetReplyMarkup(replyMarkup any) OptionsSendMessage {
 
 // OptionsForwardMessage struct for ForwardMessage().
 //
-// options include: `disable_notification` and `protect_content`.
+// options include: `message_thread_id`, `disable_notification` and `protect_content`.
 //
 // https://core.telegram.org/bots/api#forwardmessage
 type OptionsForwardMessage MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsForwardMessage.
+func (o OptionsForwardMessage) SetMessageThreadID(messageThreadID int64) OptionsForwardMessage {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetDisableNotification sets the `disable_notification` value of OptionsForwardMessage.
 func (o OptionsForwardMessage) SetDisableNotification(disable bool) OptionsForwardMessage {
@@ -159,10 +171,16 @@ func (o OptionsForwardMessage) SetProtectContent(protect bool) OptionsForwardMes
 
 // OptionsCopyMessage struct for CopyMessage().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, `reply_markup`
+// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, `reply_markup`
 //
 // https://core.telegram.org/bots/api#copymessage
 type OptionsCopyMessage MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetMessageThreadID(messageThreadID int64) OptionsCopyMessage {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetCaption sets the `caption` value of OptionsCopyMessage.
 func (o OptionsCopyMessage) SetCaption(caption string) OptionsCopyMessage {
@@ -216,10 +234,16 @@ func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup any) OptionsCopyMessage {
 
 // OptionsSendPhoto struct for SendPhoto().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id`value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetMessageThreadID(messageThreadID int64) OptionsSendPhoto {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetCaption sets the `caption` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetCaption(caption string) OptionsSendPhoto {
@@ -273,10 +297,16 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 
 // OptionsSendAudio struct for SendAudio().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendaudio
 type OptionsSendAudio MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetMessageThreadID(messageThreadID int64) OptionsSendAudio {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetCaption sets the `caption` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetCaption(caption string) OptionsSendAudio {
@@ -356,10 +386,16 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup any) OptionsSendAudio {
 
 // OptionsSendDocument struct for SendDocument().
 //
-// options include: `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddocument
 type OptionsSendDocument MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetMessageThreadID(messageThreadID int64) OptionsSendDocument {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetThumb sets the thumb value of OptionsSendDocument.
 //
@@ -427,10 +463,16 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup any) OptionsSendDocument
 
 // OptionsSendSticker struct for SendSticker().
 //
-// options include: `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendsticker
 type OptionsSendSticker MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetMessageThreadID(messageThreadID int64) OptionsSendSticker {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetDisableNotification sets the `disable_notification` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetDisableNotification(disable bool) OptionsSendSticker {
@@ -567,10 +609,16 @@ func (o OptionsSetStickerSetThumb) SetThumbString(thumb string) OptionsSetSticke
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `duration`, `caption`, `parse_mode`, `caption_entities`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `duration`, `caption`, `parse_mode`, `caption_entities`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetMessageThreadID(messageThreadID int64) OptionsSendVideo {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetDuration sets the `duration` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetDuration(duration int) OptionsSendVideo {
@@ -656,10 +704,16 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 
 // OptionsSendAnimation struct for SendAnimation().
 //
-// options include: `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetMessageThreadID(messageThreadID int64) OptionsSendAnimation {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetDuration sets the `duration` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetDuration(duration int) OptionsSendAnimation {
@@ -739,10 +793,16 @@ func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup any) OptionsSendAnimati
 
 // OptionsSendVoice struct for SendVoice().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvoice
 type OptionsSendVoice MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetMessageThreadID(messageThreadID int64) OptionsSendVoice {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetCaption sets the `caption` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetCaption(caption string) OptionsSendVoice {
@@ -802,11 +862,17 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup any) OptionsSendVoice {
 
 // OptionsSendVideoNote struct for SendVideoNote().
 //
-// options include: `duration`, `length`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id,` `duration`, `length`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
 type OptionsSendVideoNote MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetMessageThreadID(messageThreadID int64) OptionsSendVideoNote {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetDuration sets the `duration` value of OptionsSendVideoNote.
 func (o OptionsSendVideoNote) SetDuration(duration int) OptionsSendVideoNote {
@@ -862,10 +928,16 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNo
 
 // OptionsSendMediaGroup struct for SendMediaGroup().
 //
-// options include: `disable_notification`, `protect_content`, `reply_to_message_id`, and `allow_sending_without_reply`
+// options include: `message_thread_id`, `disable_notification`, `protect_content`, `reply_to_message_id`, and `allow_sending_without_reply`
 //
 // https://core.telegram.org/bots/api#sendmediagroup
 type OptionsSendMediaGroup MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendMediaGroup.
+func (o OptionsSendMediaGroup) SetMessageThreadID(messageThreadID int64) OptionsSendMediaGroup {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetDisableNotification sets the `disable_notification` value of OptionsSendMediaGroup.
 func (o OptionsSendMediaGroup) SetDisableNotification(disable bool) OptionsSendMediaGroup {
@@ -893,10 +965,16 @@ func (o OptionsSendMediaGroup) SetAllowSendingWithoutReply(allow bool) OptionsSe
 
 // OptionsSendLocation struct for SendLocation()
 //
-// options include: `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id,` `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendlocation
 type OptionsSendLocation MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetMessageThreadID(messageThreadID int64) OptionsSendLocation {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetHorizontalAccuracy sets the `horizontal_accuracy` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetHorizontalAccuracy(horizontalAccuracy float32) OptionsSendLocation {
@@ -956,10 +1034,16 @@ func (o OptionsSendLocation) SetReplyMarkup(replyMarkup any) OptionsSendLocation
 
 // OptionsSendVenue struct for SendVenue().
 //
-// options include: `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvenue
 type OptionsSendVenue MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetMessageThreadID(messageThreadID int64) OptionsSendVenue {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetFoursquareID sets the `foursquare_id` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetFoursquareID(foursquareID string) OptionsSendVenue {
@@ -1019,10 +1103,16 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup any) OptionsSendVenue {
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetMessageThreadID(messageThreadID int64) OptionsSendPoll {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetIsAnonymous sets the `is_anonymous` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetIsAnonymous(isAnonymous bool) OptionsSendPoll {
@@ -1131,10 +1221,16 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 
 // OptionsSendDice struct for SendDice().
 //
-// options include: `emoji`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddice
 type OptionsSendDice MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendDice.
+func (o OptionsSendDice) SetMessageThreadID(messageThreadID int64) OptionsSendDice {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetEmoji sets the `emoji` value of OptionsSendDice.
 //
@@ -1178,10 +1274,16 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup any) OptionsSendDice {
 
 // OptionsSendContact struct for SendContact()
 //
-// options include: `last_name`, `vcard`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `last_name`, `vcard`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendcontact
 type OptionsSendContact MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendContact.
+func (o OptionsSendContact) SetMessageThreadID(messageThreadID int64) OptionsSendContact {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetLastName sets the `last_name` value of OptionsSendContact.
 func (o OptionsSendContact) SetLastName(lastName string) OptionsSendContact {
@@ -1280,7 +1382,7 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `is_anonymous`, `can_change_info`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_invite_users`, `can_restrict_members`, `can_pin_messages`, and `can_promote_members`
+// options include: `is_anonymous`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_restrict_members`, `can_promote_members`, `can_change_info`, `can_invite_users`, `can_pin_messages`, and `can_manage_topics`.
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -1348,6 +1450,12 @@ func (o OptionsPromoteChatMember) SetCanPinMessages(can bool) OptionsPromoteChat
 // SetCanPromoteMembers sets the `can_promote_members` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanPromoteMembers(can bool) OptionsPromoteChatMember {
 	o["can_promote_members"] = can
+	return o
+}
+
+// SetCanManageTopics sets the `can_manage_topics` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageTopics(can bool) OptionsPromoteChatMember {
+	o["can_manage_topics"] = can
 	return o
 }
 
@@ -1833,10 +1941,16 @@ func (o OptionsAnswerInlineQuery) SetSwitchPmParameter(switchPmParam string) Opt
 
 // OptionsSendInvoice struct for SendInvoice().
 //
-// options include: `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`
+// options include: `message_thread_id`, `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#sendinvoice
 type OptionsSendInvoice MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetMessageThreadID(messageThreadID int64) OptionsSendInvoice {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetMaxTipAmount sets the `max_tip_amount` value of OptionsSendInvoice.
 func (o OptionsSendInvoice) SetMaxTipAmount(maxTipAmount int) OptionsSendInvoice {
@@ -2051,10 +2165,16 @@ func (o OptionsCreateInvoiceLink) SetIsFlexible(isFlexible bool) OptionsCreateIn
 
 // OptionsSendGame struct for SendGame()
 //
-// options include: `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendgame
 type OptionsSendGame MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendGame.
+func (o OptionsSendGame) SetMessageThreadID(messageThreadID int64) OptionsSendGame {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
 
 // SetDisableNotification sets the `disable_notification` value of OptionsSendGame.
 func (o OptionsSendGame) SetDisableNotification(disable bool) OptionsSendGame {
@@ -2141,5 +2261,22 @@ func (o OptionsGetGameHighScores) SetIDs(chatID ChatID, messageID int64) Options
 // SetInlineMessageID sets the `inline_message_id` value of OptionsGetGameHighScores.
 func (o OptionsGetGameHighScores) SetInlineMessageID(inlineMessageID string) OptionsGetGameHighScores {
 	o["inline_message_id"] = inlineMessageID
+	return o
+}
+
+// OptionsCreateForumTopic struct for CreateForumTopic().
+//
+// https://core.telegram.org/bots/api#createforumtopic
+type OptionsCreateForumTopic MethodOptions
+
+// SetIconColor sets the `icon_color` value of OptionsCreateForumTopic.
+func (o OptionsCreateForumTopic) SetIconColor(iconColor int) OptionsCreateForumTopic {
+	o["icon_color"] = iconColor
+	return o
+}
+
+// SetIconCustomEmojiID sets the `icon_custom_emoji_id` value of OptionsCreateForumTopic.
+func (o OptionsCreateForumTopic) SetIconCustomEmojiID(iconCustomEmojiID string) OptionsCreateForumTopic {
+	o["icon_custom_emoji_id"] = iconCustomEmojiID
 	return o
 }
