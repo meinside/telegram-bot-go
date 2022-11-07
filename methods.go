@@ -1230,6 +1230,90 @@ func (b *Bot) AnswerWebAppQuery(webAppQueryID string, res InlineQueryResult) (re
 	return b.requestResponseSentWebAppMessage("answerWebAppQuery", options)
 }
 
+// CreateForumTopic creates a topic in a forum supergroup chat.
+//
+// https://core.telegram.org/bots/api#createforumtopic
+func (b *Bot) CreateForumTopic(chatID ChatID, name string, options OptionsCreateForumTopic) (result APIResponseForumTopic) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["name"] = name
+
+	return b.requestResponseForumTopic("createForumTopic", options)
+}
+
+// EditForumTopic edits a forum topic.
+//
+// https://core.telegram.org/bots/api#editforumtopic
+func (b *Bot) EditForumTopic(chatID ChatID, messageThreadID int64, name string, iconCustomEmojiID string) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id":              chatID,
+		"message_thread_id":    messageThreadID,
+		"name":                 name,
+		"icon_custom_emoji_id": iconCustomEmojiID,
+	}
+
+	return b.requestResponseBool("editForumTopic", options)
+}
+
+// CloseForumTopic closes a forum topic.
+//
+// https://core.telegram.org/bots/api#closeforumtopic
+func (b *Bot) CloseForumTopic(chatID ChatID, messageThreadID int64) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id":           chatID,
+		"message_thread_id": messageThreadID,
+	}
+
+	return b.requestResponseBool("closeForumTopic", options)
+}
+
+// ReopenForumTopic reopens a forum topic.
+//
+// https://core.telegram.org/bots/api#reopenforumtopic
+func (b *Bot) ReopenForumTopic(chatID ChatID, messageThreadID int64) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id":           chatID,
+		"message_thread_id": messageThreadID,
+	}
+
+	return b.requestResponseBool("reopenForumTopic", options)
+}
+
+// DeleteForumTopic deletes a forum topic.
+//
+// https://core.telegram.org/bots/api#deleteforumtopic
+func (b *Bot) DeleteForumTopic(chatID ChatID, messageThreadID int64) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id":           chatID,
+		"message_thread_id": messageThreadID,
+	}
+
+	return b.requestResponseBool("deleteForumTopic", options)
+}
+
+// UnpinAllForumTopicMessages unpins all forum topic messages.
+//
+// https://core.telegram.org/bots/api#unpinallforumtopicmessages
+func (b *Bot) UnpinAllForumTopicMessages(chatID ChatID, messageThreadID int64) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id":           chatID,
+		"message_thread_id": messageThreadID,
+	}
+
+	return b.requestResponseBool("unpinAllForumTopicMessages", options)
+}
+
+// GetForumTopicIconStickers fetches forum topic icon stickers.
+//
+// https://core.telegram.org/bots/api#getforumtopiciconstickers
+func (b *Bot) GetForumTopicIconStickers() (result APIResponseStickers) {
+	return b.requestResponseStickers("getForumTopicIconStickers", nil)
+}
+
 // Check if given http params contain file or not.
 func checkIfFileParamExists(params map[string]any) bool {
 	for _, value := range params {
@@ -1976,6 +2060,27 @@ func (b *Bot) requestResponseMenuButton(method string, params map[string]any) (r
 	b.error(errStr)
 
 	return APIResponseMenuButton{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseForumTopic and fetch its result.
+func (b *Bot) requestResponseForumTopic(method string, params map[string]any) (result APIResponseForumTopic) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseForumTopic
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseForumTopic{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Handle Webhook request.

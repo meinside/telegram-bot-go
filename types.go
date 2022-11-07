@@ -287,6 +287,12 @@ type APIResponseMenuButton struct {
 	Result *MenuButton `json:"result,omitempty"`
 }
 
+// APIResponseForumTopic is an API response with result type: ForumTopic
+type APIResponseForumTopic struct {
+	APIResponseBase
+	Result *ForumTopic `json:"result,omitempty"`
+}
+
 // UpdateType is a type of updates (for allowed_updates)
 //
 // https://core.telegram.org/bots/api#setwebhook
@@ -386,7 +392,10 @@ type Chat struct {
 	Username                           *string          `json:"username,omitempty"`
 	FirstName                          *string          `json:"first_name,omitempty"`
 	LastName                           *string          `json:"last_name,omitempty"`
+	IsForum                            bool             `json:"is_forum,omitempty"`
 	Photo                              *ChatPhoto       `json:"photo,omitempty"`
+	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`
+	EmojiStatusCustomEmojiID           *string          `json:"emoji_status_custom_emoji_id,omitempty"`
 	Bio                                *string          `json:"bio,omitempty"`
 	HasPrivateForwards                 bool             `json:"has_private_forwards,omitempty"`
 	HasRestrictedVoiceAndVideoMessages bool             `json:"has_restricted_voice_and_video_messages,omitempty"`
@@ -683,6 +692,25 @@ type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"`
 }
 
+// ForumTopicCreated is a struct for a new forum topic created in the chat.
+//
+// https://core.telegram.org/bots/api#forumtopiccreated
+type ForumTopicCreated struct {
+	Name              string `json:"name"`
+	IconColor         int    `json:"icon_color"`
+	IconCustomEmojiID string `json:"icon_custom_emoji_id"`
+}
+
+// ForumTopicClosed is a struct for a closed forum topic in the chat.
+//
+// https://core.telegram.org/bots/api#forumtopicclosed
+type ForumTopicClosed struct{}
+
+// ForumTopicReopened is a struct for a reopened forum topic in the chat.
+//
+// https://core.telegram.org/bots/api#forumtopicreopened
+type ForumTopicReopened struct{}
+
 // VideoChatStarted is a struct for service message: video chat started
 //
 // https://core.telegram.org/bots/api#videochatstarted
@@ -881,14 +909,15 @@ type ChatAdministratorRights struct {
 	CanPostMessages     bool `json:"can_post_messages,omitempty"`
 	CanEditMessages     bool `json:"can_edit_messages,omitempty"`
 	CanPinMessages      bool `json:"can_pin_messages,omitempty"`
+	CanManageTopics     bool `json:"can_manage_topics,omitempty"`
 }
 
 // ChatMember is a struct of a chat member
 //
 // https://core.telegram.org/bots/api#chatmember
 type ChatMember struct {
-	User                  User             `json:"user"`
 	Status                ChatMemberStatus `json:"status"`
+	User                  User             `json:"user"`
 	IsAnonymous           bool             `json:"is_anonymous,omitempty"`              // owner and administrators only
 	CustomTitle           *string          `json:"custom_title,omitempty"`              // owner and administrators only
 	CanBeEdited           bool             `json:"can_be_edited,omitempty"`             // administrators only
@@ -902,6 +931,7 @@ type ChatMember struct {
 	CanChangeInfo         bool             `json:"can_change_info,omitempty"`           // administrators and restricted only
 	CanInviteUsers        bool             `json:"can_invite_users,omitempty"`          // administrators and restricted only
 	CanPinMessages        bool             `json:"can_pin_messages,omitempty"`          // administrators and restricted only
+	CanManageTopics       bool             `json:"can_manage_topics,omitempty"`         // administrators and restricted only
 	IsMember              bool             `json:"is_member,omitempty"`                 // restricted only
 	CanSendMessages       bool             `json:"can_send_messages,omitempty"`         // restricted only
 	CanSendMediaMessages  bool             `json:"can_send_media_messages,omitempty"`   // restricted only
@@ -935,6 +965,83 @@ type ChatPermissions struct {
 	CanChangeInfo         bool `json:"can_change_info,omitempty"`
 	CanInviteUsers        bool `json:"can_invite_users,omitempty"`
 	CanPinMessages        bool `json:"can_pin_messages,omitempty"`
+	CanManageTopics       bool `json:"can_manage_topics,omitempty"`
+}
+
+// ChatMemmberOwner is a struct of a chat member who is an owner.
+//
+// https://core.telegram.org/bots/api#chatmemberowner
+type ChatMemberOwner struct {
+	Status      string  `json:"status"` // = "creator"
+	User        User    `json:"user"`
+	IsAnonymous bool    `json:"is_anonymous"`
+	CustomTitle *string `json:"custom_title,omitempty"`
+}
+
+// ChatMemmberAdministrator is a struct of a chat member who is an administrator.
+//
+// https://core.telegram.org/bots/api#chatmemberadministrator
+type ChatMemberAdministrator struct {
+	Status              string  `json:"status"` // = "administrator"
+	User                User    `json:"user"`
+	CanBeEdited         bool    `json:"can_be_edited"`
+	IsAnonymous         bool    `json:"is_anonymous"`
+	CanManageChat       bool    `json:"can_manage_chat"`
+	CanDeleteMessages   bool    `json:"can_delete_messages"`
+	CanManageVideoChats bool    `json:"can_manage_video_chats"`
+	CanRestrictMembers  bool    `json:"can_restrict_members"`
+	CanPromoteMembers   bool    `json:"can_promote_members"`
+	CanChangeInfo       bool    `json:"can_change_info"`
+	CanInviteUsers      bool    `json:"can_invite_users"`
+	CanPostMessages     bool    `json:"can_post_messages,omitempty"`
+	CanEditMessages     bool    `json:"can_edit_messages,omitempty"`
+	CanPinMessages      bool    `json:"can_pin_messages,omitempty"`
+	CanManageTopics     bool    `json:"can_manage_topics,omitempty"`
+	CustomTitle         *string `json:"custom_title,omitempty"`
+}
+
+// ChatMemberMember is a struct of a chat member.
+//
+// https://core.telegram.org/bots/api#chatmembermember
+type ChatMemberMember struct {
+	Status string `json:"status"` // = "member"
+	User   User   `json:"user"`
+}
+
+// ChatMemberRestricted is a struct of chat member who is restricted
+//
+// https://core.telegram.org/bots/api#chatmemberrestricted
+type ChatMemberRestricted struct {
+	Status                 string `json:"status"` // = "restricted"
+	User                   User   `json:"user"`
+	IsMember               bool   `json:"is_member"`
+	CanChangeInfo          bool   `json:"can_change_info"`
+	CanInviteUsers         bool   `json:"can_invite_users"`
+	CanPinMessages         bool   `json:"can_pin_messages"`
+	CanManageTopics        bool   `json:"can_manage_topics"`
+	CanSendMessages        bool   `json:"can_send_messages"`
+	CanSendMediaMessages   bool   `json:"can_send_media_messages"`
+	CanSendPolls           bool   `json:"can_send_polls"`
+	CanSendOtherMessages   bool   `json:"can_send_other_messages"`
+	CanSendWebPagePreviews bool   `json:"can_add_web_page_previews"`
+	UntilDate              int    `json:"until_date"`
+}
+
+// ChatMemberLeft is a struct of a chat member who left.
+//
+// https://core.telegram.org/bots/api#chatmemberleft
+type ChatMemberLeft struct {
+	Status string `json:"status"` // = "left"
+	User   User   `json:"user"`
+}
+
+// ChatMemberBanned is a struct of a chat member who is banned.
+//
+// https://core.telegram.org/bots/api#chatmemberbanned
+type ChatMemberBanned struct {
+	Status    string `json:"status"` // = "kicked"
+	User      User   `json:"user"`
+	UntilDate int    `json:"until_date"`
 }
 
 // ChatLocation is a struct of chat location
@@ -1032,6 +1139,7 @@ type BotCommandScopeChatMember struct {
 // https://core.telegram.org/bots/api#message
 type Message struct {
 	MessageID                     int64                          `json:"message_id"`
+	MessageThreadID               int64                          `json:"message_thread_id,omitempty"`
 	From                          *User                          `json:"from,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	Date                          int                            `json:"date"`
@@ -1042,6 +1150,7 @@ type Message struct {
 	ForwardSignature              *string                        `json:"forward_signature,omitempty"`
 	ForwardSenderName             *string                        `json:"forward_sender_name,omitempty"`
 	ForwardDate                   int                            `json:"forward_date,omitempty"`
+	IsTopicMessage                bool                           `json:"is_topic_message,omitempty"`
 	IsAutomaticForward            bool                           `json:"is_automatic_forward,omitempty"`
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
@@ -1084,6 +1193,9 @@ type Message struct {
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
+	ForumTopicCreated            *ForumTopicCreated            `json:"forum_topic_created,omitempty"`
+	ForumTopicClosed             *ForumTopicClosed             `json:"forum_topic_closed,omitempty"`
+	ForumTopicReopened           *ForumTopicReopened           `json:"forum_topic_reopened,omitempty"`
 	VideoChatScheduled           *VideoChatScheduled           `json:"video_chat_scheduled,omitempty"`
 	VideoChatStarted             *VideoChatStarted             `json:"video_chat_started,omitempty"`
 	VideoChatEnded               *VideoChatEnded               `json:"video_chat_ended,omitempty"`
@@ -1637,4 +1749,14 @@ type MenuButtonWebApp struct {
 // https://core.telegram.org/bots/api#menubuttondefault
 type MenuButtonDefault struct {
 	Type string `json:"type"` // = "default"
+}
+
+// ForumTopic is a struct for a forum topic.
+//
+// https://core.telegram.org/bots/api#forumtopic
+type ForumTopic struct {
+	MessageThreadID   int64   `json:"message_thread_id"`
+	Name              string  `json:"name"`
+	IconColor         int     `json:"icon_color"`
+	IconCustomEmojiID *string `json:"icon_custom_emoji_id,omitempty"`
 }
