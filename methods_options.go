@@ -1,9 +1,5 @@
 package telegrambot
 
-const (
-	ParamKeyContentTypeOverride = "__content_type__"
-)
-
 // https://core.telegram.org/bots/api#available-methods
 
 // MethodOptions is a type for methods' options parameter.
@@ -430,12 +426,6 @@ func (o OptionsSendDocument) SetCaptionEntities(entities []MessageEntity) Option
 // SetDisableContentTypeDetection sets the `disable_content_type_detection` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetDisableContentTypeDetection(disable bool) OptionsSendDocument {
 	o["disable_content_type_detection"] = disable
-	return o
-}
-
-func (o OptionsSendDocument) SetContentType(contentType string) OptionsSendDocument {
-	o.SetDisableContentTypeDetection(true)
-	o[ParamKeyContentTypeOverride] = contentType
 	return o
 }
 
