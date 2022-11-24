@@ -1481,13 +1481,7 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]any) (re
 	var req *http.Request
 	req, err = http.NewRequest("POST", apiURL, body)
 	if err == nil {
-		var contentType string
-		if contentTypeOverride, exists := params[ParamKeyContentTypeOverride]; exists {
-			contentType, _ = contentTypeOverride.(string)
-		} else {
-			contentType = writer.FormDataContentType()
-		}
-		req.Header.Add("Content-Type", contentType)
+		req.Header.Add("Content-Type", writer.FormDataContentType()) // due to file parameter
 		req.Close = true
 
 		var resp *http.Response
