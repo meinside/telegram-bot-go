@@ -26,7 +26,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 	if err == nil {
 		if update.HasMessage() {
 			// 'is typing...'
-			b.SendChatAction(update.Message.Chat.ID, bot.ChatActionTyping)
+			b.SendChatAction(update.Message.Chat.ID, bot.ChatActionTyping, nil)
 			time.Sleep(typingDelaySeconds * time.Second)
 
 			var message string
