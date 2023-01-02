@@ -407,6 +407,8 @@ type Chat struct {
 	Permissions                        *ChatPermissions `json:"permissions,omitempty"`
 	SlowModeDelay                      int              `json:"slow_mode_delay,omitempty"`
 	MessageAutoDeleteTime              int              `json:"message_auto_delete_time,omitempty"`
+	HasAggressiveAntiSpamEnabled       bool             `json:"has_aggressive_anti_spam_enabled,omitempty"`
+	HasHiddenMembers                   bool             `json:"has_hidden_members,omitempty"`
 	HasProtectedContent                bool             `json:"has_protected_content,omitempty"`
 	StickerSetName                     *string          `json:"sticker_set_name,omitempty"`
 	CanSetStickerSet                   bool             `json:"can_set_sticker_set,omitempty"`
@@ -435,6 +437,7 @@ type InputMedia struct {
 	Thumb                       *InputFile      `json:"thumb,omitempty"` // video, animation, audio, document
 	Caption                     *string         `json:"caption,omitempty"`
 	CaptionEntities             []MessageEntity `json:"caption_entities,omitempty"`
+	HasSpoiler                  bool            `json:"has_spoiler,omitempty"` // video, animation, photo
 	ParseMode                   *ParseMode      `json:"parse_mode,omitempty"`
 	Width                       int             `json:"width,omitempty"`                          // video, animation
 	Height                      int             `json:"height,omitempty"`                         // video, animation
@@ -698,7 +701,7 @@ type MessageAutoDeleteTimerChanged struct {
 type ForumTopicCreated struct {
 	Name              string `json:"name"`
 	IconColor         int    `json:"icon_color"`
-	IconCustomEmojiID string `json:"icon_custom_emoji_id"`
+	IconCustomEmojiID string `json:"icon_custom_emoji_id,omitempty"`
 }
 
 // ForumTopicClosed is a struct for a closed forum topic in the chat.
@@ -706,10 +709,33 @@ type ForumTopicCreated struct {
 // https://core.telegram.org/bots/api#forumtopicclosed
 type ForumTopicClosed struct{}
 
+// ForumTopicEdited is a struct for a edited forum topic in the chat.
+//
+// https://core.telegram.org/bots/api#forumtopicedited
+type ForumTopicEdited struct {
+	Name              string `json:"name,omitempty"`
+	IconCustomEmojiID string `json:"icon_custom_emoji_id,omitempty"`
+}
+
 // ForumTopicReopened is a struct for a reopened forum topic in the chat.
 //
 // https://core.telegram.org/bots/api#forumtopicreopened
 type ForumTopicReopened struct{}
+
+// GeneralForumTopicHidden is a struct for a hidden general forum topic in the chat.
+//
+// https://core.telegram.org/bots/api#generalforumtopichidden
+type GeneralForumTopicHidden struct{}
+
+// GeneralForumTopicUnhidden is a struct for an unhidden general forum topic in the chat.
+//
+// https://core.telegram.org/bots/api#generalforumtopicunhidden
+type GeneralForumTopicUnhidden struct{}
+
+// WriteAccessAllowed is a struct for an allowed write access in the chat.
+//
+// https://core.telegram.org/bots/api#writeaccessallowed
+type WriteAccessAllowed struct{}
 
 // VideoChatStarted is a struct for service message: video chat started
 //
@@ -760,6 +786,7 @@ type File struct {
 // https://core.telegram.org/bots/api#replykeyboardmarkup
 type ReplyKeyboardMarkup struct {
 	Keyboard              [][]KeyboardButton `json:"keyboard"`
+	IsPersistent          bool               `json:"is_persistent,omitempty"`
 	ResizeKeyboard        bool               `json:"resize_keyboard,omitempty"`
 	OneTimeKeyboard       bool               `json:"one_time_keyboard,omitempty"`
 	InputFieldPlaceholder *string            `json:"input_field_placeholder,omitempty"` // 1-64 characters
@@ -1170,6 +1197,7 @@ type Message struct {
 	Voice                         *Voice                         `json:"voice,omitempty"`
 	Caption                       *string                        `json:"caption,omitempty"`
 	CaptionEntities               []MessageEntity                `json:"caption_entities,omitempty"`
+	HasMediaSpoiler               bool                           `json:"has_media_spoiler,omitempty"`
 	Contact                       *Contact                       `json:"contact,omitempty"`
 	Dice                          *Dice                          `json:"dice,omitempty"`
 	Game                          *Game                          `json:"game,omitempty"`
@@ -1191,11 +1219,15 @@ type Message struct {
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
 	SuccessfulPayment             *SuccessfulPayment             `json:"successful_payment,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
+	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
 	ForumTopicCreated            *ForumTopicCreated            `json:"forum_topic_created,omitempty"`
+	ForumTopicEdited             *ForumTopicEdited             `json:"forum_topic_edited,omitempty"`
 	ForumTopicClosed             *ForumTopicClosed             `json:"forum_topic_closed,omitempty"`
 	ForumTopicReopened           *ForumTopicReopened           `json:"forum_topic_reopened,omitempty"`
+	GeneralForumTopicHidden      *GeneralForumTopicHidden      `json:"general_forum_topic_hidden,omitempty"`
+	GeneralForumTopicUnhidden    *GeneralForumTopicUnhidden    `json:"general_forum_topic_unhidden,omitempty"`
 	VideoChatScheduled           *VideoChatScheduled           `json:"video_chat_scheduled,omitempty"`
 	VideoChatStarted             *VideoChatStarted             `json:"video_chat_started,omitempty"`
 	VideoChatEnded               *VideoChatEnded               `json:"video_chat_ended,omitempty"`
