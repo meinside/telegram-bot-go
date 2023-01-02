@@ -234,7 +234,7 @@ func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup any) OptionsCopyMessage {
 
 // OptionsSendPhoto struct for SendPhoto().
 //
-// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
@@ -260,6 +260,12 @@ func (o OptionsSendPhoto) SetParseMode(parseMode ParseMode) OptionsSendPhoto {
 // SetCaptionEntities sets the `caption_entities` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetCaptionEntities(entities []MessageEntity) OptionsSendPhoto {
 	o["caption_entities"] = entities
+	return o
+}
+
+// SetHasSpoiler sets the `has_spoiler` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetHasSpiler(hasSpoiler bool) OptionsSendPhoto {
+	o["has_spoiler"] = hasSpoiler
 	return o
 }
 
@@ -609,7 +615,7 @@ func (o OptionsSetStickerSetThumb) SetThumbString(thumb string) OptionsSetSticke
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `message_thread_id`, `duration`, `caption`, `parse_mode`, `caption_entities`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `duration`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
@@ -664,6 +670,12 @@ func (o OptionsSendVideo) SetCaptionEntities(entities []MessageEntity) OptionsSe
 	return o
 }
 
+// SetHasSpoiler sets the `has_spoiler` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetHasSpiler(hasSpoiler bool) OptionsSendVideo {
+	o["has_spoiler"] = hasSpoiler
+	return o
+}
+
 // SetSupportsStreaming sets the `supports_streaming` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetSupportsStreaming(supportsStreaming bool) OptionsSendVideo {
 	o["supports_streaming"] = supportsStreaming
@@ -704,7 +716,7 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 
 // OptionsSendAnimation struct for SendAnimation().
 //
-// options include: `message_thread_id`, `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
@@ -756,6 +768,12 @@ func (o OptionsSendAnimation) SetParseMode(parseMode ParseMode) OptionsSendAnima
 // SetCaptionEntities sets the `caption_entities` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetCaptionEntities(entities []MessageEntity) OptionsSendAnimation {
 	o["caption_entities"] = entities
+	return o
+}
+
+// SetHasSpoiler sets the `has_spoiler` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetHasSpiler(hasSpoiler bool) OptionsSendAnimation {
+	o["has_spoiler"] = hasSpoiler
 	return o
 }
 
@@ -1272,7 +1290,20 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup any) OptionsSendDice {
 	return o
 }
 
-// OptionsSendContact struct for SendContact()
+// OptionsSendChatAction struct for SendChatAction().
+//
+// options include: `message_thread_id`.
+//
+// https://core.telegram.org/bots/api#sendchataction
+type OptionsSendChatAction MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendChatAction.
+func (o OptionsSendChatAction) SetMessageThreadID(messageThreadID int64) OptionsSendChatAction {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// OptionsSendContact struct for SendContact().
 //
 // options include: `message_thread_id`, `last_name`, `vcard`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
@@ -2277,6 +2308,23 @@ func (o OptionsCreateForumTopic) SetIconColor(iconColor int) OptionsCreateForumT
 
 // SetIconCustomEmojiID sets the `icon_custom_emoji_id` value of OptionsCreateForumTopic.
 func (o OptionsCreateForumTopic) SetIconCustomEmojiID(iconCustomEmojiID string) OptionsCreateForumTopic {
+	o["icon_custom_emoji_id"] = iconCustomEmojiID
+	return o
+}
+
+// OptionsEditForumTopic struct for EditForumTopic().
+//
+// https://core.telegram.org/bots/api#editforumtopic
+type OptionsEditForumTopic MethodOptions
+
+// SetName sets the `name` value of OptionsEditForumTopic.
+func (o OptionsEditForumTopic) SetName(name string) OptionsEditForumTopic {
+	o["name"] = name
+	return o
+}
+
+// SetIconCustomEmojiID sets the `icon_custom_emoji_id` value of OptionsEditForumTopic.
+func (o OptionsEditForumTopic) SetIconCustomEmojiID(iconCustomEmojiID string) OptionsEditForumTopic {
 	o["icon_custom_emoji_id"] = iconCustomEmojiID
 	return o
 }

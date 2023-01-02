@@ -521,14 +521,16 @@ func (b *Bot) SendDice(chatID ChatID, options OptionsSendDice) (result APIRespon
 // SendChatAction sends chat actions.
 //
 // https://core.telegram.org/bots/api#sendchataction
-func (b *Bot) SendChatAction(chatID ChatID, action ChatAction) (result APIResponseBool) {
-	// essential params
-	params := map[string]any{
-		"chat_id": chatID,
-		"action":  action,
+func (b *Bot) SendChatAction(chatID ChatID, action ChatAction, options OptionsSendChatAction) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]any{}
 	}
 
-	return b.requestResponseBool("sendChatAction", params)
+	// essential params
+	options["chat_id"] = chatID
+	options["action"] = action
+
+	return b.requestResponseBool("sendChatAction", options)
 }
 
 // GetUserProfilePhotos gets user profile photos.
@@ -1248,13 +1250,14 @@ func (b *Bot) CreateForumTopic(chatID ChatID, name string, options OptionsCreate
 // EditForumTopic edits a forum topic.
 //
 // https://core.telegram.org/bots/api#editforumtopic
-func (b *Bot) EditForumTopic(chatID ChatID, messageThreadID int64, name string, iconCustomEmojiID string) (result APIResponseBool) {
-	options := map[string]any{
-		"chat_id":              chatID,
-		"message_thread_id":    messageThreadID,
-		"name":                 name,
-		"icon_custom_emoji_id": iconCustomEmojiID,
+func (b *Bot) EditForumTopic(chatID ChatID, messageThreadID int64, options OptionsEditForumTopic) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]any{}
 	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["message_thread_id"] = messageThreadID
 
 	return b.requestResponseBool("editForumTopic", options)
 }
@@ -1305,6 +1308,62 @@ func (b *Bot) UnpinAllForumTopicMessages(chatID ChatID, messageThreadID int64) (
 	}
 
 	return b.requestResponseBool("unpinAllForumTopicMessages", options)
+}
+
+// EditGeneralForumTopic edites general forum topic.
+//
+// https://core.telegram.org/bots/api#editgeneralforumtopic
+func (b *Bot) EditGeneralForumTopic(chatID ChatID, name string) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id": chatID,
+		"name":    name,
+	}
+
+	return b.requestResponseBool("editGeneralForumTopic", options)
+}
+
+// CloseGeneralForumTopic closes general forum topic.
+//
+// https://core.telegram.org/bots/api#closegeneralforumtopic
+func (b *Bot) CloseGeneralForumTopic(chatID ChatID) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id": chatID,
+	}
+
+	return b.requestResponseBool("closeGeneralForumTopic", options)
+}
+
+// ReopenGeneralForumTopic reopens general forum topic.
+//
+// https://core.telegram.org/bots/api#reopengeneralforumtopic
+func (b *Bot) ReopenGeneralForumTopic(chatID ChatID) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id": chatID,
+	}
+
+	return b.requestResponseBool("reopenGeneralForumTopic", options)
+}
+
+// HideGeneralForumTopic hides general forum topic.
+//
+// https://core.telegram.org/bots/api#hidegeneralforumtopic
+func (b *Bot) HideGeneralForumTopic(chatID ChatID) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id": chatID,
+	}
+
+	return b.requestResponseBool("hideGeneralForumTopic", options)
+}
+
+// UnhideGeneralForumTopic unhides general forum topic.
+//
+// https://core.telegram.org/bots/api#unhidegeneralforumtopic
+func (b *Bot) UnhideGeneralForumTopic(chatID ChatID) (result APIResponseBool) {
+	options := map[string]any{
+		"chat_id": chatID,
+	}
+
+	return b.requestResponseBool("unhideGeneralForumTopic", options)
 }
 
 // GetForumTopicIconStickers fetches forum topic icon stickers.
