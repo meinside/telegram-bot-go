@@ -670,11 +670,16 @@ func (b *Bot) UnbanChatSenderChat(chatID ChatID, senderChatID int64) (result API
 // SetChatPermissions sets permissions of a chat.
 //
 // https://core.telegram.org/bots/api#setchatpermissions
-func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions) (result APIResponseBool) {
-	return b.requestResponseBool("setChatPermissions", map[string]any{
-		"chat_id":     chatID,
-		"permissions": permissions,
-	})
+func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions, options OptionsSetChatPermissions) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["permissions"] = permissions
+
+	return b.requestResponseBool("setChatPermissions", options)
 }
 
 // ExportChatInviteLink exports a chat invite link.

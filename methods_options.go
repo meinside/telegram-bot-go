@@ -1400,10 +1400,16 @@ func (o OptionsBanChatMember) SetRevokeMessages(revokeMessages bool) OptionsBanC
 
 // OptionsRestrictChatMember struct for RestrictChatMember().
 //
-// options include: `until_date`
+// options include: `use_independent_chat_permissions`, and `until_date`
 //
 // https://core.telegram.org/bots/api#restrictchatmember
 type OptionsRestrictChatMember MethodOptions
+
+// SetUserIndependentChatPermissions sets the `use_independent_chat_permissions` value of OptionsRestrictChatMember.
+func (o OptionsRestrictChatMember) SetUserIndependentChatPermissions(val bool) OptionsRestrictChatMember {
+	o["use_independent_chat_permissions"] = val
+	return o
+}
 
 // SetUntilDate sets the `until_date` value of OptionsRestrictChatMember.
 func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMember {
@@ -1487,6 +1493,19 @@ func (o OptionsPromoteChatMember) SetCanPromoteMembers(can bool) OptionsPromoteC
 // SetCanManageTopics sets the `can_manage_topics` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanManageTopics(can bool) OptionsPromoteChatMember {
 	o["can_manage_topics"] = can
+	return o
+}
+
+// OptionsSetChatPermissions struct for SetChatPermissions
+//
+// options include: `use_independent_chat_permissions`.
+//
+// https://core.telegram.org/bots/api#setchatpermissions
+type OptionsSetChatPermissions MethodOptions
+
+// SetUserIndependentChatPermissions sets the `use_independent_chat_permissions` value of OptionsRestrictChatMember.
+func (o OptionsSetChatPermissions) SetUserIndependentChatPermissions(val bool) OptionsSetChatPermissions {
+	o["use_independent_chat_permissions"] = val
 	return o
 }
 
