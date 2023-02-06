@@ -732,6 +732,22 @@ type GeneralForumTopicHidden struct{}
 // https://core.telegram.org/bots/api#generalforumtopicunhidden
 type GeneralForumTopicUnhidden struct{}
 
+// UserShared is a struct for a user who shared the message.
+//
+// https://core.telegram.org/bots/api#usershared
+type UserShared struct {
+	RequestID int64 `json:"request_id"`
+	UserID    int64 `json:"user_id"`
+}
+
+// ChatShared is a struct for a chat which shared the message.
+//
+// https://core.telegram.org/bots/api#chatshared
+type ChatShared struct {
+	RequestID int64 `json:"request_id"`
+	ChatID    int64 `json:"chat_id"`
+}
+
 // WriteAccessAllowed is a struct for an allowed write access in the chat.
 //
 // https://core.telegram.org/bots/api#writeaccessallowed
@@ -797,11 +813,36 @@ type ReplyKeyboardMarkup struct {
 //
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
-	Text            string                  `json:"text"`
-	RequestContact  bool                    `json:"request_contact,omitempty"`
-	RequestLocation bool                    `json:"request_location,omitempty"`
-	RequestPoll     *KeyboardButtonPollType `json:"request_poll,omitempty"`
-	WebApp          *WebAppInfo             `json:"web_app,omitempty"`
+	Text            string                     `json:"text"`
+	RequestUser     *KeyboardButtonRequestUser `json:"request_user"`
+	RequestChat     *KeyboardButtonRequestChat `json:"request_chat"`
+	RequestContact  bool                       `json:"request_contact,omitempty"`
+	RequestLocation bool                       `json:"request_location,omitempty"`
+	RequestPoll     *KeyboardButtonPollType    `json:"request_poll,omitempty"`
+	WebApp          *WebAppInfo                `json:"web_app,omitempty"`
+}
+
+// KeyboardButtonRequestUser is a struct for `request_user` in KeyboardButton
+//
+// https://core.telegram.org/bots/api#keyboardbuttonrequestuser
+type KeyboardButtonRequestUser struct {
+	RequestID     int64 `json:"request_id"`
+	UserIsBot     *bool `json:"user_is_bot,omitempty"`
+	UserIsPremium *bool `json:"user_is_premium,omitempty"`
+}
+
+// KeyboardButtonRequestChat is a struct for `request_chat` in KeyboardButton
+//
+// https://core.telegram.org/bots/api#keyboardbuttonrequestchat
+type KeyboardButtonRequestChat struct {
+	RequestID               int64                    `json:"request_id"`
+	ChatIsChannel           bool                     `json:"chat_is_channel"`
+	ChatIsForum             *bool                    `json:"chat_is_forum,omitempty"`
+	ChatHasUsername         *bool                    `json:"chat_has_username,omitempty"`
+	ChatIsCreated           *bool                    `json:"chat_is_created,omitempty"`
+	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"`
+	BotAdministratorRights  *ChatAdministratorRights `json:"bot_administrator_rights,omitempty"`
+	BotIsMember             *bool                    `json:"bot_is_member,omitempty"`
 }
 
 // KeyboardButtonPollType is a struct for KeyboardButtonPollType
@@ -985,7 +1026,12 @@ type ChatMemberUpdated struct {
 // https://core.telegram.org/bots/api#chatpermissions
 type ChatPermissions struct {
 	CanSendMessages       bool `json:"can_send_messages,omitempty"`
-	CanSendMediaMessages  bool `json:"can_send_media_messages,omitempty"`
+	CanSendAudios         bool `json:"can_send_audios"`
+	CanSendDocuments      bool `json:"can_send_documents"`
+	CanSendPhotos         bool `json:"can_send_photos"`
+	CanSendVideos         bool `json:"can_send_videos"`
+	CanSendVideoNotes     bool `json:"can_send_video_notes"`
+	CanSendVoiceNotes     bool `json:"can_send_voice_notes"`
 	CanSendPolls          bool `json:"can_send_polls,omitempty"`
 	CanSendOtherMessages  bool `json:"can_send_other_messages,omitempty"`
 	CanAddWebPagePreviews bool `json:"can_add_web_page_previews,omitempty"`
@@ -1047,7 +1093,12 @@ type ChatMemberRestricted struct {
 	CanPinMessages         bool   `json:"can_pin_messages"`
 	CanManageTopics        bool   `json:"can_manage_topics"`
 	CanSendMessages        bool   `json:"can_send_messages"`
-	CanSendMediaMessages   bool   `json:"can_send_media_messages"`
+	CanSendAudios          bool   `json:"can_send_audios"`
+	CanSendDocuments       bool   `json:"can_send_documents"`
+	CanSendPhotos          bool   `json:"can_send_photos"`
+	CanSendVideos          bool   `json:"can_send_videos"`
+	CanSendVideoNotes      bool   `json:"can_send_video_notes"`
+	CanSendVoiceNotes      bool   `json:"can_send_voice_notes"`
 	CanSendPolls           bool   `json:"can_send_polls"`
 	CanSendOtherMessages   bool   `json:"can_send_other_messages"`
 	CanSendWebPagePreviews bool   `json:"can_add_web_page_previews"`
@@ -1085,6 +1136,7 @@ type ChatLocation struct {
 type ChatJoinRequest struct {
 	Chat       Chat            `json:"chat"`
 	From       User            `json:"from"`
+	UserChatID int64           `json:"user_chat_id"`
 	Date       int             `json:"date"`
 	Bio        *string         `json:"bio,omitempty"`
 	InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
@@ -1218,6 +1270,8 @@ type Message struct {
 	PinnedMessage                 *Message                       `json:"pinned_message,omitempty"`
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
 	SuccessfulPayment             *SuccessfulPayment             `json:"successful_payment,omitempty"`
+	UserShared                    *UserShared                    `json:"user_shared,omitempty"`
+	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
