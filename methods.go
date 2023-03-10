@@ -263,11 +263,12 @@ func (b *Bot) GetCustomEmojiStickers(customEmojiIDs []string) (result APIRespons
 // UploadStickerFile uploads a sticker file.
 //
 // https://core.telegram.org/bots/api#uploadstickerfile
-func (b *Bot) UploadStickerFile(userID int64, sticker InputFile) (result APIResponseFile) {
+func (b *Bot) UploadStickerFile(userID int64, sticker InputFile, stickerFormat StickerFormat) (result APIResponseFile) {
 	// essential params
 	params := map[string]any{
-		"user_id":     userID,
-		"png_sticker": sticker,
+		"user_id":        userID,
+		"sticker":        sticker,
+		"sticker_format": stickerFormat,
 	}
 
 	return b.requestResponseFile("uploadStickerFile", params)
@@ -276,7 +277,7 @@ func (b *Bot) UploadStickerFile(userID int64, sticker InputFile) (result APIResp
 // CreateNewStickerSet creates a new sticker set.
 //
 // https://core.telegram.org/bots/api#createnewstickerset
-func (b *Bot) CreateNewStickerSet(userID int64, name, title string, emojis string, options OptionsCreateNewStickerSet) (result APIResponseBool) {
+func (b *Bot) CreateNewStickerSet(userID int64, name, title string, stickers []InputSticker, stickerFormat StickerFormat, options OptionsCreateNewStickerSet) (result APIResponseBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -285,7 +286,8 @@ func (b *Bot) CreateNewStickerSet(userID int64, name, title string, emojis strin
 	options["user_id"] = userID
 	options["name"] = name
 	options["title"] = title
-	options["emojis"] = emojis
+	options["stickers"] = stickers
+	options["sticker_format"] = stickerFormat
 
 	return b.requestResponseBool("createNewStickerSet", options)
 }
@@ -293,7 +295,7 @@ func (b *Bot) CreateNewStickerSet(userID int64, name, title string, emojis strin
 // AddStickerToSet adds a sticker to set.
 //
 // https://core.telegram.org/bots/api#addstickertoset
-func (b *Bot) AddStickerToSet(userID int64, name string, emojis string, options OptionsAddStickerToSet) (result APIResponseBool) {
+func (b *Bot) AddStickerToSet(userID int64, name string, sticker InputSticker, options OptionsAddStickerToSet) (result APIResponseBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -301,7 +303,7 @@ func (b *Bot) AddStickerToSet(userID int64, name string, emojis string, options 
 	// essential params
 	options["user_id"] = userID
 	options["name"] = name
-	options["emojis"] = emojis
+	options["sticker"] = sticker
 
 	return b.requestResponseBool("addStickerToSet", options)
 }
@@ -331,10 +333,10 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponseBool) {
 	return b.requestResponseBool("deleteStickerFromSet", params)
 }
 
-// SetStickerSetThumb sets a thumbnail of a sticker set.
+// SetStickerSetThumbnail sets a thumbnail of a sticker set.
 //
-// https://core.telegram.org/bots/api#setstickersetthumb
-func (b *Bot) SetStickerSetThumb(name string, userID int64, options OptionsSetStickerSetThumb) (result APIResponseBool) {
+// https://core.telegram.org/bots/api#setstickersetthumbnail
+func (b *Bot) SetStickerSetThumbnail(name string, userID int64, options OptionsSetStickerSetThumbnail) (result APIResponseBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -343,7 +345,74 @@ func (b *Bot) SetStickerSetThumb(name string, userID int64, options OptionsSetSt
 	options["name"] = name
 	options["user_id"] = userID
 
-	return b.requestResponseBool("setStickerSetThumb", options)
+	return b.requestResponseBool("setStickerSetThumbnail", options)
+}
+
+// SetCustomEmojiStickerSetThumbnail sets the custom emoji sticker set's thumbnail.
+//
+// https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail
+func (b *Bot) SetCustomEmojiStickerSetThumbnail(name string, options OptionsSetCustomEmojiStickerSetThumbnail) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["name"] = name
+
+	return b.requestResponseBool("setCustomEmojiStickerSetThumbnail", options)
+}
+
+// SetStickerSetTitle sets the title of sticker set.
+//
+// https://core.telegram.org/bots/api#setstickersettitle
+func (b *Bot) SetStickerSetTitle(name, title string) (result APIResponseBool) {
+	return b.requestResponseBool("setStickerSetTitle", map[string]any{
+		"name":  name,
+		"title": title,
+	})
+}
+
+// DeleteStickerSet deletes a sticker set.
+//
+// https://core.telegram.org/bots/api#deletestickerset
+func (b *Bot) DeleteStickerSet(name string) (result APIResponseBool) {
+	return b.requestResponseBool("deleteStickerSet", map[string]any{
+		"name": name,
+	})
+}
+
+// SetStickerEmojiList sets the emoji list of sticker set.
+//
+// https://core.telegram.org/bots/api#setstickeremojilist
+func (b *Bot) SetStickerEmojiList(sticker string, emojiList []string) (result APIResponseBool) {
+	return b.requestResponseBool("setStickerEmojiList", map[string]any{
+		"sticker":    sticker,
+		"emoji_list": emojiList,
+	})
+}
+
+// SetStickerKeywords sets the keywords of sticker.
+//
+// https://core.telegram.org/bots/api#setstickerkeywords
+func (b *Bot) SetStickerKeywords(sticker string, keywords []string) (result APIResponseBool) {
+	return b.requestResponseBool("setStickerKeywords", map[string]any{
+		"sticker":  sticker,
+		"keywords": keywords,
+	})
+}
+
+// SetStickerMaskPosition sets mask position of sticker.
+//
+// https://core.telegram.org/bots/api#setstickermaskposition
+func (b *Bot) SetStickerMaskPosition(sticker string, options OptionsSetStickerMaskPosition) (result APIResponseBool) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["sticker"] = sticker
+
+	return b.requestResponseBool("setStickerMaskPosition", options)
 }
 
 // SendVideo sends a video file.
@@ -944,6 +1013,34 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerC
 // https://core.telegram.org/bots/api#getmycommands
 func (b *Bot) GetMyCommands(options OptionsGetMyCommands) (result APIResponseBotCommands) {
 	return b.requestResponseBotCommands("getMyCommands", options)
+}
+
+// SetMyDescription sets the bot's description.
+//
+// https://core.telegram.org/bots/api#setmydescription
+func (b *Bot) SetMyDescription(options OptionsSetMyDescription) (result APIResponseBool) {
+	return b.requestResponseBool("setMyDescription", options)
+}
+
+// GetMyDescription gets the bot's description.
+//
+// https://core.telegram.org/bots/api#setmydescription
+func (b *Bot) GetMyDescription(options OptionsGetMyDescription) (result APIResponseBotDescription) {
+	return b.requestResponseBotDescription("getMyDescription", options)
+}
+
+// SetMyShortDescription sets the bot's short description.
+//
+// https://core.telegram.org/bots/api#setmyshortdescription
+func (b *Bot) SetMyShortDescription(options OptionsSetMyShortDescription) (result APIResponseBool) {
+	return b.requestResponseBool("setMyShortDescription", options)
+}
+
+// GetMyShortDescription gets the bot's short description.
+//
+// https://core.telegram.org/bots/api#getmyshortdescription
+func (b *Bot) GetMyShortDescription(options OptionsGetMyShortDescription) (result APIResponseBotShortDescription) {
+	return b.requestResponseBotShortDescription("getMyShortDescription", options)
 }
 
 // SetMyCommands sets commands of this bot.
@@ -2082,6 +2179,48 @@ func (b *Bot) requestResponseBotCommands(method string, params map[string]any) (
 	b.error(errStr)
 
 	return APIResponseBotCommands{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseBotDescription and fetch its result.
+func (b *Bot) requestResponseBotDescription(method string, params map[string]any) (result APIResponseBotDescription) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseBotDescription
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseBotDescription{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
+}
+
+// Send request for APIResponseBotShortDescription and fetch its result.
+func (b *Bot) requestResponseBotShortDescription(method string, params map[string]any) (result APIResponseBotShortDescription) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponseBotShortDescription
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponseBotShortDescription{APIResponseBase: APIResponseBase{Ok: false, Description: &errStr}}
 }
 
 // Send request for APIResponseChatInviteLink and fetch its result.
