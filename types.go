@@ -710,8 +710,8 @@ type ReplyKeyboardMarkup struct {
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
 	Text            string                     `json:"text"`
-	RequestUser     *KeyboardButtonRequestUser `json:"request_user"`
-	RequestChat     *KeyboardButtonRequestChat `json:"request_chat"`
+	RequestUser     *KeyboardButtonRequestUser `json:"request_user,omitempty"`
+	RequestChat     *KeyboardButtonRequestChat `json:"request_chat,omitempty"`
 	RequestContact  bool                       `json:"request_contact,omitempty"`
 	RequestLocation bool                       `json:"request_location,omitempty"`
 	RequestPoll     *KeyboardButtonPollType    `json:"request_poll,omitempty"`
