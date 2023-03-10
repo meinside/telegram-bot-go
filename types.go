@@ -133,11 +133,21 @@ const (
 	MaskPositionChin     MaskPositionPoint = "chin"
 )
 
-// APIResponseBase is a base of API responses
-type APIResponseBase struct {
+// APIResponse is a base of API responses
+type APIResponse[T any] struct {
 	Ok          bool                   `json:"ok"`
 	Description *string                `json:"description,omitempty"`
 	Parameters  *APIResponseParameters `json:"parameters,omitempty"`
+	Result      *T                     `json:"result,omitempty"`
+}
+
+// APIResponseMessageOrBool type for ambiguous type of `result`
+type APIResponseMessageOrBool struct {
+	Ok            bool                   `json:"ok"`
+	Description   *string                `json:"description,omitempty"`
+	Parameters    *APIResponseParameters `json:"parameters,omitempty"`
+	ResultMessage *Message               `json:"result_message,omitempty"`
+	ResultBool    *bool                  `json:"result_bool,omitempty"`
 }
 
 // APIResponseParameters is parameters in API responses
@@ -146,163 +156,6 @@ type APIResponseBase struct {
 type APIResponseParameters struct {
 	MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"`
 	RetryAfter      int   `json:"retry_after,omitempty"`
-}
-
-// APIResponseWebhookInfo is an API response with result type: WebhookInfo
-type APIResponseWebhookInfo struct {
-	APIResponseBase
-	Result *WebhookInfo `json:"result,omitempty"`
-}
-
-// APIResponseUser is an API response with result type: User
-type APIResponseUser struct {
-	APIResponseBase
-	Result *User `json:"result,omitempty"`
-}
-
-// APIResponseMessage is an API response with result type: Message
-type APIResponseMessage struct {
-	APIResponseBase
-	Result *Message `json:"result,omitempty"`
-}
-
-// APIResponseMessages is an API response with result type: []Message
-type APIResponseMessages struct {
-	APIResponseBase
-	Result []Message `json:"result,omitempty"`
-}
-
-// APIResponseMessageID is an API response with result type: MessageID
-type APIResponseMessageID struct {
-	APIResponseBase
-	Result *MessageID `json:"result,omitempty"`
-}
-
-// APIResponseUserProfilePhotos is an API response with result type: UserProfilePhotos
-type APIResponseUserProfilePhotos struct {
-	APIResponseBase
-	Result *UserProfilePhotos `json:"result,omitempty"`
-}
-
-// APIResponseFile is an API response with result type: File
-type APIResponseFile struct {
-	APIResponseBase
-	Result *File `json:"result,omitempty"`
-}
-
-// APIResponseUpdates is an API response with result type: Update
-type APIResponseUpdates struct {
-	APIResponseBase
-	Result []Update `json:"result,omitempty"`
-}
-
-// APIResponseChat is an API response with result type: Chat
-type APIResponseChat struct {
-	APIResponseBase
-	Result *Chat `json:"result,omitempty"`
-}
-
-// APIResponseChatAdministrators is an API response with result type: ChatAdministrators
-type APIResponseChatAdministrators struct {
-	APIResponseBase
-	Result []ChatMember `json:"result,omitempty"`
-}
-
-// APIResponseChatMember is an API response with result type: ChatMember
-type APIResponseChatMember struct {
-	APIResponseBase
-	Result *ChatMember `json:"result,omitempty"`
-}
-
-// APIResponseInt is an API response with result type: int
-type APIResponseInt struct {
-	APIResponseBase
-	Result int `json:"result,omitempty"`
-}
-
-// APIResponseBool is an API response with result type: bool
-type APIResponseBool struct {
-	APIResponseBase
-	Result bool `json:"result,omitempty"`
-}
-
-// APIResponseString is an API response with result type: string
-type APIResponseString struct {
-	APIResponseBase
-	Result *string `json:"result,omitempty"`
-}
-
-// APIResponseGameHighScores is an API response with result type: GameHighScores
-type APIResponseGameHighScores struct {
-	APIResponseBase
-	Result []GameHighScore `json:"result,omitempty"`
-}
-
-// APIResponseSentWebAppMessage is an API response with result type: SentWebAppMessage
-type APIResponseSentWebAppMessage struct {
-	APIResponseBase
-	Result *SentWebAppMessage `json:"result,omitempty"`
-}
-
-// APIResponseStickerSet is an API response with result type: StickerSet
-type APIResponseStickerSet struct {
-	APIResponseBase
-	Result *StickerSet `json:"result,omitempty"`
-}
-
-// APIResponseStickers is an API response with result type: []Sticker
-type APIResponseStickers struct {
-	APIResponseBase
-	Result []Sticker `json:"result,omitempty"`
-}
-
-// APIResponseMessageOrBool is an API response with result type: Message or bool
-type APIResponseMessageOrBool struct {
-	APIResponseBase
-	ResultMessage *Message
-	ResultBool    *bool
-}
-
-// APIResponsePoll is an API response with result type: Poll
-type APIResponsePoll struct {
-	APIResponseBase
-	Result *Poll `json:"result,omitempty"`
-}
-
-// APIResponseBotCommands is an API response with result type: []BotCommand
-type APIResponseBotCommands struct {
-	APIResponseBase
-	Result []BotCommand `json:"result,omitempty"`
-}
-
-// APIResponseBotDescription is an API response with result type: BotDescription
-type APIResponseBotDescription struct {
-	APIResponseBase
-	Result *BotDescription `json:"result,omitempty"`
-}
-
-// APIResponseBotShortDescription is an API response with result type: BotShortDescription
-type APIResponseBotShortDescription struct {
-	APIResponseBase
-	Result *BotShortDescription `json:"result,omitempty"`
-}
-
-// APIResponseChatInviteLink is an API response with result type: ChatInviteLink
-type APIResponseChatInviteLink struct {
-	APIResponseBase
-	Result *ChatInviteLink `json:"result,omitempty"`
-}
-
-// APIResponseMenuButton is an API response with result type: MenuButton
-type APIResponseMenuButton struct {
-	APIResponseBase
-	Result *MenuButton `json:"result,omitempty"`
-}
-
-// APIResponseForumTopic is an API response with result type: ForumTopic
-type APIResponseForumTopic struct {
-	APIResponseBase
-	Result *ForumTopic `json:"result,omitempty"`
 }
 
 // UpdateType is a type of updates (for allowed_updates)
