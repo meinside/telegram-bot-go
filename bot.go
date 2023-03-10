@@ -3,7 +3,6 @@
 // https://core.telegram.org/bots/api
 //
 // Created on : 2015.10.06, meinside@duck.com
-//
 package telegrambot
 
 import (
@@ -147,7 +146,7 @@ func (b *Bot) StartMonitoringUpdates(updateOffset int64, interval int, updateHan
 	}
 	b.updateHandler = updateHandler
 
-	var updates APIResponseUpdates
+	var updates APIResponse[[]Update]
 loop:
 	for {
 		select {
@@ -155,7 +154,7 @@ loop:
 			break loop
 		default:
 			if updates = b.GetUpdates(options); updates.Ok {
-				for _, update := range updates.Result {
+				for _, update := range *updates.Result {
 					// update offset (max + 1)
 					if options["offset"].(int64) <= update.UpdateID {
 						options["offset"] = update.UpdateID + 1
