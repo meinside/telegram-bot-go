@@ -234,7 +234,7 @@ func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup any) OptionsCopyMessage {
 
 // OptionsSendPhoto struct for SendPhoto().
 //
-// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
@@ -260,6 +260,12 @@ func (o OptionsSendPhoto) SetParseMode(parseMode ParseMode) OptionsSendPhoto {
 // SetCaptionEntities sets the `caption_entities` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetCaptionEntities(entities []MessageEntity) OptionsSendPhoto {
 	o["caption_entities"] = entities
+	return o
+}
+
+// SetHasSpoiler sets the `has_spoiler` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetHasSpiler(hasSpoiler bool) OptionsSendPhoto {
+	o["has_spoiler"] = hasSpoiler
 	return o
 }
 
@@ -297,7 +303,7 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 
 // OptionsSendAudio struct for SendAudio().
 //
-// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendaudio
 type OptionsSendAudio MethodOptions
@@ -344,11 +350,11 @@ func (o OptionsSendAudio) SetTitle(title string) OptionsSendAudio {
 	return o
 }
 
-// SetThumb sets the `thumb` value of OptionsSendAudio.
+// SetThumbnail sets the `thumbnail` value of OptionsSendAudio.
 //
-// thumb can be one of InputFile or string.
-func (o OptionsSendAudio) SetThumb(thumb any) OptionsSendAudio {
-	o["thumb"] = thumb
+// `thumbnail` can be one of InputFile or string.
+func (o OptionsSendAudio) SetThumbnail(thumbnail any) OptionsSendAudio {
+	o["thumbnail"] = thumbnail
 	return o
 }
 
@@ -386,7 +392,7 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup any) OptionsSendAudio {
 
 // OptionsSendDocument struct for SendDocument().
 //
-// options include: `message_thread_id`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddocument
 type OptionsSendDocument MethodOptions
@@ -397,11 +403,11 @@ func (o OptionsSendDocument) SetMessageThreadID(messageThreadID int64) OptionsSe
 	return o
 }
 
-// SetThumb sets the thumb value of OptionsSendDocument.
+// SetThumbnail sets the thumbnail value of OptionsSendDocument.
 //
-// `thumb` can be one of InputFile or string.
-func (o OptionsSendDocument) SetThumb(thumb any) OptionsSendDocument {
-	o["thumb"] = thumb
+// `thumbnail` can be one of InputFile or string.
+func (o OptionsSendDocument) SetThumbnail(thumbnail any) OptionsSendDocument {
+	o["thumbnail"] = thumbnail
 	return o
 }
 
@@ -463,7 +469,7 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup any) OptionsSendDocument
 
 // OptionsSendSticker struct for SendSticker().
 //
-// options include: `message_thread_id`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendsticker
 type OptionsSendSticker MethodOptions
@@ -471,6 +477,12 @@ type OptionsSendSticker MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetMessageThreadID(messageThreadID int64) OptionsSendSticker {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetEmoji sets the `emoji` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetEmoji(emoji string) OptionsSendSticker {
+	o["emoji"] = emoji
 	return o
 }
 
@@ -508,108 +520,80 @@ func (o OptionsSendSticker) SetReplyMarkup(replyMarkup any) OptionsSendSticker {
 
 // OptionsCreateNewStickerSet struct for CreateNewStickerSet().
 //
-// options include: `png_sticker`, `tgs_sticker`, `webm_sticker`, `sticker_type`, and `mask_position`
+// options include: `sticker_type`, and `needs_repainting`
 //
 // https://core.telegram.org/bots/api#createnewstickerset
 type OptionsCreateNewStickerSet MethodOptions
 
-// SetPNGSticker sets the `png_sticker` value of OptionsCreateNewStickerSet.
-func (o OptionsCreateNewStickerSet) SetPNGSticker(pngSticker InputFile) OptionsCreateNewStickerSet {
-	o["png_sticker"] = pngSticker
-	return o
-}
-
-// SetPNGStickerString sets the `png_sticker` value of OptionsCreateNewStickerSet.
-func (o OptionsCreateNewStickerSet) SetPNGStickerString(pngSticker string) OptionsCreateNewStickerSet {
-	o["png_sticker"] = pngSticker
-	return o
-}
-
-// SetTGSSticker sets the `tgs_sticker` value of OptionsCreateNewStickerSet.
-func (o OptionsCreateNewStickerSet) SetTGSSticker(tgsSticker InputFile) OptionsCreateNewStickerSet {
-	o["tgs_sticker"] = tgsSticker
-	return o
-}
-
-// SetWebmSticker sets the `webm_sticker` value of OptionsCreateNewStickerSet.
-func (o OptionsCreateNewStickerSet) SetWebmSticker(webmSticker InputFile) OptionsCreateNewStickerSet {
-	o["webm_sticker"] = webmSticker
-	return o
-}
-
-// SetStickerType sets the `sticker_type` value of OptionsCreateNewStickerSet. ("regular" or "mask")
-func (o OptionsCreateNewStickerSet) SetStickerType(stickerType string) OptionsCreateNewStickerSet {
+// SetStickerType sets the `sticker_type` value of OptionsCreateNewStickerSet.
+func (o OptionsCreateNewStickerSet) SetStickerType(stickerType StickerType) OptionsCreateNewStickerSet {
 	o["sticker_type"] = stickerType
 	return o
 }
 
-// SetMaskPosition sets the `mask_position` value of OptionsCreateNewStickerSet.
-func (o OptionsCreateNewStickerSet) SetMaskPosition(maskPosition MaskPosition) OptionsCreateNewStickerSet {
-	o["mask_position"] = maskPosition
+// SetNeedsRepainting sets the `needs_repainting` value of OptionsCreateNewStickerSet.
+func (o OptionsCreateNewStickerSet) SetNeedsRepainting(needsRepainting bool) OptionsCreateNewStickerSet {
+	o["needs_repainting"] = needsRepainting
 	return o
 }
 
 // OptionsAddStickerToSet struct for AddStickerToSet()
 //
-// options include: `png_sticker`, `tgs_sticker`, `webm_sticker`, and `mask_position`
+// options include: nothing for now
 //
 // https://core.telegram.org/bots/api#addstickertoset
 type OptionsAddStickerToSet MethodOptions
 
-// SetPNGSticker sets the `png_sticker` value of OptionsAddStickerToSet.
-func (o OptionsAddStickerToSet) SetPNGSticker(pngSticker InputFile) OptionsAddStickerToSet {
-	o["png_sticker"] = pngSticker
+// OptionsSetStickerSetThumbnail struct for SetStickerSetThumbnail()
+//
+// options include: `thumbnail`
+//
+// https://core.telegram.org/bots/api#setstickersetthumbnail
+type OptionsSetStickerSetThumbnail MethodOptions
+
+// SetThumbnail sets the `thumbnail` value of OptionsSetStickerSetThumbnail.
+func (o OptionsSetStickerSetThumbnail) SetThumbnail(thumbnail InputFile) OptionsSetStickerSetThumbnail {
+	o["thumbnail"] = thumbnail
 	return o
 }
 
-// SetPNGStickerString sets the `png_sticker` value of OptionsAddStickerToSet.
-func (o OptionsAddStickerToSet) SetPNGStickerString(pngSticker string) OptionsAddStickerToSet {
-	o["png_sticker"] = pngSticker
+// SetThumbnailString sets the `thumbnail` value of OptionsSetStickerSetThumbnail.
+//
+// `thumbnail` can be a file_id or a http url to a file
+func (o OptionsSetStickerSetThumbnail) SetThumbnailString(thumbnail string) OptionsSetStickerSetThumbnail {
+	o["thumbnail"] = thumbnail
 	return o
 }
 
-// SetTGSSticker sets the `tgs_sticker` value of OptionsAddStickerToSet.
-func (o OptionsAddStickerToSet) SetTGSSticker(tgsSticker InputFile) OptionsAddStickerToSet {
-	o["tgs_sticker"] = tgsSticker
+// OptionsSetCustomEmojiStickerSetThumbnail struct for SetCustomEmojiStickerSet()
+//
+// options include: `custom_emoji_id`
+//
+// https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail
+type OptionsSetCustomEmojiStickerSetThumbnail MethodOptions
+
+// SetCustomEmojiID sets the `custom_emoji_id` value of OptionsSetCustomEmojiStickerSetThumbnail.
+func (o OptionsSetCustomEmojiStickerSetThumbnail) SetCustomEmojiID(customEmojiID string) OptionsSetCustomEmojiStickerSetThumbnail {
+	o["custom_emoji_id"] = customEmojiID
 	return o
 }
 
-// SetWebmSticker sets the `webm_sticker` value of OptionsAddStickerToSet.
-func (o OptionsAddStickerToSet) SetWebmSticker(webmSticker InputFile) OptionsAddStickerToSet {
-	o["webm_sticker"] = webmSticker
-	return o
-}
+// OptionsSetStickerMaskPosition struct for SetStickerMaskPosition()
+//
+// options include: `mask_position`
+//
+// https://core.telegram.org/bots/api#setstickermaskposition
+type OptionsSetStickerMaskPosition MethodOptions
 
-// SetMaskPosition sets the `mask_position` value of OptionsAddStickerToSet.
-func (o OptionsAddStickerToSet) SetMaskPosition(maskPosition MaskPosition) OptionsAddStickerToSet {
+// SetMaskPosition sets the `mask_position` value of OptionsSetStickerMaskPosition.
+func (o OptionsSetStickerMaskPosition) SetMaskPosition(maskPosition MaskPosition) OptionsSetStickerMaskPosition {
 	o["mask_position"] = maskPosition
-	return o
-}
-
-// OptionsSetStickerSetThumb struct for SetStickerSetThumb()
-//
-// options include: `thumb`
-//
-// https://core.telegram.org/bots/api#setstickersetthumb
-type OptionsSetStickerSetThumb MethodOptions
-
-// SetThumb sets the `thumb` value of OptionsSetStickerSetThumb.
-func (o OptionsSetStickerSetThumb) SetThumb(thumb InputFile) OptionsSetStickerSetThumb {
-	o["thumb"] = thumb
-	return o
-}
-
-// SetThumbString sets the `thumb` value of OptionsSetStickerSetThumb.
-//
-// `thumb` can be a file_id or a http url to a file
-func (o OptionsSetStickerSetThumb) SetThumbString(thumb string) OptionsSetStickerSetThumb {
-	o["thumb"] = thumb
 	return o
 }
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `message_thread_id`, `duration`, `caption`, `parse_mode`, `caption_entities`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
@@ -638,11 +622,11 @@ func (o OptionsSendVideo) SetHeight(height int) OptionsSendVideo {
 	return o
 }
 
-// SetThumb sets the `thumb` value of OptionsSendVideo.
+// SetThumbnail sets the `thumbnail` value of OptionsSendVideo.
 //
-// `thumb` can be one of InputFile or string.
-func (o OptionsSendVideo) SetThumb(thumb any) OptionsSendVideo {
-	o["thumb"] = thumb
+// `thumbnail` can be one of InputFile or string.
+func (o OptionsSendVideo) SetThumbnail(thumbnail any) OptionsSendVideo {
+	o["thumbnail"] = thumbnail
 	return o
 }
 
@@ -661,6 +645,12 @@ func (o OptionsSendVideo) SetParseMode(parseMode ParseMode) OptionsSendVideo {
 // SetCaptionEntities sets the `caption_entities` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetCaptionEntities(entities []MessageEntity) OptionsSendVideo {
 	o["caption_entities"] = entities
+	return o
+}
+
+// SetHasSpoiler sets the `has_spoiler` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetHasSpiler(hasSpoiler bool) OptionsSendVideo {
+	o["has_spoiler"] = hasSpoiler
 	return o
 }
 
@@ -704,7 +694,7 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 
 // OptionsSendAnimation struct for SendAnimation().
 //
-// options include: `message_thread_id`, `duration`, `width`, `height`, `thumb`, `caption`, `parse_mode`, `caption_entities`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
@@ -733,11 +723,11 @@ func (o OptionsSendAnimation) SetHeight(height int) OptionsSendAnimation {
 	return o
 }
 
-// SetThumb sets the `thumb` value of OptionsSendAnimation.
+// SetThumbnail sets the `thumbnail` value of OptionsSendAnimation.
 //
-// `thumb` can be one of InputFile or string.
-func (o OptionsSendAnimation) SetThumb(thumb any) OptionsSendAnimation {
-	o["thumb"] = thumb
+// `thumbnail` can be one of InputFile or string.
+func (o OptionsSendAnimation) SetThumbnail(thumbnail any) OptionsSendAnimation {
+	o["thumbnail"] = thumbnail
 	return o
 }
 
@@ -756,6 +746,12 @@ func (o OptionsSendAnimation) SetParseMode(parseMode ParseMode) OptionsSendAnima
 // SetCaptionEntities sets the `caption_entities` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetCaptionEntities(entities []MessageEntity) OptionsSendAnimation {
 	o["caption_entities"] = entities
+	return o
+}
+
+// SetHasSpoiler sets the `has_spoiler` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetHasSpiler(hasSpoiler bool) OptionsSendAnimation {
+	o["has_spoiler"] = hasSpoiler
 	return o
 }
 
@@ -862,7 +858,7 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup any) OptionsSendVoice {
 
 // OptionsSendVideoNote struct for SendVideoNote().
 //
-// options include: `message_thread_id,` `duration`, `length`, `thumb`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
+// options include: `message_thread_id,` `duration`, `length`, `thumbnail`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
@@ -886,11 +882,11 @@ func (o OptionsSendVideoNote) SetLength(length int) OptionsSendVideoNote {
 	return o
 }
 
-// SetThumb sets the `thumb` value of OptionsSendVideoNote.
+// SetThumbnail sets the `thumbnail` value of OptionsSendVideoNote.
 //
-// `thumb` can be one of InputFile or string.
-func (o OptionsSendVideoNote) SetThumb(thumb any) OptionsSendVideoNote {
-	o["thumb"] = thumb
+// `thumbnail` can be one of InputFile or string.
+func (o OptionsSendVideoNote) SetThumbnail(thumbnail any) OptionsSendVideoNote {
+	o["thumbnail"] = thumbnail
 	return o
 }
 
@@ -1272,7 +1268,20 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup any) OptionsSendDice {
 	return o
 }
 
-// OptionsSendContact struct for SendContact()
+// OptionsSendChatAction struct for SendChatAction().
+//
+// options include: `message_thread_id`.
+//
+// https://core.telegram.org/bots/api#sendchataction
+type OptionsSendChatAction MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendChatAction.
+func (o OptionsSendChatAction) SetMessageThreadID(messageThreadID int64) OptionsSendChatAction {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// OptionsSendContact struct for SendContact().
 //
 // options include: `message_thread_id`, `last_name`, `vcard`, `disable_notification`, `protect_content`, `reply_to_message_id`, `allow_sending_without_reply`, and `reply_markup`.
 //
@@ -1369,10 +1378,16 @@ func (o OptionsBanChatMember) SetRevokeMessages(revokeMessages bool) OptionsBanC
 
 // OptionsRestrictChatMember struct for RestrictChatMember().
 //
-// options include: `until_date`
+// options include: `use_independent_chat_permissions`, and `until_date`
 //
 // https://core.telegram.org/bots/api#restrictchatmember
 type OptionsRestrictChatMember MethodOptions
+
+// SetUserIndependentChatPermissions sets the `use_independent_chat_permissions` value of OptionsRestrictChatMember.
+func (o OptionsRestrictChatMember) SetUserIndependentChatPermissions(val bool) OptionsRestrictChatMember {
+	o["use_independent_chat_permissions"] = val
+	return o
+}
 
 // SetUntilDate sets the `until_date` value of OptionsRestrictChatMember.
 func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMember {
@@ -1456,6 +1471,19 @@ func (o OptionsPromoteChatMember) SetCanPromoteMembers(can bool) OptionsPromoteC
 // SetCanManageTopics sets the `can_manage_topics` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanManageTopics(can bool) OptionsPromoteChatMember {
 	o["can_manage_topics"] = can
+	return o
+}
+
+// OptionsSetChatPermissions struct for SetChatPermissions
+//
+// options include: `use_independent_chat_permissions`.
+//
+// https://core.telegram.org/bots/api#setchatpermissions
+type OptionsSetChatPermissions MethodOptions
+
+// SetUserIndependentChatPermissions sets the `use_independent_chat_permissions` value of OptionsRestrictChatMember.
+func (o OptionsSetChatPermissions) SetUserIndependentChatPermissions(val bool) OptionsSetChatPermissions {
+	o["use_independent_chat_permissions"] = val
 	return o
 }
 
@@ -1600,6 +1628,78 @@ func (o OptionsDeleteMyCommands) SetScope(scope any) OptionsDeleteMyCommands {
 //
 // `language_code` is a two-letter ISO 639-1 language code and can be empty.
 func (o OptionsDeleteMyCommands) SetLanguageCode(languageCode string) OptionsDeleteMyCommands {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsSetMyDescription struct for SetMyDescription().
+//
+// options include: `description`, and `language_code`.
+//
+// https://core.telegram.org/bots/api#setmydescription
+type OptionsSetMyDescription MethodOptions
+
+// SetDescription sets the `description` value of OptionsSetMyDescription.
+func (o OptionsSetMyDescription) SetDescription(description string) OptionsSetMyDescription {
+	o["description"] = description
+	return o
+}
+
+// SetLanguageCode sets the `language_code` value of OptionsSetMyDescription.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsSetMyDescription) SetLanguageCode(languageCode string) OptionsSetMyDescription {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsGetMyDescription struct for GetMyDescription().
+//
+// options include: `language_code`.
+//
+// https://core.telegram.org/bots/api#getmydescription
+type OptionsGetMyDescription MethodOptions
+
+// SetLanguageCode sets the `language_code` value of OptionsGetMyDescription.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsGetMyDescription) SetLanguageCode(languageCode string) OptionsGetMyDescription {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsSetMyShortDescription struct for SetMyShortDescription().
+//
+// options include: `short_description`, and `language_code`.
+//
+// https://core.telegram.org/bots/api#setmyshortdescription
+type OptionsSetMyShortDescription MethodOptions
+
+// SetShortDescription sets the `short_description` value of OptionsSetMyShortDescription.
+func (o OptionsSetMyShortDescription) SetDescription(shortDescription string) OptionsSetMyShortDescription {
+	o["short_description"] = shortDescription
+	return o
+}
+
+// SetLanguageCode sets the `language_code` value of OptionsSetMyShortDescription.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsSetMyShortDescription) SetLanguageCode(languageCode string) OptionsSetMyShortDescription {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsGetMyShortDescription struct for GetMyShortDescription().
+//
+// options include: `language_code`.
+//
+// https://core.telegram.org/bots/api#getmyshortdescription
+type OptionsGetMyShortDescription MethodOptions
+
+// SetLanguageCode sets the `language_code` value of OptionsGetMyShortDescription.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsGetMyShortDescription) SetLanguageCode(languageCode string) OptionsGetMyShortDescription {
 	o["language_code"] = languageCode
 	return o
 }
@@ -2277,6 +2377,23 @@ func (o OptionsCreateForumTopic) SetIconColor(iconColor int) OptionsCreateForumT
 
 // SetIconCustomEmojiID sets the `icon_custom_emoji_id` value of OptionsCreateForumTopic.
 func (o OptionsCreateForumTopic) SetIconCustomEmojiID(iconCustomEmojiID string) OptionsCreateForumTopic {
+	o["icon_custom_emoji_id"] = iconCustomEmojiID
+	return o
+}
+
+// OptionsEditForumTopic struct for EditForumTopic().
+//
+// https://core.telegram.org/bots/api#editforumtopic
+type OptionsEditForumTopic MethodOptions
+
+// SetName sets the `name` value of OptionsEditForumTopic.
+func (o OptionsEditForumTopic) SetName(name string) OptionsEditForumTopic {
+	o["name"] = name
+	return o
+}
+
+// SetIconCustomEmojiID sets the `icon_custom_emoji_id` value of OptionsEditForumTopic.
+func (o OptionsEditForumTopic) SetIconCustomEmojiID(iconCustomEmojiID string) OptionsEditForumTopic {
 	o["icon_custom_emoji_id"] = iconCustomEmojiID
 	return o
 }

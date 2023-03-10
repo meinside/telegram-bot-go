@@ -54,15 +54,15 @@ func NewInlineQueryResultArticle(title, messageText, description string) (newArt
 // Photo must be in jpeg format, < 5MB.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultphoto
-func NewInlineQueryResultPhoto(photoURL, thumbURL string) (newPhoto *InlineQueryResultPhoto, generatedID *string) {
+func NewInlineQueryResultPhoto(photoURL, thumbnailURL string) (newPhoto *InlineQueryResultPhoto, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultPhoto{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypePhoto,
 				ID:   id,
 			},
-			PhotoURL: photoURL,
-			ThumbURL: thumbURL,
+			PhotoURL:     photoURL,
+			ThumbnailURL: thumbnailURL,
 		}, &id
 	}
 
@@ -74,15 +74,15 @@ func NewInlineQueryResultPhoto(photoURL, thumbURL string) (newPhoto *InlineQuery
 // Gif must be in gif format, < 1MB.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultgif
-func NewInlineQueryResultGif(gifURL, thumbURL string) (newGif *InlineQueryResultGif, generatedID *string) {
+func NewInlineQueryResultGif(gifURL, thumbnailURL string) (newGif *InlineQueryResultGif, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultGif{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeGif,
 				ID:   id,
 			},
-			GifURL:   gifURL,
-			ThumbURL: thumbURL,
+			GifURL:       gifURL,
+			ThumbnailURL: thumbnailURL,
 		}, &id
 	}
 
@@ -94,15 +94,15 @@ func NewInlineQueryResultGif(gifURL, thumbURL string) (newGif *InlineQueryResult
 // Mpeg4 must be in H.264/MPEG-4 AVC video(wihout sound) format, < 1MB.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
-func NewInlineQueryResultMpeg4Gif(mpeg4URL, thumbURL string) (newMpeg4Gif *InlineQueryResultMpeg4Gif, generatedID *string) {
+func NewInlineQueryResultMpeg4Gif(mpeg4URL, thumbnailURL string) (newMpeg4Gif *InlineQueryResultMpeg4Gif, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultMpeg4Gif{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeMpeg4Gif,
 				ID:   id,
 			},
-			Mpeg4URL: mpeg4URL,
-			ThumbURL: thumbURL,
+			Mpeg4URL:     mpeg4URL,
+			ThumbnailURL: thumbnailURL,
 		}, &id
 	}
 
@@ -112,17 +112,17 @@ func NewInlineQueryResultMpeg4Gif(mpeg4URL, thumbURL string) (newMpeg4Gif *Inlin
 // NewInlineQueryResultVideo is a helper function for generating a new InlineQueryResultVideo
 //
 // https://core.telegram.org/bots/api#inlinequeryresultvideo
-func NewInlineQueryResultVideo(videoURL, thumbURL, title string, mimeType VideoMimeType) (newVideo *InlineQueryResultVideo, generatedID *string) {
+func NewInlineQueryResultVideo(videoURL, thumbnailURL, title string, mimeType VideoMimeType) (newVideo *InlineQueryResultVideo, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return &InlineQueryResultVideo{
 			InlineQueryResult: InlineQueryResult{
 				Type: InlineQueryResultTypeVideo,
 				ID:   id,
 			},
-			VideoURL: videoURL,
-			MimeType: mimeType,
-			ThumbURL: thumbURL,
-			Title:    title,
+			VideoURL:     videoURL,
+			MimeType:     mimeType,
+			ThumbnailURL: thumbnailURL,
+			Title:        title,
 		}, &id
 	}
 

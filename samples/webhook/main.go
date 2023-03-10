@@ -32,6 +32,7 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 			b.SendChatAction(
 				webhook.Message.Chat.ID,
 				bot.ChatActionTyping,
+				nil,
 			)
 			time.Sleep(typingDelaySeconds * time.Second)
 
