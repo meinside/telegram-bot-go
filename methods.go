@@ -1737,7 +1737,7 @@ func (b *Bot) requestWebhookInfo(method string, params map[string]any) (result A
 
 		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
 	} else {
-		errStr = fmt.Sprintf("getWebhookInfo failed with error: %s", err)
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
 	b.error(errStr)
