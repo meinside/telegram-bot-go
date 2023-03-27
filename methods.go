@@ -1111,13 +1111,10 @@ func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (resu
 // EditMessageCaption edits caption of a message.
 //
 // https://core.telegram.org/bots/api#editmessagecaption
-func (b *Bot) EditMessageCaption(caption string, options OptionsEditMessageCaption) (result APIResponseMessageOrBool) {
+func (b *Bot) EditMessageCaption(options OptionsEditMessageCaption) (result APIResponseMessageOrBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
-
-	// essential params
-	options["caption"] = caption
 
 	return b.requestMessageOrBool("editMessageCaption", options)
 }
@@ -2122,8 +2119,12 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 		var jsonResponseBool APIResponse[bool]
 		err = json.Unmarshal(bytes, &jsonResponseBool)
 		if err == nil {
+			b := false
+			if jsonResponseBool.Result != nil {
+				b = *jsonResponseBool.Result
+			}
 			return APIResponseMessageOrBool{
-				Ok:          true,
+				Ok:          b,
 				Description: jsonResponseBool.Description,
 				ResultBool:  jsonResponseBool.Result,
 			}
