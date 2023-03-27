@@ -2119,12 +2119,8 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 		var jsonResponseBool APIResponse[bool]
 		err = json.Unmarshal(bytes, &jsonResponseBool)
 		if err == nil {
-			b := false
-			if jsonResponseBool.Result != nil {
-				b = *jsonResponseBool.Result
-			}
 			return APIResponseMessageOrBool{
-				Ok:          b,
+				Ok:          true,
 				Description: jsonResponseBool.Description,
 				ResultBool:  jsonResponseBool.Result,
 			}
