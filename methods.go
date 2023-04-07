@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -1650,7 +1649,7 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]any) (re
 		if err == nil {
 			// FIXXX: check http status code here
 			var bytes []byte
-			bytes, err = ioutil.ReadAll(resp.Body)
+			bytes, err = io.ReadAll(resp.Body)
 			if err == nil {
 				return bytes, nil
 			}
@@ -1699,7 +1698,7 @@ func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]any) (r
 		if err == nil {
 			// FIXXX: check http status code here
 			var bytes []byte
-			bytes, err = ioutil.ReadAll(resp.Body)
+			bytes, err = io.ReadAll(resp.Body)
 			if err == nil {
 				return bytes, nil
 			}
@@ -2289,7 +2288,7 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 
 	b.verbose("received webhook request: %+v", req)
 
-	if body, err := ioutil.ReadAll(req.Body); err == nil {
+	if body, err := io.ReadAll(req.Body); err == nil {
 		var webhook Update
 		if err = json.Unmarshal(body, &webhook); err != nil {
 			b.error("error while parsing json (%s)", err)
