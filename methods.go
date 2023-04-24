@@ -1012,6 +1012,27 @@ func (b *Bot) GetMyCommands(options OptionsGetMyCommands) (result APIResponse[[]
 	return b.requestBotCommands("getMyCommands", options)
 }
 
+// SetMyName changes the bot's name.
+//
+// https://core.telegram.org/bots/api#setmyname
+func (b *Bot) SetMyName(name string, options OptionsSetMyName) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["name"] = name
+
+	return b.requestBool("setMyName", options)
+}
+
+// GetMyName fetches the bot's name.
+//
+// https://core.telegram.org/bots/api#getmyname
+func (b *Bot) GetMyName(options OptionsGetMyName) (result APIResponse[BotName]) {
+	return b.requestBotName("getMyName", options)
+}
+
 // SetMyDescription sets the bot's description.
 //
 // https://core.telegram.org/bots/api#setmydescription
@@ -2175,6 +2196,27 @@ func (b *Bot) requestBotCommands(method string, params map[string]any) (result A
 	b.error(errStr)
 
 	return APIResponse[[]BotCommand]{Ok: false, Description: &errStr}
+}
+
+// Send request for APIResponse[BotName] and fetch its result.
+func (b *Bot) requestBotName(method string, params map[string]any) (result APIResponse[BotName]) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponse[BotName]
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponse[BotName]{Ok: false, Description: &errStr}
 }
 
 // Send request for APIResponse[BotDescription] and fetch its result.
