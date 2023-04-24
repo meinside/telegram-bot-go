@@ -1632,6 +1632,36 @@ func (o OptionsDeleteMyCommands) SetLanguageCode(languageCode string) OptionsDel
 	return o
 }
 
+// OptionsSetMyName struct for SetMyName().
+//
+// options include: `language_code`
+//
+// https://core.telegram.org/bots/api#setmyname
+type OptionsSetMyName MethodOptions
+
+// SetLanguageCode sets the `language_code` value of OptionsSetMyName.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsSetMyName) SetLanguageCode(languageCode string) OptionsSetMyName {
+	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsGetMyName struct for GetMyName().
+//
+// options include: `language_code`
+//
+// https://core.telegram.org/bots/api#getmyname
+type OptionsGetMyName MethodOptions
+
+// SetLanguageCode sets the `language_code` value of OptionsGetMyName.
+//
+// `language_code` is a two-letter ISO 639-1 language code and can be empty.
+func (o OptionsGetMyName) SetLanguageCode(languageCode string) OptionsGetMyName {
+	o["language_code"] = languageCode
+	return o
+}
+
 // OptionsSetMyDescription struct for SetMyDescription().
 //
 // options include: `description`, and `language_code`.
@@ -2027,15 +2057,9 @@ func (o OptionsAnswerInlineQuery) SetNextOffset(nextOffset string) OptionsAnswer
 	return o
 }
 
-// SetSwitchPmText sets the `switch_pm_text` value of OptionsAnswerInlineQuery.
-func (o OptionsAnswerInlineQuery) SetSwitchPmText(switchPmText string) OptionsAnswerInlineQuery {
-	o["switch_pm_text"] = switchPmText
-	return o
-}
-
-// SetSwitchPmParameter sets the `switch_pm_parameter` value of OptionsAnswerInlineQuery.
-func (o OptionsAnswerInlineQuery) SetSwitchPmParameter(switchPmParam string) OptionsAnswerInlineQuery {
-	o["switch_pm_parameter"] = switchPmParam
+// SetButton sets the `button` value of OptionsAnswerInlineQuery.
+func (o OptionsAnswerInlineQuery) SetButton(button InlineQueryResultsButton) OptionsAnswerInlineQuery {
+	o["button"] = button
 	return o
 }
 

@@ -647,7 +647,9 @@ type ChatShared struct {
 // WriteAccessAllowed is a struct for an allowed write access in the chat.
 //
 // https://core.telegram.org/bots/api#writeaccessallowed
-type WriteAccessAllowed struct{}
+type WriteAccessAllowed struct {
+	WebAppName *string `json:"web_app_name,omitempty"`
+}
 
 // VideoChatStarted is a struct for service message: video chat started
 //
@@ -767,15 +769,16 @@ type InlineKeyboardMarkup struct {
 //
 // https://core.telegram.org/bots/api#inlinekeyboardbutton
 type InlineKeyboardButton struct {
-	Text                         string        `json:"text"`
-	URL                          *string       `json:"url,omitempty"`
-	LoginURL                     *LoginURL     `json:"login_url,omitempty"`
-	CallbackData                 *string       `json:"callback_data,omitempty"`
-	WebApp                       *WebAppInfo   `json:"web_app,omitempty"`
-	SwitchInlineQuery            *string       `json:"switch_inline_query,omitempty"`
-	SwitchInlineQueryCurrentChat *string       `json:"switch_inline_query_current_chat,omitempty"`
-	CallbackGame                 *CallbackGame `json:"callback_game,omitempty"`
-	Pay                          bool          `json:"pay,omitempty"`
+	Text                         string                       `json:"text"`
+	URL                          *string                      `json:"url,omitempty"`
+	LoginURL                     *LoginURL                    `json:"login_url,omitempty"`
+	CallbackData                 *string                      `json:"callback_data,omitempty"`
+	WebApp                       *WebAppInfo                  `json:"web_app,omitempty"`
+	SwitchInlineQuery            *string                      `json:"switch_inline_query,omitempty"`
+	SwitchInlineQueryCurrentChat *string                      `json:"switch_inline_query_current_chat,omitempty"`
+	SwitchInlineQueryChosenChat  *SwitchInlineQueryChosenChat `json:"switch_inline_query_chosen_chat,omitempty"`
+	CallbackGame                 *CallbackGame                `json:"callback_game,omitempty"`
+	Pay                          bool                         `json:"pay,omitempty"`
 }
 
 // LoginURL is a struct for LoginURL
@@ -786,6 +789,17 @@ type LoginURL struct {
 	ForwardText        *string `json:"forward_text,omitempty"`
 	BotUsername        *string `json:"bot_username,omitempty"`
 	RequestWriteAccess bool    `json:"request_write_access,omitempty"`
+}
+
+// SwitchInlineQueryChosenChat is a struct for SwitchInlineQueryChosenChat
+//
+// https://core.telegram.org/bots/api#switchinlinequerychosenchat
+type SwitchInlineQueryChosenChat struct {
+	Query             *string `json:"query,omitempty"`
+	AllowUserChats    *bool   `json:"allow_user_chats,omitempty"`
+	AllowBotChats     *bool   `json:"allow_bot_chats,omitempty"`
+	AllowGroupChats   *bool   `json:"allow_group_chats,omitempty"`
+	AllowChannelChats *bool   `json:"allow_channel_chats,omitempty"`
 }
 
 // CallbackQuery is a struct for a callback query
@@ -909,12 +923,13 @@ type ChatMember struct {
 //
 // https://core.telegram.org/bots/api#chatmemberupdated
 type ChatMemberUpdated struct {
-	Chat          Chat            `json:"chat"`
-	From          User            `json:"from"`
-	Date          int             `json:"date"`
-	OldChatMember ChatMember      `json:"old_chat_member"`
-	NewChatMember ChatMember      `json:"new_chat_member"`
-	InviteLink    *ChatInviteLink `json:"invite_link,omitempty"`
+	Chat                    Chat            `json:"chat"`
+	From                    User            `json:"from"`
+	Date                    int             `json:"date"`
+	OldChatMember           ChatMember      `json:"old_chat_member"`
+	NewChatMember           ChatMember      `json:"new_chat_member"`
+	InviteLink              *ChatInviteLink `json:"invite_link,omitempty"`
+	ViaChatFolderInviteLink *bool           `json:"via_chat_folder_invite_link,omitempty"`
 }
 
 // ChatPermissions is a struct of chat permissions
@@ -1044,6 +1059,13 @@ type ChatJoinRequest struct {
 type BotCommand struct {
 	Command     string `json:"command"`
 	Description string `json:"description"`
+}
+
+// BotName is a struct of a bot's name
+//
+// https://core.telegram.org/bots/api#botname
+type BotName struct {
+	Name string `json:"name"`
 }
 
 // BotDescription is a struct of a bot's description
@@ -1247,6 +1269,15 @@ const (
 	DocumentMimeTypePdf DocumentMimeType = "application/pdf"
 	DocumentMimeTypeZip DocumentMimeType = "application/zip"
 )
+
+// InlineQueryResultsButton is a struct for inline query results button
+//
+// https://core.telegram.org/bots/api#inlinequeryresultsbutton
+type InlineQueryResultsButton struct {
+	Text           string      `json:"text"`
+	WebApp         *WebAppInfo `json:"web_app,omitempty"`
+	StartParameter *string     `json:"start_parameter,omitempty"`
+}
 
 // InlineQueryResult is a struct for inline query results
 //
