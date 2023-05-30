@@ -36,7 +36,7 @@ func helpCommandHandler(b *bot.Bot, update bot.Update, args string) {
 }
 
 // handle non-supported commands
-func noSuchCommandHandler(b *bot.Bot, update bot.Update, cmd string) {
+func noSuchCommandHandler(b *bot.Bot, update bot.Update, cmd, args string) {
 	if update.HasMessage() {
 		send(b, update.Message.Chat.ID, update.Message.MessageID, fmt.Sprintf("No such command: %s", cmd))
 	}

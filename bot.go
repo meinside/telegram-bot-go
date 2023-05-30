@@ -48,7 +48,7 @@ type Bot struct {
 
 	updateHandler            func(b *Bot, update Update, err error)                // update(webhook) handler function
 	commandHandlers          map[string](func(b *Bot, update Update, args string)) // command handler functions
-	noMatchingCommandHandler func(b *Bot, update Update, cmd string)               // handler function for no matching command
+	noMatchingCommandHandler func(b *Bot, update Update, cmd, args string)         // handler function for no matching command
 
 	Verbose bool // print verbose log messages or not
 }
@@ -108,7 +108,7 @@ func (b *Bot) AddCommandHandler(command string, handler func(b *Bot, update Upda
 }
 
 // SetNoMatchingCommandHandler sets a handler function for handling no-matching commands.
-func (b *Bot) SetNoMatchingCommandHandler(handler func(b *Bot, update Update, cmd string)) {
+func (b *Bot) SetNoMatchingCommandHandler(handler func(b *Bot, update Update, cmd, args string)) {
 	b.noMatchingCommandHandler = handler
 }
 
@@ -230,7 +230,7 @@ func handleCommand(b *Bot, update Update) bool {
 
 	// if no matching command handler is set, handle with it
 	if b.noMatchingCommandHandler != nil {
-		go b.noMatchingCommandHandler(b, update, command)
+		go b.noMatchingCommandHandler(b, update, command, params)
 
 		return true
 	}
