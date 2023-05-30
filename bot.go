@@ -46,7 +46,9 @@ type Bot struct {
 
 	quitLoop chan struct{} // quit channel of monitoring loop
 
-	updateHandler func(b *Bot, update Update, err error) // update(webhook) handler function
+	updateHandler            func(b *Bot, update Update, err error)                // update(webhook) handler function
+	commandHandlers          map[string](func(b *Bot, update Update, args string)) // command handler functions
+	noMatchingCommandHandler func(b *Bot, update Update, cmd string)               // handler function for no matching command
 
 	Verbose bool // print verbose log messages or not
 }
@@ -88,6 +90,26 @@ func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string,
 	}
 
 	return nil
+}
+
+// AddCommandHandler adds a handler function for given command.
+func (b *Bot) AddCommandHandler(command string, handler func(b *Bot, update Update, args string)) {
+	// initialize map
+	if b.commandHandlers == nil {
+		b.commandHandlers = map[string]func(b *Bot, update Update, args string){}
+	}
+
+	// prepend '/'
+	if !strings.HasPrefix(command, "/") {
+		command = "/" + command
+	}
+
+	b.commandHandlers[command] = handler
+}
+
+// SetNoMatchingCommandHandler sets a handler function for handling no-matching commands.
+func (b *Bot) SetNoMatchingCommandHandler(handler func(b *Bot, update Update, cmd string)) {
+	b.noMatchingCommandHandler = handler
 }
 
 // StartWebhookServerAndWait starts a webhook server(and waits forever).
@@ -160,7 +182,11 @@ loop:
 						options["offset"] = update.UpdateID + 1
 					}
 
-					go b.updateHandler(b, update, nil)
+					// if there is a matching command, handle it as a command,
+					if !handleCommand(b, update) {
+						// if it was not handled as a command, handle it normally
+						go b.updateHandler(b, update, nil)
+					}
 				}
 			} else {
 				go b.updateHandler(b, Update{}, fmt.Errorf("%s", *updates.Description))
@@ -171,6 +197,45 @@ loop:
 	}
 
 	b.verbose("stopped monitoring updates")
+}
+
+// checks if given update matches any command and handle it (returns true if handled)
+func handleCommand(b *Bot, update Update) bool {
+	if !update.HasMessage() && !update.HasEditedMessage() {
+		return false
+	}
+
+	var msg string
+	if update.HasMessage() {
+		msg = *update.Message.Text
+	} else if update.HasEditedMessage() {
+		msg = *update.EditedMessage.Text
+	}
+
+	// if a messsage doesn't start with '/', it is not a command
+	if !strings.HasPrefix(msg, "/") {
+		return false
+	}
+
+	command := strings.Split(msg, " ")[0]
+	params := strings.TrimSpace(strings.TrimPrefix(msg, command))
+
+	for cmd, cmdHandler := range b.commandHandlers {
+		if command == cmd {
+			go cmdHandler(b, update, params)
+
+			return true
+		}
+	}
+
+	// if no matching command handler is set, handle with it
+	if b.noMatchingCommandHandler != nil {
+		go b.noMatchingCommandHandler(b, update, command)
+
+		return true
+	}
+
+	return false
 }
 
 // StopMonitoringUpdates stops loop of polling updates

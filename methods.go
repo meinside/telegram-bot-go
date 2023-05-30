@@ -2337,12 +2337,16 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 		} else {
 			b.verbose("received webhook body: %s", string(body))
 
-			b.updateHandler(b, webhook, nil)
+			// if there is a matching command, handle it as a command,
+			if !handleCommand(b, webhook) {
+				// if it was not a command, handle it normally
+				go b.updateHandler(b, webhook, nil)
+			}
 		}
 	} else {
 		b.error("error while reading webhook request (%s)", err)
 
-		b.updateHandler(b, Update{}, err)
+		go b.updateHandler(b, Update{}, err)
 	}
 }
 
