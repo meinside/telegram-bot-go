@@ -1551,6 +1551,17 @@ func (o OptionsUnpinChatMessage) SetMessageID(messageID int64) OptionsUnpinChatM
 // https://core.telegram.org/bots/api#answercallbackquery
 type OptionsAnswerCallbackQuery MethodOptions
 
+// SetText sets the `text` value of OptionsAnswerCallbackQuery.
+func (o OptionsAnswerCallbackQuery) SetText(text string) OptionsAnswerCallbackQuery {
+	o["text"] = text
+	return o
+}
+
+func (o OptionsAnswerCallbackQuery) SetShowAlert(showAlert bool) OptionsAnswerCallbackQuery {
+	o["show_alert"] = showAlert
+	return o
+}
+
 // SetURL sets the `url` value of OptionsAnswerCallbackQuery.
 func (o OptionsAnswerCallbackQuery) SetURL(url string) OptionsAnswerCallbackQuery {
 	o["url"] = url
