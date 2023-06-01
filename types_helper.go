@@ -459,10 +459,10 @@ func (u *Update) HasChatJoinRequest() bool {
 	return u.ChatJoinRequest != nil
 }
 
-// From returns the `from` value from Update.
+// GetFrom returns the `from` value from Update.
 //
 // NOTE: `Poll` type doesn't have `from` property.
-func (u *Update) From() *User {
+func (u *Update) GetFrom() *User {
 	if u.HasMessage() {
 		return u.Message.From
 	} else if u.HasEditedMessage() {
@@ -494,6 +494,28 @@ func (u *Update) From() *User {
 	}
 
 	return nil
+}
+
+// GetMessage returns usable message property from Update.
+func (u *Update) GetMessage() (message *Message, edited bool) {
+	if u.HasMessage() {
+		return u.Message, false
+	} else if u.HasEditedMessage() {
+		return u.EditedMessage, true
+	}
+
+	return nil, false
+}
+
+// GetChannelPost returns usable channel post property from Update.
+func (u *Update) GetChannelPost() (post *Message, edited bool) {
+	if u.HasChannelPost() {
+		return u.ChannelPost, false
+	} else if u.HasEditedChannelPost() {
+		return u.EditedChannelPost, true
+	}
+
+	return nil, false
 }
 
 ////////////////////////////////
