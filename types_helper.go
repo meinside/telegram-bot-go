@@ -459,6 +459,43 @@ func (u *Update) HasChatJoinRequest() bool {
 	return u.ChatJoinRequest != nil
 }
 
+// From returns the `from` value from Update.
+//
+// NOTE: `Poll` type doesn't have `from` property.
+func (u *Update) From() *User {
+	if u.HasMessage() {
+		return u.Message.From
+	} else if u.HasEditedMessage() {
+		return u.EditedMessage.From
+	} else if u.HasChannelPost() {
+		return u.ChannelPost.From
+	} else if u.HasEditedChannelPost() {
+		return u.EditedChannelPost.From
+	} else if u.HasInlineQuery() {
+		return &u.InlineQuery.From
+	} else if u.HasChosenInlineResult() {
+		return &u.ChosenInlineResult.From
+	} else if u.HasCallbackQuery() {
+		return &u.CallbackQuery.From
+	} else if u.HasShippingQuery() {
+		return &u.ShippingQuery.From
+	} else if u.HasPreCheckoutQuery() {
+		return &u.PreCheckoutQuery.From
+	} else if u.HasPoll() {
+		return nil
+	} else if u.HasPollAnswer() {
+		return &u.PollAnswer.User
+	} else if u.HasMyChatMember() {
+		return &u.MyChatMember.From
+	} else if u.HasChatMember() {
+		return &u.ChatMember.From
+	} else if u.HasChatJoinRequest() {
+		return &u.ChatJoinRequest.From
+	}
+
+	return nil
+}
+
 ////////////////////////////////
 // Helper functions for User
 //
