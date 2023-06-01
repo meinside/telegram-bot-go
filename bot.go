@@ -275,24 +275,30 @@ loop:
 
 // checks if given update matches any command and handle it (returns true if handled)
 func handleUpdateAsCommand(b *Bot, update Update) bool {
-	if !update.HasMessage() && !update.HasEditedMessage() {
+	var message Message
+	if update.HasMessage() {
+		message = *update.Message
+	} else if update.HasEditedMessage() {
+		message = *update.EditedMessage
+	} else {
+		// if it doesn't have a user message, do not handle it
 		return false
 	}
 
-	var msg string
-	if update.HasMessage() {
-		msg = *update.Message.Text
-	} else if update.HasEditedMessage() {
-		msg = *update.EditedMessage.Text
+	// if it doesn't have any text, do not handle it
+	if !message.HasText() {
+		return false
 	}
+
+	var txt = *message.Text
 
 	// if a messsage doesn't start with '/', it is not a command
-	if !strings.HasPrefix(msg, "/") {
+	if !strings.HasPrefix(txt, "/") {
 		return false
 	}
 
-	command := strings.Split(msg, " ")[0]
-	params := strings.TrimSpace(strings.TrimPrefix(msg, command))
+	command := strings.Split(txt, " ")[0]
+	params := strings.TrimSpace(strings.TrimPrefix(txt, command))
 
 	for cmd, cmdHandler := range b.commandHandlers {
 		if command == cmd {
