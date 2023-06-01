@@ -46,10 +46,10 @@ type Bot struct {
 
 	quitLoop chan struct{} // quit channel of monitoring loop
 
-	// update handler through webhook or polling
-	updateHandler func(b *Bot, update Update, err error) // update(webhook) handler function
+	// manual update handler - must be set
+	updateHandler func(b *Bot, update Update, err error)
 
-	// update content handlers
+	// update handlers by content type (if not set, update will be passed to `upateHandler`)
 	messageHandler            func(b *Bot, update Update, message Message, edited bool)
 	channelPostHandler        func(b *Bot, update Update, channelPost Message, edited bool)
 	inlineQueryHandler        func(b *Bot, update Update, inlineQuery InlineQuery)
@@ -62,7 +62,7 @@ type Bot struct {
 	chatMemberUpdateHandler   func(b *Bot, update Update, memberUpdated ChatMemberUpdated, isMine bool)
 	chatJoinRequestHandler    func(b *Bot, update Update, chatJoinRequest ChatJoinRequest)
 
-	// command handlers
+	// command handlers (if not set, update will be passed to `updateHandler`)
 	commandHandlers          map[string](func(b *Bot, update Update, args string)) // command handler functions
 	noMatchingCommandHandler func(b *Bot, update Update, cmd, args string)         // handler function for no matching command
 
