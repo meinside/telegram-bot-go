@@ -399,6 +399,16 @@ func (u *Update) HasEditedMessage() bool {
 	return u.EditedMessage != nil
 }
 
+// HasChannelPost checks if Update has ChannelPost.
+func (u *Update) HasChannelPost() bool {
+	return u.ChannelPost != nil
+}
+
+// HasEditedChannelPost checks if Update has EditedChannelPost.
+func (u *Update) HasEditedChannelPost() bool {
+	return u.EditedChannelPost != nil
+}
+
 // HasInlineQuery checks if Update has InlineQuery
 func (u *Update) HasInlineQuery() bool {
 	return u.InlineQuery != nil
@@ -427,6 +437,26 @@ func (u *Update) HasPreCheckoutQuery() bool {
 // HasPoll checks if Update has Poll
 func (u *Update) HasPoll() bool {
 	return u.Poll != nil
+}
+
+// HasPollAnswer checks if Update has PollAnswer.
+func (u *Update) HasPollAnswer() bool {
+	return u.PollAnswer != nil
+}
+
+// HasMyChatMember checks if Update has MyChatMember.
+func (u *Update) HasMyChatMember() bool {
+	return u.MyChatMember != nil
+}
+
+// HasChatMember checks if Update has ChatMember.
+func (u *Update) HasChatMember() bool {
+	return u.ChatMember != nil
+}
+
+// HasChatJoinRequest checks if Update has ChatJoinRequest.
+func (u *Update) HasChatJoinRequest() bool {
+	return u.ChatJoinRequest != nil
 }
 
 ////////////////////////////////

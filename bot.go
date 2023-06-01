@@ -46,7 +46,23 @@ type Bot struct {
 
 	quitLoop chan struct{} // quit channel of monitoring loop
 
-	updateHandler            func(b *Bot, update Update, err error)                // update(webhook) handler function
+	// manual update handler - must be set
+	updateHandler func(b *Bot, update Update, err error)
+
+	// update handlers by content type (if not set, update will be passed to `upateHandler`)
+	messageHandler            func(b *Bot, update Update, message Message, edited bool)
+	channelPostHandler        func(b *Bot, update Update, channelPost Message, edited bool)
+	inlineQueryHandler        func(b *Bot, update Update, inlineQuery InlineQuery)
+	chosenInlineResultHandler func(b *Bot, update Update, chosenInlineResult ChosenInlineResult)
+	callbackQueryHandler      func(b *Bot, update Update, callbackQuery CallbackQuery)
+	shippingQueryHandler      func(b *Bot, update Update, shippingQuery ShippingQuery)
+	preCheckoutQueryHandler   func(b *Bot, update Update, preCheckoutQuery PreCheckoutQuery)
+	pollHandler               func(b *Bot, update Update, poll Poll)
+	pollAnswerHandler         func(b *Bot, update Update, pollAnswer PollAnswer)
+	chatMemberUpdateHandler   func(b *Bot, update Update, memberUpdated ChatMemberUpdated, isMine bool)
+	chatJoinRequestHandler    func(b *Bot, update Update, chatJoinRequest ChatJoinRequest)
+
+	// command handlers (if not set, update will be passed to `updateHandler`)
 	commandHandlers          map[string](func(b *Bot, update Update, args string)) // command handler functions
 	noMatchingCommandHandler func(b *Bot, update Update, cmd, args string)         // handler function for no matching command
 
@@ -107,9 +123,64 @@ func (b *Bot) AddCommandHandler(command string, handler func(b *Bot, update Upda
 	b.commandHandlers[command] = handler
 }
 
-// SetNoMatchingCommandHandler sets a handler function for handling no-matching commands.
+// SetNoMatchingCommandHandler sets a function for handling no-matching commands.
 func (b *Bot) SetNoMatchingCommandHandler(handler func(b *Bot, update Update, cmd, args string)) {
 	b.noMatchingCommandHandler = handler
+}
+
+// SetMessageHandler sets a function for handling messages.
+func (b *Bot) SetMessageHandler(handler func(b *Bot, update Update, message Message, edited bool)) {
+	b.messageHandler = handler
+}
+
+// SetChannelPostHandler sets a function for handling channel posts.
+func (b *Bot) SetChannelPostHandler(handler func(b *Bot, update Update, channelPost Message, edited bool)) {
+	b.channelPostHandler = handler
+}
+
+// SetInlineQueryHandler sets a function for handling inline queries.
+func (b *Bot) SetInlineQueryHandler(handler func(b *Bot, update Update, inlineQuery InlineQuery)) {
+	b.inlineQueryHandler = handler
+}
+
+// SetChosenInlineResultHandler sets a function for handling chosen inline results.
+func (b *Bot) SetChosenInlineResultHandler(handler func(b *Bot, update Update, chosenInlineResult ChosenInlineResult)) {
+	b.chosenInlineResultHandler = handler
+}
+
+// SetCallbackQueryHandler sets a function for handling callback queries.
+func (b *Bot) SetCallbackQueryHandler(handler func(b *Bot, update Update, callbackQuery CallbackQuery)) {
+	b.callbackQueryHandler = handler
+}
+
+// SetShippingQueryHandler sets a function for handling shipping queries.
+func (b *Bot) SetShippingQueryHandler(handler func(b *Bot, update Update, shippingQuery ShippingQuery)) {
+	b.shippingQueryHandler = handler
+}
+
+// SetPreCheckoutQueryHandler sets a function for handling pre-checkout queries.
+func (b *Bot) SetPreCheckoutQueryHandler(handler func(b *Bot, update Update, preCheckoutQuery PreCheckoutQuery)) {
+	b.preCheckoutQueryHandler = handler
+}
+
+// SetPollHandler sets a function for handling polls.
+func (b *Bot) SetPollHandler(handler func(b *Bot, update Update, poll Poll)) {
+	b.pollHandler = handler
+}
+
+// SetPollAnswerHandler sets a function for handling poll answers.
+func (b *Bot) SetPollAnswerHandler(handler func(b *Bot, update Update, pollAnswer PollAnswer)) {
+	b.pollAnswerHandler = handler
+}
+
+// SetChatMemberUpdateHandler sets a function for handling chat member updates.
+func (b *Bot) SetChatMemberUpdateHandler(handler func(b *Bot, update Update, memberUpdated ChatMemberUpdated, isMine bool)) {
+	b.chatMemberUpdateHandler = handler
+}
+
+// SetChatJoinRequestHandler sets a function for handling chat join requests.
+func (b *Bot) SetChatJoinRequestHandler(handler func(b *Bot, update Update, chatJoinRequest ChatJoinRequest)) {
+	b.chatJoinRequestHandler = handler
 }
 
 // StartWebhookServerAndWait starts a webhook server(and waits forever).
@@ -183,9 +254,12 @@ loop:
 					}
 
 					// if there is a matching command, handle it as a command,
-					if !handleCommand(b, update) {
-						// if it was not handled as a command, handle it normally
-						go b.updateHandler(b, update, nil)
+					if !handleUpdateAsCommand(b, update) {
+						// if it was not handled as a command, handle it by type:
+						if !handleUpdateByType(b, update) {
+							// otherwise, handle it manually
+							go b.updateHandler(b, update, nil)
+						}
 					}
 				}
 			} else {
@@ -200,7 +274,7 @@ loop:
 }
 
 // checks if given update matches any command and handle it (returns true if handled)
-func handleCommand(b *Bot, update Update) bool {
+func handleUpdateAsCommand(b *Bot, update Update) bool {
 	if !update.HasMessage() && !update.HasEditedMessage() {
 		return false
 	}
@@ -231,6 +305,79 @@ func handleCommand(b *Bot, update Update) bool {
 	// if no matching command handler is set, handle with it
 	if b.noMatchingCommandHandler != nil {
 		go b.noMatchingCommandHandler(b, update, command, params)
+
+		return true
+	}
+
+	return false
+}
+
+// checks if given update matches any registered handler by type and handle it (returns true if handled)
+func handleUpdateByType(b *Bot, update Update) bool {
+	// if it was not handled as a command, handle it by type:
+	if b.messageHandler != nil && (update.HasMessage() || update.HasEditedMessage()) {
+		var message Message
+		if update.HasMessage() {
+			message = *update.Message
+		} else if update.HasEditedMessage() {
+			message = *update.EditedMessage
+		}
+
+		go b.messageHandler(b, update, message, update.HasEditedMessage())
+
+		return true
+	} else if b.channelPostHandler != nil && (update.HasChannelPost() || update.HasEditedChannelPost()) {
+		var channelPost Message
+		if update.HasChannelPost() {
+			channelPost = *update.ChannelPost
+		} else if update.HasEditedMessage() {
+			channelPost = *update.EditedChannelPost
+		}
+
+		go b.channelPostHandler(b, update, channelPost, update.HasEditedChannelPost())
+
+		return true
+	} else if b.inlineQueryHandler != nil && update.HasInlineQuery() {
+		go b.inlineQueryHandler(b, update, *update.InlineQuery)
+
+		return true
+	} else if b.chosenInlineResultHandler != nil && update.HasChosenInlineResult() {
+		go b.chosenInlineResultHandler(b, update, *update.ChosenInlineResult)
+
+		return true
+	} else if b.callbackQueryHandler != nil && update.HasCallbackQuery() {
+		go b.callbackQueryHandler(b, update, *update.CallbackQuery)
+
+		return true
+	} else if b.shippingQueryHandler != nil && update.HasShippingQuery() {
+		go b.shippingQueryHandler(b, update, *update.ShippingQuery)
+
+		return true
+	} else if b.preCheckoutQueryHandler != nil && update.HasPreCheckoutQuery() {
+		go b.preCheckoutQueryHandler(b, update, *update.PreCheckoutQuery)
+
+		return true
+	} else if b.pollHandler != nil && update.HasPoll() {
+		go b.pollHandler(b, update, *update.Poll)
+
+		return true
+	} else if b.pollAnswerHandler != nil && update.HasPollAnswer() {
+		go b.pollAnswerHandler(b, update, *update.PollAnswer)
+
+		return true
+	} else if b.chatMemberUpdateHandler != nil && (update.HasMyChatMember() || update.HasChatMember()) {
+		var chatMemberUpdated ChatMemberUpdated
+		if update.HasMyChatMember() {
+			chatMemberUpdated = *update.MyChatMember
+		} else if update.HasChatMember() {
+			chatMemberUpdated = *update.ChatMember
+		}
+
+		go b.chatMemberUpdateHandler(b, update, chatMemberUpdated, update.HasMyChatMember())
+
+		return true
+	} else if b.chatJoinRequestHandler != nil && update.HasChatJoinRequest() {
+		go b.chatJoinRequestHandler(b, update, *update.ChatJoinRequest)
 
 		return true
 	}
