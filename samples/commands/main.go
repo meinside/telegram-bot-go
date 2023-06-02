@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (handle commands),
 //
-// last update: 2023.05.30.
+// last update: 2023.06.02.
 
 package main
 
@@ -15,7 +15,7 @@ import (
 const (
 	apiToken = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
 
-	monitorIntervalSeconds = 1
+	pollingIntervalSeconds = 1
 	typingDelaySeconds     = 1
 
 	verbose = true
@@ -98,9 +98,9 @@ func main() {
 			client.SetNoMatchingCommandHandler(noSuchCommandHandler)
 
 			// wait for new updates
-			client.StartMonitoringUpdates(
+			client.StartPollingUpdates(
 				0,
-				monitorIntervalSeconds,
+				pollingIntervalSeconds,
 				handleUpdate,
 			)
 		} else {
