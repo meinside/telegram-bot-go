@@ -44,7 +44,7 @@ type Bot struct {
 
 	httpClient *http.Client // http client
 
-	quitLoop chan struct{} // quit channel of monitoring loop
+	quitLoop chan struct{} // quit channel of polling loop
 
 	// manual update handler - must be set
 	updateHandler func(b *Bot, update Update, err error)
@@ -220,11 +220,11 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	}
 }
 
-// StartMonitoringUpdates retrieves updates from API server constantly.
+// StartPollingUpdates retrieves updates from API server constantly.
 //
 // If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
-func (b *Bot) StartMonitoringUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error)) {
-	b.verbose("starting monitoring updates (interval seconds: %d) ...", interval)
+func (b *Bot) StartPollingUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error)) {
+	b.verbose("starting polling updates (interval seconds: %d) ...", interval)
 
 	// https://core.telegram.org/bots/api#getupdates
 	options := OptionsGetUpdates{}.
@@ -270,7 +270,12 @@ loop:
 		}
 	}
 
-	b.verbose("stopped monitoring updates")
+	b.verbose("stopped polling updates")
+}
+
+// DEPRECATED: renamed to `StartPollingUpdates`
+func (b *Bot) StartMonitoringUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error)) {
+	b.StartPollingUpdates(updateOffset, interval, updateHandler)
 }
 
 // checks if given update matches any command and handle it (returns true if handled)
@@ -391,11 +396,16 @@ func handleUpdateByType(b *Bot, update Update) bool {
 	return false
 }
 
-// StopMonitoringUpdates stops loop of polling updates
-func (b *Bot) StopMonitoringUpdates() {
-	b.verbose("stopping monitoring updates...")
+// StopPollingUpdates stops loop of polling updates
+func (b *Bot) StopPollingUpdates() {
+	b.verbose("stopping polling updates...")
 
 	b.quitLoop <- struct{}{}
+}
+
+// DEPRECATED: renamed to `StopPollingUpdates`
+func (b *Bot) StopMonitoringUpdates() {
+	b.StopPollingUpdates()
 }
 
 // Get webhook path generated with hash.
