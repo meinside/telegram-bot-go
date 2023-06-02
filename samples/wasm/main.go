@@ -23,7 +23,7 @@ import (
 const (
 	apiToken = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
 
-	monitorIntervalSeconds = 1
+	pollingIntervalSeconds = 1
 	typingDelaySeconds     = 1
 
 	//verbose = false
@@ -196,7 +196,7 @@ func main() {
 			// wait for new updates
 			client.StartMonitoringUpdates(
 				0,
-				monitorIntervalSeconds,
+				pollingIntervalSeconds,
 				handleUpdate,
 			)
 		} else {
