@@ -1,6 +1,6 @@
 # telegram-bot-go/samples/wasm
 
-Go 1.11+
+[Wasm](https://webassembly.org/) sample application for telegram-bot-go.
 
 ## How to build
 

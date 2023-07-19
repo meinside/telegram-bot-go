@@ -3,7 +3,7 @@
     <title>telegram-bot-go/samples/wasm</title>
 
     <!-- BEGIN: for WASM -->
-    <script src="wasm_exec.js"></script>  <!-- copied from $GOROOT/misc/wasm/wasm_exec.js (go 1.19) -->
+    <script src="wasm_exec.js"></script>  <!-- copied with `cp $(go env GOROOT)/misc/wasm/wasm_exec.js ./` (go 1.20.6) -->
     <script type="text/javascript"> // copied from https://github.com/mattn/golang-wasm-example/blob/master/index.html
       function fetchAndInstantiate(url, importObject) {
         return fetch(url).then(response =>
