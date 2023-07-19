@@ -1,12 +1,13 @@
+//go:build js && wasm
+
 // sample code for telegram-bot-go (get updates),
 //
 // WASM version
 //
 // created on: 2018.11.19.
-//
-// +build: js,wasm
 
-// $ GOOS=js GOARCH=wasm vi __FILENAME__
+// NOTE: open related files with GOOS and GOARCH environment variables like:
+//    `$ GOOS=js GOARCH=wasm nvim __FILENAME__`
 
 package main
 
@@ -135,7 +136,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 					SetReplyMarkup(bot.ReplyKeyboardMarkup{        // show keyboards
 						ResizeKeyboard: true, // compact keyboard size
 						Keyboard: [][]bot.KeyboardButton{
-							[]bot.KeyboardButton{
+							{
 								bot.KeyboardButton{
 									Text:           "Send contact",
 									RequestContact: true,
