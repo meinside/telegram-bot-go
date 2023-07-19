@@ -4,23 +4,14 @@
 
     <!-- BEGIN: for WASM -->
     <script src="wasm_exec.js"></script>  <!-- copied with `cp $(go env GOROOT)/misc/wasm/wasm_exec.js ./` (go 1.20.6) -->
-    <script type="text/javascript"> // copied from https://github.com/mattn/golang-wasm-example/blob/master/index.html
-      function fetchAndInstantiate(url, importObject) {
-        return fetch(url).then(response =>
-          response.arrayBuffer()
-        ).then(bytes =>
-          WebAssembly.instantiate(bytes, importObject)
-        ).then(results =>
-          results.instance
-        );
-      }
-      var go = new Go();
-      var mod = fetchAndInstantiate("/telegram.wasm", go.importObject);
-      window.onload = function() {
-        mod.then(function(instance) {
-          go.run(instance);
-        });
-      };
+    <script type="text/javascript">
+      const go = new Go();
+      WebAssembly.instantiateStreaming(fetch("/telegram.wasm"), go.importObject).then((result) => {
+        go.run(result.instance);
+
+        // declared(exposed) in `main.go`
+        runBot();
+      });
     </script>
     <!-- END: for WASM -->
 
