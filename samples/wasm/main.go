@@ -38,7 +38,7 @@ func init() {
 	_wasmHelper = wh.New()
 	_wasmHelper.SetVerbose(verbose)
 
-	_content = _wasmHelper.Call("document.getElementById", "content")
+	_content, _ = _wasmHelper.Call("document.getElementById", "content")
 }
 
 // update handler function
@@ -160,7 +160,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 	} else {
 		log.Printf(
 			"*** error while receiving update (%s)",
-			err.Error(),
+			err,
 		)
 	}
 }
@@ -239,21 +239,14 @@ func runBot(this js.Value, args []js.Value) any {
 
 // append a child div to a parent
 func appendDiv(class, content, style string, parent js.Value) {
-	item := _wasmHelper.Call("document.createElement", "div")
-	_wasmHelper.SetOn(
-		item,
-		"class",
-		class,
-	)
-	_wasmHelper.SetOn(
-		item,
-		"style",
-		style,
-	)
-	_wasmHelper.SetOn(
-		item,
-		"innerHTML",
-		content,
-	)
-	_wasmHelper.CallOn(parent, "appendChild", item)
+	if div, err := _wasmHelper.Call("document.createElement", "div"); err == nil {
+		_ = _wasmHelper.SetOn(div, "class", class)
+		_ = _wasmHelper.SetOn(div, "style", style)
+		_ = _wasmHelper.SetOn(div, "innerHTML", content)
+		if _, err := _wasmHelper.CallOn(parent, "appendChild", div); err != nil {
+			log.Printf("failed to append div: %s", err)
+		}
+	} else {
+		log.Printf("failed to create div: %s", err)
+	}
 }
