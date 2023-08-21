@@ -1,12 +1,13 @@
+//go:build js && wasm
+
 // sample code for telegram-bot-go (get updates),
 //
-// WASM version
+// Wasm version
 //
 // created on: 2018.11.19.
-//
-// +build: js,wasm
 
-// $ GOOS=js GOARCH=wasm vi __FILENAME__
+// NOTE: open related files with GOOS and GOARCH environment variables like:
+//    `$ GOOS=js GOARCH=wasm nvim __FILENAME__`
 
 package main
 
@@ -37,7 +38,7 @@ func init() {
 	_wasmHelper = wh.New()
 	_wasmHelper.SetVerbose(verbose)
 
-	_content = _wasmHelper.Call("document.getElementById", "content")
+	_content, _ = _wasmHelper.Call("document.getElementById", "content")
 }
 
 // update handler function
@@ -120,10 +121,12 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			}
 
 			// append to the html,
-			element := _wasmHelper.Call("document.createElement", "div")
-			_wasmHelper.SetOn(element, "style", "margin: 5px")
-			_wasmHelper.SetOn(element, "innerHTML", message)
-			_wasmHelper.CallOn(_content, "appendChild", element)
+			appendDiv(
+				"message",
+				message,
+				"margin: 5px;",
+				_content,
+			)
 
 			// and reply to the message
 			if sent := b.SendMessage(
@@ -135,7 +138,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 					SetReplyMarkup(bot.ReplyKeyboardMarkup{        // show keyboards
 						ResizeKeyboard: true, // compact keyboard size
 						Keyboard: [][]bot.KeyboardButton{
-							[]bot.KeyboardButton{
+							{
 								bot.KeyboardButton{
 									Text:           "Send contact",
 									RequestContact: true,
@@ -157,12 +160,29 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 	} else {
 		log.Printf(
 			"*** error while receiving update (%s)",
-			err.Error(),
+			err,
 		)
 	}
 }
 
 func main() {
+	// `runBot` will be exposed to js
+	_wasmHelper.RegisterCallbacks(map[string]wh.WasmCallback{
+		"runBot": runBot,
+	})
+
+	_wasmHelper.Wait() // busy-wait
+}
+
+// this will be called by js
+func runBot(this js.Value, args []js.Value) any {
+	appendDiv(
+		"start",
+		"Launching bot...",
+		"margin: 10px; color: #000000;",
+		_content,
+	)
+
 	client := bot.NewClient(apiToken)
 	client.Verbose = verbose
 
@@ -172,21 +192,15 @@ func main() {
 		botName := me.Result.FirstName
 
 		// set bot info on html,
-		info := _wasmHelper.Call("document.createElement", "info")
-		_wasmHelper.SetOn(
-			info,
-			"style",
-			"margin: 10px; color: #0000FF; font-weight: bold;",
-		)
-		_wasmHelper.SetOn(
-			info,
-			"innerHTML",
+		appendDiv(
+			"info",
 			fmt.Sprintf("Connected to bot: <a href='https://telegram.me/%s' target='_blank'>@%s</a> (%s)", botID, botID, botName),
+			"margin: 10px; color: #0000FF; font-weight: bold;",
+			_content,
 		)
-		_wasmHelper.CallOn(_content, "appendChild", info)
 
 		log.Printf(
-			"Running bot: @%s (%s)",
+			"Launched bot: @%s (%s)",
 			botID,
 			botName,
 		)
@@ -200,9 +214,39 @@ func main() {
 				handleUpdate,
 			)
 		} else {
+			appendDiv(
+				"error",
+				*unhooked.Description,
+				"margin: 10px; color: #FF0000;",
+				_content,
+			)
+
 			panic("failed to delete webhook")
 		}
 	} else {
+		appendDiv(
+			"error",
+			*me.Description,
+			"margin: 10px; color: #FF0000;",
+			_content,
+		)
+
 		panic("failed to get info of the bot")
+	}
+
+	return nil
+}
+
+// append a child div to a parent
+func appendDiv(class, content, style string, parent js.Value) {
+	if div, err := _wasmHelper.Call("document.createElement", "div"); err == nil {
+		_ = _wasmHelper.SetOn(div, "class", class)
+		_ = _wasmHelper.SetOn(div, "style", style)
+		_ = _wasmHelper.SetOn(div, "innerHTML", content)
+		if _, err := _wasmHelper.CallOn(parent, "appendChild", div); err != nil {
+			log.Printf("failed to append div: %s", err)
+		}
+	} else {
+		log.Printf("failed to create div: %s", err)
 	}
 }
