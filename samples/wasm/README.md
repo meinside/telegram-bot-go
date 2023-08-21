@@ -1,6 +1,8 @@
 # telegram-bot-go/samples/wasm
 
-Go 1.11+
+**Note**: currently not working on browsers (with error: `dial tcp: lookup api.telegram.org: Protocol not available`)
+
+[Wasm](https://webassembly.org/) sample application for telegram-bot-go.
 
 ## How to build
 
