@@ -1483,6 +1483,15 @@ func (b *Bot) UnhideGeneralForumTopic(chatID ChatID) (result APIResponse[bool]) 
 	return b.requestBool("unhideGeneralForumTopic", options)
 }
 
+// https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages
+func (b *Bot) UnpinAllGeneralForumTopicMessages(chatID ChatID) (result APIResponse[bool]) {
+	options := map[string]any{
+		"chat_id": chatID,
+	}
+
+	return b.requestBool("unpinAllGeneralForumTopicMessages", options)
+}
+
 // GetForumTopicIconStickers fetches forum topic icon stickers.
 //
 // https://core.telegram.org/bots/api#getforumtopiciconstickers

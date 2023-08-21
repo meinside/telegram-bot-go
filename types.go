@@ -261,6 +261,7 @@ type Chat struct {
 	Photo                              *ChatPhoto       `json:"photo,omitempty"`
 	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`
 	EmojiStatusCustomEmojiID           *string          `json:"emoji_status_custom_emoji_id,omitempty"`
+	EmojiStatusExpirationDate          int              `json:"emoji_status_expiration_date,omitempty"`
 	Bio                                *string          `json:"bio,omitempty"`
 	HasPrivateForwards                 bool             `json:"has_private_forwards,omitempty"`
 	HasRestrictedVoiceAndVideoMessages bool             `json:"has_restricted_voice_and_video_messages,omitempty"`
@@ -449,6 +450,13 @@ type InputSticker struct {
 	Keywords     []string      `json:"keywords,omitempty"`
 }
 
+// Story is a struct for a forwarded story of a message
+//
+// https://core.telegram.org/bots/api#story
+type Story struct {
+	// - currently holds no information -
+}
+
 // Video is a struct for a video file
 //
 // https://core.telegram.org/bots/api#video
@@ -572,7 +580,8 @@ type PollOption struct {
 // https://core.telegram.org/bots/api#pollanswer
 type PollAnswer struct {
 	PollID    string `json:"poll_id"`
-	User      User   `json:"user"`
+	VoterChat *Chat  `json:"voter_chat,omitempty"`
+	User      *User  `json:"user,omitempty"`
 	OptionIDs []int  `json:"option_ids"`
 }
 
@@ -1176,6 +1185,7 @@ type Message struct {
 	Document                      *Document                      `json:"document,omitempty"`
 	Photo                         []PhotoSize                    `json:"photo,omitempty"`
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
+	Story                         *Story                         `json:"story,omitempty"`
 	Video                         *Video                         `json:"video,omitempty"`
 	VideoNote                     *VideoNote                     `json:"video_note,omitempty"`
 	Voice                         *Voice                         `json:"voice,omitempty"`

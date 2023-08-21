@@ -484,7 +484,7 @@ func (u *Update) GetFrom() *User {
 	} else if u.HasPoll() {
 		return nil
 	} else if u.HasPollAnswer() {
-		return &u.PollAnswer.User
+		return u.PollAnswer.User
 	} else if u.HasMyChatMember() {
 		return &u.MyChatMember.From
 	} else if u.HasChatMember() {
