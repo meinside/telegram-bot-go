@@ -6,13 +6,7 @@
 
 ## How to build
 
-Get wasm helper library,
-
-```bash
-$ go get -u github.com/meinside/wasm-helper-go
-```
-
-then edit **apiToken** value in `main.go` to yours, and build with following command:
+Edit **apiToken** value in `main.go` to yours, and build with following command:
 
 ```bash
 $ GOOS=js GOARCH=wasm go build -o telegram.wasm main.go
