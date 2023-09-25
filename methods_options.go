@@ -1438,6 +1438,24 @@ func (o OptionsPromoteChatMember) SetCanDeleteMessages(can bool) OptionsPromoteC
 	return o
 }
 
+// SetCanPostStories sets the `can_post_stories` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanPostStories(can bool) OptionsPromoteChatMember {
+	o["can_post_stories"] = can
+	return o
+}
+
+// SetCanEditStories sets the `can_edit_stories` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanEditStories(can bool) OptionsPromoteChatMember {
+	o["can_edit_stories"] = can
+	return o
+}
+
+// SetCanDeleteStories sets the `can_delete_stories` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanDeleteStories(can bool) OptionsPromoteChatMember {
+	o["can_delete_stories"] = can
+	return o
+}
+
 // SetCanManageVideoChats sets the `can_manage_video_chats` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanManageVideoChats(can bool) OptionsPromoteChatMember {
 	o["can_manage_video_chats"] = can
