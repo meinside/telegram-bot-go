@@ -657,7 +657,9 @@ type ChatShared struct {
 //
 // https://core.telegram.org/bots/api#writeaccessallowed
 type WriteAccessAllowed struct {
-	WebAppName *string `json:"web_app_name,omitempty"`
+	FromRequest        bool    `json:"from_request,omitempty"`
+	WebAppName         *string `json:"web_app_name,omitempty"`
+	FromAttachmentMenu bool    `json:"from_attachment_menu,omitempty"`
 }
 
 // VideoChatStarted is a struct for service message: video chat started
@@ -896,6 +898,9 @@ type ChatAdministratorRights struct {
 	CanPostMessages     bool `json:"can_post_messages,omitempty"`
 	CanEditMessages     bool `json:"can_edit_messages,omitempty"`
 	CanPinMessages      bool `json:"can_pin_messages,omitempty"`
+	CanPostStories      bool `json:"can_post_stories,omitempty"`
+	CanEditStories      bool `json:"can_edit_stories,omitempty"`
+	CanDeleteStories    bool `json:"can_delete_stories,omitempty"`
 	CanManageTopics     bool `json:"can_manage_topics,omitempty"`
 }
 
@@ -989,6 +994,9 @@ type ChatMemberAdministrator struct {
 	CanPostMessages     bool    `json:"can_post_messages,omitempty"`
 	CanEditMessages     bool    `json:"can_edit_messages,omitempty"`
 	CanPinMessages      bool    `json:"can_pin_messages,omitempty"`
+	CanPostStories      bool    `json:"can_post_stories,omitempty"`
+	CanEditStories      bool    `json:"can_edit_stories,omitempty"`
+	CanDeleteStories    bool    `json:"can_delete_stories,omitempty"`
 	CanManageTopics     bool    `json:"can_manage_topics,omitempty"`
 	CustomTitle         *string `json:"custom_title,omitempty"`
 }
