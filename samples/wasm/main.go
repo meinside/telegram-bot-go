@@ -176,63 +176,65 @@ func main() {
 
 // this will be called by js
 func runBot(this js.Value, args []js.Value) any {
-	appendDiv(
-		"start",
-		"Launching bot...",
-		"margin: 10px; color: #000000;",
-		_content,
-	)
-
-	client := bot.NewClient(apiToken)
-	client.Verbose = verbose
-
-	// get info about this bot
-	if me := client.GetMe(); me.Ok {
-		botID := *me.Result.Username
-		botName := me.Result.FirstName
-
-		// set bot info on html,
+	go func() {
 		appendDiv(
-			"info",
-			fmt.Sprintf("Connected to bot: <a href='https://telegram.me/%s' target='_blank'>@%s</a> (%s)", botID, botID, botName),
-			"margin: 10px; color: #0000FF; font-weight: bold;",
+			"start",
+			"Launching bot...",
+			"margin: 10px; color: #000000;",
 			_content,
 		)
 
-		log.Printf(
-			"Launched bot: @%s (%s)",
-			botID,
-			botName,
-		)
+		client := bot.NewClient(apiToken)
+		client.Verbose = verbose
 
-		// delete webhook (getting updates will not work when wehbook is set up)
-		if unhooked := client.DeleteWebhook(true); unhooked.Ok {
-			// wait for new updates
-			client.StartMonitoringUpdates(
-				0,
-				pollingIntervalSeconds,
-				handleUpdate,
+		// get info about this bot
+		if me := client.GetMe(); me.Ok {
+			botID := *me.Result.Username
+			botName := me.Result.FirstName
+
+			// set bot info on html,
+			appendDiv(
+				"info",
+				fmt.Sprintf("Connected to bot: <a href='https://telegram.me/%s' target='_blank'>@%s</a> (%s)", botID, botID, botName),
+				"margin: 10px; color: #0000FF; font-weight: bold;",
+				_content,
 			)
+
+			log.Printf(
+				"Launched bot: @%s (%s)",
+				botID,
+				botName,
+			)
+
+			// delete webhook (getting updates will not work when wehbook is set up)
+			if unhooked := client.DeleteWebhook(true); unhooked.Ok {
+				// wait for new updates
+				client.StartMonitoringUpdates(
+					0,
+					pollingIntervalSeconds,
+					handleUpdate,
+				)
+			} else {
+				appendDiv(
+					"error",
+					*unhooked.Description,
+					"margin: 10px; color: #FF0000;",
+					_content,
+				)
+
+				panic("failed to delete webhook")
+			}
 		} else {
 			appendDiv(
 				"error",
-				*unhooked.Description,
+				*me.Description,
 				"margin: 10px; color: #FF0000;",
 				_content,
 			)
 
-			panic("failed to delete webhook")
+			panic("failed to get info of the bot")
 		}
-	} else {
-		appendDiv(
-			"error",
-			*me.Description,
-			"margin: 10px; color: #FF0000;",
-			_content,
-		)
-
-		panic("failed to get info of the bot")
-	}
+	}()
 
 	return nil
 }

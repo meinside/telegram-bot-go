@@ -9,8 +9,7 @@
       WebAssembly.instantiateStreaming(fetch("/telegram.wasm"), go.importObject).then((result) => {
         go.run(result.instance);
 
-        // declared(exposed) in `main.go`
-        runBot();
+        runBot(); // declared(exposed) in `main.go`
       });
     </script>
     <!-- END: for WASM -->
