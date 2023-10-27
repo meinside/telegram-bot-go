@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -71,11 +72,22 @@ type Bot struct {
 
 // NewClient gets a new bot API client with given token string.
 func NewClient(token string) *Bot {
-	return &Bot{
+	client := Bot{
 		token:       token,
 		tokenHashed: fmt.Sprintf("%x", md5.Sum([]byte(token))),
 
-		httpClient: &http.Client{
+		httpClient: nil,
+
+		quitLoop: make(chan struct{}, 1),
+	}
+
+	// FIXME: (wasm) with DialContext, HTTP requests fail with "dial tcp: lookup api.telegram.org: Protocol not available"
+	if runtime.GOARCH == "wasm" {
+		client.httpClient = &http.Client{
+			Timeout: 10 * time.Second,
+		}
+	} else {
+		client.httpClient = &http.Client{
 			Transport: &http.Transport{
 				DialContext: (&net.Dialer{
 					Timeout:   10 * time.Second,
@@ -86,10 +98,10 @@ func NewClient(token string) *Bot {
 				ResponseHeaderTimeout: 10 * time.Second,
 				ExpectContinueTimeout: 1 * time.Second,
 			},
-		},
-
-		quitLoop: make(chan struct{}, 1),
+		}
 	}
+
+	return &client
 }
 
 // GenCertAndKey generates a certificate and a private key file with given domain.
