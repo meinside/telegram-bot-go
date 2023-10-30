@@ -7,7 +7,7 @@
 // created on: 2018.11.19.
 
 // NOTE: open related files with GOOS and GOARCH environment variables like:
-//    `$ GOOS=js GOARCH=wasm nvim __FILENAME__`
+//    `$ GOOS=js GOARCH=wasm vi __FILENAME__`
 
 package main
 
@@ -22,8 +22,6 @@ import (
 )
 
 const (
-	apiToken = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
-
 	pollingIntervalSeconds = 1
 	typingDelaySeconds     = 1
 
@@ -174,8 +172,10 @@ func main() {
 	_wasmHelper.Wait() // busy-wait
 }
 
-// this will be called by js
+// this function will be called from `index.html`
 func runBot(this js.Value, args []js.Value) any {
+	apiToken := args[0].String()
+
 	go func() {
 		appendDiv(
 			"start",
