@@ -5,12 +5,14 @@
     <!-- BEGIN: for WASM -->
     <script src="wasm_exec.js"></script>  <!-- copied with `cp $(go env GOROOT)/misc/wasm/wasm_exec.js ./` (go 1.21.0) -->
     <script type="text/javascript">
+      // TODO: edit this token value
+      const token = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST";
+
       const go = new Go();
       WebAssembly.instantiateStreaming(fetch("/telegram.wasm"), go.importObject).then((result) => {
         go.run(result.instance);
 
-        // declared(exposed) in `main.go`
-        runBot();
+        runBot(token); // declared(exposed) in `main.go`
       });
     </script>
     <!-- END: for WASM -->

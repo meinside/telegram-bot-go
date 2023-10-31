@@ -6,11 +6,15 @@
 
 ## How to build
 
-Edit **apiToken** value in `main.go` to yours, and build with following command:
+Build with following command:
 
 ```bash
 $ GOOS=js GOARCH=wasm go build -o telegram.wasm main.go
 ```
+
+## Configure
+
+Edit `token` value in `index.html` file. Yours can be obtained from the [@BotFather](https://telegram.me/BotFather) bot.
 
 ## Run
 
