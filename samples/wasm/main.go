@@ -167,7 +167,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 
 func main() {
 	// `runBot` will be exposed to js
-	_wasmHelper.RegisterCallbacks(map[string]wh.WasmCallback{
+	_wasmHelper.RegisterFunctions(map[string]wh.WasmFunction{
 		"runBot": runBot,
 	})
 
