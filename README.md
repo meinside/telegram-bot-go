@@ -14,6 +14,24 @@ $ go get -u github.com/meinside/telegram-bot-go
 
 See codes in [samples/](https://github.com/meinside/telegram-bot-go/tree/master/samples).
 
+## Test
+
+With following environment variables:
+
+```bash
+$ export TOKEN="01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
+$ export CHAT_ID="-123456789"
+
+# for verbose output messages
+$ export VERBOSE=true
+```
+
+run tests with:
+
+```bash
+$ go test
+```
+
 ## Not implemented yet
 
 - [ ] [Telegram Passport](https://core.telegram.org/bots/api#telegram-passport)

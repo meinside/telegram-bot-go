@@ -1,4 +1,4 @@
-github.com/meinside/telegram-bot-go v0.9.9 h1:1kNAgzoVK0l2heDUl623+Oa2XfV3V4lmETe+pWo0reQ=
-github.com/meinside/telegram-bot-go v0.9.9/go.mod h1:RzR/y1i7pjalRtwD1vBg8wtkqWR+TI6wwnkTpOy7UJM=
-github.com/meinside/wasm-helper-go v0.3.0 h1:SgcL6xQnW8BxGotQX2hXeOQb1flcvvV5BuQmbT7Xels=
-github.com/meinside/wasm-helper-go v0.3.0/go.mod h1:r5Y7QM648vehMuysPGeIzGk8tgp41dMN9RJwET2u3hg=
+github.com/meinside/telegram-bot-go v0.9.11 h1:mept3d60gBpALtFDGDMkS9gfQJsmnM+HjJZnWyYUW0E=
+github.com/meinside/telegram-bot-go v0.9.11/go.mod h1:i9gGJrrfhdAIElC/HCUprMmccGjMKPVq52av4n54Y2s=
+github.com/meinside/wasm-helper-go v0.3.2 h1:TN7yws7Cr/cfvuEf5XnRZNr9dYmTj1NsHa++Z2NyAk4=
+github.com/meinside/wasm-helper-go v0.3.2/go.mod h1:+thzjZBs0c6fmJcvB8seB6ppD0Rr9Z9b05H2hHxPzkA=
