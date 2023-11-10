@@ -50,7 +50,7 @@ type Bot struct {
 	// manual update handler - must be set
 	updateHandler func(b *Bot, update Update, err error)
 
-	// update handlers by content type (if not set, update will be passed to `upateHandler`)
+	// update handlers by content type (if not set, update will be passed to `updateHandler`)
 	messageHandler            func(b *Bot, update Update, message Message, edited bool)
 	channelPostHandler        func(b *Bot, update Update, channelPost Message, edited bool)
 	inlineQueryHandler        func(b *Bot, update Update, inlineQuery InlineQuery)
@@ -232,9 +232,9 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 	}
 }
 
-// StartPollingUpdates retrieves updates from API server constantly.
+// StartPollingUpdates retrieves updates from API server constantly, synchronously.
 //
-// If webhook is registered, it may not work properly. So make sure webhook is deleted, or not registered.
+// NOTE: Make sure webhook is deleted, or not registered before polling.
 func (b *Bot) StartPollingUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error)) {
 	b.verbose("starting polling updates (interval seconds: %d) ...", interval)
 
