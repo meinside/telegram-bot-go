@@ -1,4 +1,4 @@
-// methods_test.go
+// bot_test.go
 //
 // created on: 2023.11.10.
 
@@ -6,11 +6,44 @@ package telegrambot
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"testing"
 	"time"
 )
+
+func TestPollingUpdates(t *testing.T) {
+	_token := os.Getenv("TOKEN")
+	_verbose := os.Getenv("VERBOSE")
+
+	client := NewClient(_token)
+	client.Verbose = _verbose == "true"
+
+	if len(_token) <= 0 {
+		t.Errorf("environment variable `TOKEN` is needed")
+	}
+
+	slog.Info("testing polling updates...")
+
+	if deleted := client.DeleteWebhook(true); !deleted.Ok {
+		t.Errorf("failed to delete webhook before testing polling updates: %s", *deleted.Description)
+	} else {
+		go func() {
+			time.Sleep(10 * time.Second) // sleep for a while,
+
+			client.StopPollingUpdates() // stop polling
+		}()
+
+		// polling is synchronous
+		client.StartPollingUpdates(0, 1, func(b *Bot, update Update, err error) {
+			if err != nil {
+				t.Errorf("error while polling updates: %s", err)
+			}
+		})
+
+		slog.Info("stopped polling updates")
+	}
+}
 
 func TestMethods(t *testing.T) {
 	_token := os.Getenv("TOKEN")
@@ -24,7 +57,7 @@ func TestMethods(t *testing.T) {
 		t.Errorf("environment variables `TOKEN` and `CHAT_ID` are needed")
 	}
 
-	log.Printf("testing API method functions...")
+	slog.Info("testing API method functions...")
 
 	////////////////////////////////
 	// (bot info)
@@ -137,7 +170,7 @@ func TestMethods(t *testing.T) {
 			// TODO: DeclineChatJoinRequest
 			// TODO: GetMyCommands
 			// SetMyName
-			if name := client.SetMyName("telegram-bot-go test bot", OptionsSetMyName{}); !name.Ok {
+			if name := client.SetMyName("telegram api test bot", OptionsSetMyName{}); !name.Ok {
 				t.Errorf("failed to set my name: %s", *name.Description)
 			}
 			// GetMyName
@@ -282,38 +315,5 @@ func TestMethods(t *testing.T) {
 			//
 			// TODO: AnswerWebAppQuery
 		}
-	}
-}
-
-func TestPollingUpdates(t *testing.T) {
-	_token := os.Getenv("TOKEN")
-	_verbose := os.Getenv("VERBOSE")
-
-	client := NewClient(_token)
-	client.Verbose = _verbose == "true"
-
-	if len(_token) <= 0 {
-		t.Errorf("environment variable `TOKEN` is needed")
-	}
-
-	log.Printf("testing polling updates...")
-
-	if deleted := client.DeleteWebhook(true); !deleted.Ok {
-		t.Errorf("failed to delete webhook before testing polling updates: %s", *deleted.Description)
-	} else {
-		go func() {
-			time.Sleep(10 * time.Second) // sleep for a while,
-
-			client.StopPollingUpdates() // stop polling
-		}()
-
-		// polling is synchronous
-		client.StartPollingUpdates(0, 1, func(b *Bot, update Update, err error) {
-			if err != nil {
-				t.Errorf("error while polling updates: %s", err)
-			}
-		})
-
-		log.Printf("stopped polling updates")
 	}
 }
