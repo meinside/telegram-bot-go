@@ -69,7 +69,9 @@ func send(b *bot.Bot, chatID, messageID int64, message string) {
 		message,
 		// option
 		bot.OptionsSendMessage{}.
-			SetReplyToMessageID(messageID), // show original message
+			SetReplyParameters(bot.ReplyParameters{
+				MessageID: messageID,
+			}), // show original message
 	); !sent.Ok {
 		log.Printf(
 			"*** failed to send message: %s",

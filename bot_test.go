@@ -39,7 +39,7 @@ func TestPollingUpdates(t *testing.T) {
 			if err != nil {
 				t.Errorf("error while polling updates: %s", err)
 			}
-		})
+		}, []AllowedUpdate{AllowMessage})
 
 		slog.Info("stopped polling updates")
 	}
@@ -110,6 +110,8 @@ func TestMethods(t *testing.T) {
 					t.Errorf("failed to forward message: %s", *forwarded.Description)
 				}
 			}
+			// TODO: CopyMessages
+			// TODO: ForwardMessages
 			// SendPhoto
 			if photo := client.SendPhoto(_chatID, InputFileFromFilepath("./samples/_files/gopher.png"), OptionsSendPhoto{}); !photo.Ok {
 				t.Errorf("failed to send photo: %s", *photo.Description)
@@ -133,6 +135,7 @@ func TestMethods(t *testing.T) {
 					t.Errorf("failed to delete message: %s", *deleted.Description)
 				}
 			}
+			// TODO: DeleteMessages
 			// TODO: SendSticker
 			// TODO: SendVideo
 			// TODO: SendAnimation
@@ -195,6 +198,7 @@ func TestMethods(t *testing.T) {
 			if desc := client.GetMyShortDescription(OptionsGetMyShortDescription{}); !desc.Ok {
 				t.Errorf("failed to get my short description: %s", *desc.Description)
 			}
+			// TODO: GetUserChatBoosts
 			// TODO: SetMyCommands
 			// TODO: DeleteMyCommands
 			// TODO: SetChatMenuButton
@@ -309,6 +313,11 @@ func TestMethods(t *testing.T) {
 			// TODO: SendGame
 			// TODO: SetGameScore
 			// TODO: GetGameHighScores
+
+			////////////////////////////////
+			// (reaction)
+			//
+			// TODO: SetMessageReaction
 
 			////////////////////////////////
 			// (webapp)

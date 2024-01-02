@@ -71,8 +71,10 @@ func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
 				message,
 				// option
 				bot.OptionsSendMessage{}.
-					SetReplyToMessageID(webhook.Message.MessageID). // show original message
-					SetReplyMarkup(bot.ReplyKeyboardMarkup{         // show keyboards
+					SetReplyParameters(bot.ReplyParameters{
+						MessageID: webhook.Message.MessageID,
+					}).                                     // show original message
+					SetReplyMarkup(bot.ReplyKeyboardMarkup{ // show keyboards
 						Keyboard: [][]bot.KeyboardButton{
 							{
 								{
