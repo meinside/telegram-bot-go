@@ -157,6 +157,22 @@ func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int64, options
 	return b.requestMessage("forwardMessage", options)
 }
 
+// ForwardMessages forwards messages.
+//
+// https://core.telegram.org/bots/api#forwardmessages
+func (b *Bot) ForwardMessages(chatID, fromChatID ChatID, messageIDs []int64, options OptionsForwardMessage) (result APIResponse[[]MessageID]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["from_chat_id"] = fromChatID
+	options["message_ids"] = messageIDs
+
+	return b.requestMessageIDs("forwardMessages", options)
+}
+
 // CopyMessage copies a message.
 //
 // https://core.telegram.org/bots/api#copymessage
@@ -171,6 +187,22 @@ func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int64, options Op
 	options["message_id"] = messageID
 
 	return b.requestMessageID("copyMessage", options)
+}
+
+// CopyMessages copies messages.
+//
+// https://core.telegram.org/bots/api#copymessages
+func (b *Bot) CopyMessages(chatID, fromChatID ChatID, messageIDs []int64, options OptionsCopyMessages) (result APIResponse[[]MessageID]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["from_chat_id"] = fromChatID
+	options["message_ids"] = messageIDs
+
+	return b.requestMessageIDs("copyMessages", options)
 }
 
 // SendPhoto sends a photo.
@@ -597,6 +629,21 @@ func (b *Bot) SendChatAction(chatID ChatID, action ChatAction, options OptionsSe
 	options["action"] = action
 
 	return b.requestBool("sendChatAction", options)
+}
+
+// SetMessageReaction sets message reaction.
+//
+// https://core.telegram.org/bots/api#setmessagereaction
+func (b *Bot) SetMessageReaction(chatID ChatID, messageID int64, options OptionsSetMessageReaction) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["message_id"] = messageID
+
+	return b.requestBool("setMessageReaction", options)
 }
 
 // GetUserProfilePhotos gets user profile photos.
@@ -1061,6 +1108,19 @@ func (b *Bot) GetMyShortDescription(options OptionsGetMyShortDescription) (resul
 	return b.requestBotShortDescription("getMyShortDescription", options)
 }
 
+// GetUserChatBoosts gets boosts of a user.
+//
+// https://core.telegram.org/bots/api#getuserchatboosts
+func (b *Bot) GetUserChatBoosts(chatID ChatID, userID int64) (result APIResponse[UserChatBoosts]) {
+	// essential params
+	options := map[string]any{
+		"chat_id": chatID,
+		"user_id": userID,
+	}
+
+	return b.requestUserChatBoosts("getUserChatBoosts", options)
+}
+
 // SetMyCommands sets commands of this bot.
 //
 // https://core.telegram.org/bots/api#setmycommands
@@ -1189,6 +1249,16 @@ func (b *Bot) DeleteMessage(chatID ChatID, messageID int64) (result APIResponse[
 	return b.requestBool("deleteMessage", map[string]any{
 		"chat_id":    chatID,
 		"message_id": messageID,
+	})
+}
+
+// DeleteMessages deletes messages.
+//
+// https://core.telegram.org/bots/api#deletemessages
+func (b *Bot) DeleteMessages(chatID ChatID, messageIDs []int64) (result APIResponse[bool]) {
+	return b.requestBool("deleteMessages", map[string]any{
+		"chat_id":     chatID,
+		"message_ids": messageIDs,
 	})
 }
 
@@ -1855,6 +1925,27 @@ func (b *Bot) requestMessageID(method string, params map[string]any) (result API
 	return APIResponse[MessageID]{Ok: false, Description: &errStr}
 }
 
+// Send request for APIResponse[[]MessageID] and fetch its result.
+func (b *Bot) requestMessageIDs(method string, params map[string]any) (result APIResponse[[]MessageID]) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponse[[]MessageID]
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponse[[]MessageID]{Ok: false, Description: &errStr}
+}
+
 // Send request for APIResponse[UserProfilePhotos] and fetch its result.
 func (b *Bot) requestUserProfilePhotos(method string, params map[string]any) (result APIResponse[UserProfilePhotos]) {
 	var errStr string
@@ -2331,6 +2422,27 @@ func (b *Bot) requestForumTopic(method string, params map[string]any) (result AP
 	b.error(errStr)
 
 	return APIResponse[ForumTopic]{Ok: false, Description: &errStr}
+}
+
+// Send request for APIResponse[UserChatBoosts] and fetch its result.
+func (b *Bot) requestUserChatBoosts(method string, params map[string]any) (result APIResponse[UserChatBoosts]) {
+	var errStr string
+
+	if bytes, err := b.request(method, params); err == nil {
+		var jsonResponse APIResponse[UserChatBoosts]
+		err = json.Unmarshal(bytes, &jsonResponse)
+		if err == nil {
+			return jsonResponse
+		}
+
+		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+	} else {
+		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+	}
+
+	b.error(errStr)
+
+	return APIResponse[UserChatBoosts]{Ok: false, Description: &errStr}
 }
 
 // Handle Webhook request.

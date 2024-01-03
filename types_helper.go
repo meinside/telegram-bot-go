@@ -552,12 +552,16 @@ func (m Message) String() string {
 
 // HasForwardFrom checks if Message has Forward.
 func (m *Message) HasForwardFrom() bool {
-	return m.ForwardFrom != nil && m.ForwardDate > 0
+	return m.ForwardOrigin != nil &&
+		(m.ForwardOrigin.SenderUser != nil || m.ForwardOrigin.SenderUserName != nil) &&
+		m.ForwardOrigin.Date > 0
 }
 
 // HasForwardFromChat checks if Message has Forward from chat.
 func (m *Message) HasForwardFromChat() bool {
-	return m.ForwardFromChat != nil && m.ForwardDate > 0
+	return m.ForwardOrigin != nil &&
+		m.ForwardOrigin.SenderChat != nil &&
+		m.ForwardOrigin.Date > 0
 }
 
 // HasReplyTo checks if Message has ReplyTo.
@@ -711,6 +715,28 @@ func (m *Message) HasPinnedMessage() bool {
 }
 
 ////////////////////////////////
+// Helper functions for MaybeInaccessibleMessage
+//
+
+// IsInaccessible returns true if it is inaccessible
+func (m *MaybeInaccessibleMessage) IsInaccessible() bool {
+	return m.Date == 0
+}
+
+// AsMessage returns its value as `Message` or `InaccessibleMessage`
+func (m *MaybeInaccessibleMessage) AsMessage() (*Message, *InaccessibleMessage) {
+	if !m.IsInaccessible() {
+		return (*Message)(m), nil
+	} else {
+		return nil, &InaccessibleMessage{
+			Chat:      m.Chat,
+			MessageID: m.MessageID,
+			Date:      0,
+		}
+	}
+}
+
+////////////////////////////////
 // Helper functions for InlineQuery
 //
 
@@ -823,6 +849,100 @@ func NewInlineKeyboardButtonsWithSwitchInlineQuery(values map[string]string) []I
 // String function for CallbackQuery
 func (q CallbackQuery) String() string {
 	return structToString(q)
+}
+
+////////////////////////////////
+// Helper functions for ReactionType
+
+// NewEmojiReaction returns a ReactionType with emoji.
+func NewEmojiReaction(emoji string) ReactionType {
+	return ReactionType{
+		Type:  "emoji",
+		Emoji: &emoji,
+	}
+}
+
+// NewCustomEmojiReaction returns a ReactionType with custom emoji.
+func NewCustomEmojiReaction(customEmojiID string) ReactionType {
+	return ReactionType{
+		Type:          "custom_emoji",
+		CustomEmojiID: &customEmojiID,
+	}
+}
+
+////////////////////////////////
+// Helper functions for MessageOrigin
+
+// NewMessageOriginUser returns a new MessageOriginUser.
+func NewMessageOriginUser(user User, date int) MessageOrigin {
+	return MessageOrigin{
+		Type:       "user",
+		Date:       date,
+		SenderUser: &user,
+	}
+}
+
+// NewMessageOriginHiddenUser returns a new MessageOriginHiddenUser.
+func NewMessageOriginHiddenUser(senderUserName string, date int) MessageOrigin {
+	return MessageOrigin{
+		Type:           "hidden_user",
+		Date:           date,
+		SenderUserName: &senderUserName,
+	}
+}
+
+// NewMessageOriginChat returns a new MessageOriginChat.
+//
+// `authorSignature` can be nil.
+func NewMessageOriginChat(senderChat Chat, date int, authorSignature *string) MessageOrigin {
+	return MessageOrigin{
+		Type:            "chat",
+		Date:            date,
+		SenderChat:      &senderChat,
+		AuthorSignature: authorSignature,
+	}
+}
+
+// NewMessageOriginChannel returns a new MessageOriginChannel.
+//
+// `authorSignature` can be nil.
+func NewMessageOriginChannel(chat Chat, messageID int64, date int, authorSignature *string) MessageOrigin {
+	return MessageOrigin{
+		Type:            "channel",
+		Date:            date,
+		Chat:            &chat,
+		MessageID:       messageID,
+		AuthorSignature: authorSignature,
+	}
+}
+
+////////////////////////////////
+// Helper functions for ChatBoostSource
+
+// NewChatBoostSourcePremium returns a new ChatBoostSourcePremium.
+func NewChatBoostSourcePremium(user User) ChatBoostSource {
+	return ChatBoostSource{
+		Source: "premium",
+		User:   &user,
+	}
+}
+
+// NewChatBoostSourceGiftCode returns a new ChatBoostSourceGiftCode.
+func NewChatBoostSourceGiftCode(user User) ChatBoostSource {
+	return ChatBoostSource{
+		Source: "gift_code",
+		User:   &user,
+	}
+}
+
+// NewChatBoostSourceGiveaway returns a new ChatBoostSourceGiveaway.
+func NewChatBoostSourceGiveaway(giveawayMessageID int64, user *User, isUnclaimed bool) ChatBoostSource {
+	return ChatBoostSource{
+		Source:            "giveaway",
+		GiveawayMessageID: giveawayMessageID,
+		User:              user,
+		IsUnclaimed:       isUnclaimed,
+	}
 }
 
 ////////////////////////////////
