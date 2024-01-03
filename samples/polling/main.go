@@ -64,8 +64,10 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 				message,
 				// option
 				bot.OptionsSendMessage{}.
-					SetReplyToMessageID(update.Message.MessageID). // show original message
-					SetReplyMarkup(bot.ReplyKeyboardMarkup{        // show keyboards
+					SetReplyParameters(bot.ReplyParameters{
+						MessageID: update.Message.MessageID,
+					}).                                     // show original message
+					SetReplyMarkup(bot.ReplyKeyboardMarkup{ // show keyboards
 						Keyboard: [][]bot.KeyboardButton{
 							{
 								{
