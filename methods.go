@@ -23,7 +23,7 @@ func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponse[[]Update
 		options = map[string]any{}
 	}
 
-	return b.requestUpdates("getUpdates", options)
+	return requestGeneric[[]Update](b, "getUpdates", options)
 }
 
 // SetWebhook sets various options for receiving incoming updates.
@@ -79,7 +79,7 @@ func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (resu
 
 	b.verbose("setting webhook url to: %s", b.webhookURL)
 
-	return b.requestBool("setWebhook", params)
+	return requestGeneric[bool](b, "setWebhook", params)
 }
 
 // DeleteWebhook deletes webhook for this bot.
@@ -93,7 +93,7 @@ func (b *Bot) DeleteWebhook(dropPendingUpdates bool) (result APIResponse[bool]) 
 
 	b.verbose("deleting webhook url")
 
-	return b.requestBool("deleteWebhook", map[string]any{
+	return requestGeneric[bool](b, "deleteWebhook", map[string]any{
 		"drop_pending_updates": dropPendingUpdates,
 	})
 }
@@ -102,28 +102,28 @@ func (b *Bot) DeleteWebhook(dropPendingUpdates bool) (result APIResponse[bool]) 
 //
 // https://core.telegram.org/bots/api#getwebhookinfo
 func (b *Bot) GetWebhookInfo() (result APIResponse[WebhookInfo]) {
-	return b.requestWebhookInfo("getWebhookInfo", map[string]any{})
+	return requestGeneric[WebhookInfo](b, "getWebhookInfo", map[string]any{})
 }
 
 // GetMe gets info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
 func (b *Bot) GetMe() (result APIResponse[User]) {
-	return b.requestUser("getMe", map[string]any{}) // no params
+	return requestGeneric[User](b, "getMe", map[string]any{}) // no params
 }
 
 // LogOut logs this bot from cloud Bot API server.
 //
 // https://core.telegram.org/bots/api#logout
 func (b *Bot) LogOut() (result APIResponse[bool]) {
-	return b.requestBool("logOut", map[string]any{}) // no params
+	return requestGeneric[bool](b, "logOut", map[string]any{}) // no params
 }
 
 // Close closes this bot from local Bot API server.
 //
 // https://core.telegram.org/bots/api#close
 func (b *Bot) Close() (result APIResponse[bool]) {
-	return b.requestBool("close", map[string]any{}) // no params
+	return requestGeneric[bool](b, "close", map[string]any{}) // no params
 }
 
 // SendMessage sends a message to the bot.
@@ -138,7 +138,7 @@ func (b *Bot) SendMessage(chatID ChatID, text string, options OptionsSendMessage
 	options["chat_id"] = chatID
 	options["text"] = text
 
-	return b.requestMessage("sendMessage", options)
+	return requestGeneric[Message](b, "sendMessage", options)
 }
 
 // ForwardMessage forwards a message.
@@ -154,7 +154,7 @@ func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int64, options
 	options["from_chat_id"] = fromChatID
 	options["message_id"] = messageID
 
-	return b.requestMessage("forwardMessage", options)
+	return requestGeneric[Message](b, "forwardMessage", options)
 }
 
 // ForwardMessages forwards messages.
@@ -170,7 +170,7 @@ func (b *Bot) ForwardMessages(chatID, fromChatID ChatID, messageIDs []int64, opt
 	options["from_chat_id"] = fromChatID
 	options["message_ids"] = messageIDs
 
-	return b.requestMessageIDs("forwardMessages", options)
+	return requestGeneric[[]MessageID](b, "forwardMessages", options)
 }
 
 // CopyMessage copies a message.
@@ -186,7 +186,7 @@ func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int64, options Op
 	options["from_chat_id"] = fromChatID
 	options["message_id"] = messageID
 
-	return b.requestMessageID("copyMessage", options)
+	return requestGeneric[MessageID](b, "copyMessage", options)
 }
 
 // CopyMessages copies messages.
@@ -202,7 +202,7 @@ func (b *Bot) CopyMessages(chatID, fromChatID ChatID, messageIDs []int64, option
 	options["from_chat_id"] = fromChatID
 	options["message_ids"] = messageIDs
 
-	return b.requestMessageIDs("copyMessages", options)
+	return requestGeneric[[]MessageID](b, "copyMessages", options)
 }
 
 // SendPhoto sends a photo.
@@ -217,7 +217,7 @@ func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options OptionsSendPhoto
 	options["chat_id"] = chatID
 	options["photo"] = photo
 
-	return b.requestMessage("sendPhoto", options)
+	return requestGeneric[Message](b, "sendPhoto", options)
 }
 
 // SendAudio sends an audio file. (.mp3 format only, will be played with external players)
@@ -232,7 +232,7 @@ func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options OptionsSendAudio
 	options["chat_id"] = chatID
 	options["audio"] = audio
 
-	return b.requestMessage("sendAudio", options)
+	return requestGeneric[Message](b, "sendAudio", options)
 }
 
 // SendDocument sends a general file.
@@ -247,7 +247,7 @@ func (b *Bot) SendDocument(chatID ChatID, document InputFile, options OptionsSen
 	options["chat_id"] = chatID
 	options["document"] = document
 
-	return b.requestMessage("sendDocument", options)
+	return requestGeneric[Message](b, "sendDocument", options)
 }
 
 // SendSticker sends a sticker.
@@ -262,7 +262,7 @@ func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options OptionsSendS
 	options["chat_id"] = chatID
 	options["sticker"] = sticker
 
-	return b.requestMessage("sendSticker", options)
+	return requestGeneric[Message](b, "sendSticker", options)
 }
 
 // GetStickerSet gets a sticker set.
@@ -274,7 +274,7 @@ func (b *Bot) GetStickerSet(name string) (result APIResponse[StickerSet]) {
 		"name": name,
 	}
 
-	return b.requestStickerSet("getStickerSet", params)
+	return requestGeneric[StickerSet](b, "getStickerSet", params)
 }
 
 // GetCustomEmojiStickers gets custom emoji stickers.
@@ -286,7 +286,7 @@ func (b *Bot) GetCustomEmojiStickers(customEmojiIDs []string) (result APIRespons
 		"custom_emoji_ids": customEmojiIDs,
 	}
 
-	return b.requestStickers("getCustomEmojiStickers", params)
+	return requestGeneric[[]Sticker](b, "getCustomEmojiStickers", params)
 }
 
 // UploadStickerFile uploads a sticker file.
@@ -300,7 +300,7 @@ func (b *Bot) UploadStickerFile(userID int64, sticker InputFile, stickerFormat S
 		"sticker_format": stickerFormat,
 	}
 
-	return b.requestFile("uploadStickerFile", params)
+	return requestGeneric[File](b, "uploadStickerFile", params)
 }
 
 // CreateNewStickerSet creates a new sticker set.
@@ -318,7 +318,7 @@ func (b *Bot) CreateNewStickerSet(userID int64, name, title string, stickers []I
 	options["stickers"] = stickers
 	options["sticker_format"] = stickerFormat
 
-	return b.requestBool("createNewStickerSet", options)
+	return requestGeneric[bool](b, "createNewStickerSet", options)
 }
 
 // AddStickerToSet adds a sticker to set.
@@ -334,7 +334,7 @@ func (b *Bot) AddStickerToSet(userID int64, name string, sticker InputSticker, o
 	options["name"] = name
 	options["sticker"] = sticker
 
-	return b.requestBool("addStickerToSet", options)
+	return requestGeneric[bool](b, "addStickerToSet", options)
 }
 
 // SetStickerPositionInSet sets sticker position in set.
@@ -347,7 +347,7 @@ func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIR
 		"position": position,
 	}
 
-	return b.requestBool("setStickerPositionInSet", params)
+	return requestGeneric[bool](b, "setStickerPositionInSet", params)
 }
 
 // DeleteStickerFromSet deletes a sticker from set.
@@ -359,7 +359,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponse[bool]) {
 		"sticker": sticker,
 	}
 
-	return b.requestBool("deleteStickerFromSet", params)
+	return requestGeneric[bool](b, "deleteStickerFromSet", params)
 }
 
 // SetStickerSetThumbnail sets a thumbnail of a sticker set.
@@ -374,7 +374,7 @@ func (b *Bot) SetStickerSetThumbnail(name string, userID int64, options OptionsS
 	options["name"] = name
 	options["user_id"] = userID
 
-	return b.requestBool("setStickerSetThumbnail", options)
+	return requestGeneric[bool](b, "setStickerSetThumbnail", options)
 }
 
 // SetCustomEmojiStickerSetThumbnail sets the custom emoji sticker set's thumbnail.
@@ -388,14 +388,14 @@ func (b *Bot) SetCustomEmojiStickerSetThumbnail(name string, options OptionsSetC
 	// essential params
 	options["name"] = name
 
-	return b.requestBool("setCustomEmojiStickerSetThumbnail", options)
+	return requestGeneric[bool](b, "setCustomEmojiStickerSetThumbnail", options)
 }
 
 // SetStickerSetTitle sets the title of sticker set.
 //
 // https://core.telegram.org/bots/api#setstickersettitle
 func (b *Bot) SetStickerSetTitle(name, title string) (result APIResponse[bool]) {
-	return b.requestBool("setStickerSetTitle", map[string]any{
+	return requestGeneric[bool](b, "setStickerSetTitle", map[string]any{
 		"name":  name,
 		"title": title,
 	})
@@ -405,7 +405,7 @@ func (b *Bot) SetStickerSetTitle(name, title string) (result APIResponse[bool]) 
 //
 // https://core.telegram.org/bots/api#deletestickerset
 func (b *Bot) DeleteStickerSet(name string) (result APIResponse[bool]) {
-	return b.requestBool("deleteStickerSet", map[string]any{
+	return requestGeneric[bool](b, "deleteStickerSet", map[string]any{
 		"name": name,
 	})
 }
@@ -414,7 +414,7 @@ func (b *Bot) DeleteStickerSet(name string) (result APIResponse[bool]) {
 //
 // https://core.telegram.org/bots/api#setstickeremojilist
 func (b *Bot) SetStickerEmojiList(sticker string, emojiList []string) (result APIResponse[bool]) {
-	return b.requestBool("setStickerEmojiList", map[string]any{
+	return requestGeneric[bool](b, "setStickerEmojiList", map[string]any{
 		"sticker":    sticker,
 		"emoji_list": emojiList,
 	})
@@ -424,7 +424,7 @@ func (b *Bot) SetStickerEmojiList(sticker string, emojiList []string) (result AP
 //
 // https://core.telegram.org/bots/api#setstickerkeywords
 func (b *Bot) SetStickerKeywords(sticker string, keywords []string) (result APIResponse[bool]) {
-	return b.requestBool("setStickerKeywords", map[string]any{
+	return requestGeneric[bool](b, "setStickerKeywords", map[string]any{
 		"sticker":  sticker,
 		"keywords": keywords,
 	})
@@ -441,7 +441,7 @@ func (b *Bot) SetStickerMaskPosition(sticker string, options OptionsSetStickerMa
 	// essential params
 	options["sticker"] = sticker
 
-	return b.requestBool("setStickerMaskPosition", options)
+	return requestGeneric[bool](b, "setStickerMaskPosition", options)
 }
 
 // SendVideo sends a video file.
@@ -456,7 +456,7 @@ func (b *Bot) SendVideo(chatID ChatID, video InputFile, options OptionsSendVideo
 	options["chat_id"] = chatID
 	options["video"] = video
 
-	return b.requestMessage("sendVideo", options)
+	return requestGeneric[Message](b, "sendVideo", options)
 }
 
 // SendAnimation sends an animation.
@@ -471,7 +471,7 @@ func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options OptionsS
 	options["chat_id"] = chatID
 	options["animation"] = animation
 
-	return b.requestMessage("sendAnimation", options)
+	return requestGeneric[Message](b, "sendAnimation", options)
 }
 
 // SendVoice sends a voice file. (.ogg format only, will be played with Telegram itself))
@@ -486,7 +486,7 @@ func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options OptionsSendVoice
 	options["chat_id"] = chatID
 	options["voice"] = voice
 
-	return b.requestMessage("sendVoice", options)
+	return requestGeneric[Message](b, "sendVoice", options)
 }
 
 // SendVideoNote sends a video note.
@@ -503,7 +503,7 @@ func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options OptionsS
 	options["chat_id"] = chatID
 	options["video_note"] = videoNote
 
-	return b.requestMessage("sendVideoNote", options)
+	return requestGeneric[Message](b, "sendVideoNote", options)
 }
 
 // SendMediaGroup sends a group of photos or videos as an album.
@@ -518,7 +518,7 @@ func (b *Bot) SendMediaGroup(chatID ChatID, media []InputMedia, options OptionsS
 	options["chat_id"] = chatID
 	options["media"] = media
 
-	return b.requestMessages("sendMediaGroup", options)
+	return requestGeneric[[]Message](b, "sendMediaGroup", options)
 }
 
 // SendLocation sends locations.
@@ -534,7 +534,7 @@ func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options O
 	options["latitude"] = latitude
 	options["longitude"] = longitude
 
-	return b.requestMessage("sendLocation", options)
+	return requestGeneric[Message](b, "sendLocation", options)
 }
 
 // SendVenue sends venues.
@@ -552,7 +552,7 @@ func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, addre
 	options["title"] = title
 	options["address"] = address
 
-	return b.requestMessage("sendVenue", options)
+	return requestGeneric[Message](b, "sendVenue", options)
 }
 
 // SendContact sends contacts.
@@ -568,7 +568,7 @@ func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options 
 	options["phone_number"] = phoneNumber
 	options["first_name"] = firstName
 
-	return b.requestMessage("sendContact", options)
+	return requestGeneric[Message](b, "sendContact", options)
 }
 
 // SendPoll sends a poll.
@@ -584,7 +584,7 @@ func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []string, opt
 	options["question"] = question
 	options["options"] = pollOptions
 
-	return b.requestMessage("sendPoll", options)
+	return requestGeneric[Message](b, "sendPoll", options)
 }
 
 // StopPoll stops a poll.
@@ -599,7 +599,7 @@ func (b *Bot) StopPoll(chatID ChatID, messageID int64, options OptionsStopPoll) 
 	options["chat_id"] = chatID
 	options["message_id"] = messageID
 
-	return b.requestPoll("stopPoll", options)
+	return requestGeneric[Poll](b, "stopPoll", options)
 }
 
 // SendDice sends a random dice.
@@ -613,7 +613,7 @@ func (b *Bot) SendDice(chatID ChatID, options OptionsSendDice) (result APIRespon
 	// essential params
 	options["chat_id"] = chatID
 
-	return b.requestMessage("sendDice", options)
+	return requestGeneric[Message](b, "sendDice", options)
 }
 
 // SendChatAction sends chat actions.
@@ -628,7 +628,7 @@ func (b *Bot) SendChatAction(chatID ChatID, action ChatAction, options OptionsSe
 	options["chat_id"] = chatID
 	options["action"] = action
 
-	return b.requestBool("sendChatAction", options)
+	return requestGeneric[bool](b, "sendChatAction", options)
 }
 
 // SetMessageReaction sets message reaction.
@@ -643,7 +643,7 @@ func (b *Bot) SetMessageReaction(chatID ChatID, messageID int64, options Options
 	options["chat_id"] = chatID
 	options["message_id"] = messageID
 
-	return b.requestBool("setMessageReaction", options)
+	return requestGeneric[bool](b, "setMessageReaction", options)
 }
 
 // GetUserProfilePhotos gets user profile photos.
@@ -657,7 +657,7 @@ func (b *Bot) GetUserProfilePhotos(userID int64, options OptionsGetUserProfilePh
 	// essential params
 	options["user_id"] = userID
 
-	return b.requestUserProfilePhotos("getUserProfilePhotos", options)
+	return requestGeneric[UserProfilePhotos](b, "getUserProfilePhotos", options)
 }
 
 // GetFile gets file info and prepare for download.
@@ -669,7 +669,7 @@ func (b *Bot) GetFile(fileID string) (result APIResponse[File]) {
 		"file_id": fileID,
 	}
 
-	return b.requestFile("getFile", params)
+	return requestGeneric[File](b, "getFile", params)
 }
 
 // GetFileURL gets download link from a given File.
@@ -689,7 +689,7 @@ func (b *Bot) BanChatMember(chatID ChatID, userID int64, options OptionsBanChatM
 	options["chat_id"] = chatID
 	options["user_id"] = userID
 
-	return b.requestBool("banChatMember", options)
+	return requestGeneric[bool](b, "banChatMember", options)
 }
 
 // LeaveChat leaves a chat.
@@ -701,7 +701,7 @@ func (b *Bot) LeaveChat(chatID ChatID) (result APIResponse[bool]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("leaveChat", params)
+	return requestGeneric[bool](b, "leaveChat", params)
 }
 
 // UnbanChatMember unbans a chat member.
@@ -715,7 +715,7 @@ func (b *Bot) UnbanChatMember(chatID ChatID, userID int64, onlyIfBanned bool) (r
 		"only_if_banned": onlyIfBanned,
 	}
 
-	return b.requestBool("unbanChatMember", params)
+	return requestGeneric[bool](b, "unbanChatMember", params)
 }
 
 // RestrictChatMember restricts a chat member.
@@ -731,7 +731,7 @@ func (b *Bot) RestrictChatMember(chatID ChatID, userID int64, permissions ChatPe
 	options["user_id"] = userID
 	options["permissions"] = permissions
 
-	return b.requestBool("restrictChatMember", options)
+	return requestGeneric[bool](b, "restrictChatMember", options)
 }
 
 // PromoteChatMember promotes a chat member.
@@ -746,14 +746,14 @@ func (b *Bot) PromoteChatMember(chatID ChatID, userID int64, options OptionsProm
 	options["chat_id"] = chatID
 	options["user_id"] = userID
 
-	return b.requestBool("promoteChatMember", options)
+	return requestGeneric[bool](b, "promoteChatMember", options)
 }
 
 // SetChatAdministratorCustomTitle sets chat administrator's custom title.
 //
 // https://core.telegram.org/bots/api#setchatadministratorcustomtitle
 func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int64, customTitle string) (result APIResponse[bool]) {
-	return b.requestBool("setChatAdministratorCustomTitle", map[string]any{
+	return requestGeneric[bool](b, "setChatAdministratorCustomTitle", map[string]any{
 		"chat_id":      chatID,
 		"user_id":      userID,
 		"custom_title": customTitle,
@@ -764,7 +764,7 @@ func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int64, custo
 //
 // https://core.telegram.org/bots/api#banchatsenderchat
 func (b *Bot) BanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponse[bool]) {
-	return b.requestBool("banChatSenderChat", map[string]any{
+	return requestGeneric[bool](b, "banChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
 	})
@@ -774,7 +774,7 @@ func (b *Bot) BanChatSenderChat(chatID ChatID, senderChatID int64) (result APIRe
 //
 // https://core.telegram.org/bots/api#unbanchatsenderchat
 func (b *Bot) UnbanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponse[bool]) {
-	return b.requestBool("unbanChatSenderChat", map[string]any{
+	return requestGeneric[bool](b, "unbanChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
 	})
@@ -792,7 +792,7 @@ func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions, opt
 	options["chat_id"] = chatID
 	options["permissions"] = permissions
 
-	return b.requestBool("setChatPermissions", options)
+	return requestGeneric[bool](b, "setChatPermissions", options)
 }
 
 // ExportChatInviteLink exports a chat invite link.
@@ -804,7 +804,7 @@ func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponse[string]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestString("exportChatInviteLink", params)
+	return requestGeneric[string](b, "exportChatInviteLink", params)
 }
 
 // CreateChatInviteLink creates a chat invite link.
@@ -818,7 +818,7 @@ func (b *Bot) CreateChatInviteLink(chatID ChatID, options OptionsCreateChatInvit
 	// essential params
 	options["chat_id"] = chatID
 
-	return b.requestChatInviteLink("createChatInviteLink", options)
+	return requestGeneric[ChatInviteLink](b, "createChatInviteLink", options)
 }
 
 // EditChatInviteLink edits a chat invite link.
@@ -833,14 +833,14 @@ func (b *Bot) EditChatInviteLink(chatID ChatID, inviteLink string, options Optio
 	options["chat_id"] = chatID
 	options["invite_link"] = inviteLink
 
-	return b.requestChatInviteLink("editChatInviteLink", options)
+	return requestGeneric[ChatInviteLink](b, "editChatInviteLink", options)
 }
 
 // RevokeChatInviteLink revoks a chat invite link.
 //
 // https://core.telegram.org/bots/api#revokechatinvitelink
 func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result APIResponse[ChatInviteLink]) {
-	return b.requestChatInviteLink("revokeChatInviteLink", map[string]any{
+	return requestGeneric[ChatInviteLink](b, "revokeChatInviteLink", map[string]any{
 		"chat_id":     chatID,
 		"invite_link": inviteLink,
 	})
@@ -856,7 +856,7 @@ func (b *Bot) ApproveChatJoinRequest(chatID ChatID, userID int64) (result APIRes
 		"user_id": userID,
 	}
 
-	return b.requestBool("approveChatJoinRequest", params)
+	return requestGeneric[bool](b, "approveChatJoinRequest", params)
 }
 
 // DeclineChatJoinRequest declines chat join request.
@@ -869,7 +869,7 @@ func (b *Bot) DeclineChatJoinRequest(chatID ChatID, userID int64) (result APIRes
 		"user_id": userID,
 	}
 
-	return b.requestBool("declineChatJoinRequest", params)
+	return requestGeneric[bool](b, "declineChatJoinRequest", params)
 }
 
 // SetChatPhoto sets a chat photo.
@@ -882,7 +882,7 @@ func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponse[b
 		"photo":   photo,
 	}
 
-	return b.requestBool("setChatPhoto", params)
+	return requestGeneric[bool](b, "setChatPhoto", params)
 }
 
 // DeleteChatPhoto deletes a chat photo.
@@ -894,7 +894,7 @@ func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponse[bool]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("deleteChatPhoto", params)
+	return requestGeneric[bool](b, "deleteChatPhoto", params)
 }
 
 // SetChatTitle sets a chat title.
@@ -907,7 +907,7 @@ func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponse[bool
 		"title":   title,
 	}
 
-	return b.requestBool("setChatTitle", params)
+	return requestGeneric[bool](b, "setChatTitle", params)
 }
 
 // SetChatDescription sets a chat description.
@@ -920,7 +920,7 @@ func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIR
 		"description": description,
 	}
 
-	return b.requestBool("setChatDescription", params)
+	return requestGeneric[bool](b, "setChatDescription", params)
 }
 
 // PinChatMessage pins a chat message.
@@ -935,7 +935,7 @@ func (b *Bot) PinChatMessage(chatID ChatID, messageID int64, options OptionsPinC
 	options["chat_id"] = chatID
 	options["message_id"] = messageID
 
-	return b.requestBool("pinChatMessage", options)
+	return requestGeneric[bool](b, "pinChatMessage", options)
 }
 
 // UnpinChatMessage unpins a chat message.
@@ -949,7 +949,7 @@ func (b *Bot) UnpinChatMessage(chatID ChatID, options OptionsUnpinChatMessage) (
 	// essential params
 	options["chat_id"] = chatID
 
-	return b.requestBool("unpinChatMessage", options)
+	return requestGeneric[bool](b, "unpinChatMessage", options)
 }
 
 // UnpinAllChatMessages unpins all chat messages.
@@ -961,7 +961,7 @@ func (b *Bot) UnpinAllChatMessages(chatID ChatID) (result APIResponse[bool]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("unpinAllChatMessages", params)
+	return requestGeneric[bool](b, "unpinAllChatMessages", params)
 }
 
 // GetChat gets a chat.
@@ -973,7 +973,7 @@ func (b *Bot) GetChat(chatID ChatID) (result APIResponse[Chat]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestChat("getChat", params)
+	return requestGeneric[Chat](b, "getChat", params)
 }
 
 // GetChatAdministrators gets chat administrators.
@@ -985,7 +985,7 @@ func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponse[[]ChatMem
 		"chat_id": chatID,
 	}
 
-	return b.requestChatMembers("getChatAdministrators", params)
+	return requestGeneric[[]ChatMember](b, "getChatAdministrators", params)
 }
 
 // GetChatMemberCount gets chat members' count.
@@ -997,7 +997,7 @@ func (b *Bot) GetChatMemberCount(chatID ChatID) (result APIResponse[int]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestInt("getChatMemberCount", params)
+	return requestGeneric[int](b, "getChatMemberCount", params)
 }
 
 // GetChatMember gets a chat member.
@@ -1010,7 +1010,7 @@ func (b *Bot) GetChatMember(chatID ChatID, userID int64) (result APIResponse[Cha
 		"user_id": userID,
 	}
 
-	return b.requestChatMember("getChatMember", params)
+	return requestGeneric[ChatMember](b, "getChatMember", params)
 }
 
 // SetChatStickerSet sets a chat sticker set.
@@ -1023,7 +1023,7 @@ func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result AP
 		"sticker_set_name": stickerSetName,
 	}
 
-	return b.requestBool("setChatStickerSet", params)
+	return requestGeneric[bool](b, "setChatStickerSet", params)
 }
 
 // DeleteChatStickerSet deletes a chat sticker set.
@@ -1035,7 +1035,7 @@ func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponse[bool]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("deleteChatStickerSet", params)
+	return requestGeneric[bool](b, "deleteChatStickerSet", params)
 }
 
 // AnswerCallbackQuery answers a callback query.
@@ -1049,14 +1049,14 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerC
 	// essential params
 	options["callback_query_id"] = callbackQueryID
 
-	return b.requestBool("answerCallbackQuery", options)
+	return requestGeneric[bool](b, "answerCallbackQuery", options)
 }
 
 // GetMyCommands fetches commands of this bot.
 //
 // https://core.telegram.org/bots/api#getmycommands
 func (b *Bot) GetMyCommands(options OptionsGetMyCommands) (result APIResponse[[]BotCommand]) {
-	return b.requestBotCommands("getMyCommands", options)
+	return requestGeneric[[]BotCommand](b, "getMyCommands", options)
 }
 
 // SetMyName changes the bot's name.
@@ -1070,42 +1070,42 @@ func (b *Bot) SetMyName(name string, options OptionsSetMyName) (result APIRespon
 	// essential params
 	options["name"] = name
 
-	return b.requestBool("setMyName", options)
+	return requestGeneric[bool](b, "setMyName", options)
 }
 
 // GetMyName fetches the bot's name.
 //
 // https://core.telegram.org/bots/api#getmyname
 func (b *Bot) GetMyName(options OptionsGetMyName) (result APIResponse[BotName]) {
-	return b.requestBotName("getMyName", options)
+	return requestGeneric[BotName](b, "getMyName", options)
 }
 
 // SetMyDescription sets the bot's description.
 //
 // https://core.telegram.org/bots/api#setmydescription
 func (b *Bot) SetMyDescription(options OptionsSetMyDescription) (result APIResponse[bool]) {
-	return b.requestBool("setMyDescription", options)
+	return requestGeneric[bool](b, "setMyDescription", options)
 }
 
 // GetMyDescription gets the bot's description.
 //
 // https://core.telegram.org/bots/api#setmydescription
 func (b *Bot) GetMyDescription(options OptionsGetMyDescription) (result APIResponse[BotDescription]) {
-	return b.requestBotDescription("getMyDescription", options)
+	return requestGeneric[BotDescription](b, "getMyDescription", options)
 }
 
 // SetMyShortDescription sets the bot's short description.
 //
 // https://core.telegram.org/bots/api#setmyshortdescription
 func (b *Bot) SetMyShortDescription(options OptionsSetMyShortDescription) (result APIResponse[bool]) {
-	return b.requestBool("setMyShortDescription", options)
+	return requestGeneric[bool](b, "setMyShortDescription", options)
 }
 
 // GetMyShortDescription gets the bot's short description.
 //
 // https://core.telegram.org/bots/api#getmyshortdescription
 func (b *Bot) GetMyShortDescription(options OptionsGetMyShortDescription) (result APIResponse[BotShortDescription]) {
-	return b.requestBotShortDescription("getMyShortDescription", options)
+	return requestGeneric[BotShortDescription](b, "getMyShortDescription", options)
 }
 
 // GetUserChatBoosts gets boosts of a user.
@@ -1118,7 +1118,7 @@ func (b *Bot) GetUserChatBoosts(chatID ChatID, userID int64) (result APIResponse
 		"user_id": userID,
 	}
 
-	return b.requestUserChatBoosts("getUserChatBoosts", options)
+	return requestGeneric[UserChatBoosts](b, "getUserChatBoosts", options)
 }
 
 // SetMyCommands sets commands of this bot.
@@ -1132,42 +1132,42 @@ func (b *Bot) SetMyCommands(commands []BotCommand, options OptionsSetMyCommands)
 	// essential params
 	options["commands"] = commands
 
-	return b.requestBool("setMyCommands", options)
+	return requestGeneric[bool](b, "setMyCommands", options)
 }
 
 // DeleteMyCommands deletes commands of this bot.
 //
 // https://core.telegram.org/bots/api#deletemycommands
 func (b *Bot) DeleteMyCommands(options OptionsDeleteMyCommands) (result APIResponse[bool]) {
-	return b.requestBool("deleteMyCommands", options)
+	return requestGeneric[bool](b, "deleteMyCommands", options)
 }
 
 // SetChatMenuButton sets chat menu button.
 //
 // https://core.telegram.org/bots/api#setchatmenubutton
 func (b *Bot) SetChatMenuButton(options OptionsSetChatMenuButton) (result APIResponse[bool]) {
-	return b.requestBool("setChatMenuButton", options)
+	return requestGeneric[bool](b, "setChatMenuButton", options)
 }
 
 // GetChatMenuButton fetches current chat menu button.
 //
 // https://core.telegram.org/bots/api#getchatmenubutton
 func (b *Bot) GetChatMenuButton(options OptionsGetChatMenuButton) (result APIResponse[MenuButton]) {
-	return b.requestMenuButton("getChatMenuButton", options)
+	return requestGeneric[MenuButton](b, "getChatMenuButton", options)
 }
 
 // SetMyDefaultAdministratorRights sets my default administrator rights.
 //
 // https://core.telegram.org/bots/api#setmydefaultadministratorrights
 func (b *Bot) SetMyDefaultAdministratorRights(options OptionsSetMyDefaultAdministratorRights) (result APIResponse[bool]) {
-	return b.requestBool("setMyDefaultAdministratorRights", options)
+	return requestGeneric[bool](b, "setMyDefaultAdministratorRights", options)
 }
 
 // GetMyDefaultAdministratorRights gets my default administrator rights.
 //
 // https://core.telegram.org/bots/api#getmydefaultadministratorrights
 func (b *Bot) GetMyDefaultAdministratorRights(options OptionsGetMyDefaultAdministratorRights) (result APIResponse[bool]) {
-	return b.requestBool("getMyDefaultAdministratorRights", options)
+	return requestGeneric[bool](b, "getMyDefaultAdministratorRights", options)
 }
 
 // Updating messages
@@ -1246,7 +1246,7 @@ func (b *Bot) StopMessageLiveLocation(options OptionsStopMessageLiveLocation) (r
 //
 // https://core.telegram.org/bots/api#deletemessage
 func (b *Bot) DeleteMessage(chatID ChatID, messageID int64) (result APIResponse[bool]) {
-	return b.requestBool("deleteMessage", map[string]any{
+	return requestGeneric[bool](b, "deleteMessage", map[string]any{
 		"chat_id":    chatID,
 		"message_id": messageID,
 	})
@@ -1256,7 +1256,7 @@ func (b *Bot) DeleteMessage(chatID ChatID, messageID int64) (result APIResponse[
 //
 // https://core.telegram.org/bots/api#deletemessages
 func (b *Bot) DeleteMessages(chatID ChatID, messageIDs []int64) (result APIResponse[bool]) {
-	return b.requestBool("deleteMessages", map[string]any{
+	return requestGeneric[bool](b, "deleteMessages", map[string]any{
 		"chat_id":     chatID,
 		"message_ids": messageIDs,
 	})
@@ -1276,7 +1276,7 @@ func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []any, options Opt
 	options["inline_query_id"] = inlineQueryID
 	options["results"] = results
 
-	return b.requestBool("answerInlineQuery", options)
+	return requestGeneric[bool](b, "answerInlineQuery", options)
 }
 
 // SendInvoice sends an invoice.
@@ -1296,7 +1296,7 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 	options["currency"] = currency
 	options["prices"] = prices
 
-	return b.requestMessage("sendInvoice", options)
+	return requestGeneric[Message](b, "sendInvoice", options)
 }
 
 // CreateInvoiceLink creates a link for an invoice.
@@ -1315,7 +1315,7 @@ func (b *Bot) CreateInvoiceLink(title, description, payload, providerToken, curr
 	options["currency"] = currency
 	options["prices"] = prices
 
-	return b.requestString("createInvoiceLink", options)
+	return requestGeneric[string](b, "createInvoiceLink", options)
 }
 
 // AnswerShippingQuery answers a shipping query.
@@ -1341,7 +1341,7 @@ func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptio
 		}
 	}
 
-	return b.requestBool("answerShippingQuery", params)
+	return requestGeneric[bool](b, "answerShippingQuery", params)
 }
 
 // AnswerPreCheckoutQuery answers a pre-checkout query.
@@ -1360,7 +1360,7 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 		}
 	}
 
-	return b.requestBool("answerPreCheckoutQuery", params)
+	return requestGeneric[bool](b, "answerPreCheckoutQuery", params)
 }
 
 // SendGame sends a game.
@@ -1375,7 +1375,7 @@ func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendG
 	options["chat_id"] = chatID
 	options["game_short_name"] = gameShortName
 
-	return b.requestMessage("sendGame", options)
+	return requestGeneric[Message](b, "sendGame", options)
 }
 
 // SetGameScore sets score of a game.
@@ -1404,7 +1404,7 @@ func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) 
 	// essential params
 	options["user_id"] = userID
 
-	return b.requestGameHighScores("getGameHighScores", options)
+	return requestGeneric[[]GameHighScore](b, "getGameHighScores", options)
 }
 
 // AnswerWebAppQuery answers a web app's query
@@ -1416,7 +1416,7 @@ func (b *Bot) AnswerWebAppQuery(webAppQueryID string, res InlineQueryResult) (re
 		"result":           res,
 	}
 
-	return b.requestSentWebAppMessage("answerWebAppQuery", options)
+	return requestGeneric[SentWebAppMessage](b, "answerWebAppQuery", options)
 }
 
 // CreateForumTopic creates a topic in a forum supergroup chat.
@@ -1431,7 +1431,7 @@ func (b *Bot) CreateForumTopic(chatID ChatID, name string, options OptionsCreate
 	options["chat_id"] = chatID
 	options["name"] = name
 
-	return b.requestForumTopic("createForumTopic", options)
+	return requestGeneric[ForumTopic](b, "createForumTopic", options)
 }
 
 // EditForumTopic edits a forum topic.
@@ -1446,7 +1446,7 @@ func (b *Bot) EditForumTopic(chatID ChatID, messageThreadID int64, options Optio
 	options["chat_id"] = chatID
 	options["message_thread_id"] = messageThreadID
 
-	return b.requestBool("editForumTopic", options)
+	return requestGeneric[bool](b, "editForumTopic", options)
 }
 
 // CloseForumTopic closes a forum topic.
@@ -1458,7 +1458,7 @@ func (b *Bot) CloseForumTopic(chatID ChatID, messageThreadID int64) (result APIR
 		"message_thread_id": messageThreadID,
 	}
 
-	return b.requestBool("closeForumTopic", options)
+	return requestGeneric[bool](b, "closeForumTopic", options)
 }
 
 // ReopenForumTopic reopens a forum topic.
@@ -1470,7 +1470,7 @@ func (b *Bot) ReopenForumTopic(chatID ChatID, messageThreadID int64) (result API
 		"message_thread_id": messageThreadID,
 	}
 
-	return b.requestBool("reopenForumTopic", options)
+	return requestGeneric[bool](b, "reopenForumTopic", options)
 }
 
 // DeleteForumTopic deletes a forum topic.
@@ -1482,7 +1482,7 @@ func (b *Bot) DeleteForumTopic(chatID ChatID, messageThreadID int64) (result API
 		"message_thread_id": messageThreadID,
 	}
 
-	return b.requestBool("deleteForumTopic", options)
+	return requestGeneric[bool](b, "deleteForumTopic", options)
 }
 
 // UnpinAllForumTopicMessages unpins all forum topic messages.
@@ -1494,7 +1494,7 @@ func (b *Bot) UnpinAllForumTopicMessages(chatID ChatID, messageThreadID int64) (
 		"message_thread_id": messageThreadID,
 	}
 
-	return b.requestBool("unpinAllForumTopicMessages", options)
+	return requestGeneric[bool](b, "unpinAllForumTopicMessages", options)
 }
 
 // EditGeneralForumTopic edites general forum topic.
@@ -1506,7 +1506,7 @@ func (b *Bot) EditGeneralForumTopic(chatID ChatID, name string) (result APIRespo
 		"name":    name,
 	}
 
-	return b.requestBool("editGeneralForumTopic", options)
+	return requestGeneric[bool](b, "editGeneralForumTopic", options)
 }
 
 // CloseGeneralForumTopic closes general forum topic.
@@ -1517,7 +1517,7 @@ func (b *Bot) CloseGeneralForumTopic(chatID ChatID) (result APIResponse[bool]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("closeGeneralForumTopic", options)
+	return requestGeneric[bool](b, "closeGeneralForumTopic", options)
 }
 
 // ReopenGeneralForumTopic reopens general forum topic.
@@ -1528,7 +1528,7 @@ func (b *Bot) ReopenGeneralForumTopic(chatID ChatID) (result APIResponse[bool]) 
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("reopenGeneralForumTopic", options)
+	return requestGeneric[bool](b, "reopenGeneralForumTopic", options)
 }
 
 // HideGeneralForumTopic hides general forum topic.
@@ -1539,7 +1539,7 @@ func (b *Bot) HideGeneralForumTopic(chatID ChatID) (result APIResponse[bool]) {
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("hideGeneralForumTopic", options)
+	return requestGeneric[bool](b, "hideGeneralForumTopic", options)
 }
 
 // UnhideGeneralForumTopic unhides general forum topic.
@@ -1550,7 +1550,7 @@ func (b *Bot) UnhideGeneralForumTopic(chatID ChatID) (result APIResponse[bool]) 
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("unhideGeneralForumTopic", options)
+	return requestGeneric[bool](b, "unhideGeneralForumTopic", options)
 }
 
 // https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages
@@ -1559,14 +1559,14 @@ func (b *Bot) UnpinAllGeneralForumTopicMessages(chatID ChatID) (result APIRespon
 		"chat_id": chatID,
 	}
 
-	return b.requestBool("unpinAllGeneralForumTopicMessages", options)
+	return requestGeneric[bool](b, "unpinAllGeneralForumTopicMessages", options)
 }
 
 // GetForumTopicIconStickers fetches forum topic icon stickers.
 //
 // https://core.telegram.org/bots/api#getforumtopiciconstickers
 func (b *Bot) GetForumTopicIconStickers() (result APIResponse[[]Sticker]) {
-	return b.requestStickers("getForumTopicIconStickers", nil)
+	return requestGeneric[[]Sticker](b, "getForumTopicIconStickers", nil)
 }
 
 // Check if given http params contain file or not.
@@ -1820,405 +1820,6 @@ func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]any) (r
 	return []byte{}, err
 }
 
-// Send request for APIResponse[WebhookInfo] and fetch its result.
-func (b *Bot) requestWebhookInfo(method string, params map[string]any) (result APIResponse[WebhookInfo]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[WebhookInfo]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[WebhookInfo]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[User] and fetch its result.
-func (b *Bot) requestUser(method string, params map[string]any) (result APIResponse[User]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[User]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[User]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[Message] and fetch its result.
-func (b *Bot) requestMessage(method string, params map[string]any) (result APIResponse[Message]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[Message]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[Message]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[[]Message] and fetch its result.
-func (b *Bot) requestMessages(method string, params map[string]any) (result APIResponse[[]Message]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[[]Message]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[[]Message]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[MessageID] and fetch its result.
-func (b *Bot) requestMessageID(method string, params map[string]any) (result APIResponse[MessageID]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[MessageID]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[MessageID]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[[]MessageID] and fetch its result.
-func (b *Bot) requestMessageIDs(method string, params map[string]any) (result APIResponse[[]MessageID]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[[]MessageID]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[[]MessageID]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[UserProfilePhotos] and fetch its result.
-func (b *Bot) requestUserProfilePhotos(method string, params map[string]any) (result APIResponse[UserProfilePhotos]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[UserProfilePhotos]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[UserProfilePhotos]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[[]Update] and fetch its result.
-func (b *Bot) requestUpdates(method string, params map[string]any) (result APIResponse[[]Update]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[[]Update]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[[]Update]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[File] and fetch its result.
-func (b *Bot) requestFile(method string, params map[string]any) (result APIResponse[File]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[File]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[File]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[Chat] and fetch its result.
-func (b *Bot) requestChat(method string, params map[string]any) (result APIResponse[Chat]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[Chat]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[Chat]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[[]ChatMember] and fetch its result.
-func (b *Bot) requestChatMembers(method string, params map[string]any) (result APIResponse[[]ChatMember]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[[]ChatMember]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[[]ChatMember]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[ChatMember] and fetch its result.
-func (b *Bot) requestChatMember(method string, params map[string]any) (result APIResponse[ChatMember]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[ChatMember]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[ChatMember]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[int] and fetch its result.
-func (b *Bot) requestInt(method string, params map[string]any) (result APIResponse[int]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[int]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[int]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[bool] and fetch its result.
-func (b *Bot) requestBool(method string, params map[string]any) (result APIResponse[bool]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[bool]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[bool]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[string] and fetch its result.
-func (b *Bot) requestString(method string, params map[string]any) (result APIResponse[string]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[string]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[string]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[[]GameHighScore] and fetch its result.
-func (b *Bot) requestGameHighScores(method string, params map[string]any) (result APIResponse[[]GameHighScore]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[[]GameHighScore]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[[]GameHighScore]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[SentWebAppMessage] and fetch its result.
-func (b *Bot) requestSentWebAppMessage(method string, params map[string]any) (result APIResponse[SentWebAppMessage]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[SentWebAppMessage]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[SentWebAppMessage]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[StickerSet] and fetch its result.
-func (b *Bot) requestStickerSet(method string, params map[string]any) (result APIResponse[StickerSet]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[StickerSet]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[StickerSet]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[[]Sticker] and fetch its result.
-func (b *Bot) requestStickers(method string, params map[string]any) (result APIResponse[[]Sticker]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[[]Sticker]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[[]Sticker]{Ok: false, Description: &errStr}
-}
-
 // Send request for APIResponseMessageOrBool and fetch its result.
 func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result APIResponseMessageOrBool) {
 	var errStr string
@@ -2256,12 +1857,12 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 	return APIResponseMessageOrBool{Ok: false, Description: &errStr}
 }
 
-// Send request for APIResponse[Poll] and fetch its result.
-func (b *Bot) requestPoll(method string, params map[string]any) (result APIResponse[Poll]) {
+// Send request for APIResponse[T] and fetch its result.
+func requestGeneric[T any](b *Bot, method string, params map[string]any) (result APIResponse[T]) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[Poll]
+		var jsonResponse APIResponse[T]
 		err = json.Unmarshal(bytes, &jsonResponse)
 		if err == nil {
 			return jsonResponse
@@ -2274,175 +1875,7 @@ func (b *Bot) requestPoll(method string, params map[string]any) (result APIRespo
 
 	b.error(errStr)
 
-	return APIResponse[Poll]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[[]BotCommand] and fetch its result.
-func (b *Bot) requestBotCommands(method string, params map[string]any) (result APIResponse[[]BotCommand]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[[]BotCommand]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[[]BotCommand]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[BotName] and fetch its result.
-func (b *Bot) requestBotName(method string, params map[string]any) (result APIResponse[BotName]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[BotName]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[BotName]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[BotDescription] and fetch its result.
-func (b *Bot) requestBotDescription(method string, params map[string]any) (result APIResponse[BotDescription]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[BotDescription]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[BotDescription]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[BotShortDescription] and fetch its result.
-func (b *Bot) requestBotShortDescription(method string, params map[string]any) (result APIResponse[BotShortDescription]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[BotShortDescription]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[BotShortDescription]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[ChatInviteLink] and fetch its result.
-func (b *Bot) requestChatInviteLink(method string, params map[string]any) (result APIResponse[ChatInviteLink]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[ChatInviteLink]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[ChatInviteLink]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[MenuButton] and fetch its result.
-func (b *Bot) requestMenuButton(method string, params map[string]any) (result APIResponse[MenuButton]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[MenuButton]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[MenuButton]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[ForumTopic] and fetch its result.
-func (b *Bot) requestForumTopic(method string, params map[string]any) (result APIResponse[ForumTopic]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[ForumTopic]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[ForumTopic]{Ok: false, Description: &errStr}
-}
-
-// Send request for APIResponse[UserChatBoosts] and fetch its result.
-func (b *Bot) requestUserChatBoosts(method string, params map[string]any) (result APIResponse[UserChatBoosts]) {
-	var errStr string
-
-	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[UserChatBoosts]
-		err = json.Unmarshal(bytes, &jsonResponse)
-		if err == nil {
-			return jsonResponse
-		}
-
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
-	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
-	}
-
-	b.error(errStr)
-
-	return APIResponse[UserChatBoosts]{Ok: false, Description: &errStr}
+	return APIResponse[T]{Ok: false, Description: &errStr}
 }
 
 // Handle Webhook request.
