@@ -4,7 +4,7 @@
 //
 // Wasm version
 //
-// created on: 2018.11.19.
+// created on: 2024.01.04.
 
 // NOTE: open related files with GOOS and GOARCH environment variables like:
 //    `$ GOOS=js GOARCH=wasm vi __FILENAME__`
@@ -132,8 +132,10 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 				message,
 				// options
 				bot.OptionsSendMessage{}.
-					SetReplyToMessageID(update.Message.MessageID). // show original message
-					SetReplyMarkup(bot.ReplyKeyboardMarkup{        // show keyboards
+					SetReplyParameters(bot.ReplyParameters{
+						MessageID: update.Message.MessageID,
+					}).                                     // reply to the original message
+					SetReplyMarkup(bot.ReplyKeyboardMarkup{ // show keyboards
 						ResizeKeyboard: true, // compact keyboard size
 						Keyboard: [][]bot.KeyboardButton{
 							{

@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (get updates),
 //
-// last update: 2022.04.13.
+// last update: 2024.01.04.
 
 package main
 
@@ -21,8 +21,8 @@ const (
 	verbose = true
 )
 
-// update handler function
-func handleUpdate(b *bot.Bot, update bot.Update, err error) {
+// function for handling updates
+func updateHandler(b *bot.Bot, update bot.Update, err error) {
 	if err == nil {
 		if update.HasMessage() {
 			// 'is typing...'
@@ -146,7 +146,7 @@ func main() {
 			client.StartPollingUpdates(
 				0,
 				pollingIntervalSeconds,
-				handleUpdate,
+				updateHandler,
 			)
 		} else {
 			panic("failed to delete webhook")
