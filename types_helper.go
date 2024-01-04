@@ -870,6 +870,14 @@ func NewCustomEmojiReaction(customEmojiID string) ReactionType {
 	}
 }
 
+// NewMessageReactionWithEmoji returns a new OptionsSetMessageReaction with an emoji string for function `SetMessageReaction`.
+func NewMessageReactionWithEmoji(emoji string) OptionsSetMessageReaction {
+	return OptionsSetMessageReaction{}.
+		SetReaction([]ReactionType{
+			NewEmojiReaction(emoji),
+		})
+}
+
 ////////////////////////////////
 // Helper functions for MessageOrigin
 
