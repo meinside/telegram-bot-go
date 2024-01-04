@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (handle commands),
 //
-// last update: 2023.06.02.
+// last update: 2024.01.04.
 
 package main
 
@@ -43,16 +43,19 @@ func noSuchCommandHandler(b *bot.Bot, update bot.Update, cmd, args string) {
 }
 
 // handle non-command updates
-func handleUpdate(b *bot.Bot, update bot.Update, err error) {
+func updateHandler(b *bot.Bot, update bot.Update, err error) {
 	if err == nil {
 		if update.HasMessage() {
 			// 'is typing...'
 			b.SendChatAction(update.Message.Chat.ID, bot.ChatActionTyping, nil)
 			time.Sleep(typingDelaySeconds * time.Second)
 
-			// send message
+			// send a reply,
 			message := fmt.Sprintf("Received your message: %s", *update.Message.Text)
 			send(b, update.Message.Chat.ID, update.Message.MessageID, message)
+
+			// and add a reaction on the received message
+			react(b, update.Message.Chat.ID, update.Message.MessageID, "👍")
 		}
 	} else {
 		log.Printf(
@@ -62,7 +65,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 	}
 }
 
-// send message
+// send a message
 func send(b *bot.Bot, chatID, messageID int64, message string) {
 	if sent := b.SendMessage(
 		chatID,
@@ -74,8 +77,18 @@ func send(b *bot.Bot, chatID, messageID int64, message string) {
 			}), // show original message
 	); !sent.Ok {
 		log.Printf(
-			"*** failed to send message: %s",
+			"*** failed to send a message: %s",
 			*sent.Description,
+		)
+	}
+}
+
+// leave a reaction on a message
+func react(b *bot.Bot, chatID, messageID int64, emoji string) {
+	if reacted := b.SetMessageReaction(chatID, messageID, bot.NewMessageReactionWithEmoji(emoji)); !reacted.Ok {
+		log.Printf(
+			"*** failed to leave a reaction on a message: %s",
+			*reacted.Description,
 		)
 	}
 }
@@ -103,7 +116,7 @@ func main() {
 			client.StartPollingUpdates(
 				0,
 				pollingIntervalSeconds,
-				handleUpdate,
+				updateHandler,
 			)
 		} else {
 			panic("failed to delete webhook")

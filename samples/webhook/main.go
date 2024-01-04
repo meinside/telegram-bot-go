@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (receive webhooks),
 //
-// last update: 2022.04.13.
+// last update: 2024.01.04.
 
 package main
 
@@ -24,8 +24,8 @@ const (
 	verbose = true
 )
 
-// webhook handler function
-func handleWebhook(b *bot.Bot, webhook bot.Update, err error) {
+// function for handling webhook updates
+func webhookHandler(b *bot.Bot, webhook bot.Update, err error) {
 	if err == nil {
 		if webhook.HasMessage() {
 			// 'is typing...'
@@ -167,7 +167,7 @@ func main() {
 					client.StartWebhookServerAndWait(
 						certFilepath,
 						keyFilepath,
-						handleWebhook,
+						webhookHandler,
 					)
 				} else {
 					panic("failed to set webhook")
