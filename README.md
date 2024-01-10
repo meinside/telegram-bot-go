@@ -42,7 +42,3 @@ $ go test
 
 - [ ] Add tests for every API method
 
-## License
-
-MIT
-
