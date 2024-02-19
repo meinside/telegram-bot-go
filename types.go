@@ -293,6 +293,7 @@ type Chat struct {
 	PinnedMessage                      *Message         `json:"pinned_message,omitempty"`
 	Permissions                        *ChatPermissions `json:"permissions,omitempty"`
 	SlowModeDelay                      int              `json:"slow_mode_delay,omitempty"`
+	UnrestrictBoostCount               int              `json:"unrestrict_boost_count,omitempty"`
 	MessageAutoDeleteTime              int              `json:"message_auto_delete_time,omitempty"`
 	HasAggressiveAntiSpamEnabled       bool             `json:"has_aggressive_anti_spam_enabled,omitempty"`
 	HasHiddenMembers                   bool             `json:"has_hidden_members,omitempty"`
@@ -300,6 +301,7 @@ type Chat struct {
 	HasVisibleHistory                  bool             `json:"has_visible_history,omitempty"`
 	StickerSetName                     *string          `json:"sticker_set_name,omitempty"`
 	CanSetStickerSet                   bool             `json:"can_set_sticker_set,omitempty"`
+	CustomEmojiStickerSetName          *string          `json:"custom_emoji_sticker_set_name,omitempty"`
 	LinkedChatID                       int64            `json:"linked_chat_id,omitempty"`
 	Location                           *ChatLocation    `json:"location,omitempty"`
 }
@@ -551,7 +553,8 @@ type InputSticker struct {
 //
 // https://core.telegram.org/bots/api#story
 type Story struct {
-	// - currently holds no information -
+	Chat Chat  `json:"chat"`
+	ID   int64 `json:"id"`
 }
 
 // Video is a struct for a video file
@@ -643,6 +646,13 @@ type ProximityAlertTriggered struct {
 	Traveler User `json:"traveler"`
 	Watcher  User `json:"watcher"`
 	Distance int  `json:"distance"`
+}
+
+// ChatBoostAdded is a struct of an added boost to a chat
+//
+// https://core.telegram.org/bots/api#chatboostadded
+type ChatBoostAdded struct {
+	BoostCount int `json:"boost_count"`
 }
 
 // Poll is a struct of a poll
@@ -1324,6 +1334,7 @@ type Message struct {
 	MessageThreadID               int64                          `json:"message_thread_id,omitempty"`
 	From                          *User                          `json:"from,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
+	SenderBoostCount              int                            `json:"sender_boost_count,omitempty"`
 	Date                          int                            `json:"date"`
 	Chat                          Chat                           `json:"chat"`
 	ForwardOrigin                 *MessageOrigin                 `json:"forward_origin,omitempty"`
@@ -1332,6 +1343,7 @@ type Message struct {
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
 	ExternalReply                 *ExternalReplyInfo             `json:"external_reply,omitempty"`
 	Quote                         *TextQuote                     `json:"quote,omitempty"`
+	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
 	EditDate                      int                            `json:"edit_date,omitempty"`
 	HasProtectedContent           bool                           `json:"has_protected_content,omitempty"`
@@ -1378,6 +1390,7 @@ type Message struct {
 	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
+	BoostAdded                   *ChatBoostAdded               `json:"boost_added,omitempty"`
 	ForumTopicCreated            *ForumTopicCreated            `json:"forum_topic_created,omitempty"`
 	ForumTopicEdited             *ForumTopicEdited             `json:"forum_topic_edited,omitempty"`
 	ForumTopicClosed             *ForumTopicClosed             `json:"forum_topic_closed,omitempty"`
