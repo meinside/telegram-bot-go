@@ -1847,7 +1847,7 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 			}
 		}
 
-		errStr = fmt.Sprintf("json parse error: not in Message nor bool type (%s)", string(bytes))
+		errStr = fmt.Sprintf("%s failed to parse json: not in Message nor bool type (%s)", method, string(bytes))
 	} else {
 		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
@@ -1868,7 +1868,7 @@ func requestGeneric[T any](b *Bot, method string, params map[string]any) (result
 			return jsonResponse
 		}
 
-		errStr = fmt.Sprintf("json parse error: %s (%s)", err, string(bytes))
+		errStr = fmt.Sprintf("%s failed to parse json: %s (%s)", method, err, string(bytes))
 	} else {
 		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
