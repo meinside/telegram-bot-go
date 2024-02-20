@@ -172,13 +172,18 @@ func TestMethods(t *testing.T) {
 			// TODO: ApproveChatJoinRequest
 			// TODO: DeclineChatJoinRequest
 			// TODO: GetMyCommands
-			// SetMyName
-			if name := client.SetMyName("telegram api test bot", OptionsSetMyName{}); !name.Ok {
-				t.Errorf("failed to set my name: %s", *name.Description)
-			}
 			// GetMyName
 			if name := client.GetMyName(OptionsGetMyName{}); !name.Ok {
 				t.Errorf("failed to get my name: %s", *name.Description)
+			} else {
+				newName := "telegram api test bot"
+
+				if name.Result.Name != newName {
+					// SetMyName
+					if name := client.SetMyName(newName, OptionsSetMyName{}); !name.Ok {
+						t.Errorf("failed to set my name: %s", *name.Description)
+					}
+				}
 			}
 			// SetMyDescription
 			if desc := client.SetMyDescription(OptionsSetMyDescription{}.
