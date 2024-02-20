@@ -2,7 +2,7 @@
 
 This package is for building Telegram Bots with or without webhook interface.
 
-View the [documentation here](https://godoc.org/github.com/meinside/telegram-bot-go).
+View the [documentation here](https://pkg.go.dev/github.com/meinside/telegram-bot-go).
 
 ## How to get
 
@@ -32,13 +32,13 @@ run tests with:
 $ go test
 ```
 
-## Not implemented yet
+## Not implemented (yet)
 
 - [ ] [Telegram Passport](https://core.telegram.org/bots/api#telegram-passport)
 - [ ] [Seamless Telegram Login](https://telegram.org/blog/privacy-discussions-web-bots#meet-seamless-web-bots)
 - [ ] [Payments 2.0](https://core.telegram.org/bots/payments)
 
-## Todo
+## Todos
 
 - [ ] Add tests for every API method
 
