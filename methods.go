@@ -306,7 +306,7 @@ func (b *Bot) UploadStickerFile(userID int64, sticker InputFile, stickerFormat S
 // CreateNewStickerSet creates a new sticker set.
 //
 // https://core.telegram.org/bots/api#createnewstickerset
-func (b *Bot) CreateNewStickerSet(userID int64, name, title string, stickers []InputSticker, stickerFormat StickerFormat, options OptionsCreateNewStickerSet) (result APIResponse[bool]) {
+func (b *Bot) CreateNewStickerSet(userID int64, name, title string, stickers []InputSticker, options OptionsCreateNewStickerSet) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -316,7 +316,6 @@ func (b *Bot) CreateNewStickerSet(userID int64, name, title string, stickers []I
 	options["name"] = name
 	options["title"] = title
 	options["stickers"] = stickers
-	options["sticker_format"] = stickerFormat
 
 	return requestGeneric[bool](b, "createNewStickerSet", options)
 }
@@ -365,7 +364,7 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponse[bool]) {
 // SetStickerSetThumbnail sets a thumbnail of a sticker set.
 //
 // https://core.telegram.org/bots/api#setstickersetthumbnail
-func (b *Bot) SetStickerSetThumbnail(name string, userID int64, options OptionsSetStickerSetThumbnail) (result APIResponse[bool]) {
+func (b *Bot) SetStickerSetThumbnail(name string, userID int64, format StickerFormat, options OptionsSetStickerSetThumbnail) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -373,6 +372,7 @@ func (b *Bot) SetStickerSetThumbnail(name string, userID int64, options OptionsS
 	// essential params
 	options["name"] = name
 	options["user_id"] = userID
+	options["format"] = format
 
 	return requestGeneric[bool](b, "setStickerSetThumbnail", options)
 }
@@ -407,6 +407,18 @@ func (b *Bot) SetStickerSetTitle(name, title string) (result APIResponse[bool]) 
 func (b *Bot) DeleteStickerSet(name string) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "deleteStickerSet", map[string]any{
 		"name": name,
+	})
+}
+
+// ReplaceStickerInSet replaces an existing sticker in a sticker set with a new one.
+//
+// https://core.telegram.org/bots/api#replacestickerinset
+func (b *Bot) ReplaceStickerInSet(userID, name, oldSticker string, sticker InputSticker) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "replaceStickerInSet", map[string]any{
+		"user_id":     userID,
+		"name":        name,
+		"old_sticker": oldSticker,
+		"sticker":     sticker,
 	})
 }
 
@@ -1119,6 +1131,18 @@ func (b *Bot) GetUserChatBoosts(chatID ChatID, userID int64) (result APIResponse
 	}
 
 	return requestGeneric[UserChatBoosts](b, "getUserChatBoosts", options)
+}
+
+// GetBusinessConnection gets a business connection.
+//
+// https://core.telegram.org/bots/api#getbusinessconnection
+func (b *Bot) GetBusinessConnection(businessConnectionID string) (result APIResponse[BusinessConnection]) {
+	// essential params
+	options := map[string]any{
+		"business_connection_id": businessConnectionID,
+	}
+
+	return requestGeneric[BusinessConnection](b, "getBusinessConnection", options)
 }
 
 // SetMyCommands sets commands of this bot.

@@ -610,12 +610,13 @@ func (m *Message) LargestPhoto() PhotoSize {
 		return PhotoSize{}
 	}
 
-	var maxIndex int
+	maxIndex := 0
 	for i, photo := range m.Photo {
-		if photo.FileSize > m.Photo[maxIndex].FileSize {
+		if photo.FileSize != nil && m.Photo[maxIndex].FileSize != nil && *photo.FileSize > *m.Photo[maxIndex].FileSize {
 			maxIndex = i
 		}
 	}
+
 	return m.Photo[maxIndex]
 }
 
@@ -681,32 +682,34 @@ func (m *Message) HasNewChatPhoto() bool {
 
 // HasDeleteChatPhoto checks if Message has DeleteChatPhoto.
 func (m *Message) HasDeleteChatPhoto() bool {
-	return m.DeleteChatPhoto
+	if b := m.DeleteChatPhoto; b != nil {
+		return *b
+	}
+	return false
 }
 
 // HasGroupChatCreated checks if Message has GroupChatCreated.
 func (m *Message) HasGroupChatCreated() bool {
-	return m.GroupChatCreated
+	if b := m.GroupChatCreated; b != nil {
+		return *b
+	}
+	return false
 }
 
 // HasSupergroupChatCreated checks if Message has SupergroupChatCreated.
 func (m *Message) HasSupergroupChatCreated() bool {
-	return m.SupergroupChatCreated
+	if b := m.SupergroupChatCreated; b != nil {
+		return *b
+	}
+	return false
 }
 
 // HasChannelChatCreated checks if Message has ChannelChatCreated.
 func (m *Message) HasChannelChatCreated() bool {
-	return m.ChannelChatCreated
-}
-
-// HasMigrateToChatID checks if Message has MigrateToChatId.
-func (m *Message) HasMigrateToChatID() bool {
-	return m.MigrateToChatID > 0
-}
-
-// HasMigrateFromChatID checks if Message has MigrateFromChatId.
-func (m *Message) HasMigrateFromChatID() bool {
-	return m.MigrateFromChatID > 0
+	if b := m.ChannelChatCreated; b != nil {
+		return *b
+	}
+	return false
 }
 
 // HasPinnedMessage checks if Message has PinnedMessage.
@@ -919,7 +922,7 @@ func NewMessageOriginChannel(chat Chat, messageID int64, date int, authorSignatu
 		Type:            "channel",
 		Date:            date,
 		Chat:            &chat,
-		MessageID:       messageID,
+		MessageID:       &messageID,
 		AuthorSignature: authorSignature,
 	}
 }
@@ -947,9 +950,9 @@ func NewChatBoostSourceGiftCode(user User) ChatBoostSource {
 func NewChatBoostSourceGiveaway(giveawayMessageID int64, user *User, isUnclaimed bool) ChatBoostSource {
 	return ChatBoostSource{
 		Source:            "giveaway",
-		GiveawayMessageID: giveawayMessageID,
+		GiveawayMessageID: &giveawayMessageID,
 		User:              user,
-		IsUnclaimed:       isUnclaimed,
+		IsUnclaimed:       &isUnclaimed,
 	}
 }
 
