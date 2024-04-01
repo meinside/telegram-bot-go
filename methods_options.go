@@ -83,10 +83,16 @@ func (o OptionsGetUpdates) SetAllowedUpdates(allowedUpdates []AllowedUpdate) Opt
 
 // OptionsSendMessage struct for SendMessage().
 //
-// options include: `message_thread_id`, `parse_mode`, `entities`, `link_preview_options`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `parse_mode`, `entities`, `link_preview_options`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendmessage
 type OptionsSendMessage MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetBusinessConnectionID(businessConnectionID string) OptionsSendMessage {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetMessageThreadID(messageThreadID int64) OptionsSendMessage {
@@ -253,10 +259,16 @@ func (o OptionsCopyMessages) SetRemoveCaption(removeCaption bool) OptionsCopyMes
 
 // OptionsSendPhoto struct for SendPhoto().
 //
-// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetBusinessConnectionID(businessConnectionID string) OptionsSendPhoto {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id`value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetMessageThreadID(messageThreadID int64) OptionsSendPhoto {
@@ -316,10 +328,16 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 
 // OptionsSendAudio struct for SendAudio().
 //
-// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendaudio
 type OptionsSendAudio MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetBusinessConnectionID(businessConnectionID string) OptionsSendAudio {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetMessageThreadID(messageThreadID int64) OptionsSendAudio {
@@ -399,10 +417,16 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup any) OptionsSendAudio {
 
 // OptionsSendDocument struct for SendDocument().
 //
-// options include: `message_thread_id`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddocument
 type OptionsSendDocument MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetBusinessConnectionID(businessConnectionID string) OptionsSendDocument {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetMessageThreadID(messageThreadID int64) OptionsSendDocument {
@@ -470,10 +494,16 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup any) OptionsSendDocument
 
 // OptionsSendSticker struct for SendSticker().
 //
-// options include: `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendsticker
 type OptionsSendSticker MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetBusinessConnectionID(businessConnectionID string) OptionsSendSticker {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetMessageThreadID(messageThreadID int64) OptionsSendSticker {
@@ -588,10 +618,16 @@ func (o OptionsSetStickerMaskPosition) SetMaskPosition(maskPosition MaskPosition
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetBusinessConnectionID(businessConnectionID string) OptionsSendVideo {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetMessageThreadID(messageThreadID int64) OptionsSendVideo {
@@ -683,10 +719,16 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 
 // OptionsSendAnimation struct for SendAnimation().
 //
-// options include: `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `has_spoiler`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetBusinessConnectionID(businessConnectionID string) OptionsSendAnimation {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetMessageThreadID(messageThreadID int64) OptionsSendAnimation {
@@ -772,10 +814,16 @@ func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup any) OptionsSendAnimati
 
 // OptionsSendVoice struct for SendVoice().
 //
-// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvoice
 type OptionsSendVoice MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetBusinessConnectionID(businessConnectionID string) OptionsSendVoice {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetMessageThreadID(messageThreadID int64) OptionsSendVoice {
@@ -835,11 +883,17 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup any) OptionsSendVoice {
 
 // OptionsSendVideoNote struct for SendVideoNote().
 //
-// options include: `message_thread_id,` `duration`, `length`, `thumbnail`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id,` `duration`, `length`, `thumbnail`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
 type OptionsSendVideoNote MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetBusinessConnectionID(businessConnectionID string) OptionsSendVideoNote {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVideoNote.
 func (o OptionsSendVideoNote) SetMessageThreadID(messageThreadID int64) OptionsSendVideoNote {
@@ -895,10 +949,16 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNo
 
 // OptionsSendMediaGroup struct for SendMediaGroup().
 //
-// options include: `message_thread_id`, `disable_notification`, `protect_content`, and `reply_parameters`
+// options include: `business_connection_id`, `message_thread_id`, `disable_notification`, `protect_content`, and `reply_parameters`
 //
 // https://core.telegram.org/bots/api#sendmediagroup
 type OptionsSendMediaGroup MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendMediaGroup.
+func (o OptionsSendMediaGroup) SetBusinessConnectionID(businessConnectionID string) OptionsSendMediaGroup {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendMediaGroup.
 func (o OptionsSendMediaGroup) SetMessageThreadID(messageThreadID int64) OptionsSendMediaGroup {
@@ -926,10 +986,16 @@ func (o OptionsSendMediaGroup) SetReplyParameters(replyParameters ReplyParameter
 
 // OptionsSendLocation struct for SendLocation()
 //
-// options include: `message_thread_id,` `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id,` `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendlocation
 type OptionsSendLocation MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetBusinessConnectionID(businessConnectionID string) OptionsSendLocation {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetMessageThreadID(messageThreadID int64) OptionsSendLocation {
@@ -989,10 +1055,16 @@ func (o OptionsSendLocation) SetReplyMarkup(replyMarkup any) OptionsSendLocation
 
 // OptionsSendVenue struct for SendVenue().
 //
-// options include: `message_thread_id`, `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvenue
 type OptionsSendVenue MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetBusinessConnectionID(businessConnectionID string) OptionsSendVenue {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetMessageThreadID(messageThreadID int64) OptionsSendVenue {
@@ -1052,10 +1124,16 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup any) OptionsSendVenue {
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: `message_thread_id`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetBusinessConnectionID(businessConnectionID string) OptionsSendPoll {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetMessageThreadID(messageThreadID int64) OptionsSendPoll {
@@ -1164,10 +1242,16 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 
 // OptionsSendDice struct for SendDice().
 //
-// options include: `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddice
 type OptionsSendDice MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendDice.
+func (o OptionsSendDice) SetBusinessConnectionID(businessConnectionID string) OptionsSendDice {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendDice.
 func (o OptionsSendDice) SetMessageThreadID(messageThreadID int64) OptionsSendDice {
@@ -1211,10 +1295,16 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup any) OptionsSendDice {
 
 // OptionsSendChatAction struct for SendChatAction().
 //
-// options include: `message_thread_id`.
+// options include: `business_connection_id`, and `message_thread_id`.
 //
 // https://core.telegram.org/bots/api#sendchataction
 type OptionsSendChatAction MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendChatAction.
+func (o OptionsSendChatAction) SetBusinessConnectionID(businessConnectionID string) OptionsSendChatAction {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendChatAction.
 func (o OptionsSendChatAction) SetMessageThreadID(messageThreadID int64) OptionsSendChatAction {
@@ -1243,10 +1333,16 @@ func (o OptionsSetMessageReaction) SetIsBig(isBig bool) OptionsSetMessageReactio
 
 // OptionsSendContact struct for SendContact().
 //
-// options include: `message_thread_id`, `last_name`, `vcard`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `last_name`, `vcard`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendcontact
 type OptionsSendContact MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendContact.
+func (o OptionsSendContact) SetBusinessConnectionID(businessConnectionID string) OptionsSendContact {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendContact.
 func (o OptionsSendContact) SetMessageThreadID(messageThreadID int64) OptionsSendContact {
@@ -2266,10 +2362,16 @@ func (o OptionsCreateInvoiceLink) SetIsFlexible(isFlexible bool) OptionsCreateIn
 
 // OptionsSendGame struct for SendGame()
 //
-// options include: `message_thread_id`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendgame
 type OptionsSendGame MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendGame.
+func (o OptionsSendGame) SetBusinessConnectionID(businessConnectionID string) OptionsSendGame {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendGame.
 func (o OptionsSendGame) SetMessageThreadID(messageThreadID int64) OptionsSendGame {
