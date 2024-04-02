@@ -330,6 +330,8 @@ const (
 
 // InputMedia represents the content of a media message to be sent.
 //
+// NOTE: Can be generated with NewInputMedia() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#inputmedia
 type InputMedia struct {
 	Type                        InputMediaType  `json:"type"`
@@ -349,7 +351,8 @@ type InputMedia struct {
 }
 
 // InputFile represents contents of a file to be uploaded.
-// Can be generated with InputFileFromXXX() functions in types_helper.go
+//
+// NOTE: Can be generated with NewInputFileFromXXX() functions in types_helper.go
 //
 // https://core.telegram.org/bots/api#inputfile
 type InputFile struct {
@@ -395,6 +398,8 @@ type Audio struct {
 }
 
 // MessageEntity is a struct of a message entity
+//
+// NOTE: Can be generated with NewMessageEntity() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#messageentity
 type MessageEntity struct {
@@ -447,6 +452,8 @@ type ExternalReplyInfo struct {
 }
 
 // ReplyParameters is a struct for replying messages
+//
+// NOTE: Can be generated with NewReplyParameters() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#replyparameters
 type ReplyParameters struct {
@@ -539,6 +546,8 @@ type StickerSet struct {
 
 // MaskPosition is a struct for a mask position
 //
+// NOTE: Can be generated with NewMaskPosition() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#maskposition
 type MaskPosition struct {
 	Point  MaskPositionPoint `json:"point"`
@@ -548,6 +557,8 @@ type MaskPosition struct {
 }
 
 // InputSticker is a struct for a sticker
+//
+// NOTE: Can be generated with NewInputSticker() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#inputsticker
 type InputSticker struct {
@@ -865,6 +876,8 @@ type GiveawayCompleted struct {
 
 // LinkPreviewOptions is a struct for link preview
 //
+// NOTE: Can be generated with NewLinkPreviewOptions() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#linkpreviewoptions
 type LinkPreviewOptions struct {
 	IsDisabled       *bool   `json:"is_disabled,omitempty"`
@@ -894,6 +907,8 @@ type File struct {
 
 // ReplyKeyboardMarkup is a struct for reply keyboard markups
 //
+// NOTE: Can be generated with NewReplyKeyboardMarkup() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#replykeyboardmarkup
 type ReplyKeyboardMarkup struct {
 	Keyboard              [][]KeyboardButton `json:"keyboard"`
@@ -905,6 +920,8 @@ type ReplyKeyboardMarkup struct {
 }
 
 // KeyboardButton is a struct of a keyboard button
+//
+// NOTE: Can be generated with NewKeyboardButton() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
@@ -919,6 +936,8 @@ type KeyboardButton struct {
 
 // KeyboardButtonRequestUsers is a struct for `request_users` in KeyboardButton
 //
+// NOTE: Can be generated with NewKeyboardButtonRequestUsers() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#keyboardbuttonrequestusers
 type KeyboardButtonRequestUsers struct {
 	RequestID       int64 `json:"request_id"`
@@ -931,6 +950,8 @@ type KeyboardButtonRequestUsers struct {
 }
 
 // KeyboardButtonRequestChat is a struct for `request_chat` in KeyboardButton
+//
+// NOTE: Can be generated with NewKeyboardButtonRequestChat() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#keyboardbuttonrequestchat
 type KeyboardButtonRequestChat struct {
@@ -949,12 +970,16 @@ type KeyboardButtonRequestChat struct {
 
 // KeyboardButtonPollType is a struct for KeyboardButtonPollType
 //
+// NOTE: Can be generated with NewKeyboardButtonPollType() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#keyboardbuttonpolltype
 type KeyboardButtonPollType struct {
 	Type *string `json:"type,omitempty"` // "quiz", "regular", or anything
 }
 
 // ReplyKeyboardRemove is a struct for ReplyKeyboardRemove
+//
+// NOTE: Can be generated with NewReplyKeyboardRemove() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#replykeyboardremove
 type ReplyKeyboardRemove struct {
@@ -964,12 +989,16 @@ type ReplyKeyboardRemove struct {
 
 // InlineKeyboardMarkup is a struct for InlineKeyboardMarkup
 //
+// NOTE: Can be generated with NewInlineKeyboardMarkup() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#inlinekeyboardmarkup
 type InlineKeyboardMarkup struct {
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
 }
 
 // InlineKeyboardButton is a struct for InlineKeyboardButtons
+//
+// NOTE: Can be generated with NewInlineKeyboardButton() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#inlinekeyboardbutton
 type InlineKeyboardButton struct {
@@ -987,6 +1016,8 @@ type InlineKeyboardButton struct {
 
 // LoginURL is a struct for LoginURL
 //
+// NOTE: Can be generated with NewLoginURL() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#loginurl
 type LoginURL struct {
 	URL                string  `json:"url"`
@@ -996,6 +1027,8 @@ type LoginURL struct {
 }
 
 // SwitchInlineQueryChosenChat is a struct for SwitchInlineQueryChosenChat
+//
+// NOTE: Can be generated with NewSwitchInlineQueryChosenChat() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#switchinlinequerychosenchat
 type SwitchInlineQueryChosenChat struct {
@@ -1078,6 +1111,8 @@ type ChatInviteLink struct {
 
 // ChatAdministratorRights is a struct of chat administrator's rights
 //
+// NOTE: Can be generated with NewChatAdministratorRights() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#chatadministratorrights
 type ChatAdministratorRights struct {
 	IsAnonymous         bool  `json:"is_anonymous"`
@@ -1140,6 +1175,8 @@ type ChatMemberUpdated struct {
 }
 
 // ChatPermissions is a struct of chat permissions
+//
+// NOTE: Can be generated with NewChatPermissions() function in types_helper.go
 //
 // https://core.telegram.org/bots/api#chatpermissions
 type ChatPermissions struct {
@@ -1554,6 +1591,8 @@ type InlineQueryResultsButton struct {
 
 // InlineQueryResult is a struct for inline query results
 //
+// NOTE: Can be generated with NewInlineQueryResult*() functions in types_helper.go
+//
 // https://core.telegram.org/bots/api#inlinequeryresult
 type InlineQueryResult struct {
 	Type InlineQueryResultType `json:"type"`
@@ -1838,11 +1877,17 @@ type InlineQueryResultCachedAudio struct { // https://core.telegram.org/bots/api
 
 // InputMessageContent is a generic type of input message content types
 //
+// (can be one of `InputTextMessageContent`, `InputLocationMessageContent`, `InputVenueMessageContent`, `InputContactMessageContent`, or `InputInvoiceMessageContent`)
+//
+// NOTE: Can be generated with NewInput*MessageContent() function in types_helper.go
+//
 // https://core.telegram.org/bots/api#inputmessagecontent
 type InputMessageContent any
 
 // InputTextMessageContent is a struct of InputTextMessageContent
 type InputTextMessageContent struct { // https://core.telegram.org/bots/api#inputtextmessagecontent
+	InputMessageContent
+
 	MessageText        string              `json:"message_text"`
 	ParseMode          *ParseMode          `json:"parse_mode,omitempty"`
 	CaptionEntities    []MessageEntity     `json:"caption_entities,omitempty"`
@@ -1851,6 +1896,8 @@ type InputTextMessageContent struct { // https://core.telegram.org/bots/api#inpu
 
 // InputLocationMessageContent is a struct of InputLocationMessageContent
 type InputLocationMessageContent struct { // https://core.telegram.org/bots/api#inputlocationmessagecontent
+	InputMessageContent
+
 	Latitude             float32  `json:"latitude"`
 	Longitude            float32  `json:"longitude"`
 	HorizontalAccuracy   *float32 `json:"horizontal_accuracy,omitempty"`
@@ -1861,6 +1908,8 @@ type InputLocationMessageContent struct { // https://core.telegram.org/bots/api#
 
 // InputVenueMessageContent is a struct of InputVenueMessageContent
 type InputVenueMessageContent struct { // https://core.telegram.org/bots/api#inputvenuemessagecontent
+	InputMessageContent
+
 	Latitude        float32 `json:"latitude"`
 	Longitude       float32 `json:"longitude"`
 	Title           string  `json:"title"`
@@ -1873,6 +1922,8 @@ type InputVenueMessageContent struct { // https://core.telegram.org/bots/api#inp
 
 // InputContactMessageContent is a struct of InputContactMessageContent
 type InputContactMessageContent struct { // https://core.telegram.org/bots/api#inputcontactmessagecontent
+	InputMessageContent
+
 	PhoneNumber string  `json:"phone_number"`
 	FirstName   string  `json:"first_name"`
 	LastName    *string `json:"last_name,omitempty"`
@@ -1881,6 +1932,8 @@ type InputContactMessageContent struct { // https://core.telegram.org/bots/api#i
 
 // InputInvoiceMessageContent is a struct of InputInvoiceMessageContent
 type InputInvoiceMessageContent struct { // https://core.telegram.org/bots/api#inputinvoicemessagecontent
+	InputMessageContent
+
 	Title                     string         `json:"title"`
 	Description               string         `json:"description"`
 	Payload                   string         `json:"payload"`
@@ -2062,6 +2115,8 @@ type ForumTopic struct {
 }
 
 // ReactionType is a struct for a reaction
+//
+// NOTE: Can be generated with New*Reaction*() functions in types_helper.go
 //
 // https://core.telegram.org/bots/api#reactiontype
 type ReactionType struct {
