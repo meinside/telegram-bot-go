@@ -113,7 +113,7 @@ func TestMethods(t *testing.T) {
 			// TODO: CopyMessages
 			// TODO: ForwardMessages
 			// SendPhoto
-			if photo := client.SendPhoto(_chatID, InputFileFromFilepath("./samples/_files/gopher.png"), OptionsSendPhoto{}); !photo.Ok {
+			if photo := client.SendPhoto(_chatID, NewInputFileFromFilepath("./samples/_files/gopher.png"), OptionsSendPhoto{}); !photo.Ok {
 				t.Errorf("failed to send photo: %s", *photo.Description)
 			} else {
 				// EditMessageCaption
@@ -123,7 +123,7 @@ func TestMethods(t *testing.T) {
 			}
 			// TODO: SendAudio
 			// TODO: SendDocument
-			if doc := client.SendDocument(_chatID, InputFileFromFilepath("./samples/_files/gopher.png"), OptionsSendDocument{}); !doc.Ok {
+			if doc := client.SendDocument(_chatID, NewInputFileFromFilepath("./samples/_files/gopher.png"), OptionsSendDocument{}); !doc.Ok {
 				t.Errorf("failed to send document: %s", *doc.Description)
 			} else {
 				// GetFile
@@ -204,6 +204,7 @@ func TestMethods(t *testing.T) {
 				t.Errorf("failed to get my short description: %s", *desc.Description)
 			}
 			// TODO: GetUserChatBoosts
+			// TODO: GetBusinessConnection
 			// TODO: SetMyCommands
 			// TODO: DeleteMyCommands
 			// TODO: SetChatMenuButton
@@ -236,6 +237,7 @@ func TestMethods(t *testing.T) {
 			// TODO: AddStickerToSet
 			// TODO: SetStickerPositionInSet
 			// TODO: DeleteStickerFromSet
+			// TODO: ReplaceStickerInSet
 			// TODO: SetStickerSetThumbnail
 			// TODO: SetCustomEmojiStickerSetThumbnail
 			// TODO: SetStickerSetTitle
