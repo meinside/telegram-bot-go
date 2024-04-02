@@ -77,19 +77,11 @@ func webhookHandler(b *bot.Bot, webhook bot.Update, err error) {
 					SetReplyMarkup(bot.ReplyKeyboardMarkup{ // show keyboards
 						Keyboard: [][]bot.KeyboardButton{
 							{
-								{
-									Text: "Just a button",
-								},
+								keyboardButton("Just a button", false, false),
 							},
 							{
-								{
-									Text:           "Request contact",
-									RequestContact: true,
-								},
-								{
-									Text:            "Request location",
-									RequestLocation: true,
-								},
+								keyboardButton("Request contact", true, false),
+								keyboardButton("Request location", false, true),
 							},
 						},
 					}),
@@ -132,6 +124,14 @@ func webhookHandler(b *bot.Bot, webhook bot.Update, err error) {
 			"*** error while receiving webhook (%s)",
 			err.Error(),
 		)
+	}
+}
+
+func keyboardButton(text string, contact, location bool) bot.KeyboardButton {
+	return bot.KeyboardButton{
+		Text:            text,
+		RequestContact:  &contact,
+		RequestLocation: &location,
 	}
 }
 

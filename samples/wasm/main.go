@@ -134,22 +134,13 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 				bot.OptionsSendMessage{}.
 					SetReplyParameters(bot.ReplyParameters{
 						MessageID: update.Message.MessageID,
-					}).                                     // reply to the original message
-					SetReplyMarkup(bot.ReplyKeyboardMarkup{ // show keyboards
-						ResizeKeyboard: true, // compact keyboard size
-						Keyboard: [][]bot.KeyboardButton{
-							{
-								bot.KeyboardButton{
-									Text:           "Send contact",
-									RequestContact: true,
-								},
-								bot.KeyboardButton{
-									Text:            "Send location",
-									RequestLocation: true,
-								},
-							},
+					}).                                                              // reply to the original message
+					SetReplyMarkup(replyKeyboardMarkup(true, [][]bot.KeyboardButton{ // show keyboards
+						{
+							keyboardButton("Send contact", true, false),
+							keyboardButton("Send location", false, true),
 						},
-					}),
+					})),
 			); !sent.Ok {
 				log.Printf(
 					"*** failed to send message: %s",
@@ -162,6 +153,23 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			"*** error while receiving update (%s)",
 			err,
 		)
+	}
+}
+
+// generate a reply keyboard markup
+func replyKeyboardMarkup(resize bool, keyboards [][]bot.KeyboardButton) bot.ReplyKeyboardMarkup {
+	return bot.ReplyKeyboardMarkup{
+		ResizeKeyboard: &resize,
+		Keyboard:       keyboards,
+	}
+}
+
+// generate a keyboard button
+func keyboardButton(text string, contact, location bool) bot.KeyboardButton {
+	return bot.KeyboardButton{
+		Text:            text,
+		RequestContact:  &contact,
+		RequestLocation: &location,
 	}
 }
 
