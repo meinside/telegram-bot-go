@@ -4,7 +4,7 @@
 //
 // Wasm version
 //
-// created on: 2024.01.04.
+// created on: 2024.04.03.
 
 // NOTE: open related files with GOOS and GOARCH environment variables like:
 //    `$ GOOS=js GOARCH=wasm vi __FILENAME__`
@@ -130,17 +130,17 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			if sent := b.SendMessage(
 				update.Message.Chat.ID,
 				message,
-				// options
 				bot.OptionsSendMessage{}.
-					SetReplyParameters(bot.ReplyParameters{
-						MessageID: update.Message.MessageID,
-					}).                                                              // reply to the original message
-					SetReplyMarkup(replyKeyboardMarkup(true, [][]bot.KeyboardButton{ // show keyboards
+					SetReplyParameters(bot.NewReplyParameters(update.Message.MessageID)). // reply to the original message
+					SetReplyMarkup(bot.NewReplyKeyboardMarkup([][]bot.KeyboardButton{     // show resized keyboards
 						{
-							keyboardButton("Send contact", true, false),
-							keyboardButton("Send location", false, true),
+							bot.NewKeyboardButton("Send contact").
+								SetRequestContact(true),
+							bot.NewKeyboardButton("Send location").
+								SetRequestLocation(true),
 						},
-					})),
+					}).
+						SetResizeKeyboard(true)),
 			); !sent.Ok {
 				log.Printf(
 					"*** failed to send message: %s",
@@ -153,23 +153,6 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			"*** error while receiving update (%s)",
 			err,
 		)
-	}
-}
-
-// generate a reply keyboard markup
-func replyKeyboardMarkup(resize bool, keyboards [][]bot.KeyboardButton) bot.ReplyKeyboardMarkup {
-	return bot.ReplyKeyboardMarkup{
-		ResizeKeyboard: &resize,
-		Keyboard:       keyboards,
-	}
-}
-
-// generate a keyboard button
-func keyboardButton(text string, contact, location bool) bot.KeyboardButton {
-	return bot.KeyboardButton{
-		Text:            text,
-		RequestContact:  &contact,
-		RequestLocation: &location,
 	}
 }
 
