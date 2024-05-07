@@ -272,6 +272,19 @@ type User struct {
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
+	ID        int64    `json:"id"`
+	Type      ChatType `json:"type"`
+	Title     *string  `json:"title,omitempty"`
+	Username  *string  `json:"username,omitempty"`
+	FirstName *string  `json:"first_name,omitempty"`
+	LastName  *string  `json:"last_name,omitempty"`
+	IsForum   *bool    `json:"is_forum,omitempty"`
+}
+
+// ChatFullInfo is a struct for a full info of chat
+//
+// https://core.telegram.org/bots/api#chatfullinfo
+type ChatFullInfo struct {
 	ID                                 int64                 `json:"id"`
 	Type                               ChatType              `json:"type"`
 	Title                              *string               `json:"title,omitempty"`
@@ -279,6 +292,8 @@ type Chat struct {
 	FirstName                          *string               `json:"first_name,omitempty"`
 	LastName                           *string               `json:"last_name,omitempty"`
 	IsForum                            *bool                 `json:"is_forum,omitempty"`
+	AccentColorID                      int                   `json:"accent_color_id"`
+	MaxReactionCount                   int                   `json:"max_reaction_count"`
 	Photo                              *ChatPhoto            `json:"photo,omitempty"`
 	ActiveUsernames                    []string              `json:"active_usernames,omitempty"`
 	Birthdate                          *Birthdate            `json:"birthdate,omitempty"`
@@ -287,7 +302,6 @@ type Chat struct {
 	BusinessOpeningHours               *BusinessOpeningHours `json:"business_opening_hours,omitempty"`
 	PersonalChat                       *Chat                 `json:"personal_chat,omitempty"`
 	AvailableReactions                 []ReactionType        `json:"available_reactions,omitempty"`
-	AccentColorID                      *int                  `json:"accent_color_id,omitempty"`
 	BackgroundCustomEmojiID            *string               `json:"background_custom_emoji_id,omitempty"`
 	ProfileAccentColorID               *int                  `json:"profile_accent_color_id,omitempty"`
 	ProfileBackgroundCustomEmojiID     *string               `json:"profile_background_custom_emoji_id,omitempty"`
@@ -681,6 +695,7 @@ type ChatBoostAdded struct {
 type Poll struct {
 	ID                    string          `json:"id"`
 	Question              string          `json:"question"` // 1~255 chars
+	QuestionEntities      []MessageEntity `json:"question_entities,omitempty"`
 	Options               []PollOption    `json:"options"`
 	TotalVoterCount       int             `json:"total_voter_count"`
 	IsClosed              bool            `json:"is_closed"`
@@ -698,8 +713,18 @@ type Poll struct {
 //
 // https://core.telegram.org/bots/api#polloption
 type PollOption struct {
-	Text       string `json:"text"` // 1~100 chars
-	VoterCount int    `json:"voter_count"`
+	Text         string          `json:"text"` // 1~100 chars
+	TextEntities []MessageEntity `json:"text_entities,omitempty"`
+	VoterCount   int             `json:"voter_count"`
+}
+
+// InputPollOption is a struct of an input poll option
+//
+// https://core.telegram.org/bots/api#inputpolloption
+type InputPollOption struct {
+	Text          string          `json:"text"` // 1~100 chars
+	TextParseMode ParseMode       `json:"text_parse_mode,omitempty"`
+	TextEntities  []MessageEntity `json:"text_entities,omitempty"`
 }
 
 // PollAnswer is a struct of a poll answer
@@ -725,6 +750,79 @@ type Dice struct {
 // https://core.telegram.org/bots/api#messageautodeletetimerchanged
 type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"`
+}
+
+// ChatBackground is a struct for chat background
+//
+// https://core.telegram.org/bots/api#chatbackground
+type ChatBackground struct {
+	Type BackgroundType `json:"type"`
+}
+
+// BackgroundTypeType for types of BackgroundType
+type BackgroundTypeType string
+
+// BackgroundTypeType constants
+const (
+	BackgroundTypeFill      BackgroundTypeType = "fill"       // https://core.telegram.org/bots/api#backgroundtypefill
+	BackgroundTypeWallpaper BackgroundTypeType = "wallpaper"  // https://core.telegram.org/bots/api#backgroundtypewallpaper
+	BackgroundTypePattern   BackgroundTypeType = "pattern"    // https://core.telegram.org/bots/api#backgroundtypepattern
+	BackgroundTypeChatTheme BackgroundTypeType = "chat_theme" // https://core.telegram.org/bots/api#backgroundtypechattheme
+)
+
+// BackgroundType is a struct for a type of background
+//
+// https://core.telegram.org/bots/api#backgroundtype
+type BackgroundType struct {
+	Type BackgroundTypeType `json:"type"`
+
+	// type == "fill"
+	Fill             *BackgroundFill `json:"fill,omitempty"`
+	DarkThemeDimming *int            `json:"dark_theme_dimming,omitempty"`
+
+	// type == "wallpaper"
+	Document *Document `json:"document,omitempty"`
+	//DarkThemeDimming *int `json:"dark_theme_dimming,omitempty"`
+	IsBlurred *bool `json:"is_blurred,omitempty"`
+	IsMoving  *bool `json:"is_moving,omitempty"`
+
+	// type == "pattern"
+	//Document *Document `json:"document,omitempty"`
+	//Fill *BackgroundFill `json:"fill,omitempty"`
+	Intensity  *int  `json:"intensity,omitempty"`
+	IsInverted *bool `json:"is_inverted,omitempty"`
+	//IsMoving *bool `json:"is_moving,omitempty"`
+
+	// type == "chat_theme"
+	ThemeName *string `json:"theme_name,omitempty"`
+}
+
+// BackgroundFillType for types of BackgroundFill
+type BackgroundFillType string
+
+// BackgroundFillType constants
+const (
+	BackgroundFillTypeSolid            BackgroundFillType = "solid"
+	BackgroundFillTypeGradient         BackgroundFillType = "gradient"
+	BackgroundFillTypeFreeformGradient BackgroundFillType = "freeform_gradient"
+)
+
+// BackgroundFill is a struct for a type of background fill
+//
+// https://core.telegram.org/bots/api#backgroundfill
+type BackgroundFill struct {
+	Type BackgroundFillType `json:"type"`
+
+	// type == "solid"
+	Color *int `json:"color,omitempty"`
+
+	// type == "gradient"
+	TopColor      *int `json:"top_color,omitempty"`      // RGB24
+	BottomColor   *int `json:"bottom_color,omitempty"`   // RGB24
+	RotationAngle *int `json:"rotation_angle,omitempty"` // 0-359
+
+	// type == "freeform_gradient"
+	Colors []int `json:"colors,omitempty"`
 }
 
 // ForumTopicCreated is a struct for a new forum topic created in the chat.
@@ -1171,6 +1269,7 @@ type ChatMemberUpdated struct {
 	OldChatMember           ChatMember      `json:"old_chat_member"`
 	NewChatMember           ChatMember      `json:"new_chat_member"`
 	InviteLink              *ChatInviteLink `json:"invite_link,omitempty"`
+	ViaJoinRequest          *bool           `json:"via_join_request,omitempty"`
 	ViaChatFolderInviteLink *bool           `json:"via_chat_folder_invite_link,omitempty"`
 }
 
@@ -1500,6 +1599,7 @@ type Message struct {
 	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
 	BoostAdded                   *ChatBoostAdded               `json:"boost_added,omitempty"`
+	ChatBackgroundSet            *ChatBackground               `json:"chat_background_set,omitempty"`
 	ForumTopicCreated            *ForumTopicCreated            `json:"forum_topic_created,omitempty"`
 	ForumTopicEdited             *ForumTopicEdited             `json:"forum_topic_edited,omitempty"`
 	ForumTopicClosed             *ForumTopicClosed             `json:"forum_topic_closed,omitempty"`

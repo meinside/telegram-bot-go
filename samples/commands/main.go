@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (handle commands),
 //
-// last update: 2024.01.04.
+// last update: 2024.04.03.
 
 package main
 
@@ -70,11 +70,8 @@ func send(b *bot.Bot, chatID, messageID int64, message string) {
 	if sent := b.SendMessage(
 		chatID,
 		message,
-		// option
 		bot.OptionsSendMessage{}.
-			SetReplyParameters(bot.ReplyParameters{
-				MessageID: messageID,
-			}), // show original message
+			SetReplyParameters(bot.NewReplyParameters(messageID)), // show original message
 	); !sent.Ok {
 		log.Printf(
 			"*** failed to send a message: %s",
@@ -93,17 +90,26 @@ func react(b *bot.Bot, chatID, messageID int64, emoji string) {
 	}
 }
 
+// generate bot's name
+func botName(bot *bot.User) string {
+	if bot != nil {
+		if bot.Username != nil {
+			return fmt.Sprintf("@%s (%s)", *bot.Username, bot.FirstName)
+		} else {
+			return bot.FirstName
+		}
+	}
+
+	return "Unknown"
+}
+
 func main() {
 	client := bot.NewClient(apiToken)
 	client.Verbose = verbose
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
-		log.Printf(
-			"Bot information: @%s (%s)",
-			*me.Result.Username,
-			me.Result.FirstName,
-		)
+		log.Printf("Bot information: %s", botName(me.Result))
 
 		// delete webhook (getting updates will not work when wehbook is set up)
 		if unhooked := client.DeleteWebhook(true); unhooked.Ok {

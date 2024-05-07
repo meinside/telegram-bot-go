@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (get updates),
 //
-// last update: 2024.01.04.
+// last update: 2024.04.03.
 
 package main
 
@@ -66,18 +66,20 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 				bot.OptionsSendMessage{}.
 					SetReplyParameters(bot.ReplyParameters{
 						MessageID: update.Message.MessageID,
-					}).                                     // show original message
-					SetReplyMarkup(bot.ReplyKeyboardMarkup{ // show keyboards
-						Keyboard: [][]bot.KeyboardButton{
+					}).                                        // show original message
+					SetReplyMarkup(bot.NewReplyKeyboardMarkup( // show keyboards
+						[][]bot.KeyboardButton{
 							{
-								keyboardButton("Just a button", false, false),
+								bot.NewKeyboardButton("Just a button"),
 							},
 							{
-								keyboardButton("Request contact", true, false),
-								keyboardButton("Request location", false, true),
+								bot.NewKeyboardButton("Request contact").
+									SetRequestContact(true),
+								bot.NewKeyboardButton("Request location").
+									SetRequestLocation(true),
 							},
 						},
-					}),
+					)),
 			); !sent.Ok {
 				log.Printf(
 					"*** failed to send message: %s",
@@ -120,12 +122,17 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 	}
 }
 
-func keyboardButton(text string, contact, location bool) bot.KeyboardButton {
-	return bot.KeyboardButton{
-		Text:            text,
-		RequestContact:  &contact,
-		RequestLocation: &location,
+// generate bot's name
+func botName(bot *bot.User) string {
+	if bot != nil {
+		if bot.Username != nil {
+			return fmt.Sprintf("@%s (%s)", *bot.Username, bot.FirstName)
+		} else {
+			return bot.FirstName
+		}
 	}
+
+	return "Unknown"
 }
 
 func main() {
@@ -134,11 +141,7 @@ func main() {
 
 	// get info about this bot
 	if me := client.GetMe(); me.Ok {
-		log.Printf(
-			"Bot information: @%s (%s)",
-			*me.Result.Username,
-			me.Result.FirstName,
-		)
+		log.Printf("Bot information: %s", botName(me.Result))
 
 		// delete webhook (getting updates will not work when wehbook is set up)
 		if unhooked := client.DeleteWebhook(true); unhooked.Ok {

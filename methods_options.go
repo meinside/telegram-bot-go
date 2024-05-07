@@ -1124,7 +1124,7 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup any) OptionsSendVenue {
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: `business_connection_id`, `message_thread_id`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `question_parse_mode`, `question_entities`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
@@ -1138,6 +1138,18 @@ func (o OptionsSendPoll) SetBusinessConnectionID(businessConnectionID string) Op
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetMessageThreadID(messageThreadID int64) OptionsSendPoll {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetQuestionParseMode sets the `question_parse_mode` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetQuestionParseMode(questionParseMode ParseMode) OptionsSendPoll {
+	o["question_parse_mode"] = questionParseMode
+	return o
+}
+
+// SetQuestionEntities sets the `question_entities` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetQuestionEntities(questionEntities []MessageEntity) OptionsSendPoll {
+	o["question_entities"] = questionEntities
 	return o
 }
 
@@ -1172,7 +1184,7 @@ func (o OptionsSendPoll) SetExplanation(explanation string) OptionsSendPoll {
 }
 
 // SetExplanationParseMode sets the `explanation_parse_mode` value of OptionsSendPoll.
-func (o OptionsSendPoll) SetExplanationParseMode(explanationParseMode string) OptionsSendPoll {
+func (o OptionsSendPoll) SetExplanationParseMode(explanationParseMode ParseMode) OptionsSendPoll {
 	o["explanation_parse_mode"] = explanationParseMode
 	return o
 }
@@ -2039,7 +2051,7 @@ func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup InlineKeyboard
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `horizontal_accuracy`, `heading`, `proximity_alert_radius`, `reply_markup`
+// other options: `live_period`, `horizontal_accuracy`, `heading`, `proximity_alert_radius`, `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
 type OptionsEditMessageLiveLocation MethodOptions
@@ -2054,6 +2066,12 @@ func (o OptionsEditMessageLiveLocation) SetIDs(chatID ChatID, messageID int64) O
 // SetInlineMessageID sets the `inline_message_id` value of OptionsEditMessageLiveLocation.
 func (o OptionsEditMessageLiveLocation) SetInlineMessageID(inlineMessageID string) OptionsEditMessageLiveLocation {
 	o["inline_message_id"] = inlineMessageID
+	return o
+}
+
+// SetLivePeriod sets the `live_period` value of OptionsEditMessageLiveLocation.
+func (o OptionsEditMessageLiveLocation) SetLivePeriod(livePeriod int) OptionsEditMessageLiveLocation {
+	o["live_period"] = livePeriod
 	return o
 }
 

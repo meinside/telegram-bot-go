@@ -220,7 +220,7 @@ func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options OptionsSendPhoto
 	return requestGeneric[Message](b, "sendPhoto", options)
 }
 
-// SendAudio sends an audio file. (.mp3 format only, will be played with external players)
+// SendAudio sends an audio file. (.mp3 or .m4a format, will be played with external players)
 //
 // https://core.telegram.org/bots/api#sendaudio
 func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options OptionsSendAudio) (result APIResponse[Message]) {
@@ -586,7 +586,7 @@ func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options 
 // SendPoll sends a poll.
 //
 // https://core.telegram.org/bots/api#sendpoll
-func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []string, options OptionsSendPoll) (result APIResponse[Message]) {
+func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []InputPollOption, options OptionsSendPoll) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -979,13 +979,13 @@ func (b *Bot) UnpinAllChatMessages(chatID ChatID) (result APIResponse[bool]) {
 // GetChat gets a chat.
 //
 // https://core.telegram.org/bots/api#getchat
-func (b *Bot) GetChat(chatID ChatID) (result APIResponse[Chat]) {
+func (b *Bot) GetChat(chatID ChatID) (result APIResponse[ChatFullInfo]) {
 	// essential params
 	params := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[Chat](b, "getChat", params)
+	return requestGeneric[ChatFullInfo](b, "getChat", params)
 }
 
 // GetChatAdministrators gets chat administrators.
