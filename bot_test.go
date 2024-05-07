@@ -152,7 +152,11 @@ func TestMethods(t *testing.T) {
 				t.Errorf("failed to send contact: %s", *contact.Description)
 			}
 			// SendPoll
-			if poll := client.SendPoll(_chatID, "The earth is...?", []string{"flat", "round", "nothing"}, OptionsSendPoll{}); !poll.Ok {
+			if poll := client.SendPoll(_chatID, "The earth is...?", []InputPollOption{
+				{Text: "flat"},
+				{Text: "round"},
+				{Text: "nothing"},
+			}, OptionsSendPoll{}); !poll.Ok {
 				t.Errorf("failed to send poll: %s", *poll.Description)
 			} else {
 				// StopPoll
