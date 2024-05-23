@@ -170,9 +170,29 @@ func (m *Message) HasForwardFromChat() bool {
 		m.ForwardOrigin.Date > 0
 }
 
-// HasReplyTo checks if Message has ReplyTo.
-func (m *Message) HasReplyTo() bool {
+// HasReplyToMessage checks if Message has ReplyToMessage.
+func (m *Message) HasReplyToMessage() bool {
 	return m.ReplyToMessage != nil
+}
+
+// HasQuote checks if Message has Quote.
+func (m *Message) HasQuote() bool {
+	return m.Quote != nil
+}
+
+// HasReplyToStory checks if Message has ReplyToStory.
+func (m *Message) HasReplyToStory() bool {
+	return m.ReplyToStory != nil
+}
+
+// IsBot checks if Message is from bot.
+func (m *Message) IsBot() bool {
+	return m.ViaBot != nil && m.ViaBot.IsBot
+}
+
+// HasEditDate checks if Message has EditDate.
+func (m *Message) HasEditDate() bool {
+	return m.EditDate != nil
 }
 
 // HasText checks if Message has Text.
@@ -185,6 +205,11 @@ func (m *Message) HasMessageEntities() bool {
 	return len(m.Entities) > 0
 }
 
+// HasAnimation checks if Message has Animation.
+func (m *Message) HasAnimation() bool {
+	return m.Animation != nil
+}
+
 // HasAudio checks if Message has Audio.
 func (m *Message) HasAudio() bool {
 	return m.Audio != nil
@@ -193,16 +218,6 @@ func (m *Message) HasAudio() bool {
 // HasDocument checks if Message has Document.
 func (m *Message) HasDocument() bool {
 	return m.Document != nil
-}
-
-// HasAnimation checks if Message has Animation.
-func (m *Message) HasAnimation() bool {
-	return m.Animation != nil
-}
-
-// HasGame checks if Message has Game.
-func (m *Message) HasGame() bool {
-	return m.Game != nil
 }
 
 // HasPhoto checks if Message has Photo.
@@ -231,9 +246,19 @@ func (m *Message) HasSticker() bool {
 	return m.Sticker != nil
 }
 
+// HasStory checks if Message has Story.
+func (m *Message) HasStory() bool {
+	return m.Story != nil
+}
+
 // HasVideo checks if Message has Video.
 func (m *Message) HasVideo() bool {
 	return m.Video != nil
+}
+
+// HasVideoNote checks if Message has VideoNote.
+func (m *Message) HasVideoNote() bool {
+	return m.VideoNote != nil
 }
 
 // HasVoice checks if Message has Voice.
@@ -246,14 +271,29 @@ func (m *Message) HasCaption() bool {
 	return m.Caption != nil
 }
 
+// HasCaptionEntities checks if Message has CaptionEntities
+func (m *Message) HasCaptionEntities() bool {
+	return len(m.CaptionEntities) > 0
+}
+
 // HasContact checks if Message has Contact.
 func (m *Message) HasContact() bool {
 	return m.Contact != nil
 }
 
-// HasLocation checks if Message has Location.
-func (m *Message) HasLocation() bool {
-	return m.Location != nil
+// HasDice checks if Message has Dice.
+func (m *Message) HasDice() bool {
+	return m.Dice != nil
+}
+
+// HasGame checks if Message has Game.
+func (m *Message) HasGame() bool {
+	return m.Game != nil
+}
+
+// HasPoll checks if Message has Poll.
+func (m *Message) HasPoll() bool {
+	return m.Poll != nil
 }
 
 // HasVenue checks if Message has Venue.
@@ -261,9 +301,9 @@ func (m *Message) HasVenue() bool {
 	return m.Venue != nil
 }
 
-// HasPoll checks if Message has Poll.
-func (m *Message) HasPoll() bool {
-	return m.Poll != nil
+// HasLocation checks if Message has Location.
+func (m *Message) HasLocation() bool {
+	return m.Location != nil
 }
 
 // HasNewChatMembers checks if Message has NewChatParticipant.
@@ -286,41 +326,139 @@ func (m *Message) HasNewChatPhoto() bool {
 	return len(m.NewChatPhoto) > 0
 }
 
-// HasDeleteChatPhoto checks if Message has DeleteChatPhoto.
-func (m *Message) HasDeleteChatPhoto() bool {
-	if b := m.DeleteChatPhoto; b != nil {
-		return *b
-	}
-	return false
-}
-
-// HasGroupChatCreated checks if Message has GroupChatCreated.
-func (m *Message) HasGroupChatCreated() bool {
-	if b := m.GroupChatCreated; b != nil {
-		return *b
-	}
-	return false
-}
-
-// HasSupergroupChatCreated checks if Message has SupergroupChatCreated.
-func (m *Message) HasSupergroupChatCreated() bool {
-	if b := m.SupergroupChatCreated; b != nil {
-		return *b
-	}
-	return false
-}
-
-// HasChannelChatCreated checks if Message has ChannelChatCreated.
-func (m *Message) HasChannelChatCreated() bool {
-	if b := m.ChannelChatCreated; b != nil {
-		return *b
-	}
-	return false
+// HasMessageAutoDeleteTimerChanged checks if Message has MessageAutoDeleteTimerChanged.
+func (m *Message) HasMessageAutoDeleteTimerChanged() bool {
+	return m.MessageAutoDeleteTimerChanged != nil
 }
 
 // HasPinnedMessage checks if Message has PinnedMessage.
 func (m *Message) HasPinnedMessage() bool {
 	return m.PinnedMessage != nil
+}
+
+// HasInvoice checks if Message has Invoice.
+func (m *Message) HasInvoice() bool {
+	return m.Invoice != nil
+}
+
+// HasSuccessfulPayment checks if Message has SuccessfulPayment.
+func (m *Message) HasSuccessfulPayment() bool {
+	return m.SuccessfulPayment != nil
+}
+
+// HasUsersShared checks if Message has UsersShared.
+func (m *Message) HasUsersShared() bool {
+	return m.UsersShared != nil
+}
+
+// HasChatShared checks if Message has ChatShared.
+func (m *Message) HasChatShared() bool {
+	return m.ChatShared != nil
+}
+
+// HasConnectedWebsite checks if Message has ConnectedWebsite.
+func (m *Message) HasConnectedWebsite() bool {
+	return m.ConnectedWebsite != nil
+}
+
+// HasWriteAccessAllowed checks if Message has WriteAccessAllowed.
+func (m *Message) HasWriteAccessAllowed() bool {
+	return m.WriteAccessAllowed != nil
+}
+
+// HasProximityAlertTriggered checks if Message has ProximityAlertTriggered.
+func (m *Message) HasProximityAlertTriggered() bool {
+	return m.ProximityAlertTriggered != nil
+}
+
+// HasBoostAdded checks if Message has BoostAdded.
+func (m *Message) HasBoostAdded() bool {
+	return m.BoostAdded != nil
+}
+
+// HasChatBackgroundSet checks if Message has ChatBackgroundSet.
+func (m *Message) HasChatBackgroundSet() bool {
+	return m.ChatBackgroundSet != nil
+}
+
+// HasForumTopicCreated checks if Message has ForumTopicCreated.
+func (m *Message) HasForumTopicCreated() bool {
+	return m.ForumTopicCreated != nil
+}
+
+// HasForumTopicEdited checks if Message has ForumTopicEdited.
+func (m *Message) HasForumTopicEdited() bool {
+	return m.ForumTopicEdited != nil
+}
+
+// HasForumTopicClosed checks if Message has ForumTopicClosed.
+func (m *Message) HasForumTopicClosed() bool {
+	return m.ForumTopicClosed != nil
+}
+
+// HasForumTopicReopened checks if Message has ForumTopicReopened.
+func (m *Message) HasForumTopicReopened() bool {
+	return m.ForumTopicReopened != nil
+}
+
+// HasGeneralForumTopicHidden checks if Message has GeneralForumTopicHidden.
+func (m *Message) HasGeneralForumTopicHidden() bool {
+	return m.GeneralForumTopicHidden != nil
+}
+
+// HasGeneralForumTopicUnhidden checks if Message has GeneralForumTopicUnhidden.
+func (m *Message) HasGeneralForumTopicUnhidden() bool {
+	return m.GeneralForumTopicUnhidden != nil
+}
+
+// HasGiveawayCreated checks if Message has GiveawayCreated.
+func (m *Message) HasGiveawayCreated() bool {
+	return m.GiveawayCreated != nil
+}
+
+// HasGiveaway checks if Message has Giveaway.
+func (m *Message) HasGiveaway() bool {
+	return m.Giveaway != nil
+}
+
+// HasGiveawayWinners checks if Message has GiveawayWinners.
+func (m *Message) HasGiveawayWinners() bool {
+	return m.GiveawayWinners != nil
+}
+
+// HasGiveawayCompleted checks if Message has GiveawayCompleted.
+func (m *Message) HasGiveawayCompleted() bool {
+	return m.GiveawayCompleted != nil
+}
+
+// HasVideoChatScheduled checks if Message has VideoChatScheduled.
+func (m *Message) HasVideoChatScheduled() bool {
+	return m.VideoChatScheduled != nil
+}
+
+// HasVideoChatStarted checks if Message has VideoChatStarted.
+func (m *Message) HasVideoChatStarted() bool {
+	return m.VideoChatStarted != nil
+}
+
+// HasVideoChatEnded checks if Message has VideoChatEnded.
+func (m *Message) HasVideoChatEnded() bool {
+	return m.VideoChatEnded != nil
+}
+
+// HasVideoChatParticipantsInvited checks if Message has VideoChatParticipantsInvited.
+func (m *Message) HasVideoChatParticipantsInvited() bool {
+	return m.VideoChatParticipantsInvited != nil
+}
+
+// HasWebAppData checks if Message has WebAppData.
+func (m *Message) HasWebAppData() bool {
+	return m.WebAppData != nil
+}
+
+// HasReplyMarkup checks if Message has ReplyMarkup.
+func (m *Message) HasReplyMarkup() bool {
+	return m.ReplyMarkup != nil
 }
 
 ////////////////////////////////
