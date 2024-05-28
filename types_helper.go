@@ -20,6 +20,30 @@ func (u *Update) HasEditedMessage() bool {
 	return u.EditedMessage != nil
 }
 
+// HasMediaGroup checks if Update is a part of a grouped media
+func (u *Update) HasMediaGroup() (exists bool) {
+	var message *Message
+	if u.HasMessage() {
+		message = u.Message
+	} else if u.HasEditedMessage() {
+		message = u.EditedMessage
+	}
+
+	return message != nil && message.MediaGroupID != nil
+}
+
+// MediaGroupID returns the media group id (nil if none)
+func (u *Update) MediaGroupID() *string {
+	var message *Message
+	if u.HasMessage() {
+		message = u.Message
+	} else if u.HasEditedMessage() {
+		message = u.EditedMessage
+	}
+
+	return message.MediaGroupID
+}
+
 // HasChannelPost checks if Update has ChannelPost.
 func (u *Update) HasChannelPost() bool {
 	return u.ChannelPost != nil
