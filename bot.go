@@ -52,6 +52,7 @@ type Bot struct {
 
 	// update handlers by content type (if not set, update will be passed to `updateHandler`)
 	messageHandler            func(b *Bot, update Update, message Message, edited bool)
+	mediaGroupHandler         func(b *Bot, updates []Update, mediaGroupID string)
 	channelPostHandler        func(b *Bot, update Update, channelPost Message, edited bool)
 	inlineQueryHandler        func(b *Bot, update Update, inlineQuery InlineQuery)
 	chosenInlineResultHandler func(b *Bot, update Update, chosenInlineResult ChosenInlineResult)
@@ -143,6 +144,11 @@ func (b *Bot) SetNoMatchingCommandHandler(handler func(b *Bot, update Update, cm
 // SetMessageHandler sets a function for handling messages.
 func (b *Bot) SetMessageHandler(handler func(b *Bot, update Update, message Message, edited bool)) {
 	b.messageHandler = handler
+}
+
+// SetMediaGroupHandler sets a function for handling updates with media group id.
+func (b *Bot) SetMediaGroupHandler(handler func(b *Bot, updates []Update, mediaGroupID string)) {
+	b.mediaGroupHandler = handler
 }
 
 // SetChannelPostHandler sets a function for handling channel posts.
@@ -269,18 +275,44 @@ loop:
 			break loop
 		default:
 			if updates = b.GetUpdates(options); updates.Ok {
+				// update offset (max + 1)
 				for _, update := range *updates.Result {
-					// update offset (max + 1)
 					if options["offset"].(int64) <= update.UpdateID {
 						options["offset"] = update.UpdateID + 1
 					}
+				}
 
-					// if there is a matching command, handle it as a command,
-					if !handleUpdateAsCommand(b, update) {
-						// if it was not handled as a command, handle it by type:
-						if !handleUpdateByType(b, update) {
-							// otherwise, handle it manually
-							go b.updateHandler(b, update, nil)
+				if b.mediaGroupHandler != nil {
+					// group updates by media group id,
+					groups := groupUpdatesByMediaGroupId(*updates.Result)
+
+					// handle updates by group id
+					for groupID, groupedUpdates := range groups {
+						if groupID == "" { // NOTE: no group id
+							for _, update := range groupedUpdates {
+								// if there is a matching command, handle it as a command,
+								if !handleUpdateAsCommand(b, update) {
+									// if it was not handled as a command, handle it by type:
+									if !handleUpdateByType(b, update) {
+										// otherwise, handle it manually
+										go b.updateHandler(b, update, nil)
+									}
+								}
+							}
+						} else { // with group id
+							go b.mediaGroupHandler(b, groupedUpdates, groupID)
+						}
+					}
+				} else {
+					// ordinary handling of updates
+					for _, update := range *updates.Result {
+						// if there is a matching command, handle it as a command,
+						if !handleUpdateAsCommand(b, update) {
+							// if it was not handled as a command, handle it by type:
+							if !handleUpdateByType(b, update) {
+								// otherwise, handle it manually
+								go b.updateHandler(b, update, nil)
+							}
 						}
 					}
 				}
@@ -298,6 +330,30 @@ loop:
 // DEPRECATED: renamed to `StartPollingUpdates`
 func (b *Bot) StartMonitoringUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error)) {
 	b.StartPollingUpdates(updateOffset, interval, updateHandler)
+}
+
+// group updates by their media group id
+func groupUpdatesByMediaGroupId(updates []Update) (groups map[string][]Update) {
+	groups = map[string][]Update{}
+
+	var mediaGroupID string
+	for _, update := range updates {
+		if update.HasMediaGroup() {
+			mediaGroupID = *update.MediaGroupID()
+		} else {
+			mediaGroupID = "" // NOTE: no group id
+		}
+
+		if group, exists := groups[mediaGroupID]; exists {
+			groups[mediaGroupID] = append(group, update)
+		} else {
+			groups[mediaGroupID] = []Update{
+				update,
+			}
+		}
+	}
+
+	return groups
 }
 
 // checks if given update matches any command and handle it (returns true if handled)
