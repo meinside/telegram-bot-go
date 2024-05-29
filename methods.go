@@ -1305,6 +1305,10 @@ func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []any, options Opt
 
 // SendInvoice sends an invoice.
 //
+// NOTE:
+// - `providerToken`: Pass "" for payments in Telegram Stars.
+// - `currency`: Pass "XTR" for payments in Telegram Stars.
+//
 // https://core.telegram.org/bots/api#sendinvoice
 func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerToken, currency string, prices []LabeledPrice, options OptionsSendInvoice) (result APIResponse[Message]) {
 	if options == nil {
@@ -1324,6 +1328,10 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 }
 
 // CreateInvoiceLink creates a link for an invoice.
+//
+// NOTE:
+// - `providerToken`: Pass "" for payments in Telegram Stars.
+// - `currency`: Pass "XTR" for payments in Telegram Stars.
 //
 // https://core.telegram.org/bots/api#createinvoicelink
 func (b *Bot) CreateInvoiceLink(title, description, payload, providerToken, currency string, prices []LabeledPrice, options OptionsCreateInvoiceLink) (result APIResponse[string]) {
@@ -1385,6 +1393,19 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 	}
 
 	return requestGeneric[bool](b, "answerPreCheckoutQuery", params)
+}
+
+// RefundStarPayment refunds a successful payment in Telegram Stars.
+//
+// https://core.telegram.org/bots/api#refundstarpayment
+func (b *Bot) RefundStarPayment(userID int64, telegramPaymentChargeID string) (result APIResponse[bool]) {
+	// essential params
+	params := map[string]any{
+		"user_id":                    userID,
+		"telegram_payment_charge_id": telegramPaymentChargeID,
+	}
+
+	return requestGeneric[bool](b, "refundStarPayment", params)
 }
 
 // SendGame sends a game.
