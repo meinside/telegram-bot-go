@@ -1174,6 +1174,70 @@ type PreCheckoutQuery struct {
 	OrderInfo        *OrderInfo `json:"order_info,omitempty"`
 }
 
+// RevenueWithdrawalStateType is a type of revenue withdrawl state
+//
+// https://core.telegram.org/bots/api#revenuewithdrawalstate
+type RevenueWithdrawalStateType string
+
+const (
+	RevenueWithdrawalStatePending   RevenueWithdrawalStateType = "pending"
+	RevenueWithdrawalStateSucceeded RevenueWithdrawalStateType = "succeeded"
+	RevenueWithdrawalStateFailed    RevenueWithdrawalStateType = "failed"
+)
+
+// RevenueWithdrawalState is a struct for a state of revenue withdrawl
+//
+// https://core.telegram.org/bots/api#revenuewithdrawalstate
+type RevenueWithdrawalState struct {
+	Type RevenueWithdrawalStateType `json:"type"`
+
+	// when Type == RevenueWithdrawalStateSucceeded
+	Date *int    `json:"date,omitempty"`
+	URL  *string `json:"url,omitempty"`
+}
+
+// TransactionPartnerType is a type of transaction partner
+//
+// https://core.telegram.org/bots/api#transactionpartner
+type TransactionPartnerType string
+
+const (
+	TransactionPartnerFragment TransactionPartnerType = "fragment"
+	TransactionPartnerUser     TransactionPartnerType = "user"
+	TransactionPartnerOther    TransactionPartnerType = "other"
+)
+
+// TransactionPartner is a struct for a transaction partner
+//
+// https://core.telegram.org/bots/api#transactionpartner
+type TransactionPartner struct {
+	Type TransactionPartnerType `json:"type"`
+
+	// when Type == TransactionPartnerFragment
+	WithdrawlState *RevenueWithdrawalState `json:"withdrawal_state,omitempty"`
+
+	// when Type == TransactionPartnerUser
+	User *User `json:"user,omitempty"`
+}
+
+// StarTransaction is a struct for a star transaction
+//
+// https://core.telegram.org/bots/api#startransaction
+type StarTransaction struct {
+	ID       string              `json:"id"`
+	Amount   int                 `json:"amount"`
+	Date     int                 `json:"date"`
+	Source   *TransactionPartner `json:"source,omitempty"`   // only for incoming transactions
+	Receiver *TransactionPartner `json:"receiver,omitempty"` // only for outgoing transactions
+}
+
+// StarTransactions is a struct for star transactions
+//
+// https://core.telegram.org/bots/api#startransactions
+type StarTransactions struct {
+	Transactions []StarTransaction `json:"transactions"`
+}
+
 // ForceReply is a struct for force-reply
 //
 // https://core.telegram.org/bots/api#forcereply

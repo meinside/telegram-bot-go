@@ -300,6 +300,7 @@ func TestMethods(t *testing.T) {
 			// TODO: CreateInvoiceLink
 			// TODO: AnswerShippingQuery
 			// TODO: AnswerPreCheckoutQuery
+			// TODO: GetStarTransactions
 			// TODO: RefundStarPayment
 
 			////////////////////////////////
