@@ -1343,10 +1343,16 @@ func (o OptionsSendPoll) SetReplyMarkup(replyMarkup any) OptionsSendPoll {
 
 // OptionsStopPoll struct for StopPoll().
 //
-// options include: `reply_markup`.
+// options include: `business_connection_id`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#stoppoll
 type OptionsStopPoll MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsStopPoll.
+func (o OptionsStopPoll) SetBusinessConnectionID(businessConnectionID string) OptionsStopPoll {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetReplyMarkup sets the `reply_markup` value of OptionsStopPoll.
 func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsStopPoll {
@@ -2009,10 +2015,16 @@ func (o OptionsGetMyDefaultAdministratorRights) SetForChannels(forChannels bool)
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `parse_mode`, `entities`, `link_preview_options`, and `reply_markup`
+// other options: `business_connection_id`, `parse_mode`, `entities`, `link_preview_options`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagetext
 type OptionsEditMessageText MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsEditMessageText.
+func (o OptionsEditMessageText) SetBusinessConnectionID(businessConnectionID string) OptionsEditMessageText {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageText.
 func (o OptionsEditMessageText) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageText {
@@ -2057,10 +2069,16 @@ func (o OptionsEditMessageText) SetReplyMarkup(replyMarkup InlineKeyboardMarkup)
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, or `reply_markup`
+// other options: `business_connection_id`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, or `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagecaption
 type OptionsEditMessageCaption MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsEditMessageCaption.
+func (o OptionsEditMessageCaption) SetBusinessConnectionID(businessConnectionID string) OptionsEditMessageCaption {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageCaption.
 func (o OptionsEditMessageCaption) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageCaption {
@@ -2111,10 +2129,16 @@ func (o OptionsEditMessageCaption) SetReplyMarkup(replyMarkup InlineKeyboardMark
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `reply_markup`
+// other options: `business_connection_id`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagemedia
 type OptionsEditMessageMedia MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsEditMessageMedia.
+func (o OptionsEditMessageMedia) SetBusinessConnectionID(businessConnectionID string) OptionsEditMessageMedia {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageMedia.
 func (o OptionsEditMessageMedia) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageMedia {
@@ -2141,10 +2165,16 @@ func (o OptionsEditMessageMedia) SetReplyMarkup(replyMarkup InlineKeyboardMarkup
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `reply_markup`
+// other options: `business_connection_id`, `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagereplymarkup
 type OptionsEditMessageReplyMarkup MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsEditMessageReplyMarkup.
+func (o OptionsEditMessageReplyMarkup) SetBusinessConnectionID(businessConnectionID string) OptionsEditMessageReplyMarkup {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageReplyMarkup.
 func (o OptionsEditMessageReplyMarkup) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageReplyMarkup {
@@ -2171,10 +2201,16 @@ func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup InlineKeyboard
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `live_period`, `horizontal_accuracy`, `heading`, `proximity_alert_radius`, `reply_markup`
+// other options: `business_connection_id`, `live_period`, `horizontal_accuracy`, `heading`, `proximity_alert_radius`, `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
 type OptionsEditMessageLiveLocation MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsEditMessageLiveLocation.
+func (o OptionsEditMessageLiveLocation) SetBusinessConnectionID(businessConnectionID string) OptionsEditMessageLiveLocation {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsEditMessageLiveLocation.
 func (o OptionsEditMessageLiveLocation) SetIDs(chatID ChatID, messageID int64) OptionsEditMessageLiveLocation {
@@ -2225,10 +2261,16 @@ func (o OptionsEditMessageLiveLocation) SetReplyMarkup(replyMarkup InlineKeyboar
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `reply_markup`
+// other options: `business_connection_id`, `reply_markup`
 //
 // https://core.telegram.org/bots/api#stopmessagelivelocation
 type OptionsStopMessageLiveLocation MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsStopMessageLiveLocation.
+func (o OptionsStopMessageLiveLocation) SetBusinessConnectionID(businessConnectionID string) OptionsStopMessageLiveLocation {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetIDs sets the `chat_id` and `message_id` values of OptionsStopMessageLiveLocation.
 func (o OptionsStopMessageLiveLocation) SetIDs(chatID ChatID, messageID int64) OptionsStopMessageLiveLocation {
@@ -2501,6 +2543,27 @@ func (o OptionsCreateInvoiceLink) SetSendEmailToProvider(sendEmailToProvider boo
 // SetIsFlexible sets the `is_flexible` value of OptionsCreateInvoiceLink.
 func (o OptionsCreateInvoiceLink) SetIsFlexible(isFlexible bool) OptionsCreateInvoiceLink {
 	o["is_flexible"] = isFlexible
+	return o
+}
+
+// OptionsGetStarTransactions struct for GetStarTransactions().
+//
+// options include: `offset`, and `limit`.
+//
+// https://core.telegram.org/bots/api#getstartransactions
+type OptionsGetStarTransactions MethodOptions
+
+// SetOffset sets the `offset` value of OptionsGetStarTransactions.
+func (o OptionsGetStarTransactions) SetOffset(offset int) OptionsGetStarTransactions {
+	o["offset"] = offset
+	return o
+}
+
+// SetLimit sets the `limit` value of OptionsGetStarTransactions.
+//
+// Accepted `limit` value is 1-100. (default: 100)
+func (o OptionsGetStarTransactions) SetLimit(limit int) OptionsGetStarTransactions {
+	o["limit"] = limit
 	return o
 }
 
