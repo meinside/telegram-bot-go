@@ -1395,6 +1395,13 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 	return requestGeneric[bool](b, "answerPreCheckoutQuery", params)
 }
 
+// GetStarTransactions gets star transactions.
+//
+// https://core.telegram.org/bots/api#getstartransactions
+func (b *Bot) GetStarTransactions(options OptionsGetStarTransactions) (result APIResponse[StarTransactions]) {
+	return requestGeneric[StarTransactions](b, "getStarTransactions", options)
+}
+
 // RefundStarPayment refunds a successful payment in Telegram Stars.
 //
 // https://core.telegram.org/bots/api#refundstarpayment
