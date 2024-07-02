@@ -518,6 +518,22 @@ func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options OptionsS
 	return requestGeneric[Message](b, "sendVideoNote", options)
 }
 
+// SendPaidMedia sends paid media.
+//
+// https://core.telegram.org/bots/api#sendpaidmedia
+func (b *Bot) SendPaidMedia(chatID ChatID, starCount int, media []InputPaidMedia, options OptionsSendPaidMedia) (result APIResponse[Message]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["star_count"] = starCount
+	options["media"] = media
+
+	return requestGeneric[Message](b, "sendPaidMedia", options)
+}
+
 // SendMediaGroup sends a group of photos or videos as an album.
 //
 // https://core.telegram.org/bots/api#sendmediagroup

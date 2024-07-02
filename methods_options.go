@@ -1025,6 +1025,61 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNo
 	return o
 }
 
+// OptionsSendPaidMedia struct for SendPaideMedia().
+//
+// options include: `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+//
+// https://core.telegram.org/bots/api#sendpaidmedia
+type OptionsSendPaidMedia MethodOptions
+
+// SetCaption sets the `caption` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetCaption(caption string) OptionsSendPaidMedia {
+	o["caption"] = caption
+	return o
+}
+
+// SetParseMode sets the `parse_mode` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetParseMode(parseMode ParseMode) OptionsSendPaidMedia {
+	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetCaptionEntities(captionEntities []MessageEntity) OptionsSendPaidMedia {
+	o["caption_entities"] = captionEntities
+	return o
+}
+
+// SetShowCaptionAboveMedia sets the `show_caption_above_media` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetShowCaptionAboveMedia(showCaptionAboveMedia bool) OptionsSendPaidMedia {
+	o["show_caption_above_media"] = showCaptionAboveMedia
+	return o
+}
+
+// SetDisableNotification sets the `disable_notification` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetDisableNotification(disableNotification bool) OptionsSendPaidMedia {
+	o["disable_notification"] = disableNotification
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetProtectContent(protectContent bool) OptionsSendPaidMedia {
+	o["protect_content"] = protectContent
+	return o
+}
+
+// SetReplyParameters sets the `reply_parameters` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetReplyParameters(replyParameters ReplyParameters) OptionsSendPaidMedia {
+	o["reply_parameters"] = replyParameters
+	return o
+}
+
+// SetReplyMarkup sets the `reply_markup` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetReplyMarkup(replyMarkup any) OptionsSendPaidMedia {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
 // OptionsSendMediaGroup struct for SendMediaGroup().
 //
 // options include: `business_connection_id`, `message_thread_id`, `disable_notification`, `protect_content`, `message_effect_id`, and `reply_parameters`
