@@ -141,6 +141,7 @@ func TestMethods(t *testing.T) {
 			// TODO: SendAnimation
 			// TODO: SendVoice
 			// TODO: SendVideoNote
+			// TODO: SendPaidMedia
 			// TODO: SendMediaGroup
 			// SendLocation
 			if location := client.SendLocation(_chatID, 37.5665, 126.9780, OptionsSendLocation{}); !location.Ok {
