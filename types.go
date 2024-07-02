@@ -316,6 +316,7 @@ type ChatFullInfo struct {
 	InviteLink                         *string               `json:"invite_link,omitempty"`
 	PinnedMessage                      *Message              `json:"pinned_message,omitempty"`
 	Permissions                        *ChatPermissions      `json:"permissions,omitempty"`
+	CanSendPaidMedia                   *bool                 `json:"can_send_paid_media,omitempty"`
 	SlowModeDelay                      *int                  `json:"slow_mode_delay,omitempty"`
 	UnrestrictBoostCount               *int                  `json:"unrestrict_boost_count,omitempty"`
 	MessageAutoDeleteTime              *int                  `json:"message_auto_delete_time,omitempty"`
@@ -375,6 +376,32 @@ type InputFile struct {
 	URL      *string
 	Bytes    []byte
 	FileID   *string
+}
+
+// InputPaidMedia can be one of `InputPaidMediaPhoto` or `InputPaidMediaVideo`
+//
+// https://core.telegram.org/bots/api#inputpaidmedia
+type InputPaidMedia any
+
+// InputPaidMediaPhoto struct
+//
+// https://core.telegram.org/bots/api#inputpaidmediaphoto
+type InputPaidMediaPhoto struct {
+	Type  string `json:"type"` // == "photo"
+	Media string `json:"media"`
+}
+
+// InputPaidMediaVideo struct
+//
+// https://core.telegram.org/bots/api#inputpaidmediavideo
+type InputPaidMediaVideo struct {
+	Type              string `json:"type"` // == "video"
+	Media             string `json:"media"`
+	Thumbnail         any    `json:"thumbnail,omitempty"` // `InputFile` or string
+	Width             *int   `json:"width,omitempty"`
+	Height            *int   `json:"height,omitempty"`
+	Duration          *int   `json:"duration,omitempty"`
+	SupportsStreaming *bool  `json:"supports_streaming,omitempty"`
 }
 
 // StickerFormat is a format of sticker
@@ -448,6 +475,7 @@ type ExternalReplyInfo struct {
 	Animation          *Animation          `json:"animation,omitempty"`
 	Audio              *Audio              `json:"audio,omitempty"`
 	Document           *Document           `json:"document,omitempty"`
+	PaidMedia          *PaidMediaInfo      `json:"paid_media,omitempty"`
 	Photo              []PhotoSize         `json:"photo,omitempty"`
 	Sticker            *Sticker            `json:"sticker,omitempty"`
 	Story              *Story              `json:"story,omitempty"`
@@ -605,6 +633,45 @@ type Video struct {
 	FileName     *string    `json:"file_name,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	FileSize     *int       `json:"file_size,omitempty"`
+}
+
+// PaidMediaInfo struct
+//
+// https://core.telegram.org/bots/api#paidmediainfo
+type PaidMediaInfo struct {
+	StarCount int         `json:"star_count"`
+	PaidMedia []PaidMedia `json:"paid_media"`
+}
+
+// PaidMedia can be one of `PaidMediaPreview`, `PaidMediaPhoto`, or `PaidMediaVideo`
+//
+// https://core.telegram.org/bots/api#paidmedia
+type PaidMedia any
+
+// PaidMediaPreview struct
+//
+// https://core.telegram.org/bots/api#paidmediapreview
+type PaidMediaPreview struct {
+	Type     string `json:"type"` // == "preview"
+	Width    int    `json:"width"`
+	Height   int    `json:"height"`
+	Duration int    `json:"duration"`
+}
+
+// PaidMediaPhoto struct
+//
+// https://core.telegram.org/bots/api#paidmediaphoto
+type PaidMediaPhoto struct {
+	Type  string      `json:"type"` // == "photo"
+	Photo []PhotoSize `json:"photo"`
+}
+
+// PaidMediaVideo struct
+//
+// https://core.telegram.org/bots/api#paidmediavideo
+type PaidMediaVideo struct {
+	Type  string `json:"type"` // == "video"
+	Video Video  `json:"video"`
 }
 
 // Voice is a struct for a voice file
@@ -1202,9 +1269,10 @@ type RevenueWithdrawalState struct {
 type TransactionPartnerType string
 
 const (
-	TransactionPartnerFragment TransactionPartnerType = "fragment"
-	TransactionPartnerUser     TransactionPartnerType = "user"
-	TransactionPartnerOther    TransactionPartnerType = "other"
+	TransactionPartnerUser        TransactionPartnerType = "user"
+	TransactionPartnerFragment    TransactionPartnerType = "fragment"
+	TransactionPartnerTelegramAds TransactionPartnerType = "telegram_ads"
+	TransactionPartnerOther       TransactionPartnerType = "other"
 )
 
 // TransactionPartner is a struct for a transaction partner
@@ -1217,7 +1285,8 @@ type TransactionPartner struct {
 	WithdrawlState *RevenueWithdrawalState `json:"withdrawal_state,omitempty"`
 
 	// when Type == TransactionPartnerUser
-	User *User `json:"user,omitempty"`
+	User           *User   `json:"user,omitempty"`
+	InvoicePayload *string `json:"invoice_payload,omitempty"`
 }
 
 // StarTransaction is a struct for a star transaction
@@ -1629,6 +1698,7 @@ type Message struct {
 	Animation                     *Animation                     `json:"animation,omitempty"`
 	Audio                         *Audio                         `json:"audio,omitempty"`
 	Document                      *Document                      `json:"document,omitempty"`
+	PaidMedia                     *PaidMediaInfo                 `json:"paid_media,omitempty"`
 	Photo                         []PhotoSize                    `json:"photo,omitempty"`
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
 	Story                         *Story                         `json:"story,omitempty"`
