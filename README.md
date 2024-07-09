@@ -37,8 +37,9 @@ $ go test
 - [ ] [Telegram Passport](https://core.telegram.org/bots/api#telegram-passport)
 - [ ] [Seamless Telegram Login](https://telegram.org/blog/privacy-discussions-web-bots#meet-seamless-web-bots)
 - [ ] [Payments 2.0](https://core.telegram.org/bots/payments)
+- [ ] [Telegram Mini Apps](https://core.telegram.org/bots/webapps)
 
 ## Todos
 
-- [ ] Add tests for every API method
+- [ ] (WIP) Add tests for every API method
 

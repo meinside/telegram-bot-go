@@ -1218,6 +1218,17 @@ type CallbackQuery struct {
 	GameShortName   *string                   `json:"game_short_name,omitempty"`
 }
 
+// RefundedPayment is a struct for a refunded payment
+//
+// https://core.telegram.org/bots/api#refundedpayment
+type RefundedPayment struct {
+	Currency                string  `json:"currency"`
+	TotalAmount             int     `json:"total_amount"`
+	InvoicePayload          string  `json:"invoice_payload"`
+	TelegramPaymentChargeID string  `json:"telegram_payment_charge_id"`
+	ProviderPaymentChargeID *string `json:"provider_payment_charge_id,omitempty"`
+}
+
 // ShippingQuery is a struct for a shipping query
 //
 // https://core.telegram.org/bots/api#shippingquery
@@ -1729,6 +1740,7 @@ type Message struct {
 	PinnedMessage                 *MaybeInaccessibleMessage      `json:"pinned_message,omitempty"`
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
 	SuccessfulPayment             *SuccessfulPayment             `json:"successful_payment,omitempty"`
+	RefundedPayment               *RefundedPayment               `json:"refunded_payment,omitempty"`
 	UsersShared                   *UsersShared                   `json:"users_shared,omitempty"`
 	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
