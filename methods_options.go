@@ -1775,10 +1775,16 @@ func (o OptionsCreateChatInviteLink) SetCreatesJoinRequest(createsJoinRequest bo
 
 // OptionsPinChatMessage struct for PinChatMessage
 //
-// options include: `disable_notification`
+// options include: `business_connection_id`, and `disable_notification`
 //
 // https://core.telegram.org/bots/api#pinchatmessage
 type OptionsPinChatMessage MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsPinChatMessage.
+func (o OptionsPinChatMessage) SetBusinessConnectionID(businessConnectionID string) OptionsPinChatMessage {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetDisableNotification sets the `disable_notification` value of OptionsPinChatMessage.
 func (o OptionsPinChatMessage) SetDisableNotification(disable bool) OptionsPinChatMessage {
@@ -1788,10 +1794,16 @@ func (o OptionsPinChatMessage) SetDisableNotification(disable bool) OptionsPinCh
 
 // OptionsUnpinChatMessage struct for UnpinChatMessage
 //
-// options include: `message_id`
+// options include: `business_connection_id`, and `message_id`
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
 type OptionsUnpinChatMessage MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsUnpinChatMessage.
+func (o OptionsUnpinChatMessage) SetBusinessConnectionID(businessConnectionID string) OptionsUnpinChatMessage {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetMessageID set the `message_id` value of OptionsUnpinChatMessage.
 func (o OptionsUnpinChatMessage) SetMessageID(messageID int64) OptionsUnpinChatMessage {
