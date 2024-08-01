@@ -266,6 +266,7 @@ type User struct {
 	CanReadAllGroupMessages *bool   `json:"can_read_all_group_messages,omitempty"` // returned only in GetMe()
 	SupportsInlineQueries   *bool   `json:"supports_inline_queries,omitempty"`     // returned only in GetMe()
 	CanConnectToBusiness    *bool   `json:"can_connect_to_business,omitempty"`     // returned only in GetMe()
+	HasMainWebApp           *bool   `json:"has_main_web_app,omitempty"`            // returned only in GetMe()
 }
 
 // Chat is a struct of a chat
