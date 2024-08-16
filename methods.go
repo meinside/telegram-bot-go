@@ -864,6 +864,37 @@ func (b *Bot) EditChatInviteLink(chatID ChatID, inviteLink string, options Optio
 	return requestGeneric[ChatInviteLink](b, "editChatInviteLink", options)
 }
 
+// CreateChatSubscriptionInviteLink creates a subscription invite link for a channel chat.
+//
+// https://core.telegram.org/bots/api#createchatsubscriptioninvitelink
+func (b *Bot) CreateChatSubscriptionInviteLink(chatID ChatID, subscriptionPeriod, subscriptionPrice int, options OptionsCreateChatSubscriptionInviteLink) (result APIResponse[ChatInviteLink]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["subscription_period"] = subscriptionPeriod
+	options["subscription_price"] = subscriptionPrice
+
+	return requestGeneric[ChatInviteLink](b, "createChatSubscriptionInviteLink", options)
+}
+
+// EditChatSubscriptionInviteLink edits a subscription invite link created by the bot.
+//
+// https://core.telegram.org/bots/api#editchatsubscriptioninvitelink
+func (b *Bot) EditChatSubscriptionInviteLink(chatID ChatID, inviteLink string, options OptionsEditChatSubscriptionInviteLink) (result APIResponse[ChatInviteLink]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["invite_link"] = inviteLink
+
+	return requestGeneric[ChatInviteLink](b, "editChatSubscriptionInviteLink", options)
+}
+
 // RevokeChatInviteLink revoks a chat invite link.
 //
 // https://core.telegram.org/bots/api#revokechatinvitelink
@@ -1709,7 +1740,7 @@ func (b *Bot) request(method string, params map[string]any) (resp []byte, err er
 		return resp, nil
 	}
 
-	return []byte{}, fmt.Errorf(b.redact(err.Error()))
+	return []byte{}, fmt.Errorf("%s", b.redact(err.Error()))
 }
 
 // request multipart form data
