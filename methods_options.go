@@ -587,7 +587,7 @@ func (o OptionsSendSticker) SetReplyMarkup(replyMarkup any) OptionsSendSticker {
 
 // OptionsCreateNewStickerSet struct for CreateNewStickerSet().
 //
-// options include: `sticker_type`, and `needs_repainting`
+// options include: `sticker_type`, and `needs_repainting`.
 //
 // https://core.telegram.org/bots/api#createnewstickerset
 type OptionsCreateNewStickerSet MethodOptions
@@ -613,7 +613,7 @@ type OptionsAddStickerToSet MethodOptions
 
 // OptionsSetStickerSetThumbnail struct for SetStickerSetThumbnail()
 //
-// options include: `thumbnail`
+// options include: `thumbnail`.
 //
 // https://core.telegram.org/bots/api#setstickersetthumbnail
 type OptionsSetStickerSetThumbnail MethodOptions
@@ -634,7 +634,7 @@ func (o OptionsSetStickerSetThumbnail) SetThumbnailString(thumbnail string) Opti
 
 // OptionsSetCustomEmojiStickerSetThumbnail struct for SetCustomEmojiStickerSet()
 //
-// options include: `custom_emoji_id`
+// options include: `custom_emoji_id`.
 //
 // https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail
 type OptionsSetCustomEmojiStickerSetThumbnail MethodOptions
@@ -647,7 +647,7 @@ func (o OptionsSetCustomEmojiStickerSetThumbnail) SetCustomEmojiID(customEmojiID
 
 // OptionsSetStickerMaskPosition struct for SetStickerMaskPosition()
 //
-// options include: `mask_position`
+// options include: `mask_position`.
 //
 // https://core.telegram.org/bots/api#setstickermaskposition
 type OptionsSetStickerMaskPosition MethodOptions
@@ -1027,10 +1027,16 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNo
 
 // OptionsSendPaidMedia struct for SendPaideMedia().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpaidmedia
 type OptionsSendPaidMedia MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetBusinessConnectionID(businessConnectionID string) OptionsSendPaidMedia {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
 
 // SetCaption sets the `caption` value of OptionsSendPaidMedia.
 func (o OptionsSendPaidMedia) SetCaption(caption string) OptionsSendPaidMedia {
@@ -1082,7 +1088,7 @@ func (o OptionsSendPaidMedia) SetReplyMarkup(replyMarkup any) OptionsSendPaidMed
 
 // OptionsSendMediaGroup struct for SendMediaGroup().
 //
-// options include: `business_connection_id`, `message_thread_id`, `disable_notification`, `protect_content`, `message_effect_id`, and `reply_parameters`
+// options include: `business_connection_id`, `message_thread_id`, `disable_notification`, `protect_content`, `message_effect_id`, and `reply_parameters`.
 //
 // https://core.telegram.org/bots/api#sendmediagroup
 type OptionsSendMediaGroup MethodOptions
@@ -1744,38 +1750,62 @@ func (o OptionsSetChatPermissions) SetUserIndependentChatPermissions(val bool) O
 
 // OptionsCreateChatInviteLink struct for CreateChatInviteLink
 //
-// options include: `name`, `expire_date`, `member_limit`, and `creates_join_request`
+// options include: `name`, `expire_date`, `member_limit`, and `creates_join_request`.
 //
 // https://core.telegram.org/bots/api#createchatinvitelink
 type OptionsCreateChatInviteLink MethodOptions
 
-// SetName sets the `name` value of OptionsCreateChatInviteLink
+// SetName sets the `name` value of OptionsCreateChatInviteLink.
 func (o OptionsCreateChatInviteLink) SetName(name string) OptionsCreateChatInviteLink {
 	o["name"] = name
 	return o
 }
 
-// SetExpireDate sets the `expire_date` value of OptionsCreateChatInviteLink
+// SetExpireDate sets the `expire_date` value of OptionsCreateChatInviteLink.
 func (o OptionsCreateChatInviteLink) SetExpireDate(expireDate int) OptionsCreateChatInviteLink {
 	o["expire_date"] = expireDate
 	return o
 }
 
-// SetMemberLimit sets the `member_limit` value of OptionsCreateChatInviteLink
+// SetMemberLimit sets the `member_limit` value of OptionsCreateChatInviteLink.
 func (o OptionsCreateChatInviteLink) SetMemberLimit(memberLimit int) OptionsCreateChatInviteLink {
 	o["member_limit"] = memberLimit
 	return o
 }
 
-// SetCreatesJoinRequests sets the `creates_join_request` value of OptionsCreateChatInviteLink
+// SetCreatesJoinRequests sets the `creates_join_request` value of OptionsCreateChatInviteLink.
 func (o OptionsCreateChatInviteLink) SetCreatesJoinRequest(createsJoinRequest bool) OptionsCreateChatInviteLink {
 	o["creates_join_request"] = createsJoinRequest
 	return o
 }
 
+// OptionsCreateChatSubscriptionInviteLink struct for CreateChatSubscriptionInviteLink
+//
+// options include: `name`.
+//
+// https://core.telegram.org/bots/api#createchatsubscriptioninvitelink
+type OptionsCreateChatSubscriptionInviteLink MethodOptions
+
+// SetName sets the `name` value of OptionsCreateChatSubscriptionInviteLink.
+func (o OptionsCreateChatSubscriptionInviteLink) SetName(name string) OptionsCreateChatSubscriptionInviteLink {
+	o["name"] = name
+	return o
+}
+
+// OptionsEditChatSubscriptionInviteLink struct for EditChatSubscriptionInviteLink
+//
+// https://core.telegram.org/bots/api#editchatsubscriptioninvitelink
+type OptionsEditChatSubscriptionInviteLink MethodOptions
+
+// SetName sets the `name` value of OptionsEditChatSubscriptionInviteLink.
+func (o OptionsEditChatSubscriptionInviteLink) SetName(name string) OptionsEditChatSubscriptionInviteLink {
+	o["name"] = name
+	return o
+}
+
 // OptionsPinChatMessage struct for PinChatMessage
 //
-// options include: `business_connection_id`, and `disable_notification`
+// options include: `business_connection_id`, and `disable_notification`.
 //
 // https://core.telegram.org/bots/api#pinchatmessage
 type OptionsPinChatMessage MethodOptions
@@ -1794,7 +1824,7 @@ func (o OptionsPinChatMessage) SetDisableNotification(disable bool) OptionsPinCh
 
 // OptionsUnpinChatMessage struct for UnpinChatMessage
 //
-// options include: `business_connection_id`, and `message_id`
+// options include: `business_connection_id`, and `message_id`.
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
 type OptionsUnpinChatMessage MethodOptions
@@ -1813,7 +1843,7 @@ func (o OptionsUnpinChatMessage) SetMessageID(messageID int64) OptionsUnpinChatM
 
 // OptionsAnswerCallbackQuery struct for AnswerCallbackQuery().
 //
-// options include: `text`, `show_alert`, `url`, and `cache_time`
+// options include: `text`, `show_alert`, `url`, and `cache_time`.
 //
 // https://core.telegram.org/bots/api#answercallbackquery
 type OptionsAnswerCallbackQuery MethodOptions
@@ -1843,7 +1873,7 @@ func (o OptionsAnswerCallbackQuery) SetCacheTime(cacheTime int) OptionsAnswerCal
 
 // OptionsGetMyCommands struct for GetMyCommands().
 //
-// options include: `scope`, and `language_code`
+// options include: `scope`, and `language_code`.
 //
 // https://core.telegram.org/bots/api#getmycommands
 type OptionsGetMyCommands MethodOptions
@@ -1889,7 +1919,7 @@ func (o OptionsSetMyCommands) SetLanguageCode(languageCode string) OptionsSetMyC
 
 // OptionsDeleteMyCommands struct for DeleteMyCommands().
 //
-// options include: `scope`, and `language_code`
+// options include: `scope`, and `language_code`.
 //
 // https://core.telegram.org/bots/api#deletemycommands
 type OptionsDeleteMyCommands MethodOptions
@@ -1912,7 +1942,7 @@ func (o OptionsDeleteMyCommands) SetLanguageCode(languageCode string) OptionsDel
 
 // OptionsSetMyName struct for SetMyName().
 //
-// options include: `language_code`
+// options include: `language_code`.
 //
 // https://core.telegram.org/bots/api#setmyname
 type OptionsSetMyName MethodOptions
@@ -1927,7 +1957,7 @@ func (o OptionsSetMyName) SetLanguageCode(languageCode string) OptionsSetMyName 
 
 // OptionsGetMyName struct for GetMyName().
 //
-// options include: `language_code`
+// options include: `language_code`.
 //
 // https://core.telegram.org/bots/api#getmyname
 type OptionsGetMyName MethodOptions
@@ -2014,7 +2044,7 @@ func (o OptionsGetMyShortDescription) SetLanguageCode(languageCode string) Optio
 
 // OptionsSetChatMenuButton struct for SetChatMenuButton().
 //
-// options include: `chat_id`, and `menu_button`
+// options include: `chat_id`, and `menu_button`.
 //
 // https://core.telegram.org/bots/api#setchatmenubutton
 type OptionsSetChatMenuButton MethodOptions
@@ -2033,7 +2063,7 @@ func (o OptionsSetChatMenuButton) SetMenuButton(menuButton MenuButton) OptionsSe
 
 // OptionsGetChatMenuButton struct for GetChatMenuButton().
 //
-// options include: `chat_id`
+// options include: `chat_id`.
 //
 // https://core.telegram.org/bots/api#getchatmenubutton
 type OptionsGetChatMenuButton MethodOptions
@@ -2046,7 +2076,7 @@ func (o OptionsGetChatMenuButton) SetChatID(chatID ChatID) OptionsGetChatMenuBut
 
 // OptionsSetMyDefaultAdministratorRights struct for SetMyDefaultAdministratorRights().
 //
-// options include: `rights`, and `for_channels`
+// options include: `rights`, and `for_channels`.
 //
 // https://core.telegram.org/bots/api#setmydefaultadministratorrights
 type OptionsSetMyDefaultAdministratorRights MethodOptions
@@ -2065,7 +2095,7 @@ func (o OptionsSetMyDefaultAdministratorRights) SetForChannels(forChannels bool)
 
 // OptionsGetMyDefaultAdministratorRights struct for GetMyDefaultAdministratorRights().
 //
-// options include: `for_channels`
+// options include: `for_channels`.
 //
 // https://core.telegram.org/bots/api#getmydefaultadministratorrights
 type OptionsGetMyDefaultAdministratorRights MethodOptions
@@ -2391,7 +2421,7 @@ func (o OptionsAnswerInlineQuery) SetButton(button InlineQueryResultsButton) Opt
 
 // OptionsSendInvoice struct for SendInvoice().
 //
-// options include: `message_thread_id`, `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `protect_content`, `message_effect_id`, `reply_parameters`, and `reply_markup`
+// options include: `message_thread_id`, `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `protect_content`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendinvoice
 type OptionsSendInvoice MethodOptions

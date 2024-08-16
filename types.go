@@ -1297,8 +1297,9 @@ type TransactionPartner struct {
 	WithdrawlState *RevenueWithdrawalState `json:"withdrawal_state,omitempty"`
 
 	// when Type == TransactionPartnerUser
-	User           *User   `json:"user,omitempty"`
-	InvoicePayload *string `json:"invoice_payload,omitempty"`
+	User           *User       `json:"user,omitempty"`
+	InvoicePayload *string     `json:"invoice_payload,omitempty"`
+	PaidMedia      []PaidMedia `json:"paid_media,omitempty"`
 }
 
 // StarTransaction is a struct for a star transaction
@@ -1520,8 +1521,9 @@ type ChatMemberAdministrator struct {
 //
 // https://core.telegram.org/bots/api#chatmembermember
 type ChatMemberMember struct {
-	Status string `json:"status"` // = "member"
-	User   User   `json:"user"`
+	Status    string `json:"status"` // = "member"
+	User      User   `json:"user"`
+	UntilDate int    `json:"until_date"`
 }
 
 // ChatMemberRestricted is a struct of chat member who is restricted

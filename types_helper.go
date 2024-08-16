@@ -819,6 +819,8 @@ func (p ChatPermissions) SetCanManageTopics(can bool) ChatPermissions {
 // Helper functions for ReactionType
 
 // NewEmojiReaction returns a ReactionType with emoji.
+//
+// https://core.telegram.org/bots/api#reactiontypeemoji
 func NewEmojiReaction(emoji string) ReactionType {
 	return ReactionType{
 		Type:  "emoji",
@@ -827,6 +829,8 @@ func NewEmojiReaction(emoji string) ReactionType {
 }
 
 // NewCustomEmojiReaction returns a ReactionType with custom emoji.
+//
+// https://core.telegram.org/bots/api#reactiontypecustomemoji
 func NewCustomEmojiReaction(customEmojiID string) ReactionType {
 	return ReactionType{
 		Type:          "custom_emoji",
@@ -840,6 +844,15 @@ func NewMessageReactionWithEmoji(emoji string) OptionsSetMessageReaction {
 		SetReaction([]ReactionType{
 			NewEmojiReaction(emoji),
 		})
+}
+
+// NewPaidReaction returns a new ReactionType with type 'paid'.
+//
+// https://core.telegram.org/bots/api#reactiontypepaid
+func NewPaidReaction() ReactionType {
+	return ReactionType{
+		Type: "paid",
+	}
 }
 
 ////////////////////////////////
