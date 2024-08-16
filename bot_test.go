@@ -292,6 +292,8 @@ func TestMethods(t *testing.T) {
 			// TODO: ExportChatInviteLink
 			// TODO: CreateChatInviteLink
 			// TODO: EditChatInviteLink
+			// TODO: CreateChatSubscriptionInviteLink
+			// TODO: EditChatSubscriptionInviteLink
 			// TODO: RevokeChatInviteLink
 
 			////////////////////////////////
