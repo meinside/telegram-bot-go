@@ -1027,7 +1027,7 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNo
 
 // OptionsSendPaidMedia struct for SendPaideMedia().
 //
-// options include: `business_connection_id`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `payload`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpaidmedia
 type OptionsSendPaidMedia MethodOptions
@@ -1035,6 +1035,12 @@ type OptionsSendPaidMedia MethodOptions
 // SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendPaidMedia.
 func (o OptionsSendPaidMedia) SetBusinessConnectionID(businessConnectionID string) OptionsSendPaidMedia {
 	o["business_connection_id"] = businessConnectionID
+	return o
+}
+
+// SetPayload sets the `payload` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetPayload(payload string) OptionsSendPaidMedia {
+	o["payload"] = payload
 	return o
 }
 
