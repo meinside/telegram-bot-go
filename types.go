@@ -214,6 +214,7 @@ type Update struct {
 	CallbackQuery           *CallbackQuery               `json:"callback_query,omitempty"`
 	ShippingQuery           *ShippingQuery               `json:"shipping_query,omitempty"`
 	PreCheckoutQuery        *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`
+	PurchasedPaidMedia      *PaidMediaPurchased          `json:"purchased_paid_media,omitempty"`
 	Poll                    *Poll                        `json:"poll,omitempty"`
 	PollAnswer              *PollAnswer                  `json:"poll_answer,omitempty"`
 	MyChatMember            *ChatMemberUpdated           `json:"my_chat_member,omitempty"`
@@ -230,24 +231,29 @@ type AllowedUpdate string
 //
 // https://core.telegram.org/bots/api#update
 const (
-	AllowMessage              AllowedUpdate = "message"
-	AllowEditedMessage        AllowedUpdate = "edited_message"
-	AllowChannelPost          AllowedUpdate = "channel_post"
-	AllowEditedChannelPost    AllowedUpdate = "edited_channel_post"
-	AllowMessageReaction      AllowedUpdate = "message_reaction"       // NOTE: must be an admin, and need to be explicitly specified
-	AllowMessageReactionCount AllowedUpdate = "message_reaction_count" // NOTE: must be an admin, and need to be explicitly specified
-	AllowInlineQuery          AllowedUpdate = "inline_query"
-	AllowChosenInlineResult   AllowedUpdate = "chosen_inline_result"
-	AllowCallbackQuery        AllowedUpdate = "callback_query"
-	AllowShippingQuery        AllowedUpdate = "shipping_query"
-	AllowPreCheckoutQuery     AllowedUpdate = "pre_checkout_query"
-	AllowPoll                 AllowedUpdate = "poll"
-	AllowPollAnswer           AllowedUpdate = "poll_answer"
-	AllowMyChatMember         AllowedUpdate = "my_chat_member"
-	AllowChatMember           AllowedUpdate = "chat_member"        // NOTE: must be an admin, and need to be explicitly specified
-	AllowChatJoinRequest      AllowedUpdate = "chat_join_request"  // NOTE: must have `can_invite_users` admin right
-	AllowChatBoost            AllowedUpdate = "chat_boost"         // NOTE: must be an admin
-	AllowRemovedChatBoost     AllowedUpdate = "removed_chat_boost" // NOTE: must be an admin
+	AllowMessage                 AllowedUpdate = "message"
+	AllowEditedMessage           AllowedUpdate = "edited_message"
+	AllowChannelPost             AllowedUpdate = "channel_post"
+	AllowEditedChannelPost       AllowedUpdate = "edited_channel_post"
+	AllowBusinessConnection      AllowedUpdate = "business_connection"
+	AllowBusinessMessage         AllowedUpdate = "business_message"
+	AllowEditedBusinessMessage   AllowedUpdate = "edited_business_message"
+	AllowDeletedBusinessMessages AllowedUpdate = "deleted_business_messages"
+	AllowMessageReaction         AllowedUpdate = "message_reaction"       // NOTE: must be an admin, and need to be explicitly specified
+	AllowMessageReactionCount    AllowedUpdate = "message_reaction_count" // NOTE: must be an admin, and need to be explicitly specified
+	AllowInlineQuery             AllowedUpdate = "inline_query"
+	AllowChosenInlineResult      AllowedUpdate = "chosen_inline_result"
+	AllowCallbackQuery           AllowedUpdate = "callback_query"
+	AllowShippingQuery           AllowedUpdate = "shipping_query"
+	AllowPreCheckoutQuery        AllowedUpdate = "pre_checkout_query"
+	AllowPurchasedPaidMedia      AllowedUpdate = "purchased_paid_media"
+	AllowPoll                    AllowedUpdate = "poll"
+	AllowPollAnswer              AllowedUpdate = "poll_answer"
+	AllowMyChatMember            AllowedUpdate = "my_chat_member"
+	AllowChatMember              AllowedUpdate = "chat_member"        // NOTE: must be an admin, and need to be explicitly specified
+	AllowChatJoinRequest         AllowedUpdate = "chat_join_request"  // NOTE: must have `can_invite_users` admin right
+	AllowChatBoost               AllowedUpdate = "chat_boost"         // NOTE: must be an admin
+	AllowRemovedChatBoost        AllowedUpdate = "removed_chat_boost" // NOTE: must be an admin
 )
 
 // User is a struct of a user
@@ -1007,13 +1013,16 @@ type Giveaway struct {
 	HasPublicWinners              *bool    `json:"has_public_winners,omitempty"`
 	PrizeDescription              *string  `json:"prize_description,omitempty"`
 	CountryCodes                  []string `json:"country_codes,omitempty"`
+	PrizeStarCount                *int     `json:"prize_star_count,omitempty"`
 	PremiumSubscriptionMonthCount *int     `json:"premium_subscription_month_count,omitempty"`
 }
 
 // GiveawayCreated struct for service message about the creation of giveaway
 //
 // https://core.telegram.org/bots/api#giveawaycreated
-type GiveawayCreated struct{}
+type GiveawayCreated struct {
+	PrizeStarCount *int `json:"prize_star_count,omitempty"`
+}
 
 // GiveawayWinners struct for representing the completion of a giveaway with public winners
 //
@@ -1025,6 +1034,7 @@ type GiveawayWinners struct {
 	WinnerCount                   int     `json:"winner_count"`
 	Winners                       []User  `json:"winners"`
 	AdditionalChatCount           *int    `json:"additional_chat_count,omitempty"`
+	PrizeStarCount                *int    `json:"prize_star_count,omitempty"`
 	PremiumSubscriptionMonthCount *int    `json:"premium_subscription_month_count,omitempty"`
 	UnclaimedPrizeCount           *int    `json:"unclaimed_prize_count,omitempty"`
 	OnlyNewMembers                *bool   `json:"only_new_members,omitempty"`
@@ -1039,6 +1049,7 @@ type GiveawayCompleted struct {
 	WinnerCount         int      `json:"winner_count"`
 	UnclaimedPrizeCount *int     `json:"unclaimed_prize_count,omitempty"`
 	GiveawayMessage     *Message `json:"giveaway_message,omitempty"`
+	IsStarGiveaway      *bool    `json:"is_star_giveaway,omitempty"`
 }
 
 // LinkPreviewOptions is a struct for link preview
@@ -1251,6 +1262,14 @@ type PreCheckoutQuery struct {
 	InvoicePayload   string     `json:"invoice_payload"`
 	ShippingOptionID *string    `json:"shipping_option_id,omitempty"`
 	OrderInfo        *OrderInfo `json:"order_info,omitempty"`
+}
+
+// PaidMediaPurchased is a struct for a paid media purchase.
+//
+// https://core.telegram.org/bots/api#paidmediapurchased
+type PaidMediaPurchased struct {
+	From             User   `json:"from"`
+	PaidMediaPayload string `json:"paid_media_payload"`
 }
 
 // RevenueWithdrawalStateType is a type of revenue withdrawl state
@@ -2428,7 +2447,9 @@ type ChatBoostSource struct {
 
 	User *User `json:"user,omitempty"`
 
+	// source == "giveaway"
 	GiveawayMessageID *int64 `json:"giveaway_message_id,omitempty"`
+	PrizeStarCount    *int   `json:"prize_star_count,omitempty"`
 	IsUnclaimed       *bool  `json:"is_unclaimed,omitempty"`
 }
 
