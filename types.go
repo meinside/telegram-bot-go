@@ -1188,6 +1188,7 @@ type InlineKeyboardButton struct {
 	SwitchInlineQuery            *string                      `json:"switch_inline_query,omitempty"`
 	SwitchInlineQueryCurrentChat *string                      `json:"switch_inline_query_current_chat,omitempty"`
 	SwitchInlineQueryChosenChat  *SwitchInlineQueryChosenChat `json:"switch_inline_query_chosen_chat,omitempty"`
+	CopyText                     *CopyTextButton              `json:"copy_text,omitempty"`
 	CallbackGame                 *CallbackGame                `json:"callback_game,omitempty"`
 	Pay                          *bool                        `json:"pay,omitempty"`
 }
@@ -1215,6 +1216,13 @@ type SwitchInlineQueryChosenChat struct {
 	AllowBotChats     *bool   `json:"allow_bot_chats,omitempty"`
 	AllowGroupChats   *bool   `json:"allow_group_chats,omitempty"`
 	AllowChannelChats *bool   `json:"allow_channel_chats,omitempty"`
+}
+
+// CopyTextButton is a struct for CopyTextButton
+//
+// https://core.telegram.org/bots/api#copytextbutton
+type CopyTextButton struct {
+	Text string `json:"text"` // 1~256 characters
 }
 
 // CallbackQuery is a struct for a callback query
@@ -1303,6 +1311,7 @@ const (
 	TransactionPartnerUser        TransactionPartnerType = "user"
 	TransactionPartnerFragment    TransactionPartnerType = "fragment"
 	TransactionPartnerTelegramAds TransactionPartnerType = "telegram_ads"
+	TransactionPartnerTelegramAPI TransactionPartnerType = "telegram_api"
 	TransactionPartnerOther       TransactionPartnerType = "other"
 )
 
@@ -1319,6 +1328,9 @@ type TransactionPartner struct {
 	User           *User       `json:"user,omitempty"`
 	InvoicePayload *string     `json:"invoice_payload,omitempty"`
 	PaidMedia      []PaidMedia `json:"paid_media,omitempty"`
+
+	// when Type == TransactionParterTelegramAPI
+	RequestCount *int `json:"request_count,omitempty"`
 }
 
 // StarTransaction is a struct for a star transaction
