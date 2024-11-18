@@ -1325,9 +1325,12 @@ type TransactionPartner struct {
 	WithdrawlState *RevenueWithdrawalState `json:"withdrawal_state,omitempty"`
 
 	// when Type == TransactionPartnerUser
-	User           *User       `json:"user,omitempty"`
-	InvoicePayload *string     `json:"invoice_payload,omitempty"`
-	PaidMedia      []PaidMedia `json:"paid_media,omitempty"`
+	User               *User       `json:"user,omitempty"`
+	InvoicePayload     *string     `json:"invoice_payload,omitempty"`
+	SubscriptionPeriod *int        `json:"subscription_period,omitempty"`
+	PaidMedia          []PaidMedia `json:"paid_media,omitempty"`
+	PaidMediaPayload   *string     `json:"paid_media_payload,omitempty"`
+	Gift               *string     `json:"gift,omitempty"`
 
 	// when Type == TransactionParterTelegramAPI
 	RequestCount *int `json:"request_count,omitempty"`
@@ -2309,13 +2312,16 @@ type Invoice struct {
 //
 // https://core.telegram.org/bots/api#successfulpayment
 type SuccessfulPayment struct {
-	Currency                string     `json:"currency"`
-	TotalAmount             int        `json:"total_amount"`
-	InvoicePayload          string     `json:"invoice_payload"`
-	ShippingOptionID        *string    `json:"shipping_option_id,omitempty"`
-	OrderInfo               *OrderInfo `json:"order_info,omitempty"`
-	TelegramPaymentChargeID string     `json:"telegram_payment_charge_id"`
-	ProviderPaymentChargeID string     `json:"provider_payment_charge_id"`
+	Currency                   string     `json:"currency"`
+	TotalAmount                int        `json:"total_amount"`
+	InvoicePayload             string     `json:"invoice_payload"`
+	SubscriptionExpirationDate *int       `json:"subscription_expiration_date,omitempty"`
+	IsRecurring                *bool      `json:"is_recurring,omitempty"`
+	IsFirstRecurring           *bool      `json:"is_first_recurring,omitempty"`
+	ShippingOptionID           *string    `json:"shipping_option_id,omitempty"`
+	OrderInfo                  *OrderInfo `json:"order_info,omitempty"`
+	TelegramPaymentChargeID    string     `json:"telegram_payment_charge_id"`
+	ProviderPaymentChargeID    string     `json:"provider_payment_charge_id"`
 }
 
 // OrderInfo is a struct of order info
@@ -2369,6 +2375,14 @@ type WebAppInfo struct {
 // https://core.telegram.org/bots/api#sentwebappmessage
 type SentWebAppMessage struct {
 	InlineMessageID *string `json:"inline_message_id,omitempty"`
+}
+
+// PreparedInlineMessage is a struct for a prepared inline message
+//
+// https://core.telegram.org/bots/api#preparedinlinemessage
+type PreparedInlineMessage struct {
+	ID             string `json:"id"`
+	ExpirationDate int    `json:"expiration_date"`
 }
 
 // MenuButton is a generic type of the bot's menu buttons
@@ -2519,4 +2533,22 @@ type BusinessMessagesDeleted struct {
 	BusinessConnectionID string  `json:"business_connection_id"`
 	Chat                 Chat    `json:"chat"`
 	MessageIDs           []int64 `json:"message_ids"`
+}
+
+// Gift represents a gift that can be sent by the bot.
+//
+// https://core.telegram.org/bots/api#gift
+type Gift struct {
+	ID             string  `json:"id"`
+	Sticker        Sticker `json:"sticker"`
+	StarCount      int     `json:"star_count"`
+	TotalCount     *int    `json:"total_count,omitempty"`
+	RemainingCount *int    `json:"remaining_count,omitempty"`
+}
+
+// Gifts represents a list of gifts.
+//
+// https://core.telegram.org/bots/api#gifts
+type Gifts struct {
+	Gifts []Gift `json:"gifts"`
 }

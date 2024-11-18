@@ -305,6 +305,7 @@ func TestMethods(t *testing.T) {
 			// TODO: AnswerPreCheckoutQuery
 			// TODO: GetStarTransactions
 			// TODO: RefundStarPayment
+			// TODO: EditUserStarSubscription
 
 			////////////////////////////////
 			// (forum)
@@ -336,9 +337,17 @@ func TestMethods(t *testing.T) {
 			// TODO: SetMessageReaction
 
 			////////////////////////////////
+			// (gift)
+			//
+			// TODO: GetAvailableGifts
+			// TODO: SendGift
+
+			////////////////////////////////
 			// (webapp)
 			//
 			// TODO: AnswerWebAppQuery
+			// TODO: SetUserEmojiStatus
+			// TODO: SavePreparedInlineMessage
 		}
 	}
 }
