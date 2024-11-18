@@ -1417,7 +1417,7 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 // - `currency`: Pass "XTR" for payments in Telegram Stars.
 //
 // https://core.telegram.org/bots/api#createinvoicelink
-func (b *Bot) CreateInvoiceLink(title, description, payload, providerToken, currency string, prices []LabeledPrice, options OptionsCreateInvoiceLink) (result APIResponse[string]) {
+func (b *Bot) CreateInvoiceLink(title, description, payload, currency string, prices []LabeledPrice, options OptionsCreateInvoiceLink) (result APIResponse[string]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1426,7 +1426,6 @@ func (b *Bot) CreateInvoiceLink(title, description, payload, providerToken, curr
 	options["title"] = title
 	options["description"] = description
 	options["payload"] = payload
-	options["provider_token"] = providerToken
 	options["currency"] = currency
 	options["prices"] = prices
 
