@@ -2710,7 +2710,7 @@ func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Opt
 
 // OptionsCreateInvoiceLink struct for CreateInvoiceLink().
 //
-// options include: `business_connection_id`, `subscription_period`, `max_tip_amount`, `suggested_tip_amounts`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, and `is_flexible`.
+// options include: `business_connection_id`, `provider_token`, `subscription_period`, `max_tip_amount`, `suggested_tip_amounts`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, and `is_flexible`.
 //
 // https://core.telegram.org/bots/api#createinvoicelink
 type OptionsCreateInvoiceLink MethodOptions
@@ -2718,6 +2718,12 @@ type OptionsCreateInvoiceLink MethodOptions
 // SetBusinessConnectionID sets the `business_connection_id` value of OptionsCreateInvoiceLink.
 func (o OptionsCreateInvoiceLink) SetBusinessConnectionID(businessConnectionID string) OptionsCreateInvoiceLink {
 	o["business_connection_id"] = businessConnectionID
+	return o
+}
+
+// SetProviderToken sets the `provider_token` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetProviderToken(providerToken string) OptionsCreateInvoiceLink {
+	o["provider_token"] = providerToken
 	return o
 }
 
