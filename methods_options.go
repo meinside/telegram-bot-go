@@ -694,6 +694,31 @@ func (o OptionsSetStickerMaskPosition) SetMaskPosition(maskPosition MaskPosition
 	return o
 }
 
+// OptionsSendGift struct for SendGift().
+//
+// options include: `text`, `text_parse_mode`, and `text_entities`.
+//
+// https://core.telegram.org/bots/api#sendgift
+type OptionsSendGift MethodOptions
+
+// SetText sets the `text` value of OptionsSendGift.
+func (o OptionsSendGift) SetText(text string) OptionsSendGift {
+	o["text"] = text
+	return o
+}
+
+// SetTextParseMode sets the `text_parse_mode` value of OptionsSendGift.
+func (o OptionsSendGift) SetTextParseMode(textParseMode string) OptionsSendGift {
+	o["text_parse_mode"] = textParseMode
+	return o
+}
+
+// SetTextEntities sets the `text_entities` value of OptionsSendGift.
+func (o OptionsSendGift) SetTextEntities(textEntities []MessageEntity) OptionsSendGift {
+	o["text_entities"] = textEntities
+	return o
+}
+
 // OptionsSendVideo struct for SendVideo().
 //
 // options include: `business_connection_id`, `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
@@ -1708,6 +1733,23 @@ func (o OptionsGetUserProfilePhotos) SetLimit(limit int) OptionsGetUserProfilePh
 	return o
 }
 
+// OptionsSetUserEmojiStatus struct for SetUserEmojiStatus().
+//
+// options include: `emoji_status_custom_emoji_id`, and `emoji_status_expiration_date`.
+type OptionsSetUserEmojiStatus MethodOptions
+
+// SetEmojiStatusCustomEmojiID sets the `emoji_status_custom_emoji_id` value of OptionsSetUserEmojiStatus.
+func (o OptionsSetUserEmojiStatus) SetEmojiStatusCustomEmojiID(customEmojiID string) OptionsSetUserEmojiStatus {
+	o["emoji_status_custom_emoji_id"] = customEmojiID
+	return o
+}
+
+// SetEmojiStatusExpirationDate sets the `emoji_status_expiration_date` value of OptionsSetUserEmojiStatus.
+func (o OptionsSetUserEmojiStatus) SetEmojiStatusExpirationDate(expirationDate int) OptionsSetUserEmojiStatus {
+	o["emoji_status_expiration_date"] = expirationDate
+	return o
+}
+
 // OptionsBanChatMember struct for BanChatMember().
 //
 // options include: `until_date` and `revoke_messages`.
@@ -2668,10 +2710,22 @@ func (o OptionsSendInvoice) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Opt
 
 // OptionsCreateInvoiceLink struct for CreateInvoiceLink().
 //
-// options include: `max_tip_amount`, `suggested_tip_amounts`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, and `is_flexible`.
+// options include: `business_connection_id`, `subscription_period`, `max_tip_amount`, `suggested_tip_amounts`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, and `is_flexible`.
 //
 // https://core.telegram.org/bots/api#createinvoicelink
 type OptionsCreateInvoiceLink MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetBusinessConnectionID(businessConnectionID string) OptionsCreateInvoiceLink {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
+
+// SetSubscriptionPeriod sets the `subscription_period` value of OptionsCreateInvoiceLink.
+func (o OptionsCreateInvoiceLink) SetSubscriptionPeriod(subscriptionPeriod int) OptionsCreateInvoiceLink {
+	o["subscription_period"] = subscriptionPeriod
+	return o
+}
 
 // SetMaxTipAmount sets the `max_tip_amount` value of OptionsCreateInvoiceLink.
 func (o OptionsCreateInvoiceLink) SetMaxTipAmount(maxTipAmount int) OptionsCreateInvoiceLink {
@@ -2888,6 +2942,35 @@ func (o OptionsGetGameHighScores) SetIDs(chatID ChatID, messageID int64) Options
 // SetInlineMessageID sets the `inline_message_id` value of OptionsGetGameHighScores.
 func (o OptionsGetGameHighScores) SetInlineMessageID(inlineMessageID string) OptionsGetGameHighScores {
 	o["inline_message_id"] = inlineMessageID
+	return o
+}
+
+// OptionsSavePreparedInlineMessage struct for SavePreparedInlineMessage().
+//
+// https://core.telegram.org/bots/api#savepreparedinlinemessage
+type OptionsSavePreparedInlineMessage MethodOptions
+
+// SetAllowUserChats sets the `allow_user_chats` value of OptionsSavePreparedInlineMessage.
+func (o OptionsSavePreparedInlineMessage) SetAllowUserChats(allowUserChats bool) OptionsSavePreparedInlineMessage {
+	o["allow_user_chats"] = allowUserChats
+	return o
+}
+
+// SetAllowBotChats sets the `allow_bot_chats` value of OptionsSavePreparedInlineMessage.
+func (o OptionsSavePreparedInlineMessage) SetAllowBotChats(allowBotChats bool) OptionsSavePreparedInlineMessage {
+	o["allow_bot_chats"] = allowBotChats
+	return o
+}
+
+// SetAllowGroupChats sets the `allow_group_chats` value of OptionsSavePreparedInlineMessage.
+func (o OptionsSavePreparedInlineMessage) SetAllowGroupChats(allowGroupChats bool) OptionsSavePreparedInlineMessage {
+	o["allow_group_chats"] = allowGroupChats
+	return o
+}
+
+// SetAllowChannelChats sets the `allow_channel_chats` value of OptionsSavePreparedInlineMessage.
+func (o OptionsSavePreparedInlineMessage) SetAllowChannelChats(allowChannelChats bool) OptionsSavePreparedInlineMessage {
+	o["allow_channel_chats"] = allowChannelChats
 	return o
 }
 

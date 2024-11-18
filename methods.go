@@ -270,37 +270,37 @@ func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options OptionsSendS
 // https://core.telegram.org/bots/api#getstickerset
 func (b *Bot) GetStickerSet(name string) (result APIResponse[StickerSet]) {
 	// essential params
-	params := map[string]any{
+	options := map[string]any{
 		"name": name,
 	}
 
-	return requestGeneric[StickerSet](b, "getStickerSet", params)
+	return requestGeneric[StickerSet](b, "getStickerSet", options)
 }
 
 // GetCustomEmojiStickers gets custom emoji stickers.
 //
 // https://core.telegram.org/bots/api#getcustomemojistickers
 func (b *Bot) GetCustomEmojiStickers(customEmojiIDs []string) (result APIResponse[[]Sticker]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"custom_emoji_ids": customEmojiIDs,
 	}
 
-	return requestGeneric[[]Sticker](b, "getCustomEmojiStickers", params)
+	return requestGeneric[[]Sticker](b, "getCustomEmojiStickers", options)
 }
 
 // UploadStickerFile uploads a sticker file.
 //
 // https://core.telegram.org/bots/api#uploadstickerfile
 func (b *Bot) UploadStickerFile(userID int64, sticker InputFile, stickerFormat StickerFormat) (result APIResponse[File]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"user_id":        userID,
 		"sticker":        sticker,
 		"sticker_format": stickerFormat,
 	}
 
-	return requestGeneric[File](b, "uploadStickerFile", params)
+	return requestGeneric[File](b, "uploadStickerFile", options)
 }
 
 // CreateNewStickerSet creates a new sticker set.
@@ -340,25 +340,25 @@ func (b *Bot) AddStickerToSet(userID int64, name string, sticker InputSticker, o
 //
 // https://core.telegram.org/bots/api#setstickerpositioninset
 func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"sticker":  sticker,
 		"position": position,
 	}
 
-	return requestGeneric[bool](b, "setStickerPositionInSet", params)
+	return requestGeneric[bool](b, "setStickerPositionInSet", options)
 }
 
 // DeleteStickerFromSet deletes a sticker from set.
 //
 // https://core.telegram.org/bots/api#deletestickerfromset
 func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"sticker": sticker,
 	}
 
-	return requestGeneric[bool](b, "deleteStickerFromSet", params)
+	return requestGeneric[bool](b, "deleteStickerFromSet", options)
 }
 
 // SetStickerSetThumbnail sets a thumbnail of a sticker set.
@@ -454,6 +454,28 @@ func (b *Bot) SetStickerMaskPosition(sticker string, options OptionsSetStickerMa
 	options["sticker"] = sticker
 
 	return requestGeneric[bool](b, "setStickerMaskPosition", options)
+}
+
+// GetAvailableGifts returns the list of gifts that can be sent by the bot to users.
+//
+// https://core.telegram.org/bots/api#getavailablegifts
+func (b *Bot) GetAvailableGifts() (result APIResponse[Gifts]) {
+	return requestGeneric[Gifts](b, "getAvailableGifts", nil)
+}
+
+// SendGift sends a gift to the given user.
+//
+// https://core.telegram.org/bots/api#sendgift
+func (b *Bot) SendGift(userID int64, giftID string, options OptionsSendGift) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+	options["gift_id"] = giftID
+
+	return requestGeneric[bool](b, "sendGift", options)
 }
 
 // SendVideo sends a video file.
@@ -688,16 +710,30 @@ func (b *Bot) GetUserProfilePhotos(userID int64, options OptionsGetUserProfilePh
 	return requestGeneric[UserProfilePhotos](b, "getUserProfilePhotos", options)
 }
 
+// SetUserEmojiStatus changes the emoji status for a given user that previously allowed the bot to manage their emoji status via the Mini App.
+//
+// https://core.telegram.org/bots/api#setuseremojistatus
+func (b *Bot) SetUserEmojiStatus(userID int64, options OptionsSetUserEmojiStatus) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+
+	return requestGeneric[bool](b, "setUserEmojiStatus", options)
+}
+
 // GetFile gets file info and prepare for download.
 //
 // https://core.telegram.org/bots/api#getfile
 func (b *Bot) GetFile(fileID string) (result APIResponse[File]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"file_id": fileID,
 	}
 
-	return requestGeneric[File](b, "getFile", params)
+	return requestGeneric[File](b, "getFile", options)
 }
 
 // GetFileURL gets download link from a given File.
@@ -724,26 +760,26 @@ func (b *Bot) BanChatMember(chatID ChatID, userID int64, options OptionsBanChatM
 //
 // https://core.telegram.org/bots/api#leavechat
 func (b *Bot) LeaveChat(chatID ChatID) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[bool](b, "leaveChat", params)
+	return requestGeneric[bool](b, "leaveChat", options)
 }
 
 // UnbanChatMember unbans a chat member.
 //
 // https://core.telegram.org/bots/api#unbanchatmember
 func (b *Bot) UnbanChatMember(chatID ChatID, userID int64, onlyIfBanned bool) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id":        chatID,
 		"user_id":        userID,
 		"only_if_banned": onlyIfBanned,
 	}
 
-	return requestGeneric[bool](b, "unbanChatMember", params)
+	return requestGeneric[bool](b, "unbanChatMember", options)
 }
 
 // RestrictChatMember restricts a chat member.
@@ -827,12 +863,12 @@ func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions, opt
 //
 // https://core.telegram.org/bots/api#exportchatinvitelink
 func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponse[string]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[string](b, "exportChatInviteLink", params)
+	return requestGeneric[string](b, "exportChatInviteLink", options)
 }
 
 // CreateChatInviteLink creates a chat invite link.
@@ -909,77 +945,77 @@ func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result API
 //
 // https://core.telegram.org/bots/api#approvechatjoinrequest
 func (b *Bot) ApproveChatJoinRequest(chatID ChatID, userID int64) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
 
-	return requestGeneric[bool](b, "approveChatJoinRequest", params)
+	return requestGeneric[bool](b, "approveChatJoinRequest", options)
 }
 
 // DeclineChatJoinRequest declines chat join request.
 //
 // https://core.telegram.org/bots/api#declinechatjoinrequest
 func (b *Bot) DeclineChatJoinRequest(chatID ChatID, userID int64) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
 
-	return requestGeneric[bool](b, "declineChatJoinRequest", params)
+	return requestGeneric[bool](b, "declineChatJoinRequest", options)
 }
 
 // SetChatPhoto sets a chat photo.
 //
 // https://core.telegram.org/bots/api#setchatphoto
 func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 		"photo":   photo,
 	}
 
-	return requestGeneric[bool](b, "setChatPhoto", params)
+	return requestGeneric[bool](b, "setChatPhoto", options)
 }
 
 // DeleteChatPhoto deletes a chat photo.
 //
 // https://core.telegram.org/bots/api#deletechatphoto
 func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[bool](b, "deleteChatPhoto", params)
+	return requestGeneric[bool](b, "deleteChatPhoto", options)
 }
 
 // SetChatTitle sets a chat title.
 //
 // https://core.telegram.org/bots/api#setchattitle
 func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 		"title":   title,
 	}
 
-	return requestGeneric[bool](b, "setChatTitle", params)
+	return requestGeneric[bool](b, "setChatTitle", options)
 }
 
 // SetChatDescription sets a chat description.
 //
 // https://core.telegram.org/bots/api#setchatdescription
 func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id":     chatID,
 		"description": description,
 	}
 
-	return requestGeneric[bool](b, "setChatDescription", params)
+	return requestGeneric[bool](b, "setChatDescription", options)
 }
 
 // PinChatMessage pins a chat message.
@@ -1015,86 +1051,86 @@ func (b *Bot) UnpinChatMessage(chatID ChatID, options OptionsUnpinChatMessage) (
 //
 // https://core.telegram.org/bots/api#unpinallchatmessages
 func (b *Bot) UnpinAllChatMessages(chatID ChatID) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[bool](b, "unpinAllChatMessages", params)
+	return requestGeneric[bool](b, "unpinAllChatMessages", options)
 }
 
 // GetChat gets a chat.
 //
 // https://core.telegram.org/bots/api#getchat
 func (b *Bot) GetChat(chatID ChatID) (result APIResponse[ChatFullInfo]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[ChatFullInfo](b, "getChat", params)
+	return requestGeneric[ChatFullInfo](b, "getChat", options)
 }
 
 // GetChatAdministrators gets chat administrators.
 //
 // https://core.telegram.org/bots/api#getchatadministrators
 func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponse[[]ChatMember]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[[]ChatMember](b, "getChatAdministrators", params)
+	return requestGeneric[[]ChatMember](b, "getChatAdministrators", options)
 }
 
 // GetChatMemberCount gets chat members' count.
 //
 // https://core.telegram.org/bots/api#getchatmembercount
 func (b *Bot) GetChatMemberCount(chatID ChatID) (result APIResponse[int]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[int](b, "getChatMemberCount", params)
+	return requestGeneric[int](b, "getChatMemberCount", options)
 }
 
 // GetChatMember gets a chat member.
 //
 // https://core.telegram.org/bots/api#getchatmember
 func (b *Bot) GetChatMember(chatID ChatID, userID int64) (result APIResponse[ChatMember]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
 
-	return requestGeneric[ChatMember](b, "getChatMember", params)
+	return requestGeneric[ChatMember](b, "getChatMember", options)
 }
 
 // SetChatStickerSet sets a chat sticker set.
 //
 // https://core.telegram.org/bots/api#setchatstickerset
 func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id":          chatID,
 		"sticker_set_name": stickerSetName,
 	}
 
-	return requestGeneric[bool](b, "setChatStickerSet", params)
+	return requestGeneric[bool](b, "setChatStickerSet", options)
 }
 
 // DeleteChatStickerSet deletes a chat sticker set.
 //
 // https://core.telegram.org/bots/api#deletechatstickerset
 func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"chat_id": chatID,
 	}
 
-	return requestGeneric[bool](b, "deleteChatStickerSet", params)
+	return requestGeneric[bool](b, "deleteChatStickerSet", options)
 }
 
 // AnswerCallbackQuery answers a callback query.
@@ -1404,42 +1440,44 @@ func (b *Bot) CreateInvoiceLink(title, description, payload, providerToken, curr
 //
 // https://core.telegram.org/bots/api#answershippingquery
 func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptions []ShippingOption, errorMessage *string) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"shipping_query_id": shippingQueryID,
 		"ok":                ok,
 	}
+
 	// optional params
 	if ok {
 		if len(shippingOptions) > 0 {
-			params["shipping_options"] = shippingOptions
+			options["shipping_options"] = shippingOptions
 		}
 	} else {
 		if errorMessage != nil {
-			params["error_message"] = *errorMessage
+			options["error_message"] = *errorMessage
 		}
 	}
 
-	return requestGeneric[bool](b, "answerShippingQuery", params)
+	return requestGeneric[bool](b, "answerShippingQuery", options)
 }
 
 // AnswerPreCheckoutQuery answers a pre-checkout query.
 //
 // https://core.telegram.org/bots/api#answerprecheckoutquery
 func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMessage *string) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"pre_checkout_query_id": preCheckoutQueryID,
 		"ok":                    ok,
 	}
+
 	// optional params
 	if !ok {
 		if errorMessage != nil {
-			params["error_message"] = *errorMessage
+			options["error_message"] = *errorMessage
 		}
 	}
 
-	return requestGeneric[bool](b, "answerPreCheckoutQuery", params)
+	return requestGeneric[bool](b, "answerPreCheckoutQuery", options)
 }
 
 // GetStarTransactions gets star transactions.
@@ -1453,13 +1491,27 @@ func (b *Bot) GetStarTransactions(options OptionsGetStarTransactions) (result AP
 //
 // https://core.telegram.org/bots/api#refundstarpayment
 func (b *Bot) RefundStarPayment(userID int64, telegramPaymentChargeID string) (result APIResponse[bool]) {
-	// essential params
-	params := map[string]any{
+	// essential options
+	options := map[string]any{
 		"user_id":                    userID,
 		"telegram_payment_charge_id": telegramPaymentChargeID,
 	}
 
-	return requestGeneric[bool](b, "refundStarPayment", params)
+	return requestGeneric[bool](b, "refundStarPayment", options)
+}
+
+// EditUserStarSubscription allows the bot to cancel or re-enable extension of a subscription.
+//
+// https://core.telegram.org/bots/api#edituserstarsubscription
+func (b *Bot) EditUserStarSubscription(userID int64, telegramPaymentChargeID string, isCanceled bool) (result APIResponse[bool]) {
+	// essential options
+	options := map[string]any{
+		"user_id":                    userID,
+		"telegram_payment_charge_id": telegramPaymentChargeID,
+		"is_canceled":                isCanceled,
+	}
+
+	return requestGeneric[bool](b, "editUserStarSubscription", options)
 }
 
 // SendGame sends a game.
@@ -1506,7 +1558,7 @@ func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) 
 	return requestGeneric[[]GameHighScore](b, "getGameHighScores", options)
 }
 
-// AnswerWebAppQuery answers a web app's query
+// AnswerWebAppQuery answers a web app's query.
 //
 // https://core.telegram.org/bots/api#answerwebappquery
 func (b *Bot) AnswerWebAppQuery(webAppQueryID string, res InlineQueryResult) (result APIResponse[SentWebAppMessage]) {
@@ -1516,6 +1568,21 @@ func (b *Bot) AnswerWebAppQuery(webAppQueryID string, res InlineQueryResult) (re
 	}
 
 	return requestGeneric[SentWebAppMessage](b, "answerWebAppQuery", options)
+}
+
+// SavePreparedInlineMessage stores a message that can be sent by a user of a Mini App.
+//
+// https://core.telegram.org/bots/api#savepreparedinlinemessage
+func (b *Bot) SavePreparedInlineMessage(userID int64, result InlineQueryResult, options OptionsSavePreparedInlineMessage) (res APIResponse[PreparedInlineMessage]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+	options["result"] = result
+
+	return requestGeneric[PreparedInlineMessage](b, "savePreparedInlineMessage", options)
 }
 
 // CreateForumTopic creates a topic in a forum supergroup chat.
