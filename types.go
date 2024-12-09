@@ -1308,11 +1308,12 @@ type RevenueWithdrawalState struct {
 type TransactionPartnerType string
 
 const (
-	TransactionPartnerUser        TransactionPartnerType = "user"
-	TransactionPartnerFragment    TransactionPartnerType = "fragment"
-	TransactionPartnerTelegramAds TransactionPartnerType = "telegram_ads"
-	TransactionPartnerTelegramAPI TransactionPartnerType = "telegram_api"
-	TransactionPartnerOther       TransactionPartnerType = "other"
+	TransactionPartnerUser             TransactionPartnerType = "user"
+	TransactionPartnerAffiliateProgram TransactionPartnerType = "affiliate_program"
+	TransactionPartnerFragment         TransactionPartnerType = "fragment"
+	TransactionPartnerTelegramAds      TransactionPartnerType = "telegram_ads"
+	TransactionPartnerTelegramAPI      TransactionPartnerType = "telegram_api"
+	TransactionPartnerOther            TransactionPartnerType = "other"
 )
 
 // TransactionPartner is a struct for a transaction partner
@@ -1321,30 +1322,47 @@ const (
 type TransactionPartner struct {
 	Type TransactionPartnerType `json:"type"`
 
+	// when Type == TransactionPartnerUser
+	User               *User          `json:"user,omitempty"`
+	Affiliate          *AffiliateInfo `json:"affiliate,omitempty"`
+	InvoicePayload     *string        `json:"invoice_payload,omitempty"`
+	SubscriptionPeriod *int           `json:"subscription_period,omitempty"`
+	PaidMedia          []PaidMedia    `json:"paid_media,omitempty"`
+	PaidMediaPayload   *string        `json:"paid_media_payload,omitempty"`
+	Gift               *string        `json:"gift,omitempty"`
+
+	// when Type == TransactionPartnerAffiliateProgram
+	SponsorUser       *User `json:"sponsor_user,omitempty"`
+	CommissionPerMile *int  `json:"commission_per_mille,omitempty"`
+
 	// when Type == TransactionPartnerFragment
 	WithdrawlState *RevenueWithdrawalState `json:"withdrawal_state,omitempty"`
 
-	// when Type == TransactionPartnerUser
-	User               *User       `json:"user,omitempty"`
-	InvoicePayload     *string     `json:"invoice_payload,omitempty"`
-	SubscriptionPeriod *int        `json:"subscription_period,omitempty"`
-	PaidMedia          []PaidMedia `json:"paid_media,omitempty"`
-	PaidMediaPayload   *string     `json:"paid_media_payload,omitempty"`
-	Gift               *string     `json:"gift,omitempty"`
-
 	// when Type == TransactionParterTelegramAPI
 	RequestCount *int `json:"request_count,omitempty"`
+}
+
+// AffiliateInfo is a struct for a affiliate of transaction
+//
+// https://core.telegram.org/bots/api#affiliateinfo
+type AffiliateInfo struct {
+	AffiliateUser     *User `json:"affiliate_user,omitempty"`
+	AffiliateChat     *Chat `json:"affiliate_chat,omitempty"`
+	CommissionPerMile int   `json:"commission_per_mille"`
+	Amount            int   `json:"amount"`
+	NanostarAmount    *int  `json:"nanostar_amount,omitempty"`
 }
 
 // StarTransaction is a struct for a star transaction
 //
 // https://core.telegram.org/bots/api#startransaction
 type StarTransaction struct {
-	ID       string              `json:"id"`
-	Amount   int                 `json:"amount"`
-	Date     int                 `json:"date"`
-	Source   *TransactionPartner `json:"source,omitempty"`   // only for incoming transactions
-	Receiver *TransactionPartner `json:"receiver,omitempty"` // only for outgoing transactions
+	ID             string              `json:"id"`
+	Amount         int                 `json:"amount"`
+	NanostarAmount *int                `json:"nanostar_amount,omitempty"`
+	Date           int                 `json:"date"`
+	Source         *TransactionPartner `json:"source,omitempty"`   // only for incoming transactions
+	Receiver       *TransactionPartner `json:"receiver,omitempty"` // only for outgoing transactions
 }
 
 // StarTransactions is a struct for star transactions
