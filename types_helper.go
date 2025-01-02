@@ -1505,14 +1505,10 @@ func (r InlineQueryResultArticle) SetReplyMarkup(markup InlineKeyboardMarkup) In
 }
 
 // SetURL sets the `url` value of InlineQueryResultArticle.
+//
+// NOTE: Set an empty string for hiding the URL.
 func (r InlineQueryResultArticle) SetURL(url string) InlineQueryResultArticle {
 	r.URL = &url
-	return r
-}
-
-// SetHideURL sets the `hide_url` value of InlineQueryResultArticle.
-func (r InlineQueryResultArticle) SetHideURL(hideURL bool) InlineQueryResultArticle {
-	r.HideURL = &hideURL
 	return r
 }
 

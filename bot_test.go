@@ -47,7 +47,7 @@ func TestPollingUpdates(t *testing.T) {
 
 func TestMethods(t *testing.T) {
 	_token := os.Getenv("TOKEN")
-	_chatID := os.Getenv("CHAT_ID") // NOTE: chat_id of a group chat
+	_chatID := os.Getenv("CHAT_ID") // NOTE: `chat_id` of a group chat
 	_verbose := os.Getenv("VERBOSE")
 
 	client := NewClient(_token)
@@ -341,6 +341,14 @@ func TestMethods(t *testing.T) {
 			//
 			// TODO: GetAvailableGifts
 			// TODO: SendGift
+
+			////////////////////////////////
+			// (verification)
+			//
+			// TODO: VerifyUser
+			// TODO: RemoveUserVerification
+			// TODO: VerifyChat
+			// TODO: RemoveChatVerification
 
 			////////////////////////////////
 			// (webapp)
