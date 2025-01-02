@@ -536,7 +536,7 @@ type MessageOrigin struct {
 	// https://core.telegram.org/bots/api#messageoriginchannel
 	Chat      *Chat  `json:"chat,omitempty"`
 	MessageID *int64 `json:"message_id,omitempty"`
-	//AuthorSignature *string `json:"author_signature,omitempty"`
+	// AuthorSignature *string `json:"author_signature,omitempty"`
 }
 
 // PhotoSize is a struct of a photo's size
@@ -857,16 +857,16 @@ type BackgroundType struct {
 
 	// type == "wallpaper"
 	Document *Document `json:"document,omitempty"`
-	//DarkThemeDimming *int `json:"dark_theme_dimming,omitempty"`
+	// DarkThemeDimming *int `json:"dark_theme_dimming,omitempty"`
 	IsBlurred *bool `json:"is_blurred,omitempty"`
 	IsMoving  *bool `json:"is_moving,omitempty"`
 
 	// type == "pattern"
-	//Document *Document `json:"document,omitempty"`
-	//Fill *BackgroundFill `json:"fill,omitempty"`
+	// Document *Document `json:"document,omitempty"`
+	// Fill *BackgroundFill `json:"fill,omitempty"`
 	Intensity  *int  `json:"intensity,omitempty"`
 	IsInverted *bool `json:"is_inverted,omitempty"`
-	//IsMoving *bool `json:"is_moving,omitempty"`
+	// IsMoving *bool `json:"is_moving,omitempty"`
 
 	// type == "chat_theme"
 	ThemeName *string `json:"theme_name,omitempty"`
@@ -1800,7 +1800,7 @@ type Message struct {
 	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`
-	//PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
+	// PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
 	BoostAdded                   *ChatBoostAdded               `json:"boost_added,omitempty"`
 	ChatBackgroundSet            *ChatBackground               `json:"chat_background_set,omitempty"`
@@ -1909,8 +1909,7 @@ type InlineQueryResultArticle struct { // https://core.telegram.org/bots/api#inl
 	Title               string                `json:"title"`
 	InputMessageContent InputMessageContent   `json:"input_message_content"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	URL                 *string               `json:"url,omitempty"`
-	HideURL             *bool                 `json:"hide_url,omitempty"`
+	URL                 *string               `json:"url,omitempty"` // NOTE: pass an empty string for hiding the URL
 	Description         *string               `json:"description,omitempty"`
 	ThumbnailURL        *string               `json:"thumbnail_url,omitempty"`
 	ThumbnailWidth      *int                  `json:"thumbnail_width,omitempty"`
@@ -2557,11 +2556,12 @@ type BusinessMessagesDeleted struct {
 //
 // https://core.telegram.org/bots/api#gift
 type Gift struct {
-	ID             string  `json:"id"`
-	Sticker        Sticker `json:"sticker"`
-	StarCount      int     `json:"star_count"`
-	TotalCount     *int    `json:"total_count,omitempty"`
-	RemainingCount *int    `json:"remaining_count,omitempty"`
+	ID               string  `json:"id"`
+	Sticker          Sticker `json:"sticker"`
+	StarCount        int     `json:"star_count"`
+	UpgradeStarCount *int    `json:"upgrade_star_count,omitempty"`
+	TotalCount       *int    `json:"total_count,omitempty"`
+	RemainingCount   *int    `json:"remaining_count,omitempty"`
 }
 
 // Gifts represents a list of gifts.

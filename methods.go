@@ -478,6 +478,52 @@ func (b *Bot) SendGift(userID int64, giftID string, options OptionsSendGift) (re
 	return requestGeneric[bool](b, "sendGift", options)
 }
 
+// VerifyUser verifies a user.
+//
+// https://core.telegram.org/bots/api#verifyuser
+func (b *Bot) VerifyUser(userID int64, options OptionsVerifyUser) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+
+	return requestGeneric[bool](b, "verifyUser", options)
+}
+
+// VerifyChat verifies a chat.
+//
+// https://core.telegram.org/bots/api#verifychat
+func (b *Bot) VerifyChat(chatID ChatID, options OptionsVerifyChat) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+
+	return requestGeneric[bool](b, "verifyChat", options)
+}
+
+// RemoveUserVerification removes a user's verification.
+//
+// https://core.telegram.org/bots/api#removeuserverification
+func (b *Bot) RemoveUserVerification(userID int64) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "removeUserVerification", map[string]any{
+		"user_id": userID,
+	})
+}
+
+// RemoveChatVerification removes a chat's verification.
+//
+// https://core.telegram.org/bots/api#removechatverification
+func (b *Bot) RemoveChatVerification(chatID ChatID) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "removeChatVerification", map[string]any{
+		"chat_id": chatID,
+	})
+}
+
 // SendVideo sends a video file.
 //
 // https://core.telegram.org/bots/api#sendvideo

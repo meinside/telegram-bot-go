@@ -696,10 +696,16 @@ func (o OptionsSetStickerMaskPosition) SetMaskPosition(maskPosition MaskPosition
 
 // OptionsSendGift struct for SendGift().
 //
-// options include: `text`, `text_parse_mode`, and `text_entities`.
+// options include: `pay_for_upgrade`, `text`, `text_parse_mode`, and `text_entities`.
 //
 // https://core.telegram.org/bots/api#sendgift
 type OptionsSendGift MethodOptions
+
+// SetPayForUpgrade sets the `pay_for_upgrade` value of OptionsSendGift.
+func (o OptionsSendGift) SetPayForUpgrade(payForUpgrade bool) OptionsSendGift {
+	o["pay_for_upgrade"] = payForUpgrade
+	return o
+}
 
 // SetText sets the `text` value of OptionsSendGift.
 func (o OptionsSendGift) SetText(text string) OptionsSendGift {
@@ -716,6 +722,32 @@ func (o OptionsSendGift) SetTextParseMode(textParseMode string) OptionsSendGift 
 // SetTextEntities sets the `text_entities` value of OptionsSendGift.
 func (o OptionsSendGift) SetTextEntities(textEntities []MessageEntity) OptionsSendGift {
 	o["text_entities"] = textEntities
+	return o
+}
+
+// OptionsVerifyUser struct for VerifyUser().
+//
+// options include: `custom_description`.
+//
+// https://core.telegram.org/bots/api#verifyuser
+type OptionsVerifyUser MethodOptions
+
+// SetCustomDescription sets the `custom_description` value of OptionsVerifyUser.
+func (o OptionsVerifyUser) SetCustomDescription(customDescription string) OptionsVerifyUser {
+	o["custom_description"] = customDescription
+	return o
+}
+
+// OptionsVerifyChat struct for VerifyChat().
+//
+// options include: `custom_description`.
+//
+// https://core.telegram.org/bots/api#verifychat
+type OptionsVerifyChat MethodOptions
+
+// SetCustomDescription sets the `custom_description` value of OptionsVerifyChat.
+func (o OptionsVerifyChat) SetCustomDescription(customDescription string) OptionsVerifyChat {
+	o["custom_description"] = customDescription
 	return o
 }
 
