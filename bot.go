@@ -31,8 +31,10 @@ const (
 )
 
 // loggers
-var _stdout = log.New(os.Stdout, "", log.LstdFlags)
-var _stderr = log.New(os.Stderr, "", log.LstdFlags)
+var (
+	_stdout = log.New(os.Stdout, "", log.LstdFlags)
+	_stderr = log.New(os.Stderr, "", log.LstdFlags)
+)
 
 // Bot struct
 type Bot struct {
@@ -373,7 +375,7 @@ func handleUpdateAsCommand(b *Bot, update Update) bool {
 		return false
 	}
 
-	var txt = *message.Text
+	txt := *message.Text
 
 	// if a messsage doesn't start with '/', it is not a command
 	if !strings.HasPrefix(txt, "/") {
@@ -498,8 +500,8 @@ func (b *Bot) getWebhookURL() string {
 
 // Remove confidential info from given string.
 func (b *Bot) redact(str string) string {
-	tokenRemoved := strings.Replace(str, b.token, redactedString, -1)
-	redacted := strings.Replace(tokenRemoved, b.tokenHashed, redactedString, -1)
+	tokenRemoved := strings.ReplaceAll(str, b.token, redactedString)
+	redacted := strings.ReplaceAll(tokenRemoved, b.tokenHashed, redactedString)
 	return redacted
 }
 
