@@ -1967,16 +1967,16 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]any) (re
 
 			err = fmt.Errorf("response read error: %w", err)
 
-			b.error(err.Error())
+			b.error("%s", err.Error())
 		} else {
 			err = fmt.Errorf("request error: %w", err)
 
-			b.error(err.Error())
+			b.error("%s", err.Error())
 		}
 	} else {
 		err = fmt.Errorf("building request error: %w", err)
 
-		b.error(err.Error())
+		b.error("%s", err.Error())
 	}
 
 	return []byte{}, err
@@ -2016,16 +2016,16 @@ func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]any) (r
 
 			err = fmt.Errorf("response read error: %w", err)
 
-			b.error(err.Error())
+			b.error("%s", err.Error())
 		} else {
 			err = fmt.Errorf("request error: %w", err)
 
-			b.error(err.Error())
+			b.error("%s", err.Error())
 		}
 	} else {
 		err = fmt.Errorf("building request error: %w", err)
 
-		b.error(err.Error())
+		b.error("%s", err.Error())
 	}
 
 	return []byte{}, err
@@ -2063,7 +2063,7 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
-	b.error(errStr)
+	b.error("%s", errStr)
 
 	return APIResponseMessageOrBool{Ok: false, Description: &errStr}
 }
@@ -2084,7 +2084,7 @@ func requestGeneric[T any](b *Bot, method string, params map[string]any) (result
 		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
 	}
 
-	b.error(errStr)
+	b.error("%s", errStr)
 
 	return APIResponse[T]{Ok: false, Description: &errStr}
 }
