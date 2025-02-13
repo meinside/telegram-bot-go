@@ -466,13 +466,12 @@ func (b *Bot) GetAvailableGifts() (result APIResponse[Gifts]) {
 // SendGift sends a gift to the given user.
 //
 // https://core.telegram.org/bots/api#sendgift
-func (b *Bot) SendGift(userID int64, giftID string, options OptionsSendGift) (result APIResponse[bool]) {
+func (b *Bot) SendGift(giftID string, options OptionsSendGift) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
 
 	// essential params
-	options["user_id"] = userID
 	options["gift_id"] = giftID
 
 	return requestGeneric[bool](b, "sendGift", options)
