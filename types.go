@@ -323,6 +323,7 @@ type ChatFullInfo struct {
 	InviteLink                         *string               `json:"invite_link,omitempty"`
 	PinnedMessage                      *Message              `json:"pinned_message,omitempty"`
 	Permissions                        *ChatPermissions      `json:"permissions,omitempty"`
+	CanSendGift                        *bool                 `json:"can_send_gift,omitempty"`
 	CanSendPaidMedia                   *bool                 `json:"can_send_paid_media,omitempty"`
 	SlowModeDelay                      *int                  `json:"slow_mode_delay,omitempty"`
 	UnrestrictBoostCount               *int                  `json:"unrestrict_boost_count,omitempty"`
@@ -343,34 +344,96 @@ type InputMediaType string
 
 // InputMediaType strings
 const (
-	InputMediaAnimation InputMediaType = "animation" // https://core.telegram.org/bots/api#inputmediaanimation
-	InputMediaDocument  InputMediaType = "document"  // https://core.telegram.org/bots/api#inputmediadocument
-	InputMediaAudio     InputMediaType = "audio"     // https://core.telegram.org/bots/api#inputmediaaudio
-	InputMediaPhoto     InputMediaType = "photo"     // https://core.telegram.org/bots/api#inputmediaphoto
-	InputMediaVideo     InputMediaType = "video"     // https://core.telegram.org/bots/api#inputmediavideo
+	InputMediaTypeAnimation InputMediaType = "animation"
+	InputMediaTypeDocument  InputMediaType = "document"
+	InputMediaTypeAudio     InputMediaType = "audio"
+	InputMediaTypePhoto     InputMediaType = "photo"
+	InputMediaTypeVideo     InputMediaType = "video"
 )
 
 // InputMedia represents the content of a media message to be sent.
 //
-// NOTE: Can be generated with NewInputMedia() function in types_helper.go
+// NOTE: Can be one of InputMediaAnimation, InputMediaDocument, InputMediaAudio, InputMediaPhoto, or InputMediaVideo.
 //
 // https://core.telegram.org/bots/api#inputmedia
-type InputMedia struct {
-	Type                        InputMediaType  `json:"type"`
+type InputMedia any
+
+// InputMediaAnimation is a struct of an animation
+//
+// https://core.telegram.org/bots/api#inputmediaanimation
+type InputMediaAnimation struct {
+	Type                  InputMediaType  `json:"type"` // == InputMediaTypeAnimation
+	Media                 string          `json:"media"`
+	Thumbnail             *InputFile      `json:"thumbnail,omitempty"`
+	Caption               *string         `json:"caption,omitempty"`
+	ParseMode             *ParseMode      `json:"parse_mode,omitempty"`
+	CaptionEntities       []MessageEntity `json:"caption_entities,omitempty"`
+	ShowCaptionAboveMedia *bool           `json:"show_caption_above_media,omitempty"`
+	Width                 *int            `json:"width,omitempty"`
+	Height                *int            `json:"height,omitempty"`
+	Duration              *int            `json:"duration,omitempty"`
+	HasSpoiler            *bool           `json:"has_spoiler,omitempty"`
+}
+
+// InputMediaDocument is a struct of a document
+//
+// https://core.telegram.org/bots/api#inputmediadocument
+type InputMediaDocument struct {
+	Type                        InputMediaType  `json:"type"` // == InputMediaTypeDocument
 	Media                       string          `json:"media"`
-	Thumbnail                   *InputFile      `json:"thumbnail,omitempty"` // video, animation, audio, document
+	Thumbnail                   *InputFile      `json:"thumbnail,omitempty"`
 	Caption                     *string         `json:"caption,omitempty"`
-	CaptionEntities             []MessageEntity `json:"caption_entities,omitempty"`
-	HasSpoiler                  *bool           `json:"has_spoiler,omitempty"` // video, animation, photo
 	ParseMode                   *ParseMode      `json:"parse_mode,omitempty"`
-	ShowCaptionAboveMedia       *bool           `json:"show_caption_above_media,omitempty"`       // animation, photo, video
-	Width                       *int            `json:"width,omitempty"`                          // video, animation
-	Height                      *int            `json:"height,omitempty"`                         // video, animation
-	Duration                    *int            `json:"duration,omitempty"`                       // video, animation
-	Performer                   *string         `json:"performer,omitempty"`                      // audio only
-	Title                       *string         `json:"title,omitempty"`                          // audio only
-	SupportsStreaming           *bool           `json:"supports_streaming,omitempty"`             // video only
-	DisableContentTypeDetection *bool           `json:"disable_content_type_detection,omitempty"` // document only
+	CaptionEntities             []MessageEntity `json:"caption_entities,omitempty"`
+	DisableContentTypeDetection *bool           `json:"disable_content_type_detection,omitempty"`
+}
+
+// InputMediaAudio is a struct of an audio
+//
+// https://core.telegram.org/bots/api#inputmediaaudio
+type InputMediaAudio struct {
+	Type            InputMediaType  `json:"type"` // == InputMediaTypeAudio
+	Media           string          `json:"media"`
+	Thumbnail       *InputFile      `json:"thumbnail,omitempty"`
+	Caption         *string         `json:"caption,omitempty"`
+	ParseMode       *ParseMode      `json:"parse_mode,omitempty"`
+	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
+	Duration        *int            `json:"duration,omitempty"`
+	Performer       *string         `json:"performer,omitempty"`
+	Title           *string         `json:"title,omitempty"`
+}
+
+// InputMediaPhoto is a struct of a photo
+//
+// https://core.telegram.org/bots/api#inputmediaphoto
+type InputMediaPhoto struct {
+	Type                  InputMediaType  `json:"type"` // == InputMediaTypePhoto
+	Media                 string          `json:"media"`
+	Caption               *string         `json:"caption,omitempty"`
+	ParseMode             *ParseMode      `json:"parse_mode,omitempty"`
+	CaptionEntities       []MessageEntity `json:"caption_entities,omitempty"`
+	ShowCaptionAboveMedia *bool           `json:"show_caption_above_media,omitempty"`
+	HasSpoiler            *bool           `json:"has_spoiler,omitempty"`
+}
+
+// InputMediaVideo is a struct of a video
+//
+// https://core.telegram.org/bots/api#inputmediavideo
+type InputMediaVideo struct {
+	Type                  InputMediaType  `json:"type"` // == InputMediaTypeVideo
+	Media                 string          `json:"media"`
+	Thumbnail             *InputFile      `json:"thumbnail,omitempty"`
+	Cover                 *string         `json:"cover,omitempty"`
+	StartTimestamp        *int            `json:"start_timestamp,omitempty"`
+	Caption               *string         `json:"caption,omitempty"`
+	ParseMode             *ParseMode      `json:"parse_mode,omitempty"`
+	CaptionEntities       []MessageEntity `json:"caption_entities,omitempty"`
+	ShowCaptionAboveMedia *bool           `json:"show_caption_above_media,omitempty"`
+	Width                 *int            `json:"width,omitempty"`
+	Height                *int            `json:"height,omitempty"`
+	Duration              *int            `json:"duration,omitempty"`
+	SupportsStreaming     *bool           `json:"supports_streaming,omitempty"`
+	HasSpoiler            *bool           `json:"has_spoiler,omitempty"`
 }
 
 // InputFile represents contents of a file to be uploaded.
@@ -402,13 +465,15 @@ type InputPaidMediaPhoto struct {
 //
 // https://core.telegram.org/bots/api#inputpaidmediavideo
 type InputPaidMediaVideo struct {
-	Type              string `json:"type"` // == "video"
-	Media             string `json:"media"`
-	Thumbnail         any    `json:"thumbnail,omitempty"` // `InputFile` or string
-	Width             *int   `json:"width,omitempty"`
-	Height            *int   `json:"height,omitempty"`
-	Duration          *int   `json:"duration,omitempty"`
-	SupportsStreaming *bool  `json:"supports_streaming,omitempty"`
+	Type              string  `json:"type"` // == "video"
+	Media             string  `json:"media"`
+	Thumbnail         any     `json:"thumbnail,omitempty"` // `InputFile` or string
+	Cover             *string `json:"cover,omitempty"`
+	StartTimestamp    *int    `json:"start_timestamp,omitempty"`
+	Width             *int    `json:"width,omitempty"`
+	Height            *int    `json:"height,omitempty"`
+	Duration          *int    `json:"duration,omitempty"`
+	SupportsStreaming *bool   `json:"supports_streaming,omitempty"`
 }
 
 // StickerFormat is a format of sticker
@@ -631,15 +696,17 @@ type Story struct {
 //
 // https://core.telegram.org/bots/api#video
 type Video struct {
-	FileID       string     `json:"file_id"`
-	FileUniqueID string     `json:"file_unique_id"`
-	Width        int        `json:"width"`
-	Height       int        `json:"height"`
-	Duration     int        `json:"duration"`
-	Thumbnail    *PhotoSize `json:"thumbnail,omitempty"`
-	FileName     *string    `json:"file_name,omitempty"`
-	MimeType     *string    `json:"mime_type,omitempty"`
-	FileSize     *int       `json:"file_size,omitempty"`
+	FileID         string      `json:"file_id"`
+	FileUniqueID   string      `json:"file_unique_id"`
+	Width          int         `json:"width"`
+	Height         int         `json:"height"`
+	Duration       int         `json:"duration"`
+	Thumbnail      *PhotoSize  `json:"thumbnail,omitempty"`
+	Cover          []PhotoSize `json:"cover,omitempty"`
+	StartTimestamp *int        `json:"start_timestamp,omitempty"`
+	FileName       *string     `json:"file_name,omitempty"`
+	MimeType       *string     `json:"mime_type,omitempty"`
+	FileSize       *int        `json:"file_size,omitempty"`
 }
 
 // PaidMediaInfo struct
@@ -1309,6 +1376,7 @@ type TransactionPartnerType string
 
 const (
 	TransactionPartnerUser             TransactionPartnerType = "user"
+	TransactionPartnerChat             TransactionPartnerType = "chat"
 	TransactionPartnerAffiliateProgram TransactionPartnerType = "affiliate_program"
 	TransactionPartnerFragment         TransactionPartnerType = "fragment"
 	TransactionPartnerTelegramAds      TransactionPartnerType = "telegram_ads"
@@ -1329,7 +1397,12 @@ type TransactionPartner struct {
 	SubscriptionPeriod *int           `json:"subscription_period,omitempty"`
 	PaidMedia          []PaidMedia    `json:"paid_media,omitempty"`
 	PaidMediaPayload   *string        `json:"paid_media_payload,omitempty"`
-	Gift               *string        `json:"gift,omitempty"`
+
+	// when Type == TransactionPartnerChat
+	Chat *Chat `json:"chat,omitempty"`
+
+	// when Type == TransactionPartnerUser, or Type == TransactionPartnerChat
+	Gift *string `json:"gift,omitempty"`
 
 	// when Type == TransactionPartnerAffiliateProgram
 	SponsorUser       *User `json:"sponsor_user,omitempty"`

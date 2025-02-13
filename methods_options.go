@@ -158,7 +158,7 @@ func (o OptionsSendMessage) SetReplyMarkup(replyMarkup any) OptionsSendMessage {
 
 // OptionsForwardMessage struct for ForwardMessage().
 //
-// options include: `message_thread_id`, `disable_notification` and `protect_content`.
+// options include: `message_thread_id`, `video_start_timestamp`, `disable_notification` and `protect_content`.
 //
 // https://core.telegram.org/bots/api#forwardmessage
 type OptionsForwardMessage MethodOptions
@@ -166,6 +166,12 @@ type OptionsForwardMessage MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsForwardMessage.
 func (o OptionsForwardMessage) SetMessageThreadID(messageThreadID int64) OptionsForwardMessage {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetVideoStartTimestamp sets the `video_start_timestamp` value of OptionsForwardMessage.
+func (o OptionsForwardMessage) SetVideoStartTimestamp(videoStartTimestamp int) OptionsForwardMessage {
+	o["video_start_timestamp"] = videoStartTimestamp
 	return o
 }
 
@@ -183,7 +189,7 @@ func (o OptionsForwardMessage) SetProtectContent(protect bool) OptionsForwardMes
 
 // OptionsCopyMessage struct for CopyMessage().
 //
-// options include: `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `reply_parameters`, and `reply_markup`
+// options include: `message_thread_id`, `video_start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `reply_parameters`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#copymessage
 type OptionsCopyMessage MethodOptions
@@ -191,6 +197,12 @@ type OptionsCopyMessage MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsCopyMessage.
 func (o OptionsCopyMessage) SetMessageThreadID(messageThreadID int64) OptionsCopyMessage {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetVideoStartTimestamp sets the `video_start_timestamp` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetVideoStartTimestamp(videoStartTimestamp int) OptionsCopyMessage {
+	o["video_start_timestamp"] = videoStartTimestamp
 	return o
 }
 
@@ -696,10 +708,22 @@ func (o OptionsSetStickerMaskPosition) SetMaskPosition(maskPosition MaskPosition
 
 // OptionsSendGift struct for SendGift().
 //
-// options include: `pay_for_upgrade`, `text`, `text_parse_mode`, and `text_entities`.
+// options include: `user_id`, `chat_id`, `pay_for_upgrade`, `text`, `text_parse_mode`, and `text_entities`.
 //
 // https://core.telegram.org/bots/api#sendgift
 type OptionsSendGift MethodOptions
+
+// SetUserID sets the `user_id` value of OptionsSendGift.
+func (o OptionsSendGift) SetUserID(userID int64) OptionsSendGift {
+	o["user_id"] = userID
+	return o
+}
+
+// SetChatID sets the `chat_id` value of OptionsSendGift.
+func (o OptionsSendGift) SetChatID(chatID ChatID) OptionsSendGift {
+	o["chat_id"] = chatID
+	return o
+}
 
 // SetPayForUpgrade sets the `pay_for_upgrade` value of OptionsSendGift.
 func (o OptionsSendGift) SetPayForUpgrade(payForUpgrade bool) OptionsSendGift {
@@ -753,7 +777,7 @@ func (o OptionsVerifyChat) SetCustomDescription(customDescription string) Option
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `business_connection_id`, `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `cover`, `start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
@@ -793,6 +817,20 @@ func (o OptionsSendVideo) SetHeight(height int) OptionsSendVideo {
 // `thumbnail` can be one of InputFile or string.
 func (o OptionsSendVideo) SetThumbnail(thumbnail any) OptionsSendVideo {
 	o["thumbnail"] = thumbnail
+	return o
+}
+
+// SetCover sets the `cover` value of OptionsSendVideo.
+//
+// `cover` can be one of InputFile or string.
+func (o OptionsSendVideo) SetCover(cover any) OptionsSendVideo {
+	o["cover"] = cover
+	return o
+}
+
+// SetStartTimestamp sets the `start_timestamp` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetStartTimestamp(startTimestamp int) OptionsSendVideo {
+	o["start_timestamp"] = startTimestamp
 	return o
 }
 
