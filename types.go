@@ -134,21 +134,64 @@ const (
 	MaskPositionChin     MaskPositionPoint = "chin"
 )
 
+// base error type
+type baseError struct {
+	Message string
+}
+
+// Error returns error message.
+func (e baseError) Error() string {
+	return e.Message
+}
+
+// custom error types
+//
+// referenced: https://github.com/TelegramBotAPI/errors
+type (
+	ErrUnauthorized              struct{ baseError } // for error: 'Unauthorized'
+	ErrChatNotFound              struct{ baseError } // for error: 'Bad Request: chat not found'
+	ErrUserNotFound              struct{ baseError } // for error: 'Bad Request: user not found'
+	ErrUserDeactivated           struct{ baseError } // for error: 'Forbidden: user is deactivated'
+	ErrBotKicked                 struct{ baseError } // for error: 'Forbidden: bot was kicked'
+	ErrBotBlockedByUser          struct{ baseError } // for error: 'Forbidden: bot blocked by user'
+	ErrBotCantSendToBots         struct{ baseError } // for error: 'Forbidden: bot can't send messages to bots'
+	ErrMessageNotModified        struct{ baseError } // for error: 'Bad request: Message not modified'
+	ErrGroupMigratedToSupergroup struct{ baseError } // for error: 'Bad request: Group migrated to supergroup'
+	ErrInvalidFileID             struct{ baseError } // for error: 'Bad request: Invalid file id'
+	ErrConflictedLongPoll        struct{ baseError } // for error: 'Conflict: Terminated by other long poll'
+	ErrConflictedWebHook         struct{ baseError } // for error: 'Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook first'
+	ErrWrongParameterAction      struct{ baseError } // for error: 'Bad request: Wrong parameter action in request'
+	ErrMessageEmpty              struct{ baseError } // for error: 'Bad Request: message text is empty'
+	ErrMessageTooLong            struct{ baseError } // for error: 'Bad Request: message is too long'
+	ErrMessageCantBeEdited       struct{ baseError } // for error: 'Bad Request: message can't be edited'
+	ErrTooManyRequests           struct{ baseError } // for error: 'Too many requests'
+	ErrJSONParseFailed           struct{ baseError } // for error: 'failed to parse json'
+	ErrUnclassified              struct{ baseError } // for unclassified errors
+)
+
 // APIResponse is a base of API responses
 type APIResponse[T any] struct {
-	Ok          bool                   `json:"ok"`
-	Description *string                `json:"description,omitempty"`
-	Parameters  *APIResponseParameters `json:"parameters,omitempty"`
-	Result      *T                     `json:"result,omitempty"`
+	Ok          bool    `json:"ok"`
+	Description *string `json:"description,omitempty"`
+
+	Parameters *APIResponseParameters `json:"parameters,omitempty"`
+
+	Result *T `json:"result,omitempty"`
+
+	Error error `json:"-"` // baseError which was converted from error string
 }
 
 // APIResponseMessageOrBool type for ambiguous type of `result`
 type APIResponseMessageOrBool struct {
-	Ok            bool                   `json:"ok"`
-	Description   *string                `json:"description,omitempty"`
-	Parameters    *APIResponseParameters `json:"parameters,omitempty"`
-	ResultMessage *Message               `json:"result_message,omitempty"`
-	ResultBool    *bool                  `json:"result_bool,omitempty"`
+	Ok          bool    `json:"ok"`
+	Description *string `json:"description,omitempty"`
+
+	Parameters *APIResponseParameters `json:"parameters,omitempty"`
+
+	ResultMessage *Message `json:"result_message,omitempty"`
+	ResultBool    *bool    `json:"result_bool,omitempty"`
+
+	Error error `json:"-"`
 }
 
 // APIResponseParameters is parameters in API responses

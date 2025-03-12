@@ -4,7 +4,135 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io"
+	"strings"
 )
+
+////////////////////////////////
+// Helper functions for errors
+//
+
+// converts given errStr to custom error
+func strToErr(errStr string) error {
+	switch {
+	case strings.Contains(errStr, "Unauthorized"):
+		return ErrUnauthorized{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad Request: chat not found"):
+		return ErrChatNotFound{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad Request: user not found"):
+		return ErrUserNotFound{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Forbidden: user is deactivated"):
+		return ErrUserDeactivated{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Forbidden: bot was kicked"):
+		return ErrBotKicked{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Forbidden: bot blocked by user"):
+		return ErrBotBlockedByUser{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Forbidden: bot can't send messages to bots"):
+		return ErrBotCantSendToBots{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad request: Message not modified"):
+		return ErrMessageNotModified{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad request: Group migrated to supergroup"):
+		return ErrGroupMigratedToSupergroup{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad request: Invalid file id"):
+		return ErrInvalidFileID{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Conflict: Terminated by other long poll"):
+		return ErrConflictedLongPoll{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Conflict: can't use getUpdates method while webhook is active; use deleteWebhook to delete the webhook firs"):
+		return ErrConflictedWebHook{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad request: Wrong parameter action in request"):
+		return ErrWrongParameterAction{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad Request: message text is empty"):
+		return ErrMessageEmpty{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad Request: message is too long"):
+		return ErrMessageTooLong{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Bad Request: message can't be edited"):
+		return ErrMessageCantBeEdited{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "Too many requests"):
+		return ErrTooManyRequests{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	case strings.Contains(errStr, "failed to parse json"):
+		return ErrJSONParseFailed{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	}
+
+	// TODO: handle more errors here
+
+	// fallback
+	return ErrUnclassified{
+		baseError: baseError{
+			Message: errStr,
+		},
+	}
+}
 
 ////////////////////////////////
 // Helper functions for Update

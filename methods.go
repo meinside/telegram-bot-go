@@ -57,6 +57,7 @@ func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (resu
 			return APIResponse[bool]{
 				Ok:          false,
 				Description: &errStr,
+				Error:       strToErr(errStr),
 			}
 		}
 	}
@@ -2036,25 +2037,33 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 
 	if bytes, err := b.request(method, params); err == nil {
 		// try APIResponseMessage type,
-		var jsonResponseMessage APIResponse[Message]
-		err = json.Unmarshal(bytes, &jsonResponseMessage)
+		var resMessage APIResponse[Message]
+		err = json.Unmarshal(bytes, &resMessage)
 		if err == nil {
-			return APIResponseMessageOrBool{
-				Ok:            true,
-				Description:   jsonResponseMessage.Description,
-				ResultMessage: jsonResponseMessage.Result,
+			res := APIResponseMessageOrBool{
+				Ok:            resMessage.Ok,
+				Description:   resMessage.Description,
+				ResultMessage: resMessage.Result,
 			}
+			if !res.Ok && res.Description != nil {
+				res.Error = strToErr(*res.Description)
+			}
+			return res
 		}
 
 		// then try APIResponseBool type,
-		var jsonResponseBool APIResponse[bool]
-		err = json.Unmarshal(bytes, &jsonResponseBool)
+		var resBool APIResponse[bool]
+		err = json.Unmarshal(bytes, &resBool)
 		if err == nil {
-			return APIResponseMessageOrBool{
-				Ok:          true,
-				Description: jsonResponseBool.Description,
-				ResultBool:  jsonResponseBool.Result,
+			res := APIResponseMessageOrBool{
+				Ok:          resBool.Ok,
+				Description: resBool.Description,
+				ResultBool:  resBool.Result,
 			}
+			if !res.Ok && res.Description != nil {
+				res.Error = strToErr(*res.Description)
+			}
+			return res
 		}
 
 		errStr = fmt.Sprintf("%s failed to parse json: not in Message nor bool type (%s)", method, string(bytes))
@@ -2064,7 +2073,11 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 
 	b.error("%s", errStr)
 
-	return APIResponseMessageOrBool{Ok: false, Description: &errStr}
+	return APIResponseMessageOrBool{
+		Ok:          false,
+		Description: &errStr,
+		Error:       strToErr(errStr),
+	}
 }
 
 // Send request for APIResponse[T] and fetch its result.
@@ -2072,10 +2085,13 @@ func requestGeneric[T any](b *Bot, method string, params map[string]any) (result
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
-		var jsonResponse APIResponse[T]
-		err = json.Unmarshal(bytes, &jsonResponse)
+		var res APIResponse[T]
+		err = json.Unmarshal(bytes, &res)
 		if err == nil {
-			return jsonResponse
+			if !res.Ok && res.Description != nil {
+				res.Error = strToErr(*res.Description)
+			}
+			return res
 		}
 
 		errStr = fmt.Sprintf("%s failed to parse json: %s (%s)", method, err, string(bytes))
@@ -2085,7 +2101,11 @@ func requestGeneric[T any](b *Bot, method string, params map[string]any) (result
 
 	b.error("%s", errStr)
 
-	return APIResponse[T]{Ok: false, Description: &errStr}
+	return APIResponse[T]{
+		Ok:          false,
+		Description: &errStr,
+		Error:       strToErr(errStr),
+	}
 }
 
 // Handle Webhook request.
