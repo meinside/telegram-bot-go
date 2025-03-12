@@ -5,13 +5,16 @@
 package telegrambot
 
 import (
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 	"testing"
 	"time"
 )
 
+// test polling updates
 func TestPollingUpdates(t *testing.T) {
 	_token := os.Getenv("TOKEN")
 	_verbose := os.Getenv("VERBOSE")
@@ -45,6 +48,7 @@ func TestPollingUpdates(t *testing.T) {
 	}
 }
 
+// test API method functions
 func TestMethods(t *testing.T) {
 	_token := os.Getenv("TOKEN")
 	_chatID := os.Getenv("CHAT_ID") // NOTE: `chat_id` of a group chat
@@ -117,7 +121,9 @@ func TestMethods(t *testing.T) {
 				t.Errorf("failed to send photo: %s", *photo.Description)
 			} else {
 				// EditMessageCaption
-				if caption := client.EditMessageCaption(OptionsEditMessageCaption{}.SetCaption("caption")); !caption.Ok {
+				if caption := client.EditMessageCaption(OptionsEditMessageCaption{}.
+					SetIDs(_chatID, photo.Result.MessageID).
+					SetCaption("edited caption")); !caption.Ok {
 					t.Errorf("failed to edit message caption: %s", *caption.Description)
 				}
 			}
@@ -358,4 +364,99 @@ func TestMethods(t *testing.T) {
 			// TODO: SavePreparedInlineMessage
 		}
 	}
+}
+
+// test (un)classified errors
+func TestErrors(t *testing.T) {
+	_token := os.Getenv("TOKEN")
+	_chatID := os.Getenv("CHAT_ID") // NOTE: `chat_id` of a group chat
+	_verbose := os.Getenv("VERBOSE")
+
+	client := NewClient(_token)
+	client.Verbose = _verbose == "true"
+
+	if len(_token) <= 0 || len(_chatID) <= 0 {
+		t.Errorf("environment variables `TOKEN` and `CHAT_ID` are needed")
+	}
+
+	slog.Info("testing classification of errors...")
+
+	// ErrUnauthorized
+	unauthClient := NewClient("000000000:UNAUTHORIZEDabcdefghijklmnopqrs-0_Z")
+	unauthClient.Verbose = _verbose == "true"
+	if res := unauthClient.SendMessage(_chatID, "unauthorized", OptionsSendMessage{}); !res.Ok {
+		var e ErrUnauthorized
+		if !errors.As(res.Error, &e) {
+			t.Errorf("should have failed with ErrUnauthorized, but got: %s", res.Error)
+		}
+	} else {
+		t.Errorf("should have failed to send unauthorized request")
+	}
+
+	// ErrChatNotFound
+	if res := client.SendMessage(0, "no-such-chat", OptionsSendMessage{}); !res.Ok {
+		var e ErrChatNotFound
+		if !errors.As(res.Error, &e) {
+			t.Errorf("should have failed with ErrChatNotFound, but got: %s", res.Error)
+		}
+	} else {
+		t.Errorf("should have failed to send message to a non-existent chat")
+	}
+
+	// TODO: ErrUserNotFound
+
+	// TODO: ErrUserDeactivated
+
+	// TODO: ErrBotKicked
+
+	// TODO: ErrBotBlockedByUser
+
+	// TODO: ErrBotCantSendToBots
+
+	// TODO: ErrMessageNotModified
+
+	// TODO: ErrGroupMigratedToSupergroup
+
+	// TODO: ErrInvalidFileID
+
+	// TODO: ErrConflictedLongPoll
+
+	// TODO: ErrConflictedWebHook
+
+	// TODO: ErrWrongParameterAction
+
+	// ErrMessageEmpty
+	if res := client.SendMessage(_chatID, "", OptionsSendMessage{}); !res.Ok {
+		var e ErrMessageEmpty
+		if !errors.As(res.Error, &e) {
+			t.Errorf("should have failed with ErrMessageEmpty but got: %s", res.Error)
+		}
+	} else {
+		t.Errorf("should have failed to send an empty message")
+	}
+
+	// ErrMessageTooLong
+	longLongMessage := strings.Repeat("a", 4097)
+	if res := client.SendMessage(_chatID, longLongMessage, OptionsSendMessage{}); !res.Ok {
+		var e ErrMessageTooLong
+		if !errors.As(res.Error, &e) {
+			t.Errorf("should have failed with ErrMessageTooLong but got: %s", res.Error)
+		}
+	} else {
+		t.Errorf("should have failed to send a long message")
+	}
+
+	// ErrMessageCantBeEdited
+	// TODO: ErrMessageCantBeEdited
+
+	// ErrTooManyRequests
+	// TODO: ErrTooManyRequests
+
+	// ErrJSONParseFailed
+	// TODO: ErrJSONParseFailed
+
+	// TODO: add more errors here
+
+	// ErrUnclassified
+	// TODO: ErrUnclassified
 }

@@ -393,7 +393,7 @@ func handleUpdateAsCommand(b *Bot, update Update) bool {
 		}
 	}
 
-	// if no matching command handler is set, handle with it
+	// if no-matching-command-handler is set, handle with it
 	if b.noMatchingCommandHandler != nil {
 		go b.noMatchingCommandHandler(b, update, command, params)
 
