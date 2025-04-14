@@ -215,7 +215,6 @@ func TestMethods(t *testing.T) {
 				t.Errorf("failed to get my short description: %s", *desc.Description)
 			}
 			// TODO: GetUserChatBoosts
-			// TODO: GetBusinessConnection
 			// TODO: SetMyCommands
 			// TODO: DeleteMyCommands
 			// TODO: SetChatMenuButton
@@ -226,6 +225,28 @@ func TestMethods(t *testing.T) {
 			// TODO: EditMessageReplyMarkup
 			// TODO: EditMessageLiveLocation
 			// TODO: StopMessageLiveLocation
+
+			////////////////////////////////
+			// (business connection)
+			//
+			// TODO: GetBusinessConnection
+			// TODO: ReadBusinessMessage
+			// TODO: DeleteBusinessMessages
+			// TODO: SetBusinessAccountName
+			// TODO: SetBusinessAccountUsername
+			// TODO: SetBusinessAccountBio
+			// TODO: SetBusinessAccountProfilePhoto
+			// TODO: RemoveBusinessAccountProfilePhoto
+			// TODO: SetBusinessAccountGiftSettings
+			// TODO: GetBusinessAccountStarBalance
+			// TODO: TransferBusinessAccountStars
+			// TODO: GetBusinessAccountGifts
+			// TODO: ConvertGiftToStars
+			// TODO: UpgradeGift
+			// TODO: TransferGift
+			// TODO: PostStory
+			// TODO: EditStory
+			// TODO: DeleteStory
 
 			////////////////////////////////
 			// (callback query)
@@ -347,6 +368,7 @@ func TestMethods(t *testing.T) {
 			//
 			// TODO: GetAvailableGifts
 			// TODO: SendGift
+			// TODO: GiftPremiumSubscription
 
 			////////////////////////////////
 			// (verification)

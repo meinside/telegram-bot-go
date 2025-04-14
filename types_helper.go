@@ -2,6 +2,7 @@ package telegrambot
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strings"
@@ -666,7 +667,9 @@ func NewKeyboardButtons(texts ...string) []KeyboardButton {
 
 // NewInlineKeyboardButtonsWithURL is a helper function
 // for generating an array of InlineKeyboardButtons with urls
-func NewInlineKeyboardButtonsWithURL(values map[string]string) []InlineKeyboardButton {
+func NewInlineKeyboardButtonsWithURL(
+	values map[string]string,
+) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
 	for text, url := range values {
@@ -682,13 +685,17 @@ func NewInlineKeyboardButtonsWithURL(values map[string]string) []InlineKeyboardB
 
 // NewInlineKeyboardButtonsWithCallbackData is a helper function
 // for generating an array of InlineKeyboardButtons with callback data
-func NewInlineKeyboardButtonsWithCallbackData(values map[string]string) []InlineKeyboardButton {
+func NewInlineKeyboardButtonsWithCallbackData(
+	values map[string]string,
+) []InlineKeyboardButton {
 	return NewInlineKeyboardButtonsAsColumnsWithCallbackData(values)
 }
 
 // NewInlineKeyboardButtonsAsColumnsWithCallbackData is a helper function
 // for generating an array of InlineKeyboardButtons (as columns) with callback data
-func NewInlineKeyboardButtonsAsColumnsWithCallbackData(values map[string]string) []InlineKeyboardButton {
+func NewInlineKeyboardButtonsAsColumnsWithCallbackData(
+	values map[string]string,
+) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
 	for text, data := range values {
@@ -704,7 +711,9 @@ func NewInlineKeyboardButtonsAsColumnsWithCallbackData(values map[string]string)
 
 // NewInlineKeyboardButtonsAsRowsWithCallbackData is a helper function
 // for generating an array of InlineKeyboardButtons (as rows) with callback data
-func NewInlineKeyboardButtonsAsRowsWithCallbackData(values map[string]string) [][]InlineKeyboardButton {
+func NewInlineKeyboardButtonsAsRowsWithCallbackData(
+	values map[string]string,
+) [][]InlineKeyboardButton {
 	keyboards := [][]InlineKeyboardButton{}
 
 	for text, data := range values {
@@ -722,7 +731,9 @@ func NewInlineKeyboardButtonsAsRowsWithCallbackData(values map[string]string) []
 
 // NewInlineKeyboardButtonsWithSwitchInlineQuery is a helper function
 // for generating an array of InlineKeyboardButtons with switch inline query
-func NewInlineKeyboardButtonsWithSwitchInlineQuery(values map[string]string) []InlineKeyboardButton {
+func NewInlineKeyboardButtonsWithSwitchInlineQuery(
+	values map[string]string,
+) []InlineKeyboardButton {
 	keyboards := []InlineKeyboardButton{}
 
 	for text, switchInlineQuery := range values {
@@ -806,7 +817,19 @@ func (c SwitchInlineQueryChosenChat) SetAllowChannelChats(allow bool) SwitchInli
 // Helper functions for ChatAdministratorRights
 
 // NewChatAdministratorRights returns a new ChatAdministratorRights.
-func NewChatAdministratorRights(isAnonymous, canManageChat, canDeleteMessages, canManageVideoChats, canRestrictMembers, canPromoteMembers, canChangeInfo, canInviteUsers, canPostStories, canEditStories, canDeleteStories bool) ChatAdministratorRights {
+func NewChatAdministratorRights(
+	isAnonymous,
+	canManageChat,
+	canDeleteMessages,
+	canManageVideoChats,
+	canRestrictMembers,
+	canPromoteMembers,
+	canChangeInfo,
+	canInviteUsers,
+	canPostStories,
+	canEditStories,
+	canDeleteStories bool,
+) ChatAdministratorRights {
 	return ChatAdministratorRights{
 		IsAnonymous:         isAnonymous,
 		CanManageChat:       canManageChat,
@@ -1108,7 +1131,10 @@ func (p ReplyParameters) SetQuotePosition(position int) ReplyParameters {
 // Helper functions for MaskPosition
 
 // NewMaskPosition returns a new MaskPosition.
-func NewMaskPosition(point MaskPositionPoint, xShift, yShift, scale float32) MaskPosition {
+func NewMaskPosition(
+	point MaskPositionPoint,
+	xShift, yShift, scale float32,
+) MaskPosition {
 	return MaskPosition{
 		Point:  point,
 		XShift: xShift,
@@ -1121,7 +1147,11 @@ func NewMaskPosition(point MaskPositionPoint, xShift, yShift, scale float32) Mas
 // Helper functions for InputSticker
 
 // NewInputSticker returns a new InputSticker.
-func NewInputSticker(sticker any, format StickerFormat, emojiList []string) InputSticker {
+func NewInputSticker(
+	sticker any,
+	format StickerFormat,
+	emojiList []string,
+) InputSticker {
 	return InputSticker{
 		Sticker:   sticker,
 		Format:    format,
@@ -1315,7 +1345,10 @@ func (u KeyboardButtonRequestUsers) SetRequestPhoto(requestPhoto bool) KeyboardB
 // Helper functions for KeyboardButtonRequestChat
 
 // NewKeyboardButtonRequestChat returns a new KeyboardButtonRequestChat.
-func NewKeyboardButtonRequestChat(requestID int64, isChannel bool) KeyboardButtonRequestChat {
+func NewKeyboardButtonRequestChat(
+	requestID int64,
+	isChannel bool,
+) KeyboardButtonRequestChat {
 	return KeyboardButtonRequestChat{
 		RequestID:     requestID,
 		ChatIsChannel: isChannel,
@@ -1524,7 +1557,9 @@ func newUUID() (string, error) {
 // NewInlineQueryResultArticle is a helper function for generating a new InlineQueryResultArticle.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultarticle
-func NewInlineQueryResultArticle(title, messageText, description string) (newArticle InlineQueryResultArticle, generatedID *string) {
+func NewInlineQueryResultArticle(
+	title, messageText, description string,
+) (newArticle InlineQueryResultArticle, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultArticle{
 			InlineQueryResult: InlineQueryResult{
@@ -1585,7 +1620,9 @@ func (r InlineQueryResultArticle) SetThumbnailHeight(height int) InlineQueryResu
 // Photo must be in jpeg format, < 5MB.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultphoto
-func NewInlineQueryResultPhoto(photoURL, thumbnailURL string) (newPhoto InlineQueryResultPhoto, generatedID *string) {
+func NewInlineQueryResultPhoto(
+	photoURL, thumbnailURL string,
+) (newPhoto InlineQueryResultPhoto, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultPhoto{
 			InlineQueryResult: InlineQueryResult{
@@ -1659,7 +1696,9 @@ func (r InlineQueryResultPhoto) SetInputMessageContent(content InputMessageConte
 // Gif must be in gif format, < 1MB.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultgif
-func NewInlineQueryResultGif(gifURL, thumbnailURL string) (newGif InlineQueryResultGif, generatedID *string) {
+func NewInlineQueryResultGif(
+	gifURL, thumbnailURL string,
+) (newGif InlineQueryResultGif, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultGif{
 			InlineQueryResult: InlineQueryResult{
@@ -1739,7 +1778,9 @@ func (r InlineQueryResultGif) SetInputMessageContent(content InputMessageContent
 // Mpeg4 must be in H.264/MPEG-4 AVC video(wihout sound) format, < 1MB.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
-func NewInlineQueryResultMpeg4Gif(mpeg4URL, thumbnailURL string) (newMpeg4Gif InlineQueryResultMpeg4Gif, generatedID *string) {
+func NewInlineQueryResultMpeg4Gif(
+	mpeg4URL, thumbnailURL string,
+) (newMpeg4Gif InlineQueryResultMpeg4Gif, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultMpeg4Gif{
 			InlineQueryResult: InlineQueryResult{
@@ -1817,7 +1858,10 @@ func (r InlineQueryResultMpeg4Gif) SetInputMessageContent(content InputMessageCo
 // NewInlineQueryResultVideo is a helper function for generating a new InlineQueryResultVideo.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultvideo
-func NewInlineQueryResultVideo(videoURL, thumbnailURL, title string, mimeType VideoMimeType) (newVideo InlineQueryResultVideo, generatedID *string) {
+func NewInlineQueryResultVideo(
+	videoURL, thumbnailURL, title string,
+	mimeType VideoMimeType,
+) (newVideo InlineQueryResultVideo, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultVideo{
 			InlineQueryResult: InlineQueryResult{
@@ -1891,7 +1935,9 @@ func (r InlineQueryResultVideo) SetInputMessageContent(content InputMessageConte
 // NewInlineQueryResultAudio is a helper function for generating a new InlineQueryResultAudio.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultaudio
-func NewInlineQueryResultAudio(audioURL, title string) (newAudio InlineQueryResultAudio, generatedID *string) {
+func NewInlineQueryResultAudio(
+	audioURL, title string,
+) (newAudio InlineQueryResultAudio, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultAudio{
 			InlineQueryResult: InlineQueryResult{
@@ -1951,7 +1997,9 @@ func (r InlineQueryResultAudio) SetInputMessageContent(content InputMessageConte
 // NewInlineQueryResultVoice is a helper function for generating a new InlineQueryResultVoice.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultvoice
-func NewInlineQueryResultVoice(voiceURL, title string) (newVoice InlineQueryResultVoice, generatedID *string) {
+func NewInlineQueryResultVoice(
+	voiceURL, title string,
+) (newVoice InlineQueryResultVoice, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultVoice{
 			InlineQueryResult: InlineQueryResult{
@@ -2005,7 +2053,10 @@ func (r InlineQueryResultVoice) SetInputMessageContent(content InputMessageConte
 // NewInlineQueryResultDocument is a helper function for generating a new InlineQueryResultDocument.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultdocument
-func NewInlineQueryResultDocument(documentURL, title string, mimeType DocumentMimeType) (newDocument InlineQueryResultDocument, generatedID *string) {
+func NewInlineQueryResultDocument(
+	documentURL, title string,
+	mimeType DocumentMimeType,
+) (newDocument InlineQueryResultDocument, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultDocument{
 			InlineQueryResult: InlineQueryResult{
@@ -2078,7 +2129,10 @@ func (r InlineQueryResultDocument) SetThumbnailHeight(thumbnailHeight int) Inlin
 // NewInlineQueryResultLocation is a helper function for generating a new InlineQueryResultLocation.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultlocation
-func NewInlineQueryResultLocation(latitude, longitude float32, title string) (newLocation InlineQueryResultLocation, generatedID *string) {
+func NewInlineQueryResultLocation(
+	latitude, longitude float32,
+	title string,
+) (newLocation InlineQueryResultLocation, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultLocation{
 			InlineQueryResult: InlineQueryResult{
@@ -2151,7 +2205,10 @@ func (r InlineQueryResultLocation) SetThumbnailHeight(thumbnailHeight int) Inlin
 // NewInlineQueryResultVenue is a helper function for generating a new InlineQueryResultVenue.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultvenue
-func NewInlineQueryResultVenue(latitude, longitude float32, title, address string) (newVenue InlineQueryResultVenue, generatedID *string) {
+func NewInlineQueryResultVenue(
+	latitude, longitude float32,
+	title, address string,
+) (newVenue InlineQueryResultVenue, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultVenue{
 			InlineQueryResult: InlineQueryResult{
@@ -2225,7 +2282,9 @@ func (r InlineQueryResultVenue) SetThumbnailHeight(thumbnailHeight int) InlineQu
 // NewInlineQueryResultContact is a helper function for generating a new InlineQueryResultContact.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcontact
-func NewInlineQueryResultContact(phoneNumber, firstName string) (newContact InlineQueryResultContact, generatedID *string) {
+func NewInlineQueryResultContact(
+	phoneNumber, firstName string,
+) (newContact InlineQueryResultContact, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultContact{
 			InlineQueryResult: InlineQueryResult{
@@ -2285,7 +2344,9 @@ func (r InlineQueryResultContact) SetThumbnailHeight(thumbnailHeight int) Inline
 // NewInlineQueryResultGame is a helper function for generating a new InlineQueryResultGame.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultgame
-func NewInlineQueryResultGame(shortName string) (newGame InlineQueryResultGame, generatedID *string) {
+func NewInlineQueryResultGame(
+	shortName string,
+) (newGame InlineQueryResultGame, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultGame{
 			InlineQueryResult: InlineQueryResult{
@@ -2308,7 +2369,9 @@ func (r InlineQueryResultGame) SetReplyMarkup(markup InlineKeyboardMarkup) Inlin
 // NewInlineQueryResultCachedPhoto is a helper function for generating a new InlineQueryResultCachedPhoto.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedphoto
-func NewInlineQueryResultCachedPhoto(photoFileID string) (newPhoto InlineQueryResultCachedPhoto, generatedID *string) {
+func NewInlineQueryResultCachedPhoto(
+	photoFileID string,
+) (newPhoto InlineQueryResultCachedPhoto, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedPhoto{
 			InlineQueryResult: InlineQueryResult{
@@ -2367,7 +2430,9 @@ func (r InlineQueryResultCachedPhoto) SetInputMessageContent(content InputMessag
 // NewInlineQueryResultCachedGif is a helper function for generating a new InlineQueryResultCachedGif.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedgif
-func NewInlineQueryResultCachedGif(gifFileID string) (newGif InlineQueryResultCachedGif, generatedID *string) {
+func NewInlineQueryResultCachedGif(
+	gifFileID string,
+) (newGif InlineQueryResultCachedGif, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedGif{
 			InlineQueryResult: InlineQueryResult{
@@ -2420,7 +2485,9 @@ func (r InlineQueryResultCachedGif) SetInputMessageContent(content InputMessageC
 // NewInlineQueryResultCachedMpeg4Gif is a helper function for generating a new InlineQueryResultCachedMpeg4Gif.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif
-func NewInlineQueryResultCachedMpeg4Gif(mpeg4FileID string) (newMpeg4Gif InlineQueryResultCachedMpeg4Gif, generatedID *string) {
+func NewInlineQueryResultCachedMpeg4Gif(
+	mpeg4FileID string,
+) (newMpeg4Gif InlineQueryResultCachedMpeg4Gif, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedMpeg4Gif{
 			InlineQueryResult: InlineQueryResult{
@@ -2473,7 +2540,9 @@ func (r InlineQueryResultCachedMpeg4Gif) SetInputMessageContent(content InputMes
 // NewInlineQueryResultCachedSticker is a helper function for generating a new InlineQueryResultCachedSticker.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedsticker
-func NewInlineQueryResultCachedSticker(stickerFileID string) (newSticker InlineQueryResultCachedSticker, generatedID *string) {
+func NewInlineQueryResultCachedSticker(
+	stickerFileID string,
+) (newSticker InlineQueryResultCachedSticker, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedSticker{
 			InlineQueryResult: InlineQueryResult{
@@ -2502,7 +2571,9 @@ func (r InlineQueryResultCachedSticker) SetInputMessageContent(content InputMess
 // NewInlineQueryResultCachedDocument is a helper function for generating a new InlineQueryResultCachedDocument.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcacheddocument
-func NewInlineQueryResultCachedDocument(title, documentFileID string) (newDocument InlineQueryResultCachedDocument, generatedID *string) {
+func NewInlineQueryResultCachedDocument(
+	title, documentFileID string,
+) (newDocument InlineQueryResultCachedDocument, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedDocument{
 			InlineQueryResult: InlineQueryResult{
@@ -2556,7 +2627,9 @@ func (r InlineQueryResultCachedDocument) SetInputMessageContent(content InputMes
 // NewInlineQueryResultCachedVideo is a helper function for generating a new InlineQueryResultCachedVideo.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedvideo
-func NewInlineQueryResultCachedVideo(title, videoFileID string) (newVideo InlineQueryResultCachedVideo, generatedID *string) {
+func NewInlineQueryResultCachedVideo(
+	title, videoFileID string,
+) (newVideo InlineQueryResultCachedVideo, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedVideo{
 			InlineQueryResult: InlineQueryResult{
@@ -2610,7 +2683,9 @@ func (r InlineQueryResultCachedVideo) SetInputMessageContent(content InputMessag
 // NewInlineQueryResultCachedVoice is a helper function for generating a new InlineQueryResultCachedVoice.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedvoice
-func NewInlineQueryResultCachedVoice(title, voiceFileID string) (newVoice InlineQueryResultCachedVoice, generatedID *string) {
+func NewInlineQueryResultCachedVoice(
+	title, voiceFileID string,
+) (newVoice InlineQueryResultCachedVoice, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedVoice{
 			InlineQueryResult: InlineQueryResult{
@@ -2658,7 +2733,9 @@ func (r InlineQueryResultCachedVoice) SetInputMessageContent(content InputMessag
 // NewInlineQueryResultCachedAudio is a helper function for generating a new InlineQueryResultCachedAudio.
 //
 // https://core.telegram.org/bots/api#inlinequeryresultcachedaudio
-func NewInlineQueryResultCachedAudio(audioFileID string) (newAudio InlineQueryResultCachedAudio, generatedID *string) {
+func NewInlineQueryResultCachedAudio(
+	audioFileID string,
+) (newAudio InlineQueryResultCachedAudio, generatedID *string) {
 	if id, err := newUUID(); err == nil {
 		return InlineQueryResultCachedAudio{
 			InlineQueryResult: InlineQueryResult{
@@ -2763,7 +2840,10 @@ func (c InputLocationMessageContent) SetProximityAlertRadius(radius int) InputLo
 }
 
 // NewInputVenueMessageContent returns a new InputVenueMessageContent.
-func NewInputVenueMessageContent(latitude, longitude float32, title, address string) InputVenueMessageContent {
+func NewInputVenueMessageContent(
+	latitude, longitude float32,
+	title, address string,
+) InputVenueMessageContent {
 	return InputVenueMessageContent{
 		Latitude:  latitude,
 		Longitude: longitude,
@@ -2817,7 +2897,10 @@ func (c InputContactMessageContent) SetVCard(vCard string) InputContactMessageCo
 }
 
 // NewInputInvoiceMessageContent returns a new InputInvoiceMessageContent.
-func NewInputInvoiceMessageContent(title, description, payload, providerToken, currency string, prices []LabeledPrice) InputInvoiceMessageContent {
+func NewInputInvoiceMessageContent(
+	title, description, payload, providerToken, currency string,
+	prices []LabeledPrice,
+) InputInvoiceMessageContent {
 	return InputInvoiceMessageContent{
 		Title:         title,
 		Description:   description,
@@ -2937,11 +3020,42 @@ func NewChatBoostSourceGiftCode(user User) ChatBoostSource {
 }
 
 // NewChatBoostSourceGiveaway returns a new ChatBoostSourceGiveaway.
-func NewChatBoostSourceGiveaway(giveawayMessageID int64, user *User, isUnclaimed bool) ChatBoostSource {
+func NewChatBoostSourceGiveaway(
+	giveawayMessageID int64,
+	user *User,
+	isUnclaimed bool,
+) ChatBoostSource {
 	return ChatBoostSource{
 		Source:            "giveaway",
 		GiveawayMessageID: &giveawayMessageID,
 		User:              user,
 		IsUnclaimed:       &isUnclaimed,
 	}
+}
+
+////////////////////////////////
+// Helper functions for OwnedGift
+
+// GiftAsGift returns `gift` as Gift.
+func (g OwnedGift) GiftAsGift() (result *Gift, err error) {
+	if g.Type == "regular" {
+		if err = json.Unmarshal(g.Gift, &result); err == nil {
+			return result, nil
+		} else {
+			return nil, fmt.Errorf("failed to unmarshal gift: %w", err)
+		}
+	}
+	return nil, fmt.Errorf("gift is not in regular type")
+}
+
+// GiftAsUniqueGift returns `gift` as UniqueGift.
+func (g OwnedGift) GiftAsUniqueGift() (result *UniqueGift, err error) {
+	if g.Type == "unique" {
+		if err = json.Unmarshal(g.Gift, &result); err == nil {
+			return result, nil
+		} else {
+			return nil, fmt.Errorf("failed to unmarshal unique gift: %w", err)
+		}
+	}
+	return nil, fmt.Errorf("gift is not in unique type")
 }
