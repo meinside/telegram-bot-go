@@ -3083,3 +3083,254 @@ func (o OptionsEditForumTopic) SetIconCustomEmojiID(iconCustomEmojiID string) Op
 	o["icon_custom_emoji_id"] = iconCustomEmojiID
 	return o
 }
+
+// OptionsSetBusinessAccountName struct for SetBusinessAccountName().
+//
+// options include: `last_name`.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountname
+type OptionsSetBusinessAccountName MethodOptions
+
+// SetLastname sets the `last_name` value of OptionsSetBusinessAccountName.
+func (o OptionsSetBusinessAccountName) SetLastName(lastName string) OptionsSetBusinessAccountName {
+	o["last_name"] = lastName
+	return o
+}
+
+// OptionsSetBusinessAccountUsername struct for SetBusinessAccountUsername().
+//
+// options include: `username`.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountusername
+type OptionsSetBusinessAccountUsername MethodOptions
+
+// SetUsername sets the `username` value of OptionsSetBusinessAccountUsername.
+func (o OptionsSetBusinessAccountUsername) SetUsername(username string) OptionsSetBusinessAccountUsername {
+	o["username"] = username
+	return o
+}
+
+// OptionsSetBusinessAccountBio struct for SetBusinessAccountBio().
+//
+// options include: `bio`.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountbio
+type OptionsSetBusinessAccountBio MethodOptions
+
+// SetBio sets the `bio` value of OptionsSetBusinessAccountBio.
+func (o OptionsSetBusinessAccountBio) SetBio(bio string) OptionsSetBusinessAccountBio {
+	o["bio"] = bio
+	return o
+}
+
+// OptionsSetBusinessAccountProfilePhoto struct for SetBusinessAccountProfilePhoto().
+//
+// options include: `is_public`.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountprofilephoto
+type OptionsSetBusinessAccountProfilePhoto MethodOptions
+
+// SetIsPublic sets the `is_public` value of OptionsSetBusinessAccountProfilePhoto.
+func (o OptionsSetBusinessAccountProfilePhoto) SetIsPublic(isPublic bool) OptionsSetBusinessAccountProfilePhoto {
+	o["is_public"] = isPublic
+	return o
+}
+
+// OptionsRemoveBusinessAccountProfilePhoto struct for RemoveBusinessAccountProfilePhoto().
+//
+// options include: `is_public`.
+//
+// https://core.telegram.org/bots/api#removebusinessaccountprofilephoto
+type OptionsRemoveBusinessAccountProfilePhoto MethodOptions
+
+// SetIsPublic sets the `is_public` value of OptionsRemoveBusinessAccountProfilePhoto.
+func (o OptionsRemoveBusinessAccountProfilePhoto) SetIsPublic(isPublic bool) OptionsRemoveBusinessAccountProfilePhoto {
+	o["is_public"] = isPublic
+	return o
+}
+
+// OptionsGetBusinessAccountGifts struct for GetBusinessAccountGifts().
+//
+// options include: `exclude_unsaved`, `exclude_saved`, `exclude_unlimited`, `exclude_limited`, `exclude_unique`, `sort_by_price`, `offset`, and `limit`.
+//
+// https://core.telegram.org/bots/api#getbusinessaccountgifts
+type OptionsGetBusinessAccountGifts MethodOptions
+
+// SetExcludeUnsaved sets the `exclude_unsaved` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeUnsaved(excludeUnsaved bool) OptionsGetBusinessAccountGifts {
+	o["exclude_unsaved"] = excludeUnsaved
+	return o
+}
+
+// SetExcludeSaved sets the `exclude_saved` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeSaved(excludeSaved bool) OptionsGetBusinessAccountGifts {
+	o["exclude_saved"] = excludeSaved
+	return o
+}
+
+// SetExcludeUnlimited sets the `exclude_unlimited` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeUnlimited(excludeUnlimited bool) OptionsGetBusinessAccountGifts {
+	o["exclude_unlimited"] = excludeUnlimited
+	return o
+}
+
+// SetExcludeLimited sets the `exclude_limited` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeLimited(excludeLimited bool) OptionsGetBusinessAccountGifts {
+	o["exclude_limited"] = excludeLimited
+	return o
+}
+
+// SetExcludeUnique sets the `exclude_unique` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeUnique(excludeUnique bool) OptionsGetBusinessAccountGifts {
+	o["exclude_unique"] = excludeUnique
+	return o
+}
+
+// SetSortByPrice sets the `sort_by_price` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetSortByPrice(sortByPrice bool) OptionsGetBusinessAccountGifts {
+	o["sort_by_price"] = sortByPrice
+	return o
+}
+
+// SetOffset sets the `offset` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetOffset(offset string) OptionsGetBusinessAccountGifts {
+	o["offset"] = offset
+	return o
+}
+
+// SetLimit sets the `limit` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetLimit(limit int) OptionsGetBusinessAccountGifts {
+	o["limit"] = limit
+	return o
+}
+
+// OptionsUpgradeGift struct for UpgradeGift().
+//
+// options include: `keep_original_details`, and `star_count`.
+//
+// https://core.telegram.org/bots/api#upgradegift
+type OptionsUpgradeGift MethodOptions
+
+// SetKeepOriginalDetails sets the `keep_original_details` value of OptionsUpgradeGift.
+func (o OptionsUpgradeGift) SetKeepOriginalDetails(keep bool) OptionsUpgradeGift {
+	o["keep_original_details"] = keep
+	return o
+}
+
+// SetStarCount sets the `star_count` value of OptionsUpgradeGift.
+func (o OptionsUpgradeGift) SetStarCount(starCount int) OptionsUpgradeGift {
+	o["star_count"] = starCount
+	return o
+}
+
+// OptionsTransferGift struct for TransferGift().
+//
+// options include: `star_count`.
+//
+// https://core.telegram.org/bots/api#transfergift
+type OptionsTransferGift MethodOptions
+
+// SetStarCount sets the `star_count` value of OptionsTrasnferGift.
+func (o OptionsTransferGift) SetStarCount(starCount int) OptionsTransferGift {
+	o["star_count"] = starCount
+	return o
+}
+
+// OptionsPostStory struct for PostStory().
+//
+// options include: `caption`, `parse_mode`, `caption_entities`, `areas`, `post_to_chat_page`, and `protect_content`.
+//
+// https://core.telegram.org/bots/api#poststory
+type OptionsPostStory MethodOptions
+
+// SetCaption sets the `caption` value of OptionsPostStory.
+func (o OptionsPostStory) SetCaption(caption string) OptionsPostStory {
+	o["caption"] = caption
+	return o
+}
+
+// SetParseMode sets the `parse_mode` value of OptionsPostStory.
+func (o OptionsPostStory) SetParseMode(parseMode ParseMode) OptionsPostStory {
+	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetCaptionEntities sets the `caption_entities` value of OptionsPostStory.
+func (o OptionsPostStory) SetCaptionEntities(captionEntities []MessageEntity) OptionsPostStory {
+	o["caption_entities"] = captionEntities
+	return o
+}
+
+// SetAreas sets the `areas` value of OptionsPostStory.
+func (o OptionsPostStory) SetAreas(areas []StoryArea) OptionsPostStory {
+	o["areas"] = areas
+	return o
+}
+
+// SetPostToChatPage sets the `post_to_chat_page` value of OptionsPostStory.
+func (o OptionsPostStory) SetPostToChatPage(postToChatPage bool) OptionsPostStory {
+	o["post_to_chat_page"] = postToChatPage
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsPostStory.
+func (o OptionsPostStory) SetProtectContent(protectContent bool) OptionsPostStory {
+	o["protect_content"] = protectContent
+	return o
+}
+
+// OptionsEditStory struct for EditStory().
+//
+// options include: `caption`, `parse_mode`, `caption_entities`, and `areas`.
+//
+// https://core.telegram.org/bots/api#editstory
+type OptionsEditStory MethodOptions
+
+// SetCaption sets the `caption` value of OptionsEditStory.
+func (o OptionsEditStory) SetCaption(caption string) OptionsEditStory {
+	o["caption"] = caption
+	return o
+}
+
+// SetParseMode sets the `parse_mode` value of OptionsEditStory.
+func (o OptionsEditStory) SetParseMode(parseMode ParseMode) OptionsEditStory {
+	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetCaptionEntities sets the `caption_entities` value of OptionsEditStory.
+func (o OptionsEditStory) SetCaptionEntities(captionEntities []MessageEntity) OptionsEditStory {
+	o["caption_entities"] = captionEntities
+	return o
+}
+
+// SetAreas sets the `areas` value of OptionsEditStory.
+func (o OptionsEditStory) SetAreas(areas []StoryArea) OptionsEditStory {
+	o["areas"] = areas
+	return o
+}
+
+// OptionsGiftPremiumSubscription struct for GiftPremiumSubscription().
+//
+// options include: `text`, `text_parse_mode`, and `text_entities`.
+//
+// https://core.telegram.org/bots/api#giftpremiumsubscription
+type OptionsGiftPremiumSubscription MethodOptions
+
+// SetText sets the `text` value of OptionsGiftPremiumSubscription.
+func (o OptionsGiftPremiumSubscription) SetText(text string) OptionsGiftPremiumSubscription {
+	o["text"] = text
+	return o
+}
+
+// SetTextParseMode sets the `text_parse_mode` value of OptionsGiftPremiumSubscription.
+func (o OptionsGiftPremiumSubscription) SetTextParseMode(parseMode ParseMode) OptionsGiftPremiumSubscription {
+	o["text_parse_mode"] = parseMode
+	return o
+}
+
+// SetTextEntities sets the `text_entities` value of OptionsGiftPremiumSubscription.
+func (o OptionsGiftPremiumSubscription) SetTextEntities(textEntities []MessageEntity) OptionsGiftPremiumSubscription {
+	o["text_entities"] = textEntities
+	return o
+}

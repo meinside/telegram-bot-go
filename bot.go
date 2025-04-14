@@ -109,7 +109,12 @@ func NewClient(token string) *Bot {
 
 // GenCertAndKey generates a certificate and a private key file with given domain.
 // (`OpenSSL` is needed.)
-func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string, expiresInDays int) error {
+func GenCertAndKey(
+	domain string,
+	outCertFilepath string,
+	outKeyFilepath string,
+	expiresInDays int,
+) error {
 	numBits := 2048
 	country := "US"
 	state := "New York"
@@ -124,7 +129,10 @@ func GenCertAndKey(domain string, outCertFilepath string, outKeyFilepath string,
 }
 
 // AddCommandHandler adds a handler function for given command.
-func (b *Bot) AddCommandHandler(command string, handler func(b *Bot, update Update, args string)) {
+func (b *Bot) AddCommandHandler(
+	command string,
+	handler func(b *Bot, update Update, args string),
+) {
 	// initialize map
 	if b.commandHandlers == nil {
 		b.commandHandlers = map[string]func(b *Bot, update Update, args string){}
@@ -139,67 +147,93 @@ func (b *Bot) AddCommandHandler(command string, handler func(b *Bot, update Upda
 }
 
 // SetNoMatchingCommandHandler sets a function for handling no-matching commands.
-func (b *Bot) SetNoMatchingCommandHandler(handler func(b *Bot, update Update, cmd, args string)) {
+func (b *Bot) SetNoMatchingCommandHandler(
+	handler func(b *Bot, update Update, cmd, args string),
+) {
 	b.noMatchingCommandHandler = handler
 }
 
 // SetMessageHandler sets a function for handling messages.
-func (b *Bot) SetMessageHandler(handler func(b *Bot, update Update, message Message, edited bool)) {
+func (b *Bot) SetMessageHandler(
+	handler func(b *Bot, update Update, message Message, edited bool),
+) {
 	b.messageHandler = handler
 }
 
 // SetMediaGroupHandler sets a function for handling updates with media group id.
-func (b *Bot) SetMediaGroupHandler(handler func(b *Bot, updates []Update, mediaGroupID string)) {
+func (b *Bot) SetMediaGroupHandler(
+	handler func(b *Bot, updates []Update, mediaGroupID string),
+) {
 	b.mediaGroupHandler = handler
 }
 
 // SetChannelPostHandler sets a function for handling channel posts.
-func (b *Bot) SetChannelPostHandler(handler func(b *Bot, update Update, channelPost Message, edited bool)) {
+func (b *Bot) SetChannelPostHandler(
+	handler func(b *Bot, update Update, channelPost Message, edited bool),
+) {
 	b.channelPostHandler = handler
 }
 
 // SetInlineQueryHandler sets a function for handling inline queries.
-func (b *Bot) SetInlineQueryHandler(handler func(b *Bot, update Update, inlineQuery InlineQuery)) {
+func (b *Bot) SetInlineQueryHandler(
+	handler func(b *Bot, update Update, inlineQuery InlineQuery),
+) {
 	b.inlineQueryHandler = handler
 }
 
 // SetChosenInlineResultHandler sets a function for handling chosen inline results.
-func (b *Bot) SetChosenInlineResultHandler(handler func(b *Bot, update Update, chosenInlineResult ChosenInlineResult)) {
+func (b *Bot) SetChosenInlineResultHandler(
+	handler func(b *Bot, update Update, chosenInlineResult ChosenInlineResult),
+) {
 	b.chosenInlineResultHandler = handler
 }
 
 // SetCallbackQueryHandler sets a function for handling callback queries.
-func (b *Bot) SetCallbackQueryHandler(handler func(b *Bot, update Update, callbackQuery CallbackQuery)) {
+func (b *Bot) SetCallbackQueryHandler(
+	handler func(b *Bot, update Update, callbackQuery CallbackQuery),
+) {
 	b.callbackQueryHandler = handler
 }
 
 // SetShippingQueryHandler sets a function for handling shipping queries.
-func (b *Bot) SetShippingQueryHandler(handler func(b *Bot, update Update, shippingQuery ShippingQuery)) {
+func (b *Bot) SetShippingQueryHandler(
+	handler func(b *Bot, update Update, shippingQuery ShippingQuery),
+) {
 	b.shippingQueryHandler = handler
 }
 
 // SetPreCheckoutQueryHandler sets a function for handling pre-checkout queries.
-func (b *Bot) SetPreCheckoutQueryHandler(handler func(b *Bot, update Update, preCheckoutQuery PreCheckoutQuery)) {
+func (b *Bot) SetPreCheckoutQueryHandler(
+	handler func(b *Bot, update Update, preCheckoutQuery PreCheckoutQuery),
+) {
 	b.preCheckoutQueryHandler = handler
 }
 
 // SetPollHandler sets a function for handling polls.
-func (b *Bot) SetPollHandler(handler func(b *Bot, update Update, poll Poll)) {
+func (b *Bot) SetPollHandler(
+	handler func(b *Bot, update Update, poll Poll),
+) {
 	b.pollHandler = handler
 }
 
 // SetPollAnswerHandler sets a function for handling poll answers.
-func (b *Bot) SetPollAnswerHandler(handler func(b *Bot, update Update, pollAnswer PollAnswer)) {
+func (b *Bot) SetPollAnswerHandler(
+	handler func(b *Bot, update Update, pollAnswer PollAnswer),
+) {
 	b.pollAnswerHandler = handler
 }
 
 // SetChatMemberUpdateHandler sets a function for handling chat member updates.
-func (b *Bot) SetChatMemberUpdateHandler(handler func(b *Bot, update Update, memberUpdated ChatMemberUpdated, isMine bool)) {
+func (b *Bot) SetChatMemberUpdateHandler(
+	handler func(b *Bot, update Update, memberUpdated ChatMemberUpdated, isMine bool),
+) {
 	b.chatMemberUpdateHandler = handler
 }
 
 // SetChatJoinRequestHandler sets a function for handling chat join requests.
-func (b *Bot) SetChatJoinRequestHandler(handler func(b *Bot, update Update, chatJoinRequest ChatJoinRequest)) {
+func (b *Bot) SetChatJoinRequestHandler(
+	handler func(b *Bot, update Update, chatJoinRequest ChatJoinRequest),
+) {
 	b.chatJoinRequestHandler = handler
 }
 
@@ -209,7 +243,11 @@ func (b *Bot) SetChatJoinRequestHandler(handler func(b *Bot, update Update, chat
 // Incoming webhooks will be received through webhookHandler function.
 //
 // https://core.telegram.org/bots/self-signed
-func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string, webhookHandler func(b *Bot, webhook Update, err error)) {
+func (b *Bot) StartWebhookServerAndWait(
+	certFilepath string,
+	keyFilepath string,
+	webhookHandler func(b *Bot, webhook Update, err error),
+) {
 	b.verbose("starting webhook server on: %s (port: %d) ...", b.getWebhookPath(), b.webhookPort)
 
 	// set update handler
@@ -246,7 +284,12 @@ func (b *Bot) StartWebhookServerAndWait(certFilepath string, keyFilepath string,
 //   - []AllowedUpdates
 //
 // NOTE: Make sure webhook is deleted, or not registered before polling.
-func (b *Bot) StartPollingUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error), optionalParams ...any) {
+func (b *Bot) StartPollingUpdates(
+	updateOffset int64,
+	interval int,
+	updateHandler func(b *Bot, update Update, err error),
+	optionalParams ...any,
+) {
 	b.verbose("starting polling updates (interval seconds: %d) ...", interval)
 
 	// https://core.telegram.org/bots/api#getupdates
@@ -330,7 +373,11 @@ loop:
 }
 
 // DEPRECATED: renamed to `StartPollingUpdates`
-func (b *Bot) StartMonitoringUpdates(updateOffset int64, interval int, updateHandler func(b *Bot, update Update, err error)) {
+func (b *Bot) StartMonitoringUpdates(
+	updateOffset int64,
+	interval int,
+	updateHandler func(b *Bot, update Update, err error),
+) {
 	b.StartPollingUpdates(updateOffset, interval, updateHandler)
 }
 

@@ -1,5 +1,7 @@
 package telegrambot
 
+import "encoding/json"
+
 // https://core.telegram.org/bots/api#available-types
 
 // ChatID can be `Message.Chat.Id`,
@@ -366,7 +368,7 @@ type ChatFullInfo struct {
 	InviteLink                         *string               `json:"invite_link,omitempty"`
 	PinnedMessage                      *Message              `json:"pinned_message,omitempty"`
 	Permissions                        *ChatPermissions      `json:"permissions,omitempty"`
-	CanSendGift                        *bool                 `json:"can_send_gift,omitempty"`
+	AcceptedGiftTypes                  *AcceptedGiftTypes    `json:"accepted_gift_types,omitempty"`
 	CanSendPaidMedia                   *bool                 `json:"can_send_paid_media,omitempty"`
 	SlowModeDelay                      *int                  `json:"slow_mode_delay,omitempty"`
 	UnrestrictBoostCount               *int                  `json:"unrestrict_boost_count,omitempty"`
@@ -1112,6 +1114,13 @@ type VideoChatParticipantsInvited struct {
 	Users []User `json:"users"`
 }
 
+// PaidMessagePriceChanged describes a service message about a change in the price of paid messages within a chat.
+//
+// https://core.telegram.org/bots/api#paidmessagepricechanged
+type PaidMessagePriceChanged struct {
+	PaidMessageStarCount int `json:"paid_message_star_count"`
+}
+
 // Giveaway struct for giveaways
 //
 // https://core.telegram.org/bots/api#giveaway
@@ -1427,6 +1436,19 @@ const (
 	TransactionPartnerOther            TransactionPartnerType = "other"
 )
 
+// TransactionPartnerUserTransactionType is a transaction type of TransactionPartnerUser
+//
+// https://core.telegram.org/bots/api#transactionpartneruser
+type TransactionPartnerUserTransactionType string
+
+const (
+	TransactionPartnerUserTransactionInvoicePayment          TransactionPartnerUserTransactionType = "invoice_payment"
+	TransactionPartnerUserTransactionPaidMediaPayment        TransactionPartnerUserTransactionType = "paid_media_payment"
+	TransactionPartnerUserTransactionGiftPurchase            TransactionPartnerUserTransactionType = "gift_purchase"
+	TransactionPartnerUserTransactionPremiumPurchase         TransactionPartnerUserTransactionType = "premium_purchase"
+	TransactionPartnerUserTransactionBusinessAccountTransfer TransactionPartnerUserTransactionType = "business_account_transfer"
+)
+
 // TransactionPartner is a struct for a transaction partner
 //
 // https://core.telegram.org/bots/api#transactionpartner
@@ -1434,12 +1456,14 @@ type TransactionPartner struct {
 	Type TransactionPartnerType `json:"type"`
 
 	// when Type == TransactionPartnerUser
-	User               *User          `json:"user,omitempty"`
-	Affiliate          *AffiliateInfo `json:"affiliate,omitempty"`
-	InvoicePayload     *string        `json:"invoice_payload,omitempty"`
-	SubscriptionPeriod *int           `json:"subscription_period,omitempty"`
-	PaidMedia          []PaidMedia    `json:"paid_media,omitempty"`
-	PaidMediaPayload   *string        `json:"paid_media_payload,omitempty"`
+	TransactionType             *TransactionPartnerUserTransactionType `json:"transaction_type,omitempty"`
+	User                        *User                                  `json:"user,omitempty"`
+	Affiliate                   *AffiliateInfo                         `json:"affiliate,omitempty"`
+	InvoicePayload              *string                                `json:"invoice_payload,omitempty"`
+	SubscriptionPeriod          *int                                   `json:"subscription_period,omitempty"`
+	PaidMedia                   []PaidMedia                            `json:"paid_media,omitempty"`
+	PaidMediaPayload            *string                                `json:"paid_media_payload,omitempty"`
+	PremiumSubscriptionDuration *int                                   `json:"premium_subscription_duration,omitempty"`
 
 	// when Type == TransactionPartnerChat
 	Chat *Chat `json:"chat,omitempty"`
@@ -1636,7 +1660,7 @@ type BusinessLocation struct {
 	Location *Location `json:"location,omitempty"`
 }
 
-// BusinessOpeningHoursInterval is a struct of an opening hours of business
+// BusinessOpeningHoursInterval is a struct of an opening hours interval of business
 //
 // https://core.telegram.org/bots/api#businessopeninghoursinterval
 type BusinessOpeningHoursInterval struct {
@@ -1644,10 +1668,104 @@ type BusinessOpeningHoursInterval struct {
 	ClosingMinute int `json:"closing_minute"`
 }
 
+// BusinessOpeningHours is a struct of an opening hours of business
+//
 // https://core.telegram.org/bots/api#businessopeninghours
 type BusinessOpeningHours struct {
 	TimeZoneName string                         `json:"time_zone_name"`
 	OpeningHours []BusinessOpeningHoursInterval `json:"opening_hours"`
+}
+
+// StoryAreaPosition describes the position of a clickable area within a story.
+//
+// https://core.telegram.org/bots/api#storyareaposition
+type StoryAreaPosition struct {
+	XPercentage            float32 `json:"x_percentage"`
+	YPercentage            float32 `json:"y_percentage"`
+	WidthPercentage        float32 `json:"width_percentage"`
+	HeightPercentage       float32 `json:"height_percentage"`
+	RotationAngle          float32 `json:"rotation_angle"`
+	CornerRadiusPercentage float32 `json:"corner_radius_percentage"`
+}
+
+// LocationAddress describes the physical address of a location.
+//
+// https://core.telegram.org/bots/api#locationaddress
+type LocationAddress struct {
+	CountryCode string  `json:"country_code"`
+	State       *string `json:"state,omitempty"`
+	City        *string `json:"city,omitempty"`
+	Street      *string `json:"street,omitempty"`
+}
+
+// StoryAreaTypeType is a type of StoryAreaType
+type StoryAreaTypeType string
+
+const (
+	StoryAreaTypeLocation          StoryAreaTypeType = "location"
+	StoryAreaTypeSuggestedReaction StoryAreaTypeType = "suggested_reaction"
+	StoryAreaTypeLink              StoryAreaTypeType = "link"
+	StoryAreaTypeWeather           StoryAreaTypeType = "weather"
+	StoryAreaTypeUniqueGift        StoryAreaTypeType = "unique_gift"
+)
+
+// StoryAreaType describes the type of a clickable area on a story.
+//
+// https://core.telegram.org/bots/api#storyareatype
+type StoryAreaType struct {
+	Type StoryAreaTypeType `json:"type"`
+
+	// Type == TypeStoryAreaLocation
+	// https://core.telegram.org/bots/api#storyareatypelocation
+	Latitude  *float32         `json:"latitude,omitempty"`
+	Longitude *float32         `json:"longitude,omitempty"`
+	Address   *LocationAddress `json:"address,omitempty"`
+
+	// Type == TypeStoryAreaSuggestedReaction
+	// https://core.telegram.org/bots/api#storyareatypesuggestedreaction
+	ReactionType *ReactionType `json:"reaction_type,omitempty"`
+	IsDark       *bool         `json:"is_dark,omitempty"`
+	IsFlipped    *bool         `json:"is_flipped,omitempty"`
+
+	// Type == TypeStoryAreaLink
+	// https://core.telegram.org/bots/api#storyareatypelink
+	URL *string `json:"url,omitempty"`
+
+	// Type == TypeStoryAreaWeather
+	// https://core.telegram.org/bots/api#storyareatypeweather
+	Temperature     *float32 `json:"temperature,omitempty"`
+	Emoji           *string  `json:"emoji,omitempty"`
+	BackgroundColor *int     `json:"background_color,omitempty"`
+
+	// Type == TypeStoryAreaUniqueGift
+	// https://core.telegram.org/bots/api#storyareatypeuniquegift
+	Name *string `json:"name,omitempty"`
+}
+
+// InputStoryContent describes the content of a story to post.
+//
+// https://core.telegram.org/bots/api#inputstorycontent
+type InputStoryContent struct {
+	Type string `json:"type"`
+
+	// Type == "photo"
+	// https://core.telegram.org/bots/api#inputstorycontentphoto
+	Photo *string `json:"photo,omitempty"`
+
+	// Type == "video"
+	// https://core.telegram.org/bots/api#inputstorycontentvideo
+	Video               *string  `json:"video,omitempty"`
+	Duration            *float32 `json:"duration,omitempty"`
+	CoverFrameTimestamp *float32 `json:"cover_frame_timestamp,omitempty"`
+	IsAnimation         *bool    `json:"is_animation,omitempty"`
+}
+
+// StoryArea describes a clickable area on a story media.
+//
+// https://core.telegram.org/bots/api#storyarea
+type StoryArea struct {
+	Position StoryAreaPosition `json:"position"`
+	Type     StoryAreaType     `json:"type"`
 }
 
 // ChatMemmberOwner is a struct of a chat member who is an owner.
@@ -1873,6 +1991,7 @@ type Message struct {
 	IsFromOffline                 *bool                          `json:"is_from_offline,omitempty"`
 	MediaGroupID                  *string                        `json:"media_group_id,omitempty"`
 	AuthorSignature               *string                        `json:"author_signature,omitempty"`
+	PaidStarCount                 *int                           `json:"paid_star_count,omitempty"`
 	Text                          *string                        `json:"text,omitempty"`
 	Entities                      []MessageEntity                `json:"entities,omitempty"`
 	LinkPreviewOptions            *LinkPreviewOptions            `json:"link_preview_options,omitempty"`
@@ -1914,6 +2033,8 @@ type Message struct {
 	RefundedPayment               *RefundedPayment               `json:"refunded_payment,omitempty"`
 	UsersShared                   *UsersShared                   `json:"users_shared,omitempty"`
 	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`
+	Gift                          *GiftInfo                      `json:"gift,omitempty"`
+	UniqueGift                    *UniqueGiftInfo                `json:"unique_gift,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`
 	// PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
@@ -1930,6 +2051,7 @@ type Message struct {
 	Giveaway                     *Giveaway                     `json:"giveaway,omitempty"`
 	GiveawayWinners              *GiveawayWinners              `json:"giveaway_winners,omitempty"`
 	GiveawayCompleted            *GiveawayCompleted            `json:"giveaway_completed,omitempty"`
+	PaidMessagePriceChanged      *PaidMessagePriceChanged      `json:"paid_message_price_changed,omitempty"`
 	VideoChatScheduled           *VideoChatScheduled           `json:"video_chat_scheduled,omitempty"`
 	VideoChatStarted             *VideoChatStarted             `json:"video_chat_started,omitempty"`
 	VideoChatEnded               *VideoChatEnded               `json:"video_chat_ended,omitempty"`
@@ -2651,12 +2773,33 @@ type UserChatBoosts struct {
 //
 // https://core.telegram.org/bots/api#businessconnection
 type BusinessConnection struct {
-	ID         string `json:"id"`
-	User       User   `json:"user"`
-	UserChatID int64  `json:"user_chat_id"`
-	Date       int    `json:"date"`
-	CanReply   bool   `json:"can_reply"`
-	IsEnabled  bool   `json:"is_enabled"`
+	ID         string             `json:"id"`
+	User       User               `json:"user"`
+	UserChatID int64              `json:"user_chat_id"`
+	Date       int                `json:"date"`
+	CanReply   bool               `json:"can_reply"`
+	Rights     *BusinessBotRights `json:"rights,omitempty"`
+	IsEnabled  bool               `json:"is_enabled"`
+}
+
+// BusinessBotRights is a struct for business bot rights
+//
+// https://core.telegram.org/bots/api#businessbotrights
+type BusinessBotRights struct {
+	CanReply                   *bool `json:"can_reply,omitempty"`
+	CanReadMessages            *bool `json:"can_read_messages,omitempty"`
+	CanDeleteOutgoingMessages  *bool `json:"can_delete_outgoing_messages,omitempty"`
+	CanDeleteAllMessages       *bool `json:"can_delete_all_messages,omitempty"`
+	CanEditName                *bool `json:"can_edit_name,omitempty"`
+	CanEditBio                 *bool `json:"can_edit_bio,omitempty"`
+	CanEditProfilePhoto        *bool `json:"can_edit_profile_photo,omitempty"`
+	CanEditUsername            *bool `json:"can_edit_username,omitempty"`
+	CanChangeGiftSettings      *bool `json:"can_change_gift_settings,omitempty"`
+	CanViewGiftsAndStars       *bool `json:"can_view_gifts_and_stars,omitempty"`
+	CanConvertGiftsToStars     *bool `json:"can_convert_gifts_to_stars,omitempty"`
+	CanTransferAndUpgradeGifts *bool `json:"can_transfer_and_upgrade_gifts,omitempty"`
+	CanTransferStars           *bool `json:"can_transfer_stars,omitempty"`
+	CanManageStories           *bool `json:"can_manage_stories,omitempty"`
 }
 
 // BusinessMessagesDeleted is a struct sent when messages are deleted from connected business accounts
@@ -2685,4 +2828,146 @@ type Gift struct {
 // https://core.telegram.org/bots/api#gifts
 type Gifts struct {
 	Gifts []Gift `json:"gifts"`
+}
+
+// UniqueGiftModel describes the model of a unique gift.
+//
+// https://core.telegram.org/bots/api#uniquegiftmodel
+type UniqueGiftModel struct {
+	Name           string  `json:"name"`
+	Sticker        Sticker `json:"sticker"`
+	RarityPerMille int     `json:"rarity_per_mille"`
+}
+
+// UniqueGiftSymbol describes the symbol shown on the pattern of a unique gift.
+//
+// https://core.telegram.org/bots/api#uniquegiftsymbol
+type UniqueGiftSymbol struct {
+	Name           string  `json:"name"`
+	Sticker        Sticker `json:"sticker"`
+	RarityPerMille int     `json:"rarity_per_mille"`
+}
+
+// UniqueGiftBackdropColors describes the colors of the backdrop of a unique gift.
+//
+// https://core.telegram.org/bots/api#uniquegiftbackdropcolors
+type UniqueGiftBackdropColors struct {
+	CenterColor int `json:"center_color"`
+	EdgeColor   int `json:"edge_color"`
+	SymbolColor int `json:"symbol_color"`
+	TextColor   int `json:"text_color"`
+}
+
+// UniqueGiftBackdrop describes the backdrop of a unique gift.
+//
+// https://core.telegram.org/bots/api#uniquegiftbackdrop
+type UniqueGiftBackdrop struct {
+	Name           string                   `json:"name"`
+	Colors         UniqueGiftBackdropColors `json:"colors"`
+	RarityPerMille int                      `json:"rarity_per_mille"`
+}
+
+// UniqueGift describes a unique gift that was upgraded from a regular gift.
+//
+// https://core.telegram.org/bots/api#uniquegift
+type UniqueGift struct {
+	BaseName string             `json:"base_name"`
+	Name     string             `json:"name"`
+	Number   int                `json:"number"`
+	Model    UniqueGiftModel    `json:"model"`
+	Symbol   UniqueGiftSymbol   `json:"symbol"`
+	Backdrop UniqueGiftBackdrop `json:"backdrop"`
+}
+
+// GiftInfo describes a service message about a regular gift that was sent or received.
+//
+// https://core.telegram.org/bots/api#giftinfo
+type GiftInfo struct {
+	Gift                    Gift            `json:"gift"`
+	OwnedGiftID             *string         `json:"owned_gift_id,omitempty"`
+	ConvertStarCount        *int            `json:"convert_star_count,omitempty"`
+	PrepaidUpgradeStarCount *int            `json:"prepaid_upgrade_star_count,omitempty"`
+	CanBeUpgraded           *bool           `json:"can_be_upgraded,omitempty"`
+	Text                    *string         `json:"text,omitempty"`
+	Entities                []MessageEntity `json:"entities,omitempty"`
+	IsPrivate               *bool           `json:"is_private,omitempty"`
+}
+
+// UniqueGiftInfo describes a service message about a unique gift that was sent or received.
+//
+// https://core.telegram.org/bots/api#uniquegiftinfo
+type UniqueGiftInfo struct {
+	Gift              UniqueGift `json:"gift"`
+	Origin            string     `json:"origin"`
+	OwnedGiftID       *string    `json:"owned_gift_id,omitempty"`
+	TransferStarCount *int       `json:"transfer_star_count,omitempty"`
+}
+
+// InputProfilePhoto describes a profile photo to set.
+//
+// https://core.telegram.org/bots/api#inputprofilephoto
+type InputProfilePhoto struct {
+	Type string `json:"type"`
+
+	// when Type == "static"
+	//
+	// https://core.telegram.org/bots/api#inputprofilephotostatic
+	Photo *string `json:"photo,omitempty"`
+
+	// when Type == "animated"
+	// https://core.telegram.org/bots/api#inputprofilephotoanimated
+	Animation          *string  `json:"animation,omitempty"`
+	MainFrameTimestamp *float32 `json:"main_frame_timestamp,omitempty"`
+}
+
+// AcceptedGiftTypes describes the types of gifts that can be gifted to a user or a chat.
+//
+// https://core.telegram.org/bots/api#acceptedgifttypes
+type AcceptedGiftTypes struct {
+	UnlimitedGifts      bool `json:"unlimited_gifts"`
+	LimitedGifts        bool `json:"limited_gifts"`
+	UniqueGifts         bool `json:"unique_gifts"`
+	PremiumSubscription bool `json:"premium_subscription"`
+}
+
+// StarAmount describes an amount of Telegram Stars.
+//
+// https://core.telegram.org/bots/api#staramount
+type StarAmount struct {
+	Amount         int  `json:"amount"`
+	NanostarAmount *int `json:"nanostar_amount,omitempty"`
+}
+
+// OwnedGifts contains the list of gifts received and owned by a user or a chat.
+//
+// https://core.telegram.org/bots/api#ownedgifts
+type OwnedGifts struct {
+	TotalCount int         `json:"total_count"`
+	Gifts      []OwnedGift `json:"gifts"`
+	NextOffset *string     `json:"next_offset,omitempty"`
+}
+
+// OwnedGift describes a gift received and owned by a user or a chat.
+//
+// https://core.telegram.org/bots/api#ownedgift
+type OwnedGift struct {
+	Type        string          `json:"type"`
+	Gift        json.RawMessage `json:"gift"` // one of `Gift` or `UniqueGift`
+	OwnedGiftID *string         `json:"owned_gift_id,omitempty"`
+	SenderUser  *User           `json:"sender_user,omitempty"`
+	SendDate    int             `json:"send_date"`
+	IsSaved     *bool           `json:"is_saved,omitempty"`
+
+	// Type == "regular"
+	Text                    *string         `json:"text,omitempty"`
+	Entities                []MessageEntity `json:"entities,omitempty"`
+	IsPrivate               *bool           `json:"is_private,omitempty"`
+	CanBeUpgraded           *bool           `json:"can_be_upgraded,omitempty"`
+	WasRefunded             *bool           `json:"was_refunded,omitempty"`
+	ConvertStarCount        *int            `json:"convert_star_count,omitempty"`
+	PrepaidUpgradeStarCount *int            `json:"prepaid_upgrade_star_count,omitempty"`
+
+	// Type == "unique"
+	CanBeTransferred  *bool `json:"can_be_transferred,omitempty"`
+	TransferStarCount *int  `json:"transfer_star_count,omitempty"`
 }
