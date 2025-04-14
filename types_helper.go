@@ -2,6 +2,7 @@ package telegrambot
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strings"
@@ -2944,4 +2945,31 @@ func NewChatBoostSourceGiveaway(giveawayMessageID int64, user *User, isUnclaimed
 		User:              user,
 		IsUnclaimed:       &isUnclaimed,
 	}
+}
+
+////////////////////////////////
+// Helper functions for OwnedGift
+
+// GiftAsGift returns `gift` as Gift.
+func (g OwnedGift) GiftAsGift() (result *Gift, err error) {
+	if g.Type == "regular" {
+		if err = json.Unmarshal(g.Gift, &result); err == nil {
+			return result, nil
+		} else {
+			return nil, fmt.Errorf("failed to unmarshal gift: %w", err)
+		}
+	}
+	return nil, fmt.Errorf("gift is not in regular type")
+}
+
+// GiftAsUniqueGift returns `gift` as UniqueGift.
+func (g OwnedGift) GiftAsUniqueGift() (result *UniqueGift, err error) {
+	if g.Type == "unique" {
+		if err = json.Unmarshal(g.Gift, &result); err == nil {
+			return result, nil
+		} else {
+			return nil, fmt.Errorf("failed to unmarshal unique gift: %w", err)
+		}
+	}
+	return nil, fmt.Errorf("gift is not in unique type")
 }

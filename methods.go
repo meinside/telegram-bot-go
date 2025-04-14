@@ -478,6 +478,22 @@ func (b *Bot) SendGift(giftID string, options OptionsSendGift) (result APIRespon
 	return requestGeneric[bool](b, "sendGift", options)
 }
 
+// GiftPremiumSubscription gifts a Telegram Premium subscription to the given user.
+//
+// https://core.telegram.org/bots/api#giftpremiumsubscription
+func (b *Bot) GiftPremiumSubscription(userID int64, monthCount, starCount int, options OptionsGiftPremiumSubscription) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+	options["month_count"] = monthCount
+	options["star_count"] = starCount
+
+	return requestGeneric[bool](b, "giftPremiumSubscription", options)
+}
+
 // VerifyUser verifies a user.
 //
 // https://core.telegram.org/bots/api#verifyuser
@@ -521,6 +537,226 @@ func (b *Bot) RemoveUserVerification(userID int64) (result APIResponse[bool]) {
 func (b *Bot) RemoveChatVerification(chatID ChatID) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "removeChatVerification", map[string]any{
 		"chat_id": chatID,
+	})
+}
+
+// ReadBusinessMessage marks an incoming message as read on behalf of a business account.
+//
+// https://core.telegram.org/bots/api#readbusinessmessage
+func (b *Bot) ReadBusinessMessage(businessConnectionID string, chatID, messageID int64) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "readBusinessMessage", map[string]any{
+		"business_connection_id": businessConnectionID,
+		"chat_id":                chatID,
+		"message_id":             messageID,
+	})
+}
+
+// DeleteBusinessMessages deletes messages on behalf of a business account.
+//
+// https://core.telegram.org/bots/api#deletebusinessmessages
+func (b *Bot) DeleteBusinessMessages(businessConnectionID string, messageIDs []int64) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "deleteBusinessMessages", map[string]any{
+		"business_connection_id": businessConnectionID,
+		"message_ids":            messageIDs,
+	})
+}
+
+// SetBusinessAccountName changes the first and last name of a managed business account.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountname
+func (b *Bot) SetBusinessAccountName(businessConnectionID string, firstName string, options OptionsSetBusinessAccountName) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["first_name"] = firstName
+
+	return requestGeneric[bool](b, "setBusinessAccountName", options)
+}
+
+// SetBusinessAccountUsername changes the username of a managed business account.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountusername
+func (b *Bot) SetBusinessAccountUsername(businessConnectionID string, options OptionsSetBusinessAccountUsername) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+
+	return requestGeneric[bool](b, "setBusinessAccountUsername", options)
+}
+
+// SetBusinessAccountBio changes the bio of a managed business account.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountbio
+func (b *Bot) SetBusinessAccountBio(businessConnectionID string, options OptionsSetBusinessAccountBio) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+
+	return requestGeneric[bool](b, "setBusinessAccountBio", options)
+}
+
+// SetBusinessAccountProfilePhoto changes the profile photo of a managed business account.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountprofilephoto
+func (b *Bot) SetBusinessAccountProfilePhoto(businessConnectionID string, photo InputProfilePhoto, options OptionsSetBusinessAccountProfilePhoto) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["photo"] = photo
+
+	return requestGeneric[bool](b, "setBusinessAccountProfilePhoto", options)
+}
+
+// RemoveBusinessAccountProfilePhoto removes the current profile photo of a managed business account.
+//
+// https://core.telegram.org/bots/api#removebusinessaccountprofilephoto
+func (b *Bot) RemoveBusinessAccountProfilePhoto(businessConnectionID string, options OptionsRemoveBusinessAccountProfilePhoto) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+
+	return requestGeneric[bool](b, "removeBusinessAccountProfilePhoto", options)
+}
+
+// SetBusinessAccountGiftSettings changes the privacy settings pertaining to incoming gifts in a managed business account.
+//
+// https://core.telegram.org/bots/api#setbusinessaccountgiftsettings
+func (b *Bot) SetBusinessAccountGiftSettings(businessConnectionID string, showGiftButton bool, acceptedGiftTypes AcceptedGiftTypes) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "setBusinessAccountGiftSettings", map[string]any{
+		"business_connection_id": businessConnectionID,
+		"show_gift_button":       showGiftButton,
+		"accepted_gift_types":    acceptedGiftTypes,
+	})
+}
+
+// GetBusinessAccountStarBalance returns the amount of Telegram Stars owned by a managed business account.
+//
+// https://core.telegram.org/bots/api#getbusinessaccountstarbalance
+func (b *Bot) GetBusinessAccountStarBalance(businessConnectionID string) (result APIResponse[StarAmount]) {
+	return requestGeneric[StarAmount](b, "getBusinessAccountStarBalance", map[string]any{
+		"business_connection_id": businessConnectionID,
+	})
+}
+
+// TransferBusinessAccountStars transfers Telegram Stars from the business account balance to the bot's balance.
+//
+// https://core.telegram.org/bots/api#transferbusinessaccountstars
+func (b *Bot) TransferBusinessAccountStars(businessConnectionID string, starCount int) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "transferBusinessAccountStars", map[string]any{
+		"business_connection_id": businessConnectionID,
+		"star_count":             starCount,
+	})
+}
+
+// GetBusinessAccountGifts returns the gifts received and owned by a managed business account.
+//
+// https://core.telegram.org/bots/api#getbusinessaccountgifts
+func (b *Bot) GetBusinessAccountGifts(businessConnectionID string, options OptionsGetBusinessAccountGifts) (result APIResponse[OwnedGifts]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+
+	return requestGeneric[OwnedGifts](b, "getBusinessAccountGifts", options)
+}
+
+// ConvertGiftToStars converts a given regular gift to Telegram Stars.
+//
+// https://core.telegram.org/bots/api#convertgifttostars
+func (b *Bot) ConvertGiftToStars(businessConnectionID, ownedGiftID string) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "convertGiftToStars", map[string]any{
+		"business_connection_id": businessConnectionID,
+		"owned_gift_id":          ownedGiftID,
+	})
+}
+
+// UpgradeGift upgrades a given regular gift to a unique gift.
+//
+// https://core.telegram.org/bots/api#upgradegift
+func (b *Bot) UpgradeGift(businessConnectionID, ownedGiftID string, options OptionsUpgradeGift) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["owned_gift_id"] = ownedGiftID
+
+	return requestGeneric[bool](b, "upgradeGift", options)
+}
+
+// TransferGift transfers an owned unique gift to another user.
+//
+// https://core.telegram.org/bots/api#transfergift
+func (b *Bot) TransferGift(businessConnectionID, ownedGiftID string, newOwnerChatID int64, options OptionsTransferGift) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["owned_gift_id"] = ownedGiftID
+	options["new_owner_chat_id"] = newOwnerChatID
+
+	return requestGeneric[bool](b, "transferGift", options)
+}
+
+// PostStory posts a story on behalf of a managed business account.
+//
+// https://core.telegram.org/bots/api#poststory
+func (b *Bot) PostStory(businessConnectionID string, content InputStoryContent, activePeriod int, options OptionsPostStory) (result APIResponse[Story]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["content"] = content
+	options["active_period"] = activePeriod
+
+	return requestGeneric[Story](b, "postStory", options)
+}
+
+// EditStory edits a story previously posted by the bot on behalf of a managed business account.
+//
+// https://core.telegram.org/bots/api#editstory
+func (b *Bot) EditStory(businessConnectionID string, storyID int64, content InputStoryContent, options OptionsEditStory) (result APIResponse[Story]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["story_id"] = storyID
+	options["content"] = content
+
+	return requestGeneric[Story](b, "editStory", options)
+}
+
+// DeleteStory deletes a story previously posted by the bot on behalf of a managed business account.
+//
+// https://core.telegram.org/bots/api#deletestory
+func (b *Bot) DeleteStory(businessConnectionID string, storyID int64) (result APIResponse[bool]) {
+	return requestGeneric[bool](b, "deleteStory", map[string]any{
+		"business_connection_id": businessConnectionID,
+		"story_id":               storyID,
 	})
 }
 
