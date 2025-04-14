@@ -18,7 +18,9 @@ import (
 // GetUpdates retrieves updates from Telegram bot API.
 //
 // https://core.telegram.org/bots/api#getupdates
-func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponse[[]Update]) {
+func (b *Bot) GetUpdates(
+	options OptionsGetUpdates,
+) (result APIResponse[[]Update]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -31,7 +33,11 @@ func (b *Bot) GetUpdates(options OptionsGetUpdates) (result APIResponse[[]Update
 // `port` should be one of: 443, 80, 88, or 8443.
 //
 // https://core.telegram.org/bots/api#setwebhook
-func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (result APIResponse[bool]) {
+func (b *Bot) SetWebhook(
+	host string,
+	port int,
+	options OptionsSetWebhook,
+) (result APIResponse[bool]) {
 	b.webhookHost = host
 	b.webhookPort = port
 	b.webhookURL = b.getWebhookURL()
@@ -87,7 +93,9 @@ func (b *Bot) SetWebhook(host string, port int, options OptionsSetWebhook) (resu
 // (Function GetUpdates will not work if webhook is set, so in that case you'll need to delete it)
 //
 // https://core.telegram.org/bots/api#deletewebhook
-func (b *Bot) DeleteWebhook(dropPendingUpdates bool) (result APIResponse[bool]) {
+func (b *Bot) DeleteWebhook(
+	dropPendingUpdates bool,
+) (result APIResponse[bool]) {
 	b.webhookHost = ""
 	b.webhookPort = 0
 	b.webhookURL = ""
@@ -130,7 +138,11 @@ func (b *Bot) Close() (result APIResponse[bool]) {
 // SendMessage sends a message to the bot.
 //
 // https://core.telegram.org/bots/api#sendmessage
-func (b *Bot) SendMessage(chatID ChatID, text string, options OptionsSendMessage) (result APIResponse[Message]) {
+func (b *Bot) SendMessage(
+	chatID ChatID,
+	text string,
+	options OptionsSendMessage,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -145,7 +157,11 @@ func (b *Bot) SendMessage(chatID ChatID, text string, options OptionsSendMessage
 // ForwardMessage forwards a message.
 //
 // https://core.telegram.org/bots/api#forwardmessage
-func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int64, options OptionsForwardMessage) (result APIResponse[Message]) {
+func (b *Bot) ForwardMessage(
+	chatID, fromChatID ChatID,
+	messageID int64,
+	options OptionsForwardMessage,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -161,7 +177,11 @@ func (b *Bot) ForwardMessage(chatID, fromChatID ChatID, messageID int64, options
 // ForwardMessages forwards messages.
 //
 // https://core.telegram.org/bots/api#forwardmessages
-func (b *Bot) ForwardMessages(chatID, fromChatID ChatID, messageIDs []int64, options OptionsForwardMessage) (result APIResponse[[]MessageID]) {
+func (b *Bot) ForwardMessages(
+	chatID, fromChatID ChatID,
+	messageIDs []int64,
+	options OptionsForwardMessage,
+) (result APIResponse[[]MessageID]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -177,7 +197,11 @@ func (b *Bot) ForwardMessages(chatID, fromChatID ChatID, messageIDs []int64, opt
 // CopyMessage copies a message.
 //
 // https://core.telegram.org/bots/api#copymessage
-func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int64, options OptionsCopyMessage) (result APIResponse[MessageID]) {
+func (b *Bot) CopyMessage(
+	chatID, fromChatID ChatID,
+	messageID int64,
+	options OptionsCopyMessage,
+) (result APIResponse[MessageID]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -193,7 +217,11 @@ func (b *Bot) CopyMessage(chatID, fromChatID ChatID, messageID int64, options Op
 // CopyMessages copies messages.
 //
 // https://core.telegram.org/bots/api#copymessages
-func (b *Bot) CopyMessages(chatID, fromChatID ChatID, messageIDs []int64, options OptionsCopyMessages) (result APIResponse[[]MessageID]) {
+func (b *Bot) CopyMessages(
+	chatID, fromChatID ChatID,
+	messageIDs []int64,
+	options OptionsCopyMessages,
+) (result APIResponse[[]MessageID]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -209,7 +237,11 @@ func (b *Bot) CopyMessages(chatID, fromChatID ChatID, messageIDs []int64, option
 // SendPhoto sends a photo.
 //
 // https://core.telegram.org/bots/api#sendphoto
-func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options OptionsSendPhoto) (result APIResponse[Message]) {
+func (b *Bot) SendPhoto(
+	chatID ChatID,
+	photo InputFile,
+	options OptionsSendPhoto,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -224,7 +256,11 @@ func (b *Bot) SendPhoto(chatID ChatID, photo InputFile, options OptionsSendPhoto
 // SendAudio sends an audio file. (.mp3 or .m4a format, will be played with external players)
 //
 // https://core.telegram.org/bots/api#sendaudio
-func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options OptionsSendAudio) (result APIResponse[Message]) {
+func (b *Bot) SendAudio(
+	chatID ChatID,
+	audio InputFile,
+	options OptionsSendAudio,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -239,7 +275,11 @@ func (b *Bot) SendAudio(chatID ChatID, audio InputFile, options OptionsSendAudio
 // SendDocument sends a general file.
 //
 // https://core.telegram.org/bots/api#senddocument
-func (b *Bot) SendDocument(chatID ChatID, document InputFile, options OptionsSendDocument) (result APIResponse[Message]) {
+func (b *Bot) SendDocument(
+	chatID ChatID,
+	document InputFile,
+	options OptionsSendDocument,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -254,7 +294,11 @@ func (b *Bot) SendDocument(chatID ChatID, document InputFile, options OptionsSen
 // SendSticker sends a sticker.
 //
 // https://core.telegram.org/bots/api#sendsticker
-func (b *Bot) SendSticker(chatID ChatID, sticker InputFile, options OptionsSendSticker) (result APIResponse[Message]) {
+func (b *Bot) SendSticker(
+	chatID ChatID,
+	sticker InputFile,
+	options OptionsSendSticker,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -281,7 +325,9 @@ func (b *Bot) GetStickerSet(name string) (result APIResponse[StickerSet]) {
 // GetCustomEmojiStickers gets custom emoji stickers.
 //
 // https://core.telegram.org/bots/api#getcustomemojistickers
-func (b *Bot) GetCustomEmojiStickers(customEmojiIDs []string) (result APIResponse[[]Sticker]) {
+func (b *Bot) GetCustomEmojiStickers(
+	customEmojiIDs []string,
+) (result APIResponse[[]Sticker]) {
 	// essential options
 	options := map[string]any{
 		"custom_emoji_ids": customEmojiIDs,
@@ -293,7 +339,11 @@ func (b *Bot) GetCustomEmojiStickers(customEmojiIDs []string) (result APIRespons
 // UploadStickerFile uploads a sticker file.
 //
 // https://core.telegram.org/bots/api#uploadstickerfile
-func (b *Bot) UploadStickerFile(userID int64, sticker InputFile, stickerFormat StickerFormat) (result APIResponse[File]) {
+func (b *Bot) UploadStickerFile(
+	userID int64,
+	sticker InputFile,
+	stickerFormat StickerFormat,
+) (result APIResponse[File]) {
 	// essential options
 	options := map[string]any{
 		"user_id":        userID,
@@ -307,7 +357,12 @@ func (b *Bot) UploadStickerFile(userID int64, sticker InputFile, stickerFormat S
 // CreateNewStickerSet creates a new sticker set.
 //
 // https://core.telegram.org/bots/api#createnewstickerset
-func (b *Bot) CreateNewStickerSet(userID int64, name, title string, stickers []InputSticker, options OptionsCreateNewStickerSet) (result APIResponse[bool]) {
+func (b *Bot) CreateNewStickerSet(
+	userID int64,
+	name, title string,
+	stickers []InputSticker,
+	options OptionsCreateNewStickerSet,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -324,7 +379,12 @@ func (b *Bot) CreateNewStickerSet(userID int64, name, title string, stickers []I
 // AddStickerToSet adds a sticker to set.
 //
 // https://core.telegram.org/bots/api#addstickertoset
-func (b *Bot) AddStickerToSet(userID int64, name string, sticker InputSticker, options OptionsAddStickerToSet) (result APIResponse[bool]) {
+func (b *Bot) AddStickerToSet(
+	userID int64,
+	name string,
+	sticker InputSticker,
+	options OptionsAddStickerToSet,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -340,7 +400,10 @@ func (b *Bot) AddStickerToSet(userID int64, name string, sticker InputSticker, o
 // SetStickerPositionInSet sets sticker position in set.
 //
 // https://core.telegram.org/bots/api#setstickerpositioninset
-func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIResponse[bool]) {
+func (b *Bot) SetStickerPositionInSet(
+	sticker string,
+	position int,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"sticker":  sticker,
@@ -353,7 +416,9 @@ func (b *Bot) SetStickerPositionInSet(sticker string, position int) (result APIR
 // DeleteStickerFromSet deletes a sticker from set.
 //
 // https://core.telegram.org/bots/api#deletestickerfromset
-func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponse[bool]) {
+func (b *Bot) DeleteStickerFromSet(
+	sticker string,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"sticker": sticker,
@@ -365,7 +430,12 @@ func (b *Bot) DeleteStickerFromSet(sticker string) (result APIResponse[bool]) {
 // SetStickerSetThumbnail sets a thumbnail of a sticker set.
 //
 // https://core.telegram.org/bots/api#setstickersetthumbnail
-func (b *Bot) SetStickerSetThumbnail(name string, userID int64, format StickerFormat, options OptionsSetStickerSetThumbnail) (result APIResponse[bool]) {
+func (b *Bot) SetStickerSetThumbnail(
+	name string,
+	userID int64,
+	format StickerFormat,
+	options OptionsSetStickerSetThumbnail,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -381,7 +451,10 @@ func (b *Bot) SetStickerSetThumbnail(name string, userID int64, format StickerFo
 // SetCustomEmojiStickerSetThumbnail sets the custom emoji sticker set's thumbnail.
 //
 // https://core.telegram.org/bots/api#setcustomemojistickersetthumbnail
-func (b *Bot) SetCustomEmojiStickerSetThumbnail(name string, options OptionsSetCustomEmojiStickerSetThumbnail) (result APIResponse[bool]) {
+func (b *Bot) SetCustomEmojiStickerSetThumbnail(
+	name string,
+	options OptionsSetCustomEmojiStickerSetThumbnail,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -414,7 +487,10 @@ func (b *Bot) DeleteStickerSet(name string) (result APIResponse[bool]) {
 // ReplaceStickerInSet replaces an existing sticker in a sticker set with a new one.
 //
 // https://core.telegram.org/bots/api#replacestickerinset
-func (b *Bot) ReplaceStickerInSet(userID, name, oldSticker string, sticker InputSticker) (result APIResponse[bool]) {
+func (b *Bot) ReplaceStickerInSet(
+	userID, name, oldSticker string,
+	sticker InputSticker,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "replaceStickerInSet", map[string]any{
 		"user_id":     userID,
 		"name":        name,
@@ -426,7 +502,10 @@ func (b *Bot) ReplaceStickerInSet(userID, name, oldSticker string, sticker Input
 // SetStickerEmojiList sets the emoji list of sticker set.
 //
 // https://core.telegram.org/bots/api#setstickeremojilist
-func (b *Bot) SetStickerEmojiList(sticker string, emojiList []string) (result APIResponse[bool]) {
+func (b *Bot) SetStickerEmojiList(
+	sticker string,
+	emojiList []string,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setStickerEmojiList", map[string]any{
 		"sticker":    sticker,
 		"emoji_list": emojiList,
@@ -436,7 +515,10 @@ func (b *Bot) SetStickerEmojiList(sticker string, emojiList []string) (result AP
 // SetStickerKeywords sets the keywords of sticker.
 //
 // https://core.telegram.org/bots/api#setstickerkeywords
-func (b *Bot) SetStickerKeywords(sticker string, keywords []string) (result APIResponse[bool]) {
+func (b *Bot) SetStickerKeywords(
+	sticker string,
+	keywords []string,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setStickerKeywords", map[string]any{
 		"sticker":  sticker,
 		"keywords": keywords,
@@ -446,7 +528,10 @@ func (b *Bot) SetStickerKeywords(sticker string, keywords []string) (result APIR
 // SetStickerMaskPosition sets mask position of sticker.
 //
 // https://core.telegram.org/bots/api#setstickermaskposition
-func (b *Bot) SetStickerMaskPosition(sticker string, options OptionsSetStickerMaskPosition) (result APIResponse[bool]) {
+func (b *Bot) SetStickerMaskPosition(
+	sticker string,
+	options OptionsSetStickerMaskPosition,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -467,7 +552,10 @@ func (b *Bot) GetAvailableGifts() (result APIResponse[Gifts]) {
 // SendGift sends a gift to the given user.
 //
 // https://core.telegram.org/bots/api#sendgift
-func (b *Bot) SendGift(giftID string, options OptionsSendGift) (result APIResponse[bool]) {
+func (b *Bot) SendGift(
+	giftID string,
+	options OptionsSendGift,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -481,7 +569,11 @@ func (b *Bot) SendGift(giftID string, options OptionsSendGift) (result APIRespon
 // GiftPremiumSubscription gifts a Telegram Premium subscription to the given user.
 //
 // https://core.telegram.org/bots/api#giftpremiumsubscription
-func (b *Bot) GiftPremiumSubscription(userID int64, monthCount, starCount int, options OptionsGiftPremiumSubscription) (result APIResponse[bool]) {
+func (b *Bot) GiftPremiumSubscription(
+	userID int64,
+	monthCount, starCount int,
+	options OptionsGiftPremiumSubscription,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -497,7 +589,10 @@ func (b *Bot) GiftPremiumSubscription(userID int64, monthCount, starCount int, o
 // VerifyUser verifies a user.
 //
 // https://core.telegram.org/bots/api#verifyuser
-func (b *Bot) VerifyUser(userID int64, options OptionsVerifyUser) (result APIResponse[bool]) {
+func (b *Bot) VerifyUser(
+	userID int64,
+	options OptionsVerifyUser,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -511,7 +606,10 @@ func (b *Bot) VerifyUser(userID int64, options OptionsVerifyUser) (result APIRes
 // VerifyChat verifies a chat.
 //
 // https://core.telegram.org/bots/api#verifychat
-func (b *Bot) VerifyChat(chatID ChatID, options OptionsVerifyChat) (result APIResponse[bool]) {
+func (b *Bot) VerifyChat(
+	chatID ChatID,
+	options OptionsVerifyChat,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -543,7 +641,10 @@ func (b *Bot) RemoveChatVerification(chatID ChatID) (result APIResponse[bool]) {
 // ReadBusinessMessage marks an incoming message as read on behalf of a business account.
 //
 // https://core.telegram.org/bots/api#readbusinessmessage
-func (b *Bot) ReadBusinessMessage(businessConnectionID string, chatID, messageID int64) (result APIResponse[bool]) {
+func (b *Bot) ReadBusinessMessage(
+	businessConnectionID string,
+	chatID, messageID int64,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "readBusinessMessage", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"chat_id":                chatID,
@@ -554,7 +655,10 @@ func (b *Bot) ReadBusinessMessage(businessConnectionID string, chatID, messageID
 // DeleteBusinessMessages deletes messages on behalf of a business account.
 //
 // https://core.telegram.org/bots/api#deletebusinessmessages
-func (b *Bot) DeleteBusinessMessages(businessConnectionID string, messageIDs []int64) (result APIResponse[bool]) {
+func (b *Bot) DeleteBusinessMessages(
+	businessConnectionID string,
+	messageIDs []int64,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "deleteBusinessMessages", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"message_ids":            messageIDs,
@@ -564,7 +668,11 @@ func (b *Bot) DeleteBusinessMessages(businessConnectionID string, messageIDs []i
 // SetBusinessAccountName changes the first and last name of a managed business account.
 //
 // https://core.telegram.org/bots/api#setbusinessaccountname
-func (b *Bot) SetBusinessAccountName(businessConnectionID string, firstName string, options OptionsSetBusinessAccountName) (result APIResponse[bool]) {
+func (b *Bot) SetBusinessAccountName(
+	businessConnectionID string,
+	firstName string,
+	options OptionsSetBusinessAccountName,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -579,7 +687,10 @@ func (b *Bot) SetBusinessAccountName(businessConnectionID string, firstName stri
 // SetBusinessAccountUsername changes the username of a managed business account.
 //
 // https://core.telegram.org/bots/api#setbusinessaccountusername
-func (b *Bot) SetBusinessAccountUsername(businessConnectionID string, options OptionsSetBusinessAccountUsername) (result APIResponse[bool]) {
+func (b *Bot) SetBusinessAccountUsername(
+	businessConnectionID string,
+	options OptionsSetBusinessAccountUsername,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -593,7 +704,10 @@ func (b *Bot) SetBusinessAccountUsername(businessConnectionID string, options Op
 // SetBusinessAccountBio changes the bio of a managed business account.
 //
 // https://core.telegram.org/bots/api#setbusinessaccountbio
-func (b *Bot) SetBusinessAccountBio(businessConnectionID string, options OptionsSetBusinessAccountBio) (result APIResponse[bool]) {
+func (b *Bot) SetBusinessAccountBio(
+	businessConnectionID string,
+	options OptionsSetBusinessAccountBio,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -607,7 +721,11 @@ func (b *Bot) SetBusinessAccountBio(businessConnectionID string, options Options
 // SetBusinessAccountProfilePhoto changes the profile photo of a managed business account.
 //
 // https://core.telegram.org/bots/api#setbusinessaccountprofilephoto
-func (b *Bot) SetBusinessAccountProfilePhoto(businessConnectionID string, photo InputProfilePhoto, options OptionsSetBusinessAccountProfilePhoto) (result APIResponse[bool]) {
+func (b *Bot) SetBusinessAccountProfilePhoto(
+	businessConnectionID string,
+	photo InputProfilePhoto,
+	options OptionsSetBusinessAccountProfilePhoto,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -622,7 +740,10 @@ func (b *Bot) SetBusinessAccountProfilePhoto(businessConnectionID string, photo 
 // RemoveBusinessAccountProfilePhoto removes the current profile photo of a managed business account.
 //
 // https://core.telegram.org/bots/api#removebusinessaccountprofilephoto
-func (b *Bot) RemoveBusinessAccountProfilePhoto(businessConnectionID string, options OptionsRemoveBusinessAccountProfilePhoto) (result APIResponse[bool]) {
+func (b *Bot) RemoveBusinessAccountProfilePhoto(
+	businessConnectionID string,
+	options OptionsRemoveBusinessAccountProfilePhoto,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -636,7 +757,11 @@ func (b *Bot) RemoveBusinessAccountProfilePhoto(businessConnectionID string, opt
 // SetBusinessAccountGiftSettings changes the privacy settings pertaining to incoming gifts in a managed business account.
 //
 // https://core.telegram.org/bots/api#setbusinessaccountgiftsettings
-func (b *Bot) SetBusinessAccountGiftSettings(businessConnectionID string, showGiftButton bool, acceptedGiftTypes AcceptedGiftTypes) (result APIResponse[bool]) {
+func (b *Bot) SetBusinessAccountGiftSettings(
+	businessConnectionID string,
+	showGiftButton bool,
+	acceptedGiftTypes AcceptedGiftTypes,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setBusinessAccountGiftSettings", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"show_gift_button":       showGiftButton,
@@ -647,7 +772,9 @@ func (b *Bot) SetBusinessAccountGiftSettings(businessConnectionID string, showGi
 // GetBusinessAccountStarBalance returns the amount of Telegram Stars owned by a managed business account.
 //
 // https://core.telegram.org/bots/api#getbusinessaccountstarbalance
-func (b *Bot) GetBusinessAccountStarBalance(businessConnectionID string) (result APIResponse[StarAmount]) {
+func (b *Bot) GetBusinessAccountStarBalance(
+	businessConnectionID string,
+) (result APIResponse[StarAmount]) {
 	return requestGeneric[StarAmount](b, "getBusinessAccountStarBalance", map[string]any{
 		"business_connection_id": businessConnectionID,
 	})
@@ -656,7 +783,10 @@ func (b *Bot) GetBusinessAccountStarBalance(businessConnectionID string) (result
 // TransferBusinessAccountStars transfers Telegram Stars from the business account balance to the bot's balance.
 //
 // https://core.telegram.org/bots/api#transferbusinessaccountstars
-func (b *Bot) TransferBusinessAccountStars(businessConnectionID string, starCount int) (result APIResponse[bool]) {
+func (b *Bot) TransferBusinessAccountStars(
+	businessConnectionID string,
+	starCount int,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "transferBusinessAccountStars", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"star_count":             starCount,
@@ -666,7 +796,10 @@ func (b *Bot) TransferBusinessAccountStars(businessConnectionID string, starCoun
 // GetBusinessAccountGifts returns the gifts received and owned by a managed business account.
 //
 // https://core.telegram.org/bots/api#getbusinessaccountgifts
-func (b *Bot) GetBusinessAccountGifts(businessConnectionID string, options OptionsGetBusinessAccountGifts) (result APIResponse[OwnedGifts]) {
+func (b *Bot) GetBusinessAccountGifts(
+	businessConnectionID string,
+	options OptionsGetBusinessAccountGifts,
+) (result APIResponse[OwnedGifts]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -680,7 +813,9 @@ func (b *Bot) GetBusinessAccountGifts(businessConnectionID string, options Optio
 // ConvertGiftToStars converts a given regular gift to Telegram Stars.
 //
 // https://core.telegram.org/bots/api#convertgifttostars
-func (b *Bot) ConvertGiftToStars(businessConnectionID, ownedGiftID string) (result APIResponse[bool]) {
+func (b *Bot) ConvertGiftToStars(
+	businessConnectionID, ownedGiftID string,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "convertGiftToStars", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"owned_gift_id":          ownedGiftID,
@@ -690,7 +825,10 @@ func (b *Bot) ConvertGiftToStars(businessConnectionID, ownedGiftID string) (resu
 // UpgradeGift upgrades a given regular gift to a unique gift.
 //
 // https://core.telegram.org/bots/api#upgradegift
-func (b *Bot) UpgradeGift(businessConnectionID, ownedGiftID string, options OptionsUpgradeGift) (result APIResponse[bool]) {
+func (b *Bot) UpgradeGift(
+	businessConnectionID, ownedGiftID string,
+	options OptionsUpgradeGift,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -705,7 +843,11 @@ func (b *Bot) UpgradeGift(businessConnectionID, ownedGiftID string, options Opti
 // TransferGift transfers an owned unique gift to another user.
 //
 // https://core.telegram.org/bots/api#transfergift
-func (b *Bot) TransferGift(businessConnectionID, ownedGiftID string, newOwnerChatID int64, options OptionsTransferGift) (result APIResponse[bool]) {
+func (b *Bot) TransferGift(
+	businessConnectionID, ownedGiftID string,
+	newOwnerChatID int64,
+	options OptionsTransferGift,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -721,7 +863,12 @@ func (b *Bot) TransferGift(businessConnectionID, ownedGiftID string, newOwnerCha
 // PostStory posts a story on behalf of a managed business account.
 //
 // https://core.telegram.org/bots/api#poststory
-func (b *Bot) PostStory(businessConnectionID string, content InputStoryContent, activePeriod int, options OptionsPostStory) (result APIResponse[Story]) {
+func (b *Bot) PostStory(
+	businessConnectionID string,
+	content InputStoryContent,
+	activePeriod int,
+	options OptionsPostStory,
+) (result APIResponse[Story]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -737,7 +884,12 @@ func (b *Bot) PostStory(businessConnectionID string, content InputStoryContent, 
 // EditStory edits a story previously posted by the bot on behalf of a managed business account.
 //
 // https://core.telegram.org/bots/api#editstory
-func (b *Bot) EditStory(businessConnectionID string, storyID int64, content InputStoryContent, options OptionsEditStory) (result APIResponse[Story]) {
+func (b *Bot) EditStory(
+	businessConnectionID string,
+	storyID int64,
+	content InputStoryContent,
+	options OptionsEditStory,
+) (result APIResponse[Story]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -753,7 +905,10 @@ func (b *Bot) EditStory(businessConnectionID string, storyID int64, content Inpu
 // DeleteStory deletes a story previously posted by the bot on behalf of a managed business account.
 //
 // https://core.telegram.org/bots/api#deletestory
-func (b *Bot) DeleteStory(businessConnectionID string, storyID int64) (result APIResponse[bool]) {
+func (b *Bot) DeleteStory(
+	businessConnectionID string,
+	storyID int64,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "deleteStory", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"story_id":               storyID,
@@ -763,7 +918,11 @@ func (b *Bot) DeleteStory(businessConnectionID string, storyID int64) (result AP
 // SendVideo sends a video file.
 //
 // https://core.telegram.org/bots/api#sendvideo
-func (b *Bot) SendVideo(chatID ChatID, video InputFile, options OptionsSendVideo) (result APIResponse[Message]) {
+func (b *Bot) SendVideo(
+	chatID ChatID,
+	video InputFile,
+	options OptionsSendVideo,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -778,7 +937,11 @@ func (b *Bot) SendVideo(chatID ChatID, video InputFile, options OptionsSendVideo
 // SendAnimation sends an animation.
 //
 // https://core.telegram.org/bots/api#sendanimation
-func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options OptionsSendAnimation) (result APIResponse[Message]) {
+func (b *Bot) SendAnimation(
+	chatID ChatID,
+	animation InputFile,
+	options OptionsSendAnimation,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -793,7 +956,11 @@ func (b *Bot) SendAnimation(chatID ChatID, animation InputFile, options OptionsS
 // SendVoice sends a voice file. (.ogg format only, will be played with Telegram itself))
 //
 // https://core.telegram.org/bots/api#sendvoice
-func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options OptionsSendVoice) (result APIResponse[Message]) {
+func (b *Bot) SendVoice(
+	chatID ChatID,
+	voice InputFile,
+	options OptionsSendVoice,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -810,7 +977,11 @@ func (b *Bot) SendVoice(chatID ChatID, voice InputFile, options OptionsSendVoice
 // videoNote cannot be a remote http url (not supported yet)
 //
 // https://core.telegram.org/bots/api#sendvideonote
-func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options OptionsSendVideoNote) (result APIResponse[Message]) {
+func (b *Bot) SendVideoNote(
+	chatID ChatID,
+	videoNote InputFile,
+	options OptionsSendVideoNote,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -825,7 +996,12 @@ func (b *Bot) SendVideoNote(chatID ChatID, videoNote InputFile, options OptionsS
 // SendPaidMedia sends paid media.
 //
 // https://core.telegram.org/bots/api#sendpaidmedia
-func (b *Bot) SendPaidMedia(chatID ChatID, starCount int, media []InputPaidMedia, options OptionsSendPaidMedia) (result APIResponse[Message]) {
+func (b *Bot) SendPaidMedia(
+	chatID ChatID,
+	starCount int,
+	media []InputPaidMedia,
+	options OptionsSendPaidMedia,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -841,7 +1017,11 @@ func (b *Bot) SendPaidMedia(chatID ChatID, starCount int, media []InputPaidMedia
 // SendMediaGroup sends a group of photos or videos as an album.
 //
 // https://core.telegram.org/bots/api#sendmediagroup
-func (b *Bot) SendMediaGroup(chatID ChatID, media []InputMedia, options OptionsSendMediaGroup) (result APIResponse[[]Message]) {
+func (b *Bot) SendMediaGroup(
+	chatID ChatID,
+	media []InputMedia,
+	options OptionsSendMediaGroup,
+) (result APIResponse[[]Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -856,7 +1036,11 @@ func (b *Bot) SendMediaGroup(chatID ChatID, media []InputMedia, options OptionsS
 // SendLocation sends locations.
 //
 // https://core.telegram.org/bots/api#sendlocation
-func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options OptionsSendLocation) (result APIResponse[Message]) {
+func (b *Bot) SendLocation(
+	chatID ChatID,
+	latitude, longitude float32,
+	options OptionsSendLocation,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -872,7 +1056,12 @@ func (b *Bot) SendLocation(chatID ChatID, latitude, longitude float32, options O
 // SendVenue sends venues.
 //
 // https://core.telegram.org/bots/api#sendvenue
-func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, address string, options OptionsSendVenue) (result APIResponse[Message]) {
+func (b *Bot) SendVenue(
+	chatID ChatID,
+	latitude, longitude float32,
+	title, address string,
+	options OptionsSendVenue,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -890,7 +1079,11 @@ func (b *Bot) SendVenue(chatID ChatID, latitude, longitude float32, title, addre
 // SendContact sends contacts.
 //
 // https://core.telegram.org/bots/api#sendcontact
-func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options OptionsSendContact) (result APIResponse[Message]) {
+func (b *Bot) SendContact(
+	chatID ChatID,
+	phoneNumber, firstName string,
+	options OptionsSendContact,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -906,7 +1099,12 @@ func (b *Bot) SendContact(chatID ChatID, phoneNumber, firstName string, options 
 // SendPoll sends a poll.
 //
 // https://core.telegram.org/bots/api#sendpoll
-func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []InputPollOption, options OptionsSendPoll) (result APIResponse[Message]) {
+func (b *Bot) SendPoll(
+	chatID ChatID,
+	question string,
+	pollOptions []InputPollOption,
+	options OptionsSendPoll,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -922,7 +1120,11 @@ func (b *Bot) SendPoll(chatID ChatID, question string, pollOptions []InputPollOp
 // StopPoll stops a poll.
 //
 // https://core.telegram.org/bots/api#stoppoll
-func (b *Bot) StopPoll(chatID ChatID, messageID int64, options OptionsStopPoll) (result APIResponse[Poll]) {
+func (b *Bot) StopPoll(
+	chatID ChatID,
+	messageID int64,
+	options OptionsStopPoll,
+) (result APIResponse[Poll]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -937,7 +1139,10 @@ func (b *Bot) StopPoll(chatID ChatID, messageID int64, options OptionsStopPoll) 
 // SendDice sends a random dice.
 //
 // https://core.telegram.org/bots/api#senddice
-func (b *Bot) SendDice(chatID ChatID, options OptionsSendDice) (result APIResponse[Message]) {
+func (b *Bot) SendDice(
+	chatID ChatID,
+	options OptionsSendDice,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -951,7 +1156,11 @@ func (b *Bot) SendDice(chatID ChatID, options OptionsSendDice) (result APIRespon
 // SendChatAction sends chat actions.
 //
 // https://core.telegram.org/bots/api#sendchataction
-func (b *Bot) SendChatAction(chatID ChatID, action ChatAction, options OptionsSendChatAction) (result APIResponse[bool]) {
+func (b *Bot) SendChatAction(
+	chatID ChatID,
+	action ChatAction,
+	options OptionsSendChatAction,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -966,7 +1175,11 @@ func (b *Bot) SendChatAction(chatID ChatID, action ChatAction, options OptionsSe
 // SetMessageReaction sets message reaction.
 //
 // https://core.telegram.org/bots/api#setmessagereaction
-func (b *Bot) SetMessageReaction(chatID ChatID, messageID int64, options OptionsSetMessageReaction) (result APIResponse[bool]) {
+func (b *Bot) SetMessageReaction(
+	chatID ChatID,
+	messageID int64,
+	options OptionsSetMessageReaction,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -981,7 +1194,10 @@ func (b *Bot) SetMessageReaction(chatID ChatID, messageID int64, options Options
 // GetUserProfilePhotos gets user profile photos.
 //
 // https://core.telegram.org/bots/api#getuserprofilephotos
-func (b *Bot) GetUserProfilePhotos(userID int64, options OptionsGetUserProfilePhotos) (result APIResponse[UserProfilePhotos]) {
+func (b *Bot) GetUserProfilePhotos(
+	userID int64,
+	options OptionsGetUserProfilePhotos,
+) (result APIResponse[UserProfilePhotos]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -995,7 +1211,10 @@ func (b *Bot) GetUserProfilePhotos(userID int64, options OptionsGetUserProfilePh
 // SetUserEmojiStatus changes the emoji status for a given user that previously allowed the bot to manage their emoji status via the Mini App.
 //
 // https://core.telegram.org/bots/api#setuseremojistatus
-func (b *Bot) SetUserEmojiStatus(userID int64, options OptionsSetUserEmojiStatus) (result APIResponse[bool]) {
+func (b *Bot) SetUserEmojiStatus(
+	userID int64,
+	options OptionsSetUserEmojiStatus,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1026,7 +1245,11 @@ func (b *Bot) GetFileURL(file File) string {
 // BanChatMember bans a chat member.
 //
 // https://core.telegram.org/bots/api#banchatmember
-func (b *Bot) BanChatMember(chatID ChatID, userID int64, options OptionsBanChatMember) (result APIResponse[bool]) {
+func (b *Bot) BanChatMember(
+	chatID ChatID,
+	userID int64,
+	options OptionsBanChatMember,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1053,7 +1276,11 @@ func (b *Bot) LeaveChat(chatID ChatID) (result APIResponse[bool]) {
 // UnbanChatMember unbans a chat member.
 //
 // https://core.telegram.org/bots/api#unbanchatmember
-func (b *Bot) UnbanChatMember(chatID ChatID, userID int64, onlyIfBanned bool) (result APIResponse[bool]) {
+func (b *Bot) UnbanChatMember(
+	chatID ChatID,
+	userID int64,
+	onlyIfBanned bool,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"chat_id":        chatID,
@@ -1067,7 +1294,12 @@ func (b *Bot) UnbanChatMember(chatID ChatID, userID int64, onlyIfBanned bool) (r
 // RestrictChatMember restricts a chat member.
 //
 // https://core.telegram.org/bots/api#restrictchatmember
-func (b *Bot) RestrictChatMember(chatID ChatID, userID int64, permissions ChatPermissions, options OptionsRestrictChatMember) (result APIResponse[bool]) {
+func (b *Bot) RestrictChatMember(
+	chatID ChatID,
+	userID int64,
+	permissions ChatPermissions,
+	options OptionsRestrictChatMember,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1083,7 +1315,11 @@ func (b *Bot) RestrictChatMember(chatID ChatID, userID int64, permissions ChatPe
 // PromoteChatMember promotes a chat member.
 //
 // https://core.telegram.org/bots/api#promotechatmember
-func (b *Bot) PromoteChatMember(chatID ChatID, userID int64, options OptionsPromoteChatMember) (result APIResponse[bool]) {
+func (b *Bot) PromoteChatMember(
+	chatID ChatID,
+	userID int64,
+	options OptionsPromoteChatMember,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1098,7 +1334,11 @@ func (b *Bot) PromoteChatMember(chatID ChatID, userID int64, options OptionsProm
 // SetChatAdministratorCustomTitle sets chat administrator's custom title.
 //
 // https://core.telegram.org/bots/api#setchatadministratorcustomtitle
-func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int64, customTitle string) (result APIResponse[bool]) {
+func (b *Bot) SetChatAdministratorCustomTitle(
+	chatID ChatID,
+	userID int64,
+	customTitle string,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setChatAdministratorCustomTitle", map[string]any{
 		"chat_id":      chatID,
 		"user_id":      userID,
@@ -1109,7 +1349,10 @@ func (b *Bot) SetChatAdministratorCustomTitle(chatID ChatID, userID int64, custo
 // BanChatSenderChat bans a channel chat in a supergroup or a channel.
 //
 // https://core.telegram.org/bots/api#banchatsenderchat
-func (b *Bot) BanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponse[bool]) {
+func (b *Bot) BanChatSenderChat(
+	chatID ChatID,
+	senderChatID int64,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "banChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
@@ -1119,7 +1362,10 @@ func (b *Bot) BanChatSenderChat(chatID ChatID, senderChatID int64) (result APIRe
 // UnbanChatSenderChat unbans a previously banned channel chat in a supergroup or a channel.
 //
 // https://core.telegram.org/bots/api#unbanchatsenderchat
-func (b *Bot) UnbanChatSenderChat(chatID ChatID, senderChatID int64) (result APIResponse[bool]) {
+func (b *Bot) UnbanChatSenderChat(
+	chatID ChatID,
+	senderChatID int64,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "unbanChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
@@ -1129,7 +1375,11 @@ func (b *Bot) UnbanChatSenderChat(chatID ChatID, senderChatID int64) (result API
 // SetChatPermissions sets permissions of a chat.
 //
 // https://core.telegram.org/bots/api#setchatpermissions
-func (b *Bot) SetChatPermissions(chatID ChatID, permissions ChatPermissions, options OptionsSetChatPermissions) (result APIResponse[bool]) {
+func (b *Bot) SetChatPermissions(
+	chatID ChatID,
+	permissions ChatPermissions,
+	options OptionsSetChatPermissions,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1156,7 +1406,10 @@ func (b *Bot) ExportChatInviteLink(chatID ChatID) (result APIResponse[string]) {
 // CreateChatInviteLink creates a chat invite link.
 //
 // https://core.telegram.org/bots/api#createchatinvitelink
-func (b *Bot) CreateChatInviteLink(chatID ChatID, options OptionsCreateChatInviteLink) (result APIResponse[ChatInviteLink]) {
+func (b *Bot) CreateChatInviteLink(
+	chatID ChatID,
+	options OptionsCreateChatInviteLink,
+) (result APIResponse[ChatInviteLink]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1170,7 +1423,11 @@ func (b *Bot) CreateChatInviteLink(chatID ChatID, options OptionsCreateChatInvit
 // EditChatInviteLink edits a chat invite link.
 //
 // https://core.telegram.org/bots/api#editchatinvitelink
-func (b *Bot) EditChatInviteLink(chatID ChatID, inviteLink string, options OptionsCreateChatInviteLink) (result APIResponse[ChatInviteLink]) {
+func (b *Bot) EditChatInviteLink(
+	chatID ChatID,
+	inviteLink string,
+	options OptionsCreateChatInviteLink,
+) (result APIResponse[ChatInviteLink]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1185,7 +1442,11 @@ func (b *Bot) EditChatInviteLink(chatID ChatID, inviteLink string, options Optio
 // CreateChatSubscriptionInviteLink creates a subscription invite link for a channel chat.
 //
 // https://core.telegram.org/bots/api#createchatsubscriptioninvitelink
-func (b *Bot) CreateChatSubscriptionInviteLink(chatID ChatID, subscriptionPeriod, subscriptionPrice int, options OptionsCreateChatSubscriptionInviteLink) (result APIResponse[ChatInviteLink]) {
+func (b *Bot) CreateChatSubscriptionInviteLink(
+	chatID ChatID,
+	subscriptionPeriod, subscriptionPrice int,
+	options OptionsCreateChatSubscriptionInviteLink,
+) (result APIResponse[ChatInviteLink]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1201,7 +1462,11 @@ func (b *Bot) CreateChatSubscriptionInviteLink(chatID ChatID, subscriptionPeriod
 // EditChatSubscriptionInviteLink edits a subscription invite link created by the bot.
 //
 // https://core.telegram.org/bots/api#editchatsubscriptioninvitelink
-func (b *Bot) EditChatSubscriptionInviteLink(chatID ChatID, inviteLink string, options OptionsEditChatSubscriptionInviteLink) (result APIResponse[ChatInviteLink]) {
+func (b *Bot) EditChatSubscriptionInviteLink(
+	chatID ChatID,
+	inviteLink string,
+	options OptionsEditChatSubscriptionInviteLink,
+) (result APIResponse[ChatInviteLink]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1216,7 +1481,10 @@ func (b *Bot) EditChatSubscriptionInviteLink(chatID ChatID, inviteLink string, o
 // RevokeChatInviteLink revoks a chat invite link.
 //
 // https://core.telegram.org/bots/api#revokechatinvitelink
-func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result APIResponse[ChatInviteLink]) {
+func (b *Bot) RevokeChatInviteLink(
+	chatID ChatID,
+	inviteLink string,
+) (result APIResponse[ChatInviteLink]) {
 	return requestGeneric[ChatInviteLink](b, "revokeChatInviteLink", map[string]any{
 		"chat_id":     chatID,
 		"invite_link": inviteLink,
@@ -1226,7 +1494,10 @@ func (b *Bot) RevokeChatInviteLink(chatID ChatID, inviteLink string) (result API
 // ApproveChatJoinRequest approves chat join request.
 //
 // https://core.telegram.org/bots/api#approvechatjoinrequest
-func (b *Bot) ApproveChatJoinRequest(chatID ChatID, userID int64) (result APIResponse[bool]) {
+func (b *Bot) ApproveChatJoinRequest(
+	chatID ChatID,
+	userID int64,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1239,7 +1510,10 @@ func (b *Bot) ApproveChatJoinRequest(chatID ChatID, userID int64) (result APIRes
 // DeclineChatJoinRequest declines chat join request.
 //
 // https://core.telegram.org/bots/api#declinechatjoinrequest
-func (b *Bot) DeclineChatJoinRequest(chatID ChatID, userID int64) (result APIResponse[bool]) {
+func (b *Bot) DeclineChatJoinRequest(
+	chatID ChatID,
+	userID int64,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1252,7 +1526,10 @@ func (b *Bot) DeclineChatJoinRequest(chatID ChatID, userID int64) (result APIRes
 // SetChatPhoto sets a chat photo.
 //
 // https://core.telegram.org/bots/api#setchatphoto
-func (b *Bot) SetChatPhoto(chatID ChatID, photo InputFile) (result APIResponse[bool]) {
+func (b *Bot) SetChatPhoto(
+	chatID ChatID,
+	photo InputFile,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1277,7 +1554,10 @@ func (b *Bot) DeleteChatPhoto(chatID ChatID) (result APIResponse[bool]) {
 // SetChatTitle sets a chat title.
 //
 // https://core.telegram.org/bots/api#setchattitle
-func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponse[bool]) {
+func (b *Bot) SetChatTitle(
+	chatID ChatID,
+	title string,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1290,7 +1570,10 @@ func (b *Bot) SetChatTitle(chatID ChatID, title string) (result APIResponse[bool
 // SetChatDescription sets a chat description.
 //
 // https://core.telegram.org/bots/api#setchatdescription
-func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIResponse[bool]) {
+func (b *Bot) SetChatDescription(
+	chatID ChatID,
+	description string,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"chat_id":     chatID,
@@ -1303,7 +1586,11 @@ func (b *Bot) SetChatDescription(chatID ChatID, description string) (result APIR
 // PinChatMessage pins a chat message.
 //
 // https://core.telegram.org/bots/api#pinchatmessage
-func (b *Bot) PinChatMessage(chatID ChatID, messageID int64, options OptionsPinChatMessage) (result APIResponse[bool]) {
+func (b *Bot) PinChatMessage(
+	chatID ChatID,
+	messageID int64,
+	options OptionsPinChatMessage,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1318,7 +1605,10 @@ func (b *Bot) PinChatMessage(chatID ChatID, messageID int64, options OptionsPinC
 // UnpinChatMessage unpins a chat message.
 //
 // https://core.telegram.org/bots/api#unpinchatmessage
-func (b *Bot) UnpinChatMessage(chatID ChatID, options OptionsUnpinChatMessage) (result APIResponse[bool]) {
+func (b *Bot) UnpinChatMessage(
+	chatID ChatID,
+	options OptionsUnpinChatMessage,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1356,7 +1646,9 @@ func (b *Bot) GetChat(chatID ChatID) (result APIResponse[ChatFullInfo]) {
 // GetChatAdministrators gets chat administrators.
 //
 // https://core.telegram.org/bots/api#getchatadministrators
-func (b *Bot) GetChatAdministrators(chatID ChatID) (result APIResponse[[]ChatMember]) {
+func (b *Bot) GetChatAdministrators(
+	chatID ChatID,
+) (result APIResponse[[]ChatMember]) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1380,7 +1672,10 @@ func (b *Bot) GetChatMemberCount(chatID ChatID) (result APIResponse[int]) {
 // GetChatMember gets a chat member.
 //
 // https://core.telegram.org/bots/api#getchatmember
-func (b *Bot) GetChatMember(chatID ChatID, userID int64) (result APIResponse[ChatMember]) {
+func (b *Bot) GetChatMember(
+	chatID ChatID,
+	userID int64,
+) (result APIResponse[ChatMember]) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1393,7 +1688,10 @@ func (b *Bot) GetChatMember(chatID ChatID, userID int64) (result APIResponse[Cha
 // SetChatStickerSet sets a chat sticker set.
 //
 // https://core.telegram.org/bots/api#setchatstickerset
-func (b *Bot) SetChatStickerSet(chatID ChatID, stickerSetName string) (result APIResponse[bool]) {
+func (b *Bot) SetChatStickerSet(
+	chatID ChatID,
+	stickerSetName string,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"chat_id":          chatID,
@@ -1418,7 +1716,10 @@ func (b *Bot) DeleteChatStickerSet(chatID ChatID) (result APIResponse[bool]) {
 // AnswerCallbackQuery answers a callback query.
 //
 // https://core.telegram.org/bots/api#answercallbackquery
-func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerCallbackQuery) (result APIResponse[bool]) {
+func (b *Bot) AnswerCallbackQuery(
+	callbackQueryID string,
+	options OptionsAnswerCallbackQuery,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1432,14 +1733,19 @@ func (b *Bot) AnswerCallbackQuery(callbackQueryID string, options OptionsAnswerC
 // GetMyCommands fetches commands of this bot.
 //
 // https://core.telegram.org/bots/api#getmycommands
-func (b *Bot) GetMyCommands(options OptionsGetMyCommands) (result APIResponse[[]BotCommand]) {
+func (b *Bot) GetMyCommands(
+	options OptionsGetMyCommands,
+) (result APIResponse[[]BotCommand]) {
 	return requestGeneric[[]BotCommand](b, "getMyCommands", options)
 }
 
 // SetMyName changes the bot's name.
 //
 // https://core.telegram.org/bots/api#setmyname
-func (b *Bot) SetMyName(name string, options OptionsSetMyName) (result APIResponse[bool]) {
+func (b *Bot) SetMyName(
+	name string,
+	options OptionsSetMyName,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1453,42 +1759,55 @@ func (b *Bot) SetMyName(name string, options OptionsSetMyName) (result APIRespon
 // GetMyName fetches the bot's name.
 //
 // https://core.telegram.org/bots/api#getmyname
-func (b *Bot) GetMyName(options OptionsGetMyName) (result APIResponse[BotName]) {
+func (b *Bot) GetMyName(
+	options OptionsGetMyName,
+) (result APIResponse[BotName]) {
 	return requestGeneric[BotName](b, "getMyName", options)
 }
 
 // SetMyDescription sets the bot's description.
 //
 // https://core.telegram.org/bots/api#setmydescription
-func (b *Bot) SetMyDescription(options OptionsSetMyDescription) (result APIResponse[bool]) {
+func (b *Bot) SetMyDescription(
+	options OptionsSetMyDescription,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setMyDescription", options)
 }
 
 // GetMyDescription gets the bot's description.
 //
 // https://core.telegram.org/bots/api#setmydescription
-func (b *Bot) GetMyDescription(options OptionsGetMyDescription) (result APIResponse[BotDescription]) {
+func (b *Bot) GetMyDescription(
+	options OptionsGetMyDescription,
+) (result APIResponse[BotDescription]) {
 	return requestGeneric[BotDescription](b, "getMyDescription", options)
 }
 
 // SetMyShortDescription sets the bot's short description.
 //
 // https://core.telegram.org/bots/api#setmyshortdescription
-func (b *Bot) SetMyShortDescription(options OptionsSetMyShortDescription) (result APIResponse[bool]) {
+func (b *Bot) SetMyShortDescription(
+	options OptionsSetMyShortDescription,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setMyShortDescription", options)
 }
 
 // GetMyShortDescription gets the bot's short description.
 //
 // https://core.telegram.org/bots/api#getmyshortdescription
-func (b *Bot) GetMyShortDescription(options OptionsGetMyShortDescription) (result APIResponse[BotShortDescription]) {
+func (b *Bot) GetMyShortDescription(
+	options OptionsGetMyShortDescription,
+) (result APIResponse[BotShortDescription]) {
 	return requestGeneric[BotShortDescription](b, "getMyShortDescription", options)
 }
 
 // GetUserChatBoosts gets boosts of a user.
 //
 // https://core.telegram.org/bots/api#getuserchatboosts
-func (b *Bot) GetUserChatBoosts(chatID ChatID, userID int64) (result APIResponse[UserChatBoosts]) {
+func (b *Bot) GetUserChatBoosts(
+	chatID ChatID,
+	userID int64,
+) (result APIResponse[UserChatBoosts]) {
 	// essential params
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1501,7 +1820,9 @@ func (b *Bot) GetUserChatBoosts(chatID ChatID, userID int64) (result APIResponse
 // GetBusinessConnection gets a business connection.
 //
 // https://core.telegram.org/bots/api#getbusinessconnection
-func (b *Bot) GetBusinessConnection(businessConnectionID string) (result APIResponse[BusinessConnection]) {
+func (b *Bot) GetBusinessConnection(
+	businessConnectionID string,
+) (result APIResponse[BusinessConnection]) {
 	// essential params
 	options := map[string]any{
 		"business_connection_id": businessConnectionID,
@@ -1513,7 +1834,10 @@ func (b *Bot) GetBusinessConnection(businessConnectionID string) (result APIResp
 // SetMyCommands sets commands of this bot.
 //
 // https://core.telegram.org/bots/api#setmycommands
-func (b *Bot) SetMyCommands(commands []BotCommand, options OptionsSetMyCommands) (result APIResponse[bool]) {
+func (b *Bot) SetMyCommands(
+	commands []BotCommand,
+	options OptionsSetMyCommands,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1527,35 +1851,45 @@ func (b *Bot) SetMyCommands(commands []BotCommand, options OptionsSetMyCommands)
 // DeleteMyCommands deletes commands of this bot.
 //
 // https://core.telegram.org/bots/api#deletemycommands
-func (b *Bot) DeleteMyCommands(options OptionsDeleteMyCommands) (result APIResponse[bool]) {
+func (b *Bot) DeleteMyCommands(
+	options OptionsDeleteMyCommands,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "deleteMyCommands", options)
 }
 
 // SetChatMenuButton sets chat menu button.
 //
 // https://core.telegram.org/bots/api#setchatmenubutton
-func (b *Bot) SetChatMenuButton(options OptionsSetChatMenuButton) (result APIResponse[bool]) {
+func (b *Bot) SetChatMenuButton(
+	options OptionsSetChatMenuButton,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setChatMenuButton", options)
 }
 
 // GetChatMenuButton fetches current chat menu button.
 //
 // https://core.telegram.org/bots/api#getchatmenubutton
-func (b *Bot) GetChatMenuButton(options OptionsGetChatMenuButton) (result APIResponse[MenuButton]) {
+func (b *Bot) GetChatMenuButton(
+	options OptionsGetChatMenuButton,
+) (result APIResponse[MenuButton]) {
 	return requestGeneric[MenuButton](b, "getChatMenuButton", options)
 }
 
 // SetMyDefaultAdministratorRights sets my default administrator rights.
 //
 // https://core.telegram.org/bots/api#setmydefaultadministratorrights
-func (b *Bot) SetMyDefaultAdministratorRights(options OptionsSetMyDefaultAdministratorRights) (result APIResponse[bool]) {
+func (b *Bot) SetMyDefaultAdministratorRights(
+	options OptionsSetMyDefaultAdministratorRights,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "setMyDefaultAdministratorRights", options)
 }
 
 // GetMyDefaultAdministratorRights gets my default administrator rights.
 //
 // https://core.telegram.org/bots/api#getmydefaultadministratorrights
-func (b *Bot) GetMyDefaultAdministratorRights(options OptionsGetMyDefaultAdministratorRights) (result APIResponse[bool]) {
+func (b *Bot) GetMyDefaultAdministratorRights(
+	options OptionsGetMyDefaultAdministratorRights,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "getMyDefaultAdministratorRights", options)
 }
 
@@ -1566,7 +1900,10 @@ func (b *Bot) GetMyDefaultAdministratorRights(options OptionsGetMyDefaultAdminis
 // EditMessageText edits text of a message.
 //
 // https://core.telegram.org/bots/api#editmessagetext
-func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (result APIResponseMessageOrBool) {
+func (b *Bot) EditMessageText(
+	text string,
+	options OptionsEditMessageText,
+) (result APIResponseMessageOrBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1580,7 +1917,9 @@ func (b *Bot) EditMessageText(text string, options OptionsEditMessageText) (resu
 // EditMessageCaption edits caption of a message.
 //
 // https://core.telegram.org/bots/api#editmessagecaption
-func (b *Bot) EditMessageCaption(options OptionsEditMessageCaption) (result APIResponseMessageOrBool) {
+func (b *Bot) EditMessageCaption(
+	options OptionsEditMessageCaption,
+) (result APIResponseMessageOrBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1591,7 +1930,10 @@ func (b *Bot) EditMessageCaption(options OptionsEditMessageCaption) (result APIR
 // EditMessageMedia edites a media message.
 //
 // https://core.telegram.org/bots/api#editmessagemedia
-func (b *Bot) EditMessageMedia(media InputMedia, options OptionsEditMessageMedia) (result APIResponseMessageOrBool) {
+func (b *Bot) EditMessageMedia(
+	media InputMedia,
+	options OptionsEditMessageMedia,
+) (result APIResponseMessageOrBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1605,14 +1947,19 @@ func (b *Bot) EditMessageMedia(media InputMedia, options OptionsEditMessageMedia
 // EditMessageReplyMarkup edits reply markup of a message.
 //
 // https://core.telegram.org/bots/api#editmessagereplymarkup
-func (b *Bot) EditMessageReplyMarkup(options OptionsEditMessageReplyMarkup) (result APIResponseMessageOrBool) {
+func (b *Bot) EditMessageReplyMarkup(
+	options OptionsEditMessageReplyMarkup,
+) (result APIResponseMessageOrBool) {
 	return b.requestMessageOrBool("editMessageReplyMarkup", options)
 }
 
 // EditMessageLiveLocation edits live location of a message.
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
-func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options OptionsEditMessageLiveLocation) (result APIResponseMessageOrBool) {
+func (b *Bot) EditMessageLiveLocation(
+	latitude, longitude float32,
+	options OptionsEditMessageLiveLocation,
+) (result APIResponseMessageOrBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1627,14 +1974,19 @@ func (b *Bot) EditMessageLiveLocation(latitude, longitude float32, options Optio
 // StopMessageLiveLocation stops live location of a message.
 //
 // https://core.telegram.org/bots/api#stopmessagelivelocation
-func (b *Bot) StopMessageLiveLocation(options OptionsStopMessageLiveLocation) (result APIResponseMessageOrBool) {
+func (b *Bot) StopMessageLiveLocation(
+	options OptionsStopMessageLiveLocation,
+) (result APIResponseMessageOrBool) {
 	return b.requestMessageOrBool("stopMessageLiveLocation", options)
 }
 
 // DeleteMessage deletes a message.
 //
 // https://core.telegram.org/bots/api#deletemessage
-func (b *Bot) DeleteMessage(chatID ChatID, messageID int64) (result APIResponse[bool]) {
+func (b *Bot) DeleteMessage(
+	chatID ChatID,
+	messageID int64,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "deleteMessage", map[string]any{
 		"chat_id":    chatID,
 		"message_id": messageID,
@@ -1644,7 +1996,10 @@ func (b *Bot) DeleteMessage(chatID ChatID, messageID int64) (result APIResponse[
 // DeleteMessages deletes messages.
 //
 // https://core.telegram.org/bots/api#deletemessages
-func (b *Bot) DeleteMessages(chatID ChatID, messageIDs []int64) (result APIResponse[bool]) {
+func (b *Bot) DeleteMessages(
+	chatID ChatID,
+	messageIDs []int64,
+) (result APIResponse[bool]) {
 	return requestGeneric[bool](b, "deleteMessages", map[string]any{
 		"chat_id":     chatID,
 		"message_ids": messageIDs,
@@ -1656,7 +2011,11 @@ func (b *Bot) DeleteMessages(chatID ChatID, messageIDs []int64) (result APIRespo
 // results = array of InlineQueryResultArticle, InlineQueryResultPhoto, InlineQueryResultGif, InlineQueryResultMpeg4Gif, or InlineQueryResultVideo.
 //
 // https://core.telegram.org/bots/api#answerinlinequery
-func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []any, options OptionsAnswerInlineQuery) (result APIResponse[bool]) {
+func (b *Bot) AnswerInlineQuery(
+	inlineQueryID string,
+	results []any,
+	options OptionsAnswerInlineQuery,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1675,7 +2034,12 @@ func (b *Bot) AnswerInlineQuery(inlineQueryID string, results []any, options Opt
 // - `currency`: Pass "XTR" for payments in Telegram Stars.
 //
 // https://core.telegram.org/bots/api#sendinvoice
-func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerToken, currency string, prices []LabeledPrice, options OptionsSendInvoice) (result APIResponse[Message]) {
+func (b *Bot) SendInvoice(
+	chatID int64,
+	title, description, payload, providerToken, currency string,
+	prices []LabeledPrice,
+	options OptionsSendInvoice,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1699,7 +2063,11 @@ func (b *Bot) SendInvoice(chatID int64, title, description, payload, providerTok
 // - `currency`: Pass "XTR" for payments in Telegram Stars.
 //
 // https://core.telegram.org/bots/api#createinvoicelink
-func (b *Bot) CreateInvoiceLink(title, description, payload, currency string, prices []LabeledPrice, options OptionsCreateInvoiceLink) (result APIResponse[string]) {
+func (b *Bot) CreateInvoiceLink(
+	title, description, payload, currency string,
+	prices []LabeledPrice,
+	options OptionsCreateInvoiceLink,
+) (result APIResponse[string]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1720,7 +2088,12 @@ func (b *Bot) CreateInvoiceLink(title, description, payload, currency string, pr
 // otherwise, errorMessage should be provided.
 //
 // https://core.telegram.org/bots/api#answershippingquery
-func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptions []ShippingOption, errorMessage *string) (result APIResponse[bool]) {
+func (b *Bot) AnswerShippingQuery(
+	shippingQueryID string,
+	ok bool,
+	shippingOptions []ShippingOption,
+	errorMessage *string,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"shipping_query_id": shippingQueryID,
@@ -1744,7 +2117,11 @@ func (b *Bot) AnswerShippingQuery(shippingQueryID string, ok bool, shippingOptio
 // AnswerPreCheckoutQuery answers a pre-checkout query.
 //
 // https://core.telegram.org/bots/api#answerprecheckoutquery
-func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMessage *string) (result APIResponse[bool]) {
+func (b *Bot) AnswerPreCheckoutQuery(
+	preCheckoutQueryID string,
+	ok bool,
+	errorMessage *string,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"pre_checkout_query_id": preCheckoutQueryID,
@@ -1764,14 +2141,19 @@ func (b *Bot) AnswerPreCheckoutQuery(preCheckoutQueryID string, ok bool, errorMe
 // GetStarTransactions gets star transactions.
 //
 // https://core.telegram.org/bots/api#getstartransactions
-func (b *Bot) GetStarTransactions(options OptionsGetStarTransactions) (result APIResponse[StarTransactions]) {
+func (b *Bot) GetStarTransactions(
+	options OptionsGetStarTransactions,
+) (result APIResponse[StarTransactions]) {
 	return requestGeneric[StarTransactions](b, "getStarTransactions", options)
 }
 
 // RefundStarPayment refunds a successful payment in Telegram Stars.
 //
 // https://core.telegram.org/bots/api#refundstarpayment
-func (b *Bot) RefundStarPayment(userID int64, telegramPaymentChargeID string) (result APIResponse[bool]) {
+func (b *Bot) RefundStarPayment(
+	userID int64,
+	telegramPaymentChargeID string,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"user_id":                    userID,
@@ -1784,7 +2166,11 @@ func (b *Bot) RefundStarPayment(userID int64, telegramPaymentChargeID string) (r
 // EditUserStarSubscription allows the bot to cancel or re-enable extension of a subscription.
 //
 // https://core.telegram.org/bots/api#edituserstarsubscription
-func (b *Bot) EditUserStarSubscription(userID int64, telegramPaymentChargeID string, isCanceled bool) (result APIResponse[bool]) {
+func (b *Bot) EditUserStarSubscription(
+	userID int64,
+	telegramPaymentChargeID string,
+	isCanceled bool,
+) (result APIResponse[bool]) {
 	// essential options
 	options := map[string]any{
 		"user_id":                    userID,
@@ -1798,7 +2184,11 @@ func (b *Bot) EditUserStarSubscription(userID int64, telegramPaymentChargeID str
 // SendGame sends a game.
 //
 // https://core.telegram.org/bots/api#sendgame
-func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendGame) (result APIResponse[Message]) {
+func (b *Bot) SendGame(
+	chatID ChatID,
+	gameShortName string,
+	options OptionsSendGame,
+) (result APIResponse[Message]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1813,7 +2203,11 @@ func (b *Bot) SendGame(chatID ChatID, gameShortName string, options OptionsSendG
 // SetGameScore sets score of a game.
 //
 // https://core.telegram.org/bots/api#setgamescore
-func (b *Bot) SetGameScore(userID int64, score int, options OptionsSetGameScore) (result APIResponseMessageOrBool) {
+func (b *Bot) SetGameScore(
+	userID int64,
+	score int,
+	options OptionsSetGameScore,
+) (result APIResponseMessageOrBool) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1828,7 +2222,10 @@ func (b *Bot) SetGameScore(userID int64, score int, options OptionsSetGameScore)
 // GetGameHighScores gets high scores of a game.
 //
 // https://core.telegram.org/bots/api#getgamehighscores
-func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) (result APIResponse[[]GameHighScore]) {
+func (b *Bot) GetGameHighScores(
+	userID int64,
+	options OptionsGetGameHighScores,
+) (result APIResponse[[]GameHighScore]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1842,7 +2239,10 @@ func (b *Bot) GetGameHighScores(userID int64, options OptionsGetGameHighScores) 
 // AnswerWebAppQuery answers a web app's query.
 //
 // https://core.telegram.org/bots/api#answerwebappquery
-func (b *Bot) AnswerWebAppQuery(webAppQueryID string, res InlineQueryResult) (result APIResponse[SentWebAppMessage]) {
+func (b *Bot) AnswerWebAppQuery(
+	webAppQueryID string,
+	res InlineQueryResult,
+) (result APIResponse[SentWebAppMessage]) {
 	options := map[string]any{
 		"web_app_query_id": webAppQueryID,
 		"result":           res,
@@ -1854,7 +2254,11 @@ func (b *Bot) AnswerWebAppQuery(webAppQueryID string, res InlineQueryResult) (re
 // SavePreparedInlineMessage stores a message that can be sent by a user of a Mini App.
 //
 // https://core.telegram.org/bots/api#savepreparedinlinemessage
-func (b *Bot) SavePreparedInlineMessage(userID int64, result InlineQueryResult, options OptionsSavePreparedInlineMessage) (res APIResponse[PreparedInlineMessage]) {
+func (b *Bot) SavePreparedInlineMessage(
+	userID int64,
+	result InlineQueryResult,
+	options OptionsSavePreparedInlineMessage,
+) (res APIResponse[PreparedInlineMessage]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1869,7 +2273,11 @@ func (b *Bot) SavePreparedInlineMessage(userID int64, result InlineQueryResult, 
 // CreateForumTopic creates a topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#createforumtopic
-func (b *Bot) CreateForumTopic(chatID ChatID, name string, options OptionsCreateForumTopic) (result APIResponse[ForumTopic]) {
+func (b *Bot) CreateForumTopic(
+	chatID ChatID,
+	name string,
+	options OptionsCreateForumTopic,
+) (result APIResponse[ForumTopic]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1884,7 +2292,11 @@ func (b *Bot) CreateForumTopic(chatID ChatID, name string, options OptionsCreate
 // EditForumTopic edits a forum topic.
 //
 // https://core.telegram.org/bots/api#editforumtopic
-func (b *Bot) EditForumTopic(chatID ChatID, messageThreadID int64, options OptionsEditForumTopic) (result APIResponse[bool]) {
+func (b *Bot) EditForumTopic(
+	chatID ChatID,
+	messageThreadID int64,
+	options OptionsEditForumTopic,
+) (result APIResponse[bool]) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1899,7 +2311,10 @@ func (b *Bot) EditForumTopic(chatID ChatID, messageThreadID int64, options Optio
 // CloseForumTopic closes a forum topic.
 //
 // https://core.telegram.org/bots/api#closeforumtopic
-func (b *Bot) CloseForumTopic(chatID ChatID, messageThreadID int64) (result APIResponse[bool]) {
+func (b *Bot) CloseForumTopic(
+	chatID ChatID,
+	messageThreadID int64,
+) (result APIResponse[bool]) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -1911,7 +2326,10 @@ func (b *Bot) CloseForumTopic(chatID ChatID, messageThreadID int64) (result APIR
 // ReopenForumTopic reopens a forum topic.
 //
 // https://core.telegram.org/bots/api#reopenforumtopic
-func (b *Bot) ReopenForumTopic(chatID ChatID, messageThreadID int64) (result APIResponse[bool]) {
+func (b *Bot) ReopenForumTopic(
+	chatID ChatID,
+	messageThreadID int64,
+) (result APIResponse[bool]) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -1923,7 +2341,10 @@ func (b *Bot) ReopenForumTopic(chatID ChatID, messageThreadID int64) (result API
 // DeleteForumTopic deletes a forum topic.
 //
 // https://core.telegram.org/bots/api#deleteforumtopic
-func (b *Bot) DeleteForumTopic(chatID ChatID, messageThreadID int64) (result APIResponse[bool]) {
+func (b *Bot) DeleteForumTopic(
+	chatID ChatID,
+	messageThreadID int64,
+) (result APIResponse[bool]) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -1935,7 +2356,10 @@ func (b *Bot) DeleteForumTopic(chatID ChatID, messageThreadID int64) (result API
 // UnpinAllForumTopicMessages unpins all forum topic messages.
 //
 // https://core.telegram.org/bots/api#unpinallforumtopicmessages
-func (b *Bot) UnpinAllForumTopicMessages(chatID ChatID, messageThreadID int64) (result APIResponse[bool]) {
+func (b *Bot) UnpinAllForumTopicMessages(
+	chatID ChatID,
+	messageThreadID int64,
+) (result APIResponse[bool]) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -1947,7 +2371,10 @@ func (b *Bot) UnpinAllForumTopicMessages(chatID ChatID, messageThreadID int64) (
 // EditGeneralForumTopic edites general forum topic.
 //
 // https://core.telegram.org/bots/api#editgeneralforumtopic
-func (b *Bot) EditGeneralForumTopic(chatID ChatID, name string) (result APIResponse[bool]) {
+func (b *Bot) EditGeneralForumTopic(
+	chatID ChatID,
+	name string,
+) (result APIResponse[bool]) {
 	options := map[string]any{
 		"chat_id": chatID,
 		"name":    name,
@@ -2071,7 +2498,10 @@ func (b *Bot) paramToString(param any) (result string, success bool) {
 // Send request to API server and return the response as bytes(synchronously).
 //
 // NOTE: If *os.File is included in the params, it will be closed automatically by this function.
-func (b *Bot) request(method string, params map[string]any) (resp []byte, err error) {
+func (b *Bot) request(
+	method string,
+	params map[string]any,
+) (resp []byte, err error) {
 	apiURL := fmt.Sprintf("%s%s/%s", apiBaseURL, b.token, method)
 
 	b.verbose("sending request to api url: %s, params: %#v", apiURL, params)
@@ -2092,7 +2522,10 @@ func (b *Bot) request(method string, params map[string]any) (resp []byte, err er
 }
 
 // request multipart form data
-func (b *Bot) requestMultipartFormData(apiURL string, params map[string]any) (resp []byte, err error) {
+func (b *Bot) requestMultipartFormData(
+	apiURL string,
+	params map[string]any,
+) (resp []byte, err error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -2219,7 +2652,10 @@ func (b *Bot) requestMultipartFormData(apiURL string, params map[string]any) (re
 }
 
 // request urlencoded form data
-func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]any) (resp []byte, err error) {
+func (b *Bot) requestURLEncodedFormData(
+	apiURL string,
+	params map[string]any,
+) (resp []byte, err error) {
 	paramValues := url.Values{}
 	for key, value := range params {
 		if strValue, ok := b.paramToString(value); ok {
@@ -2268,7 +2704,10 @@ func (b *Bot) requestURLEncodedFormData(apiURL string, params map[string]any) (r
 }
 
 // Send request for APIResponseMessageOrBool and fetch its result.
-func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result APIResponseMessageOrBool) {
+func (b *Bot) requestMessageOrBool(
+	method string,
+	params map[string]any,
+) (result APIResponseMessageOrBool) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
@@ -2317,7 +2756,11 @@ func (b *Bot) requestMessageOrBool(method string, params map[string]any) (result
 }
 
 // Send request for APIResponse[T] and fetch its result.
-func requestGeneric[T any](b *Bot, method string, params map[string]any) (result APIResponse[T]) {
+func requestGeneric[T any](
+	b *Bot,
+	method string,
+	params map[string]any,
+) (result APIResponse[T]) {
 	var errStr string
 
 	if bytes, err := b.request(method, params); err == nil {
