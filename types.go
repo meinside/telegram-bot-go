@@ -600,6 +600,7 @@ type ExternalReplyInfo struct {
 	VideoNote          *VideoNote          `json:"video_note,omitempty"`
 	Voice              *Voice              `json:"voice,omitempty"`
 	HasMediaSpoiler    bool                `json:"has_media_spoiler,omitempty"`
+	Checklist          *Checklist          `json:"checklist,omitempty"`
 	Contact            *Contact            `json:"contact,omitempty"`
 	Dice               *Dice               `json:"dice,omitempty"`
 	Game               *Game               `json:"game,omitempty"`
@@ -924,6 +925,67 @@ type PollAnswer struct {
 	OptionIDs []int  `json:"option_ids"`
 }
 
+// ChecklistTask is a struct of a checklist task
+//
+// https://core.telegram.org/bots/api#checklisttask
+type ChecklistTask struct {
+	ID              int64           `json:"id"`
+	Text            string          `json:"text"`
+	TextEntities    []MessageEntity `json:"text_entities,omitempty"`
+	CompletedByUser *User           `json:"completed_by_user,omitempty"`
+	CompletionDate  *int64          `json:"completion_date,omitempty"`
+}
+
+// Checklist is a struct of a checklist
+//
+// https://core.telegram.org/bots/api#checklist
+type Checklist struct {
+	Title                    string          `json:"title"`
+	TitleEntities            []MessageEntity `json:"title_entities,omitempty"`
+	Tasks                    []ChecklistTask `json:"tasks"`
+	OthersCanAddTasks        *bool           `json:"others_can_add_tasks,omitempty"`
+	OthersCanMarkTasksAsDone *bool           `json:"others_can_mark_tasks_as_done,omitempty"`
+}
+
+// InputChecklistTask is a struct of an input checklist task
+//
+// https://core.telegram.org/bots/api#inputchecklisttask
+type InputChecklistTask struct {
+	ID           int64           `json:"id"`
+	Text         string          `json:"text"`
+	ParseMode    *ParseMode      `json:"parse_mode,omitempty"`
+	TextEntities []MessageEntity `json:"text_entities,omitempty"`
+}
+
+// InputChecklist is a struct of an input checklist
+//
+// https://core.telegram.org/bots/api#inputchecklist
+type InputChecklist struct {
+	Title                    string               `json:"title"`
+	ParseMode                *ParseMode           `json:"parse_mode,omitempty"`
+	TitleEntities            []MessageEntity      `json:"title_entities,omitempty"`
+	Tasks                    []InputChecklistTask `json:"tasks"`
+	OthersCanAddTasks        *bool                `json:"others_can_add_tasks,omitempty"`
+	OthersCanMarkTasksAsDone *bool                `json:"others_can_mark_tasks_as_done,omitempty"`
+}
+
+// ChecklistTasksDone is a struct for service message: checklist tasks done
+//
+// https://core.telegram.org/bots/api#checklisttasksdone
+type ChecklistTasksDone struct {
+	ChecklistMessage       *Message `json:"checklist_message,omitempty"`
+	MarkedAsDoneTaskIDs    []int64  `json:"marked_as_done_task_ids,omitempty"`
+	MarkedAsNotDoneTaskIDs []int64  `json:"marked_as_not_done_task_ids,omitempty"`
+}
+
+// ChecklistTasksAdded is a struct for service message: checklist tasks added
+//
+// https://core.telegram.org/bots/api#checklisttasksadded
+type ChecklistTasksAdded struct {
+	ChecklistMessage *Message        `json:"checklist_message,omitempty"`
+	Tasks            []ChecklistTask `json:"tasks"`
+}
+
 // Dice is a struct for dice in message
 //
 // https://core.telegram.org/bots/api#dice
@@ -1119,6 +1181,14 @@ type VideoChatParticipantsInvited struct {
 // https://core.telegram.org/bots/api#paidmessagepricechanged
 type PaidMessagePriceChanged struct {
 	PaidMessageStarCount int `json:"paid_message_star_count"`
+}
+
+// DirectMessagePriceChanged is a struct for a service message about a change in the price of direct messages.
+//
+// https://core.telegram.org/bots/api#directmessagepricechanged
+type DirectMessagePriceChanged struct {
+	AreDirectMessagesEnabled bool `json:"are_direct_messages_enabled"`
+	DirectMessageStarCount   *int `json:"direct_message_star_count,omitempty"`
 }
 
 // Giveaway struct for giveaways
@@ -1768,7 +1838,7 @@ type StoryArea struct {
 	Type     StoryAreaType     `json:"type"`
 }
 
-// ChatMemmberOwner is a struct of a chat member who is an owner.
+// ChatMemberOwner is a struct of a chat member who is an owner.
 //
 // https://core.telegram.org/bots/api#chatmemberowner
 type ChatMemberOwner struct {
@@ -1778,7 +1848,7 @@ type ChatMemberOwner struct {
 	CustomTitle *string `json:"custom_title,omitempty"`
 }
 
-// ChatMemmberAdministrator is a struct of a chat member who is an administrator.
+// ChatMemberAdministrator is a struct of a chat member who is an administrator.
 //
 // https://core.telegram.org/bots/api#chatmemberadministrator
 type ChatMemberAdministrator struct {
@@ -2010,6 +2080,7 @@ type Message struct {
 	CaptionEntities               []MessageEntity                `json:"caption_entities,omitempty"`
 	ShowCaptionAboveMedia         *bool                          `json:"show_caption_above_media,omitempty"`
 	HasMediaSpoiler               *bool                          `json:"has_media_spoiler,omitempty"`
+	Checklist                     *Checklist                     `json:"checklist,omitempty"`
 	Contact                       *Contact                       `json:"contact,omitempty"`
 	Dice                          *Dice                          `json:"dice,omitempty"`
 	Game                          *Game                          `json:"game,omitempty"`
@@ -2041,6 +2112,9 @@ type Message struct {
 	ProximityAlertTriggered      *ProximityAlertTriggered      `json:"proximity_alert_triggered,omitempty"`
 	BoostAdded                   *ChatBoostAdded               `json:"boost_added,omitempty"`
 	ChatBackgroundSet            *ChatBackground               `json:"chat_background_set,omitempty"`
+	ChecklistTasksDone           *ChecklistTasksDone           `json:"checklist_tasks_done,omitempty"`
+	ChecklistTasksAdded          *ChecklistTasksAdded          `json:"checklist_tasks_added,omitempty"`
+	DirectMessagePriceChanged    *DirectMessagePriceChanged    `json:"direct_message_price_changed,omitempty"`
 	ForumTopicCreated            *ForumTopicCreated            `json:"forum_topic_created,omitempty"`
 	ForumTopicEdited             *ForumTopicEdited             `json:"forum_topic_edited,omitempty"`
 	ForumTopicClosed             *ForumTopicClosed             `json:"forum_topic_closed,omitempty"`
@@ -2897,11 +2971,23 @@ type GiftInfo struct {
 //
 // https://core.telegram.org/bots/api#uniquegiftinfo
 type UniqueGiftInfo struct {
-	Gift              UniqueGift `json:"gift"`
-	Origin            string     `json:"origin"`
-	OwnedGiftID       *string    `json:"owned_gift_id,omitempty"`
-	TransferStarCount *int       `json:"transfer_star_count,omitempty"`
+	Gift                UniqueGift           `json:"gift"`
+	Origin              UniqueGiftInfoOrigin `json:"origin"`
+	LastResaleStarCount *int                 `json:"last_resale_star_count,omitempty"`
+	OwnedGiftID         *string              `json:"owned_gift_id,omitempty"`
+	TransferStarCount   *int                 `json:"transfer_star_count,omitempty"`
+	NextTransferDate    *int                 `json:"next_transfer_date,omitempty"`
 }
+
+// UniqueGiftInfoOrigin is the origin of a unique gift info.
+type UniqueGiftInfoOrigin string
+
+// UniqueGiftInfoOrigin constants
+const (
+	UniqueGiftInfoOriginUpgrade  UniqueGiftInfoOrigin = "upgrade"
+	UniqueGiftInfoOriginTransfer UniqueGiftInfoOrigin = "transfer"
+	UniqueGiftInfoOriginResale   UniqueGiftInfoOrigin = "resale"
+)
 
 // InputProfilePhoto describes a profile photo to set.
 //
@@ -2970,4 +3056,5 @@ type OwnedGift struct {
 	// Type == "unique"
 	CanBeTransferred  *bool `json:"can_be_transferred,omitempty"`
 	TransferStarCount *int  `json:"transfer_star_count,omitempty"`
+	NextTransferDate  *int  `json:"next_transfer_date,omitempty"`
 }

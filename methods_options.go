@@ -337,7 +337,7 @@ func (o OptionsSendPhoto) SetShowCaptionAboveMedia(showCaptionAboveMedia bool) O
 }
 
 // SetHasSpoiler sets the `has_spoiler` value of OptionsSendPhoto.
-func (o OptionsSendPhoto) SetHasSpiler(hasSpoiler bool) OptionsSendPhoto {
+func (o OptionsSendPhoto) SetHasSpoiler(hasSpoiler bool) OptionsSendPhoto {
 	o["has_spoiler"] = hasSpoiler
 	return o
 }
@@ -859,7 +859,7 @@ func (o OptionsSendVideo) SetShowCaptionAboveMedia(showCaptionAboveMedia bool) O
 }
 
 // SetHasSpoiler sets the `has_spoiler` value of OptionsSendVideo.
-func (o OptionsSendVideo) SetHasSpiler(hasSpoiler bool) OptionsSendVideo {
+func (o OptionsSendVideo) SetHasSpoiler(hasSpoiler bool) OptionsSendVideo {
 	o["has_spoiler"] = hasSpoiler
 	return o
 }
@@ -978,7 +978,7 @@ func (o OptionsSendAnimation) SetShowCaptionAboveMedia(showCaptionAboveMedia boo
 }
 
 // SetHasSpoiler sets the `has_spoiler` value of OptionsSendAnimation.
-func (o OptionsSendAnimation) SetHasSpiler(hasSpoiler bool) OptionsSendAnimation {
+func (o OptionsSendAnimation) SetHasSpoiler(hasSpoiler bool) OptionsSendAnimation {
 	o["has_spoiler"] = hasSpoiler
 	return o
 }
@@ -1612,6 +1612,43 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 	return o
 }
 
+// OptionsSendChecklist struct for SendChecklist().
+//
+// options include: `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+//
+// https://core.telegram.org/bots/api#sendchecklist
+type OptionsSendChecklist MethodOptions
+
+// SetDisableNotification sets the `disable_notification` value of OptionsSendChecklist.
+func (o OptionsSendChecklist) SetDisableNotification(disable bool) OptionsSendChecklist {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendChecklist.
+func (o OptionsSendChecklist) SetProtectContent(protect bool) OptionsSendChecklist {
+	o["protect_content"] = protect
+	return o
+}
+
+// SetMessageEffectID sets the `message_effect_id` value of OptionsSendChecklist.
+func (o OptionsSendChecklist) SetMessageEffectID(messageEffectID string) OptionsSendChecklist {
+	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetReplyParameters sets the `reply_parameters` value of OptionsSendChecklist.
+func (o OptionsSendChecklist) SetReplyParameters(replyParameters ReplyParameters) OptionsSendChecklist {
+	o["reply_parameters"] = replyParameters
+	return o
+}
+
+// SetReplyMarkup sets the `reply_markup` value of OptionsSendChecklist.
+func (o OptionsSendChecklist) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsSendChecklist {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
 // OptionsSendDice struct for SendDice().
 //
 // options include: `business_connection_id`, `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
@@ -1993,7 +2030,7 @@ func (o OptionsCreateChatInviteLink) SetMemberLimit(memberLimit int) OptionsCrea
 	return o
 }
 
-// SetCreatesJoinRequests sets the `creates_join_request` value of OptionsCreateChatInviteLink.
+// SetCreatesJoinRequest sets the `creates_join_request` value of OptionsCreateChatInviteLink.
 func (o OptionsCreateChatInviteLink) SetCreatesJoinRequest(createsJoinRequest bool) OptionsCreateChatInviteLink {
 	o["creates_join_request"] = createsJoinRequest
 	return o
@@ -2234,7 +2271,7 @@ func (o OptionsGetMyDescription) SetLanguageCode(languageCode string) OptionsGet
 type OptionsSetMyShortDescription MethodOptions
 
 // SetShortDescription sets the `short_description` value of OptionsSetMyShortDescription.
-func (o OptionsSetMyShortDescription) SetDescription(shortDescription string) OptionsSetMyShortDescription {
+func (o OptionsSetMyShortDescription) SetShortDescription(shortDescription string) OptionsSetMyShortDescription {
 	o["short_description"] = shortDescription
 	return o
 }
@@ -2604,6 +2641,19 @@ func (o OptionsStopMessageLiveLocation) SetInlineMessageID(inlineMessageID strin
 
 // SetReplyMarkup sets the `reply_markup` value of OptionsStopMessageLiveLocation.
 func (o OptionsStopMessageLiveLocation) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsStopMessageLiveLocation {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
+// OptionsEditMessageChecklist struct for EditMessageChecklist()
+//
+// options include: `reply_markup`.
+//
+// https://core.telegram.org/bots/api#editmessagechecklist
+type OptionsEditMessageChecklist MethodOptions
+
+// SetReplyMarkup sets the `reply_markup` value of OptionsEditMessageChecklist.
+func (o OptionsEditMessageChecklist) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsEditMessageChecklist {
 	o["reply_markup"] = replyMarkup
 	return o
 }
@@ -3091,7 +3141,7 @@ func (o OptionsEditForumTopic) SetIconCustomEmojiID(iconCustomEmojiID string) Op
 // https://core.telegram.org/bots/api#setbusinessaccountname
 type OptionsSetBusinessAccountName MethodOptions
 
-// SetLastname sets the `last_name` value of OptionsSetBusinessAccountName.
+// SetLastName sets the `last_name` value of OptionsSetBusinessAccountName.
 func (o OptionsSetBusinessAccountName) SetLastName(lastName string) OptionsSetBusinessAccountName {
 	o["last_name"] = lastName
 	return o
