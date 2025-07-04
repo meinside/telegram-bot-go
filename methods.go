@@ -1136,6 +1136,27 @@ func (b *Bot) StopPoll(
 	return requestGeneric[Poll](b, "stopPoll", options)
 }
 
+// SendChecklist sends a checklist.
+//
+// https://core.telegram.org/bots/api#sendchecklist
+func (b *Bot) SendChecklist(
+	businessConnectionID string,
+	chatID ChatID,
+	checklist InputChecklist,
+	options OptionsSendChecklist,
+) (result APIResponse[Message]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["chat_id"] = chatID
+	options["checklist"] = checklist
+
+	return requestGeneric[Message](b, "sendChecklist", options)
+}
+
 // SendDice sends a random dice.
 //
 // https://core.telegram.org/bots/api#senddice
@@ -1944,15 +1965,6 @@ func (b *Bot) EditMessageMedia(
 	return b.requestMessageOrBool("editMessageMedia", options)
 }
 
-// EditMessageReplyMarkup edits reply markup of a message.
-//
-// https://core.telegram.org/bots/api#editmessagereplymarkup
-func (b *Bot) EditMessageReplyMarkup(
-	options OptionsEditMessageReplyMarkup,
-) (result APIResponseMessageOrBool) {
-	return b.requestMessageOrBool("editMessageReplyMarkup", options)
-}
-
 // EditMessageLiveLocation edits live location of a message.
 //
 // https://core.telegram.org/bots/api#editmessagelivelocation
@@ -1978,6 +1990,38 @@ func (b *Bot) StopMessageLiveLocation(
 	options OptionsStopMessageLiveLocation,
 ) (result APIResponseMessageOrBool) {
 	return b.requestMessageOrBool("stopMessageLiveLocation", options)
+}
+
+// EditMessageChecklist edits check list of a message.
+//
+// https://core.telegram.org/bots/api#editmessagechecklist
+func (b *Bot) EditMessageChecklist(
+	businessConnectionID string,
+	chatID int64,
+	messageID int64,
+	checklist InputChecklist,
+	options OptionsEditMessageChecklist,
+) (result APIResponse[Message]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["chat_id"] = chatID
+	options["message_id"] = messageID
+	options["checklist"] = checklist
+
+	return requestGeneric[Message](b, "editMessageChecklist", options)
+}
+
+// EditMessageReplyMarkup edits reply markup of a message.
+//
+// https://core.telegram.org/bots/api#editmessagereplymarkup
+func (b *Bot) EditMessageReplyMarkup(
+	options OptionsEditMessageReplyMarkup,
+) (result APIResponseMessageOrBool) {
+	return b.requestMessageOrBool("editMessageReplyMarkup", options)
 }
 
 // DeleteMessage deletes a message.
@@ -2136,6 +2180,13 @@ func (b *Bot) AnswerPreCheckoutQuery(
 	}
 
 	return requestGeneric[bool](b, "answerPreCheckoutQuery", options)
+}
+
+// GetMyStarBalance fetches the current balance of Telegram Stars.
+//
+// https://core.telegram.org/bots/api#getmystarbalance
+func (b *Bot) GetMyStarBalance() (result APIResponse[StarAmount]) {
+	return requestGeneric[StarAmount](b, "getMyStarBalance", nil)
 }
 
 // GetStarTransactions gets star transactions.
@@ -2427,6 +2478,8 @@ func (b *Bot) UnhideGeneralForumTopic(chatID ChatID) (result APIResponse[bool]) 
 	return requestGeneric[bool](b, "unhideGeneralForumTopic", options)
 }
 
+// UnpinAllGeneralForumTopicMessages unpins all general forum topic messages.
+//
 // https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages
 func (b *Bot) UnpinAllGeneralForumTopicMessages(chatID ChatID) (result APIResponse[bool]) {
 	options := map[string]any{

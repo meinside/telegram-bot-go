@@ -329,7 +329,7 @@ loop:
 
 				if b.mediaGroupHandler != nil {
 					// group updates by media group id,
-					groups := groupUpdatesByMediaGroupId(*updates.Result)
+					groups := groupUpdatesByMediaGroupID(*updates.Result)
 
 					// handle updates by group id
 					for groupID, groupedUpdates := range groups {
@@ -372,17 +372,8 @@ loop:
 	b.verbose("stopped polling updates")
 }
 
-// DEPRECATED: renamed to `StartPollingUpdates`
-func (b *Bot) StartMonitoringUpdates(
-	updateOffset int64,
-	interval int,
-	updateHandler func(b *Bot, update Update, err error),
-) {
-	b.StartPollingUpdates(updateOffset, interval, updateHandler)
-}
-
 // group updates by their media group id
-func groupUpdatesByMediaGroupId(updates []Update) (groups map[string][]Update) {
+func groupUpdatesByMediaGroupID(updates []Update) (groups map[string][]Update) {
 	groups = map[string][]Update{}
 
 	var mediaGroupID string
@@ -528,11 +519,6 @@ func (b *Bot) StopPollingUpdates() {
 	b.verbose("stopping polling updates...")
 
 	b.quitLoop <- struct{}{}
-}
-
-// DEPRECATED: renamed to `StopPollingUpdates`
-func (b *Bot) StopMonitoringUpdates() {
-	b.StopPollingUpdates()
 }
 
 // Get webhook path generated with hash.
