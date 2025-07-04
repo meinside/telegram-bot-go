@@ -171,6 +171,7 @@ func TestMethods(t *testing.T) {
 					t.Errorf("failed to stop poll: %s", *stopped.Description)
 				}
 			}
+			// TODO: SendChecklist
 			// SendDice
 			if dice := client.SendDice(_chatID, OptionsSendDice{}); !dice.Ok {
 				t.Errorf("failed to send dice: %s", *dice.Description)
@@ -207,7 +208,7 @@ func TestMethods(t *testing.T) {
 			}
 			// SetMyShortDescription
 			if desc := client.SetMyShortDescription(OptionsSetMyShortDescription{}.
-				SetDescription("telegram-bot-go")); !desc.Ok {
+				SetShortDescription("telegram-bot-go")); !desc.Ok {
 				t.Errorf("failed to set my short description: %s", *desc.Description)
 			}
 			// GetMyShortDescription
@@ -225,6 +226,7 @@ func TestMethods(t *testing.T) {
 			// TODO: EditMessageReplyMarkup
 			// TODO: EditMessageLiveLocation
 			// TODO: StopMessageLiveLocation
+			// TODO: EditMessageChecklist
 
 			////////////////////////////////
 			// (business connection)
@@ -330,6 +332,10 @@ func TestMethods(t *testing.T) {
 			// TODO: CreateInvoiceLink
 			// TODO: AnswerShippingQuery
 			// TODO: AnswerPreCheckoutQuery
+			// GetMyStarBalance
+			if balance := client.GetMyStarBalance(); !balance.Ok {
+				t.Errorf("failed to get my star balance: %s", *balance.Description)
+			}
 			// TODO: GetStarTransactions
 			// TODO: RefundStarPayment
 			// TODO: EditUserStarSubscription
