@@ -180,7 +180,7 @@ func (b *Bot) ForwardMessage(
 func (b *Bot) ForwardMessages(
 	chatID, fromChatID ChatID,
 	messageIDs []int64,
-	options OptionsForwardMessage,
+	options OptionsForwardMessages,
 ) (result APIResponse[[]MessageID]) {
 	if options == nil {
 		options = map[string]any{}
@@ -1134,6 +1134,44 @@ func (b *Bot) StopPoll(
 	options["message_id"] = messageID
 
 	return requestGeneric[Poll](b, "stopPoll", options)
+}
+
+// ApproveSuggestedPost approves a suggested post.
+//
+// https://core.telegram.org/bots/api#approvesuggestedpost
+func (b *Bot) ApproveSuggestedPost(
+	chatID int64,
+	messageID int64,
+	options OptionsApproveSuggestedPost,
+) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["message_id"] = messageID
+
+	return requestGeneric[bool](b, "approveSuggestedPost", options)
+}
+
+// DeclineSuggestedPost declines a suggested post.
+//
+// https://core.telegram.org/bots/api#declinesuggestedpost
+func (b *Bot) DeclineSuggestedPost(
+	chatID int64,
+	messageID int64,
+	options OptionsDeclineSuggestedPost,
+) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["message_id"] = messageID
+
+	return requestGeneric[bool](b, "declineSuggestedPost", options)
 }
 
 // SendChecklist sends a checklist.
@@ -2585,7 +2623,7 @@ func (b *Bot) requestMultipartFormData(
 	for key, value := range params {
 		switch val := value.(type) {
 		case *os.File:
-			defer val.Close() // XXX - close the file
+			defer func() { _ = val.Close() }()
 
 			var part io.Writer
 			part, err = writer.CreateFormFile(key, val.Name())
@@ -2616,7 +2654,7 @@ func (b *Bot) requestMultipartFormData(
 				if inputFile.Filepath != nil {
 					var file *os.File
 					if file, err = os.Open(*inputFile.Filepath); err == nil {
-						defer file.Close()
+						defer func() { _ = file.Close() }()
 
 						var part io.Writer
 						part, err = writer.CreateFormFile(key, file.Name())
@@ -2676,7 +2714,7 @@ func (b *Bot) requestMultipartFormData(
 		resp, err = b.httpClient.Do(req)
 
 		if resp != nil { // XXX - in case of http redirect
-			defer resp.Body.Close()
+			defer func() { _ = resp.Body.Close() }()
 		}
 
 		if err == nil {
@@ -2728,7 +2766,7 @@ func (b *Bot) requestURLEncodedFormData(
 		resp, err = b.httpClient.Do(req)
 
 		if resp != nil { // XXX - in case of redirect
-			defer resp.Body.Close()
+			defer func() { _ = resp.Body.Close() }()
 		}
 
 		if err == nil {
@@ -2842,7 +2880,7 @@ func requestGeneric[T any](
 
 // Handle Webhook request.
 func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
-	defer req.Body.Close()
+	defer func() { _ = req.Body.Close() }()
 
 	b.verbose("received webhook request: %+v", req)
 
