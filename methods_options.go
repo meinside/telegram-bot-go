@@ -83,7 +83,7 @@ func (o OptionsGetUpdates) SetAllowedUpdates(allowedUpdates []AllowedUpdate) Opt
 
 // OptionsSendMessage struct for SendMessage().
 //
-// options include: `business_connection_id`, `message_thread_id`, `parse_mode`, `entities`, `link_preview_options`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `parse_mode`, `entities`, `link_preview_options`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendmessage
 type OptionsSendMessage MethodOptions
@@ -97,6 +97,12 @@ func (o OptionsSendMessage) SetBusinessConnectionID(businessConnectionID string)
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetMessageThreadID(messageThreadID int64) OptionsSendMessage {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendMessage {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -142,6 +148,12 @@ func (o OptionsSendMessage) SetMessageEffectID(messageEffectID string) OptionsSe
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendMessage {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetReplyParameters(replyParameters ReplyParameters) OptionsSendMessage {
 	o["reply_parameters"] = replyParameters
@@ -158,7 +170,7 @@ func (o OptionsSendMessage) SetReplyMarkup(replyMarkup any) OptionsSendMessage {
 
 // OptionsForwardMessage struct for ForwardMessage().
 //
-// options include: `message_thread_id`, `video_start_timestamp`, `disable_notification` and `protect_content`.
+// options include: `message_thread_id`, `direct_messages_topic_id`, `video_start_timestamp`, `disable_notification`, `protect_content`, and `suggested_post_parameters`.
 //
 // https://core.telegram.org/bots/api#forwardmessage
 type OptionsForwardMessage MethodOptions
@@ -166,6 +178,12 @@ type OptionsForwardMessage MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsForwardMessage.
 func (o OptionsForwardMessage) SetMessageThreadID(messageThreadID int64) OptionsForwardMessage {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsForwardMessage.
+func (o OptionsForwardMessage) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsForwardMessage {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -187,9 +205,46 @@ func (o OptionsForwardMessage) SetProtectContent(protect bool) OptionsForwardMes
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsForwardMessage.
+func (o OptionsForwardMessage) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsForwardMessage {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
+// OptionsForwardMessages struct for ForwardMessages().
+//
+// options include: `message_thread_id`, `direct_messages_topic_id`, `disable_notification` and `protect_content`.
+//
+// https://core.telegram.org/bots/api#forwardmessages
+type OptionsForwardMessages MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsForwardMessages.
+func (o OptionsForwardMessages) SetMessageThreadID(messageThreadID int64) OptionsForwardMessages {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsForwardMessages.
+func (o OptionsForwardMessages) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsForwardMessages {
+	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetDisableNotification sets the `disable_notification` value of OptionsForwardMessages.
+func (o OptionsForwardMessages) SetDisableNotification(disable bool) OptionsForwardMessages {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsForwardMessages.
+func (o OptionsForwardMessages) SetProtectContent(protect bool) OptionsForwardMessages {
+	o["protect_content"] = protect
+	return o
+}
+
 // OptionsCopyMessage struct for CopyMessage().
 //
-// options include: `message_thread_id`, `video_start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `reply_parameters`, and `reply_markup`
+// options include: `message_thread_id`, `direct_messages_topic_id`, `video_start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#copymessage
 type OptionsCopyMessage MethodOptions
@@ -197,6 +252,12 @@ type OptionsCopyMessage MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsCopyMessage.
 func (o OptionsCopyMessage) SetMessageThreadID(messageThreadID int64) OptionsCopyMessage {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsCopyMessage {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -248,6 +309,12 @@ func (o OptionsCopyMessage) SetAllowPaidBroadcast(allow bool) OptionsCopyMessage
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsCopyMessage {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsCopyMessage.
 func (o OptionsCopyMessage) SetReplyParameters(replyParameters ReplyParameters) OptionsCopyMessage {
 	o["reply_parameters"] = replyParameters
@@ -264,7 +331,7 @@ func (o OptionsCopyMessage) SetReplyMarkup(replyMarkup any) OptionsCopyMessage {
 
 // OptionsCopyMessages struct for CopyMessages().
 //
-// options include: `message_thread_id`, `disable_notification`, `protect_content`, and `remove_caption`
+// options include: `message_thread_id`, `direct_messages_topic_id`, `disable_notification`, `protect_content`, and `remove_caption`
 //
 // https://core.telegram.org/bots/api#copymessages
 type OptionsCopyMessages MethodOptions
@@ -272,6 +339,12 @@ type OptionsCopyMessages MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsCopyMessages.
 func (o OptionsCopyMessages) SetMessageThreadID(messageThreadID int64) OptionsCopyMessages {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsCopyMessages.
+func (o OptionsCopyMessages) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsCopyMessages {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -295,7 +368,7 @@ func (o OptionsCopyMessages) SetRemoveCaption(removeCaption bool) OptionsCopyMes
 
 // OptionsSendPhoto struct for SendPhoto().
 //
-// options include: `business_connection_id`, `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,  `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,  `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
@@ -309,6 +382,12 @@ func (o OptionsSendPhoto) SetBusinessConnectionID(businessConnectionID string) O
 // SetMessageThreadID sets the `message_thread_id`value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetMessageThreadID(messageThreadID int64) OptionsSendPhoto {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendPhoto {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -366,6 +445,12 @@ func (o OptionsSendPhoto) SetMessageEffectID(messageEffectID string) OptionsSend
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendPhoto {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetReplyParameters(replyParameters ReplyParameters) OptionsSendPhoto {
 	o["reply_parameters"] = replyParameters
@@ -382,7 +467,7 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 
 // OptionsSendAudio struct for SendAudio().
 //
-// options include: `business_connection_id`, `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendaudio
 type OptionsSendAudio MethodOptions
@@ -396,6 +481,12 @@ func (o OptionsSendAudio) SetBusinessConnectionID(businessConnectionID string) O
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetMessageThreadID(messageThreadID int64) OptionsSendAudio {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendAudio {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -467,6 +558,12 @@ func (o OptionsSendAudio) SetMessageEffectID(messageEffectID string) OptionsSend
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendAudio {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetReplyParameters(replyParameters ReplyParameters) OptionsSendAudio {
 	o["reply_parameters"] = replyParameters
@@ -483,7 +580,7 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup any) OptionsSendAudio {
 
 // OptionsSendDocument struct for SendDocument().
 //
-// options include: `business_connection_id`, `message_thread_id`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddocument
 type OptionsSendDocument MethodOptions
@@ -497,6 +594,12 @@ func (o OptionsSendDocument) SetBusinessConnectionID(businessConnectionID string
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetMessageThreadID(messageThreadID int64) OptionsSendDocument {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendDocument {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -556,6 +659,12 @@ func (o OptionsSendDocument) SetMessageEffectID(messageEffectID string) OptionsS
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendDocument {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetReplyParameters(replyParameters ReplyParameters) OptionsSendDocument {
 	o["reply_parameters"] = replyParameters
@@ -572,7 +681,7 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup any) OptionsSendDocument
 
 // OptionsSendSticker struct for SendSticker().
 //
-// options include: `business_connection_id`, `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `emoji`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendsticker
 type OptionsSendSticker MethodOptions
@@ -586,6 +695,12 @@ func (o OptionsSendSticker) SetBusinessConnectionID(businessConnectionID string)
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetMessageThreadID(messageThreadID int64) OptionsSendSticker {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendSticker {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -616,6 +731,12 @@ func (o OptionsSendSticker) SetAllowPaidBroadcast(allow bool) OptionsSendSticker
 // SetMessageEffectID sets the `message_effect_id` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetMessageEffectID(messageEffectID string) OptionsSendSticker {
 	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendSticker {
+	o["suggested_post_parameters"] = suggestedPostParameters
 	return o
 }
 
@@ -777,7 +898,7 @@ func (o OptionsVerifyChat) SetCustomDescription(customDescription string) Option
 
 // OptionsSendVideo struct for SendVideo().
 //
-// options include: `business_connection_id`, `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `cover`, `start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `duration`, `width`, `height`, `thumbnail`, `cover`, `start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `supports_streaming`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
@@ -791,6 +912,12 @@ func (o OptionsSendVideo) SetBusinessConnectionID(businessConnectionID string) O
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetMessageThreadID(messageThreadID int64) OptionsSendVideo {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVideo {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -894,6 +1021,12 @@ func (o OptionsSendVideo) SetMessageEffectID(messageEffectID string) OptionsSend
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendVideo {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetReplyParameters(replyParameters ReplyParameters) OptionsSendVideo {
 	o["reply_parameters"] = replyParameters
@@ -910,7 +1043,7 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 
 // OptionsSendAnimation struct for SendAnimation().
 //
-// options include: `business_connection_id`, `message_thread_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
@@ -924,6 +1057,12 @@ func (o OptionsSendAnimation) SetBusinessConnectionID(businessConnectionID strin
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetMessageThreadID(messageThreadID int64) OptionsSendAnimation {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendAnimation {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1007,6 +1146,12 @@ func (o OptionsSendAnimation) SetMessageEffectID(messageEffectID string) Options
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendAnimation {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetReplyParameters(replyParameters ReplyParameters) OptionsSendAnimation {
 	o["reply_parameters"] = replyParameters
@@ -1023,7 +1168,7 @@ func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup any) OptionsSendAnimati
 
 // OptionsSendVoice struct for SendVoice().
 //
-// options include: `business_connection_id`, `message_thread_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvoice
 type OptionsSendVoice MethodOptions
@@ -1037,6 +1182,12 @@ func (o OptionsSendVoice) SetBusinessConnectionID(businessConnectionID string) O
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetMessageThreadID(messageThreadID int64) OptionsSendVoice {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVoice {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1088,6 +1239,12 @@ func (o OptionsSendVoice) SetMessageEffectID(messageEffectID string) OptionsSend
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendVoice {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetReplyParameters(replyParameters ReplyParameters) OptionsSendVoice {
 	o["reply_parameters"] = replyParameters
@@ -1104,7 +1261,7 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup any) OptionsSendVoice {
 
 // OptionsSendVideoNote struct for SendVideoNote().
 //
-// options include: `business_connection_id`, `message_thread_id,` `duration`, `length`, `thumbnail`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `duration`, `length`, `thumbnail`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
 // https://core.telegram.org/bots/api#sendvideonote
@@ -1119,6 +1276,12 @@ func (o OptionsSendVideoNote) SetBusinessConnectionID(businessConnectionID strin
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVideoNote.
 func (o OptionsSendVideoNote) SetMessageThreadID(messageThreadID int64) OptionsSendVideoNote {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVideoNote {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1166,6 +1329,12 @@ func (o OptionsSendVideoNote) SetMessageEffectID(messageEffectID string) Options
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendVideoNote {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendVideoNote.
 func (o OptionsSendVideoNote) SetReplyParameters(replyParameters ReplyParameters) OptionsSendVideoNote {
 	o["reply_parameters"] = replyParameters
@@ -1182,7 +1351,7 @@ func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNo
 
 // OptionsSendPaidMedia struct for SendPaideMedia().
 //
-// options include: `business_connection_id`, `payload`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `payload`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpaidmedia
 type OptionsSendPaidMedia MethodOptions
@@ -1190,6 +1359,18 @@ type OptionsSendPaidMedia MethodOptions
 // SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendPaidMedia.
 func (o OptionsSendPaidMedia) SetBusinessConnectionID(businessConnectionID string) OptionsSendPaidMedia {
 	o["business_connection_id"] = businessConnectionID
+	return o
+}
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetMessageThreadID(messageThreadID int64) OptionsSendPaidMedia {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendPaidMedia {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1241,6 +1422,12 @@ func (o OptionsSendPaidMedia) SetAllowPaidBroadcast(allow bool) OptionsSendPaidM
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendPaidMedia.
+func (o OptionsSendPaidMedia) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendPaidMedia {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendPaidMedia.
 func (o OptionsSendPaidMedia) SetReplyParameters(replyParameters ReplyParameters) OptionsSendPaidMedia {
 	o["reply_parameters"] = replyParameters
@@ -1255,7 +1442,7 @@ func (o OptionsSendPaidMedia) SetReplyMarkup(replyMarkup any) OptionsSendPaidMed
 
 // OptionsSendMediaGroup struct for SendMediaGroup().
 //
-// options include: `business_connection_id`, `message_thread_id`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, and `reply_parameters`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, and `reply_parameters`.
 //
 // https://core.telegram.org/bots/api#sendmediagroup
 type OptionsSendMediaGroup MethodOptions
@@ -1269,6 +1456,12 @@ func (o OptionsSendMediaGroup) SetBusinessConnectionID(businessConnectionID stri
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendMediaGroup.
 func (o OptionsSendMediaGroup) SetMessageThreadID(messageThreadID int64) OptionsSendMediaGroup {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendMediaGroup.
+func (o OptionsSendMediaGroup) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendMediaGroup {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1304,7 +1497,7 @@ func (o OptionsSendMediaGroup) SetReplyParameters(replyParameters ReplyParameter
 
 // OptionsSendLocation struct for SendLocation()
 //
-// options include: `business_connection_id`, `message_thread_id,` `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendlocation
 type OptionsSendLocation MethodOptions
@@ -1318,6 +1511,12 @@ func (o OptionsSendLocation) SetBusinessConnectionID(businessConnectionID string
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetMessageThreadID(messageThreadID int64) OptionsSendLocation {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendLocation {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1369,6 +1568,12 @@ func (o OptionsSendLocation) SetMessageEffectID(messageEffectID string) OptionsS
 	return o
 }
 
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendLocation {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
 // SetReplyParameters sets the `reply_parameters` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetReplyParameters(replyParameters ReplyParameters) OptionsSendLocation {
 	o["reply_parameters"] = replyParameters
@@ -1385,7 +1590,7 @@ func (o OptionsSendLocation) SetReplyMarkup(replyMarkup any) OptionsSendLocation
 
 // OptionsSendVenue struct for SendVenue().
 //
-// options include: `business_connection_id`, `message_thread_id`, `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvenue
 type OptionsSendVenue MethodOptions
@@ -1399,6 +1604,12 @@ func (o OptionsSendVenue) SetBusinessConnectionID(businessConnectionID string) O
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetMessageThreadID(messageThreadID int64) OptionsSendVenue {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVenue {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1447,6 +1658,12 @@ func (o OptionsSendVenue) SetAllowPaidBroadcast(allow bool) OptionsSendVenue {
 // SetMessageEffectID sets the `message_effect_id` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetMessageEffectID(messageEffectID string) OptionsSendVenue {
 	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendVenue {
+	o["suggested_post_parameters"] = suggestedPostParameters
 	return o
 }
 
@@ -1612,6 +1829,32 @@ func (o OptionsStopPoll) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) Option
 	return o
 }
 
+// OptionsApproveSuggestedPost struct for ApproveSuggestedPost().
+//
+// options include: `send_date`.
+//
+// https://core.telegram.org/bots/api#approvesuggestedpost
+type OptionsApproveSuggestedPost MethodOptions
+
+// SetSendDate sets the `send_date` value of OptionsApproveSuggestedPost.
+func (o OptionsApproveSuggestedPost) SetSendDate(sendDate int) OptionsApproveSuggestedPost {
+	o["send_date"] = sendDate
+	return o
+}
+
+// OptionsDeclineSuggestedPost struct for DeclineSuggestedPost().
+//
+// options include: `send_date`.
+//
+// https://core.telegram.org/bots/api#declinesuggestedpost
+type OptionsDeclineSuggestedPost MethodOptions
+
+// SetSendDate sets the `send_date` value of OptionsApproveSuggestedPost.
+func (o OptionsDeclineSuggestedPost) SetSendDate(sendDate int) OptionsDeclineSuggestedPost {
+	o["send_date"] = sendDate
+	return o
+}
+
 // OptionsSendChecklist struct for SendChecklist().
 //
 // options include: `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
@@ -1651,7 +1894,7 @@ func (o OptionsSendChecklist) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) O
 
 // OptionsSendDice struct for SendDice().
 //
-// options include: `business_connection_id`, `message_thread_id`, `emoji`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `emoji`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddice
 type OptionsSendDice MethodOptions
@@ -1665,6 +1908,12 @@ func (o OptionsSendDice) SetBusinessConnectionID(businessConnectionID string) Op
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendDice.
 func (o OptionsSendDice) SetMessageThreadID(messageThreadID int64) OptionsSendDice {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendDice.
+func (o OptionsSendDice) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendDice {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1697,6 +1946,12 @@ func (o OptionsSendDice) SetAllowPaidBroadcast(allow bool) OptionsSendDice {
 // SetMessageEffectID sets the `message_effect_id` value of OptionsSendDice.
 func (o OptionsSendDice) SetMessageEffectID(messageEffectID string) OptionsSendDice {
 	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendDice.
+func (o OptionsSendDice) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendDice {
+	o["suggested_post_parameters"] = suggestedPostParameters
 	return o
 }
 
@@ -1754,7 +2009,7 @@ func (o OptionsSetMessageReaction) SetIsBig(isBig bool) OptionsSetMessageReactio
 
 // OptionsSendContact struct for SendContact().
 //
-// options include: `business_connection_id`, `message_thread_id`, `last_name`, `vcard`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `last_name`, `vcard`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendcontact
 type OptionsSendContact MethodOptions
@@ -1768,6 +2023,12 @@ func (o OptionsSendContact) SetBusinessConnectionID(businessConnectionID string)
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendContact.
 func (o OptionsSendContact) SetMessageThreadID(messageThreadID int64) OptionsSendContact {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendContact.
+func (o OptionsSendContact) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendContact {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -1804,6 +2065,12 @@ func (o OptionsSendContact) SetAllowPaidBroadcast(allow bool) OptionsSendContact
 // SetMessageEffectID sets the `message_effect_id` value of OptionsSendContact.
 func (o OptionsSendContact) SetMessageEffectID(messageEffectID string) OptionsSendContact {
 	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendContact.
+func (o OptionsSendContact) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendContact {
+	o["suggested_post_parameters"] = suggestedPostParameters
 	return o
 }
 
@@ -1897,7 +2164,7 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `is_anonymous`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_restrict_members`, `can_promote_members`, `can_change_info`, `can_invite_users`, `can_pin_messages`, and `can_manage_topics`.
+// options include: `is_anonymous`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_restrict_members`, `can_promote_members`, `can_change_info`, `can_invite_users`, `can_pin_messages`, `can_manage_topics`, and `can_manage_direct_messages`.
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -1989,6 +2256,12 @@ func (o OptionsPromoteChatMember) SetCanPromoteMembers(can bool) OptionsPromoteC
 // SetCanManageTopics sets the `can_manage_topics` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanManageTopics(can bool) OptionsPromoteChatMember {
 	o["can_manage_topics"] = can
+	return o
+}
+
+// SetCanManageDirectMessages sets the `can_manage_direct_messages` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageDirectMessages(can bool) OptionsPromoteChatMember {
+	o["can_manage_direct_messages"] = can
 	return o
 }
 
@@ -2691,7 +2964,7 @@ func (o OptionsAnswerInlineQuery) SetButton(button InlineQueryResultsButton) Opt
 
 // OptionsSendInvoice struct for SendInvoice().
 //
-// options include: `message_thread_id`, `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `message_thread_id`, `direct_messages_topic_id`, `max_tip_amount`, `suggested_tip_amounts`, `start_parameter`, `provider_data`, `photo_url`, `photo_size`, `photo_width`, `photo_height`, `need_name`, `need_phone_number`, `need_email`, `need_shipping_address`, `send_phone_number_to_provider`, `send_email_to_provider`, `is_flexible`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendinvoice
 type OptionsSendInvoice MethodOptions
@@ -2699,6 +2972,12 @@ type OptionsSendInvoice MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendInvoice.
 func (o OptionsSendInvoice) SetMessageThreadID(messageThreadID int64) OptionsSendInvoice {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendInvoice {
+	o["direct_messages_topic_id"] = directMessagesTopicID
 	return o
 }
 
@@ -2813,6 +3092,12 @@ func (o OptionsSendInvoice) SetAllowPaidBroadcast(allow bool) OptionsSendInvoice
 // SetMessageEffectID sets the `message_effect_id` value of OptionsSendInvoice.
 func (o OptionsSendInvoice) SetMessageEffectID(messageEffectID string) OptionsSendInvoice {
 	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendInvoice.
+func (o OptionsSendInvoice) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendInvoice {
+	o["suggested_post_parameters"] = suggestedPostParameters
 	return o
 }
 

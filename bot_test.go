@@ -171,6 +171,8 @@ func TestMethods(t *testing.T) {
 					t.Errorf("failed to stop poll: %s", *stopped.Description)
 				}
 			}
+			// TODO: ApproveSuggestedPost
+			// TODO: DeclineSuggestedPost
 			// TODO: SendChecklist
 			// SendDice
 			if dice := client.SendDice(_chatID, OptionsSendDice{}); !dice.Ok {
