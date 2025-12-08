@@ -5,6 +5,7 @@
 package telegrambot
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -13,6 +14,32 @@ import (
 	"testing"
 	"time"
 )
+
+// test timeouts and their handling
+func TestTimeout(t *testing.T) {
+	_token := os.Getenv("TOKEN")
+	_verbose := os.Getenv("VERBOSE")
+
+	client := NewClient(_token)
+	client.Verbose = _verbose == "true"
+
+	if len(_token) <= 0 {
+		t.Errorf("environment variable `TOKEN` is needed")
+	}
+
+	slog.Info("testing timeouts...")
+
+	ctx, cancel := context.WithTimeout(context.TODO(), 1*time.Nanosecond)
+	defer cancel()
+
+	// intentional timeout
+	if me := client.GetMe(ctx); !me.Ok {
+		var e ErrContextTimeout
+		if !errors.As(me.Error, &e) {
+			t.Errorf("expected `ErrContextTimeout` but got: %s", me.Error)
+		}
+	}
+}
 
 // test polling updates
 func TestPollingUpdates(t *testing.T) {
@@ -28,7 +55,7 @@ func TestPollingUpdates(t *testing.T) {
 
 	slog.Info("testing polling updates...")
 
-	if deleted := client.DeleteWebhook(true); !deleted.Ok {
+	if deleted := client.DeleteWebhook(context.TODO(), true); !deleted.Ok {
 		t.Errorf("failed to delete webhook before testing polling updates: %s", *deleted.Description)
 	} else {
 		go func() {
@@ -67,23 +94,31 @@ func TestMethods(t *testing.T) {
 	// (bot info)
 	//
 	// GetMe
-	if me := client.GetMe(); !me.Ok {
+	if me := client.GetMe(context.TODO()); !me.Ok {
 		t.Errorf("failed to get me: %s", *me.Description)
 	} else {
 		////////////////////////////////
 		// (webhook)
 		//
 		// SetWebhook
-		if webhook := client.SetWebhook("testdomain.com", 8443, OptionsSetWebhook{}); !webhook.Ok {
+		if webhook := client.SetWebhook(
+			context.TODO(),
+			"testdomain.com",
+			8443,
+			OptionsSetWebhook{},
+		); !webhook.Ok {
 			t.Errorf("failed to set webhook: %s", *webhook.Description)
 		} else {
 			// GetWebhookInfo
-			if webhook := client.GetWebhookInfo(); !webhook.Ok {
+			if webhook := client.GetWebhookInfo(context.TODO()); !webhook.Ok {
 				t.Errorf("failed to get webhook info: %s", *webhook.Description)
 			}
 
 			// DeleteWebhook
-			if deleted := client.DeleteWebhook(false); !deleted.Ok {
+			if deleted := client.DeleteWebhook(
+				context.TODO(),
+				false,
+			); !deleted.Ok {
 				t.Errorf("failed to delete webhook: %s", *webhook.Description)
 			}
 
@@ -91,53 +126,97 @@ func TestMethods(t *testing.T) {
 			// (general methods)
 			//
 			// GetUpdates
-			if updates := client.GetUpdates(OptionsGetUpdates{}); !updates.Ok {
+			if updates := client.GetUpdates(
+				context.TODO(),
+				OptionsGetUpdates{},
+			); !updates.Ok {
 				t.Errorf("failed to get updates: %s", *updates.Description)
 			}
 			// TODO: LogOut
 			// TODO: Close
 			// SendMessage
-			if sent := client.SendMessage(_chatID, "test message", OptionsSendMessage{}); !sent.Ok {
+			if sent := client.SendMessage(
+				context.TODO(),
+				_chatID,
+				"test message",
+				OptionsSendMessage{},
+			); !sent.Ok {
 				t.Errorf("failed to send message: %s", *sent.Description)
 			} else {
 				// EditMessageText
-				if edited := client.EditMessageText("edited message", OptionsEditMessageText{}.
-					SetIDs(_chatID, sent.Result.MessageID)); !edited.Ok {
+				if edited := client.EditMessageText(
+					context.TODO(),
+					"edited message",
+					OptionsEditMessageText{}.
+						SetIDs(_chatID, sent.Result.MessageID),
+				); !edited.Ok {
 					t.Errorf("failed to edit message text: %s", *edited.Description)
 				}
 				// CopyMessage
-				if copied := client.CopyMessage(_chatID, _chatID, sent.Result.MessageID, OptionsCopyMessage{}); !copied.Ok {
+				if copied := client.CopyMessage(
+					context.TODO(),
+					_chatID,
+					_chatID,
+					sent.Result.MessageID,
+					OptionsCopyMessage{},
+				); !copied.Ok {
 					t.Errorf("failed to copy message: %s", *copied.Description)
 				}
 				// ForwardMessage
-				if forwarded := client.ForwardMessage(_chatID, _chatID, sent.Result.MessageID, OptionsForwardMessage{}); !forwarded.Ok {
+				if forwarded := client.ForwardMessage(
+					context.TODO(),
+					_chatID,
+					_chatID,
+					sent.Result.MessageID,
+					OptionsForwardMessage{},
+				); !forwarded.Ok {
 					t.Errorf("failed to forward message: %s", *forwarded.Description)
 				}
 			}
 			// TODO: CopyMessages
 			// TODO: ForwardMessages
 			// SendPhoto
-			if photo := client.SendPhoto(_chatID, NewInputFileFromFilepath("./samples/_files/gopher.png"), OptionsSendPhoto{}); !photo.Ok {
+			if photo := client.SendPhoto(
+				context.TODO(),
+				_chatID,
+				NewInputFileFromFilepath("./samples/_files/gopher.png"),
+				OptionsSendPhoto{},
+			); !photo.Ok {
 				t.Errorf("failed to send photo: %s", *photo.Description)
 			} else {
 				// EditMessageCaption
-				if caption := client.EditMessageCaption(OptionsEditMessageCaption{}.
-					SetIDs(_chatID, photo.Result.MessageID).
-					SetCaption("edited caption")); !caption.Ok {
+				if caption := client.EditMessageCaption(
+					context.TODO(),
+					OptionsEditMessageCaption{}.
+						SetIDs(_chatID, photo.Result.MessageID).
+						SetCaption("edited caption"),
+				); !caption.Ok {
 					t.Errorf("failed to edit message caption: %s", *caption.Description)
 				}
 			}
 			// TODO: SendAudio
 			// TODO: SendDocument
-			if doc := client.SendDocument(_chatID, NewInputFileFromFilepath("./samples/_files/gopher.png"), OptionsSendDocument{}); !doc.Ok {
+			if doc := client.SendDocument(
+				context.TODO(),
+				_chatID,
+				NewInputFileFromFilepath("./samples/_files/gopher.png"),
+				OptionsSendDocument{},
+			); !doc.Ok {
 				t.Errorf("failed to send document: %s", *doc.Description)
 			} else {
 				// GetFile
-				if file := client.GetFile(doc.Result.Document.FileID); !file.Ok {
+				if file := client.GetFile(
+					context.TODO(),
+					doc.Result.Document.FileID,
+				); !file.Ok {
 					t.Errorf("failed to get file: %s", *file.Description)
 				}
 				// DeleteMessage
-				if deleted := client.DeleteMessage(_chatID, doc.Result.MessageID); !deleted.Ok {
+				if deleted := client.DeleteMessage(
+					context.TODO(),
+					_chatID,
+					doc.Result.MessageID,
+				); !deleted.Ok {
 					t.Errorf("failed to delete message: %s", *deleted.Description)
 				}
 			}
@@ -150,24 +229,47 @@ func TestMethods(t *testing.T) {
 			// TODO: SendPaidMedia
 			// TODO: SendMediaGroup
 			// SendLocation
-			if location := client.SendLocation(_chatID, 37.5665, 126.9780, OptionsSendLocation{}); !location.Ok {
+			if location := client.SendLocation(
+				context.TODO(),
+				_chatID,
+				37.5665,
+				126.9780,
+				OptionsSendLocation{},
+			); !location.Ok {
 				t.Errorf("failed to send location: %s", *location.Description)
 			}
 			// TODO: SendVenue
 			// SendContact
-			if contact := client.SendContact(_chatID, "911", "Nine-One-One", OptionsSendContact{}); !contact.Ok {
+			if contact := client.SendContact(
+				context.TODO(),
+				_chatID,
+				"911",
+				"Nine-One-One",
+				OptionsSendContact{},
+			); !contact.Ok {
 				t.Errorf("failed to send contact: %s", *contact.Description)
 			}
 			// SendPoll
-			if poll := client.SendPoll(_chatID, "The earth is...?", []InputPollOption{
-				{Text: "flat"},
-				{Text: "round"},
-				{Text: "nothing"},
-			}, OptionsSendPoll{}); !poll.Ok {
+			if poll := client.SendPoll(
+				context.TODO(),
+				_chatID,
+				"The earth is...?",
+				[]InputPollOption{
+					{Text: "flat"},
+					{Text: "round"},
+					{Text: "nothing"},
+				},
+				OptionsSendPoll{},
+			); !poll.Ok {
 				t.Errorf("failed to send poll: %s", *poll.Description)
 			} else {
 				// StopPoll
-				if stopped := client.StopPoll(_chatID, poll.Result.MessageID, OptionsStopPoll{}); !stopped.Ok {
+				if stopped := client.StopPoll(
+					context.TODO(),
+					_chatID,
+					poll.Result.MessageID,
+					OptionsStopPoll{},
+				); !stopped.Ok {
 					t.Errorf("failed to stop poll: %s", *stopped.Description)
 				}
 			}
@@ -175,11 +277,20 @@ func TestMethods(t *testing.T) {
 			// TODO: DeclineSuggestedPost
 			// TODO: SendChecklist
 			// SendDice
-			if dice := client.SendDice(_chatID, OptionsSendDice{}); !dice.Ok {
+			if dice := client.SendDice(
+				context.TODO(),
+				_chatID,
+				OptionsSendDice{},
+			); !dice.Ok {
 				t.Errorf("failed to send dice: %s", *dice.Description)
 			}
 			// SendChatAction
-			if action := client.SendChatAction(_chatID, ChatActionTyping, OptionsSendChatAction{}); !action.Ok {
+			if action := client.SendChatAction(
+				context.TODO(),
+				_chatID,
+				ChatActionTyping,
+				OptionsSendChatAction{},
+			); !action.Ok {
 				t.Errorf("failed to send chat action: %s", *action.Description)
 			}
 			// TODO: GetUserProfilePhotos
@@ -187,34 +298,53 @@ func TestMethods(t *testing.T) {
 			// TODO: DeclineChatJoinRequest
 			// TODO: GetMyCommands
 			// GetMyName
-			if name := client.GetMyName(OptionsGetMyName{}); !name.Ok {
+			if name := client.GetMyName(
+				context.TODO(),
+				OptionsGetMyName{},
+			); !name.Ok {
 				t.Errorf("failed to get my name: %s", *name.Description)
 			} else {
 				newName := "telegram api test bot"
 
 				if name.Result.Name != newName {
 					// SetMyName
-					if name := client.SetMyName(newName, OptionsSetMyName{}); !name.Ok {
+					if name := client.SetMyName(
+						context.TODO(),
+						newName,
+						OptionsSetMyName{},
+					); !name.Ok {
 						t.Errorf("failed to set my name: %s", *name.Description)
 					}
 				}
 			}
 			// SetMyDescription
-			if desc := client.SetMyDescription(OptionsSetMyDescription{}.
-				SetDescription("A bot for testing library: telegram-bot-go")); !desc.Ok {
+			if desc := client.SetMyDescription(
+				context.TODO(),
+				OptionsSetMyDescription{}.
+					SetDescription("A bot for testing library: telegram-bot-go"),
+			); !desc.Ok {
 				t.Errorf("failed to set my description: %s", *desc.Description)
 			}
 			// GetMyDescription
-			if desc := client.GetMyDescription(OptionsGetMyDescription{}); !desc.Ok {
+			if desc := client.GetMyDescription(
+				context.TODO(),
+				OptionsGetMyDescription{},
+			); !desc.Ok {
 				t.Errorf("failed to get my description: %s", *desc.Description)
 			}
 			// SetMyShortDescription
-			if desc := client.SetMyShortDescription(OptionsSetMyShortDescription{}.
-				SetShortDescription("telegram-bot-go")); !desc.Ok {
+			if desc := client.SetMyShortDescription(
+				context.TODO(),
+				OptionsSetMyShortDescription{}.
+					SetShortDescription("telegram-bot-go"),
+			); !desc.Ok {
 				t.Errorf("failed to set my short description: %s", *desc.Description)
 			}
 			// GetMyShortDescription
-			if desc := client.GetMyShortDescription(OptionsGetMyShortDescription{}); !desc.Ok {
+			if desc := client.GetMyShortDescription(
+				context.TODO(),
+				OptionsGetMyShortDescription{},
+			); !desc.Ok {
 				t.Errorf("failed to get my short description: %s", *desc.Description)
 			}
 			// TODO: GetUserChatBoosts
@@ -288,22 +418,38 @@ func TestMethods(t *testing.T) {
 			// (chat administration)
 			//
 			// GetChat
-			if chat := client.GetChat(_chatID); !chat.Ok {
+			if chat := client.GetChat(
+				context.TODO(),
+				_chatID,
+			); !chat.Ok {
 				t.Errorf("failed to get chat: %s", *chat.Description)
 			}
 			// GetChatAdministrators
-			if admins := client.GetChatAdministrators(_chatID); !admins.Ok {
+			if admins := client.GetChatAdministrators(
+				context.TODO(),
+				_chatID,
+			); !admins.Ok {
 				t.Errorf("failed to get chat administrators: %s", *admins.Description)
 			}
 			// GetChatMemberCount
-			if count := client.GetChatMemberCount(_chatID); !count.Ok {
+			if count := client.GetChatMemberCount(
+				context.TODO(),
+				_chatID,
+			); !count.Ok {
 				t.Errorf("failed to get chat member count: %s", *count.Description)
 			}
 			// TODO: GetChatMember
 			// TODO: CreateChat
 			// TODO: SetChatTitle
 			// SetChatDescription
-			if desc := client.SetChatDescription(_chatID, fmt.Sprintf("[telegram-bot-go] chat_id: %s (last update: %d)", _chatID, time.Now().Unix())); !desc.Ok {
+			if desc := client.SetChatDescription(
+				context.TODO(),
+				_chatID,
+				fmt.Sprintf("[telegram-bot-go] chat_id: %s (last update: %d)",
+					_chatID,
+					time.Now().Unix(),
+				),
+			); !desc.Ok {
 				t.Errorf("failed to set chat description: %s", *desc.Description)
 			}
 			// TODO: BanChatMember
@@ -335,7 +481,7 @@ func TestMethods(t *testing.T) {
 			// TODO: AnswerShippingQuery
 			// TODO: AnswerPreCheckoutQuery
 			// GetMyStarBalance
-			if balance := client.GetMyStarBalance(); !balance.Ok {
+			if balance := client.GetMyStarBalance(context.TODO()); !balance.Ok {
 				t.Errorf("failed to get my star balance: %s", *balance.Description)
 			}
 			// TODO: GetStarTransactions
@@ -414,7 +560,12 @@ func TestErrors(t *testing.T) {
 	// ErrUnauthorized
 	unauthClient := NewClient("000000000:UNAUTHORIZEDabcdefghijklmnopqrs-0_Z")
 	unauthClient.Verbose = _verbose == "true"
-	if res := unauthClient.SendMessage(_chatID, "unauthorized", OptionsSendMessage{}); !res.Ok {
+	if res := unauthClient.SendMessage(
+		context.TODO(),
+		_chatID,
+		"unauthorized",
+		OptionsSendMessage{},
+	); !res.Ok {
 		var e ErrUnauthorized
 		if !errors.As(res.Error, &e) {
 			t.Errorf("should have failed with ErrUnauthorized, but got: %s", res.Error)
@@ -424,7 +575,12 @@ func TestErrors(t *testing.T) {
 	}
 
 	// ErrChatNotFound
-	if res := client.SendMessage(0, "no-such-chat", OptionsSendMessage{}); !res.Ok {
+	if res := client.SendMessage(
+		context.TODO(),
+		0,
+		"no-such-chat",
+		OptionsSendMessage{},
+	); !res.Ok {
 		var e ErrChatNotFound
 		if !errors.As(res.Error, &e) {
 			t.Errorf("should have failed with ErrChatNotFound, but got: %s", res.Error)
@@ -456,7 +612,12 @@ func TestErrors(t *testing.T) {
 	// TODO: ErrWrongParameterAction
 
 	// ErrMessageEmpty
-	if res := client.SendMessage(_chatID, "", OptionsSendMessage{}); !res.Ok {
+	if res := client.SendMessage(
+		context.TODO(),
+		_chatID,
+		"",
+		OptionsSendMessage{},
+	); !res.Ok {
 		var e ErrMessageEmpty
 		if !errors.As(res.Error, &e) {
 			t.Errorf("should have failed with ErrMessageEmpty but got: %s", res.Error)
@@ -467,7 +628,12 @@ func TestErrors(t *testing.T) {
 
 	// ErrMessageTooLong
 	longLongMessage := strings.Repeat("a", 4097)
-	if res := client.SendMessage(_chatID, longLongMessage, OptionsSendMessage{}); !res.Ok {
+	if res := client.SendMessage(
+		context.TODO(),
+		_chatID,
+		longLongMessage,
+		OptionsSendMessage{},
+	); !res.Ok {
 		var e ErrMessageTooLong
 		if !errors.As(res.Error, &e) {
 			t.Errorf("should have failed with ErrMessageTooLong but got: %s", res.Error)

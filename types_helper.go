@@ -127,6 +127,15 @@ func strToErr(errStr string) error {
 
 	// TODO: handle more errors here
 
+	// context timeout
+	if strings.Contains(errStr, "context deadline exceeded") {
+		return ErrContextTimeout{
+			baseError: baseError{
+				Message: errStr,
+			},
+		}
+	}
+
 	// fallback
 	return ErrUnclassified{
 		baseError: baseError{

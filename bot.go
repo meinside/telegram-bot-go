@@ -6,6 +6,7 @@
 package telegrambot
 
 import (
+	"context"
 	"crypto/md5"
 	"fmt"
 	"log"
@@ -28,6 +29,8 @@ const (
 
 const (
 	redactedString = "<REDACTED>" // confidential info will be displayed as this
+
+	pollMessagesTimeoutSeconds = 10
 )
 
 // loggers
@@ -319,7 +322,10 @@ loop:
 		case <-b.quitLoop:
 			break loop
 		default:
-			if updates = b.GetUpdates(options); updates.Ok {
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(pollMessagesTimeoutSeconds)*time.Second)
+			defer cancel()
+
+			if updates = b.GetUpdates(ctx, options); updates.Ok {
 				// update offset (max + 1)
 				for _, update := range *updates.Result {
 					if options["offset"].(int64) <= update.UpdateID {
