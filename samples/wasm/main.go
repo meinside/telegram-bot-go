@@ -12,6 +12,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"syscall/js"
@@ -22,15 +23,19 @@ import (
 )
 
 const (
-	pollingIntervalSeconds = 1
-	typingDelaySeconds     = 1
+	pollingIntervalSeconds         = 1
+	typingDelaySeconds             = 1
+	requestTimeoutSeconds          = 30
+	ignorableRequestTimeoutSeconds = 5
 
-	//verbose = false
+	// verbose = false
 	verbose = true
 )
 
-var _wasmHelper *wh.WasmHelper
-var _content js.Value
+var (
+	_wasmHelper *wh.WasmHelper
+	_content    js.Value
+)
 
 func init() {
 	_wasmHelper = wh.New()
@@ -44,12 +49,14 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 	if err == nil {
 		if update.HasMessage() {
 			// 'is typing...'
-			b.SendChatAction(update.Message.Chat.ID, bot.ChatActionTyping, nil)
+			ctxAction, cancelAction := context.WithTimeout(context.TODO(), ignorableRequestTimeoutSeconds*time.Second)
+			defer cancelAction()
+			_ = b.SendChatAction(ctxAction, update.Message.Chat.ID, bot.ChatActionTyping, nil)
 
 			// sleep for a while,
 			time.Sleep(typingDelaySeconds * time.Second)
 
-			var sender string = *update.Message.From.Username
+			sender := *update.Message.From.Username
 			var message, fileURL string
 
 			if update.Message.HasContact() {
@@ -74,7 +81,10 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			} else if update.Message.HasPhoto() {
 				photo := update.Message.LargestPhoto()
 
-				if fileRes := b.GetFile(photo.FileID); fileRes.Ok {
+				// get file info
+				ctxFileInfo, cancelFileInfo := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+				defer cancelFileInfo()
+				if fileRes := b.GetFile(ctxFileInfo, photo.FileID); fileRes.Ok {
 					fileURL = b.GetFileURL(*fileRes.Result)
 				}
 
@@ -94,7 +104,10 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			} else if update.Message.HasAnimation() {
 				animation := update.Message.Animation
 
-				if fileRes := b.GetFile(animation.FileID); fileRes.Ok {
+				// get file info
+				ctxFileInfo, cancelFileInfo := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+				defer cancelFileInfo()
+				if fileRes := b.GetFile(ctxFileInfo, animation.FileID); fileRes.Ok {
 					fileURL = b.GetFileURL(*fileRes.Result)
 				}
 
@@ -127,7 +140,10 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			)
 
 			// and reply to the message
+			ctxSend, cancelSend := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+			defer cancelSend()
 			if sent := b.SendMessage(
+				ctxSend,
 				update.Message.Chat.ID,
 				message,
 				bot.OptionsSendMessage{}.
@@ -181,7 +197,9 @@ func runBot(this js.Value, args []js.Value) any {
 		client.Verbose = verbose
 
 		// get info about this bot
-		if me := client.GetMe(); me.Ok {
+		ctxBotInfo, cancelBotInfo := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+		defer cancelBotInfo()
+		if me := client.GetMe(ctxBotInfo); me.Ok {
 			botID := *me.Result.Username
 			botName := me.Result.FirstName
 
@@ -200,9 +218,11 @@ func runBot(this js.Value, args []js.Value) any {
 			)
 
 			// delete webhook (getting updates will not work when wehbook is set up)
-			if unhooked := client.DeleteWebhook(true); unhooked.Ok {
+			ctxDeleteWebhook, cancelDeleteWebhook := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+			defer cancelDeleteWebhook()
+			if unhooked := client.DeleteWebhook(ctxDeleteWebhook, true); unhooked.Ok {
 				// wait for new updates
-				client.StartMonitoringUpdates(
+				client.StartPollingUpdates(
 					0,
 					pollingIntervalSeconds,
 					handleUpdate,
