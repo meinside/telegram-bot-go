@@ -168,6 +168,7 @@ type (
 	ErrMessageCantBeEdited       struct{ baseError } // for error: 'Bad Request: message can't be edited'
 	ErrTooManyRequests           struct{ baseError } // for error: 'Too many requests'
 	ErrJSONParseFailed           struct{ baseError } // for error: 'failed to parse json'
+	ErrContextTimeout            struct{ baseError } // for error: 'context deadline exceeded'
 	ErrUnclassified              struct{ baseError } // for unclassified errors
 )
 
