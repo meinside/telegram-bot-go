@@ -5,6 +5,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
@@ -19,7 +20,8 @@ const (
 	certFilepath = "./cert.pem"
 	keyFilepath  = "./cert.key"
 
-	typingDelaySeconds = 1
+	requestTimeoutSeconds = 10
+	typingDelaySeconds    = 1
 
 	verbose = true
 )
@@ -28,8 +30,12 @@ const (
 func webhookHandler(b *bot.Bot, webhook bot.Update, err error) {
 	if err == nil {
 		if webhook.HasMessage() {
+			ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+			defer cancel()
+
 			// 'is typing...'
 			b.SendChatAction(
+				ctx,
 				webhook.Message.Chat.ID,
 				bot.ChatActionTyping,
 				nil,
@@ -65,8 +71,13 @@ func webhookHandler(b *bot.Bot, webhook bot.Update, err error) {
 					)
 				}
 			}
+
+			ctx2, cancel2 := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+			defer cancel2()
+
 			// send message
 			if sent := b.SendMessage(
+				ctx2,
 				webhook.Message.Chat.ID,
 				message,
 				bot.OptionsSendMessage{}.
@@ -106,8 +117,12 @@ func webhookHandler(b *bot.Bot, webhook bot.Update, err error) {
 				article2,
 			}
 
+			ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+			defer cancel()
+
 			// answer inline query
 			if sent := b.AnswerInlineQuery(
+				ctx,
 				webhook.InlineQuery.ID,
 				results,
 				nil,
@@ -143,12 +158,18 @@ func main() {
 	client := bot.NewClient(apiToken)
 	client.Verbose = verbose
 
+	ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+	defer cancel()
+
 	// get info about this bot
-	if me := client.GetMe(); me.Ok {
+	if me := client.GetMe(ctx); me.Ok {
 		log.Printf("Bot information: %s", botName(me.Result))
 
+		ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+		defer cancel()
+
 		// delete webhook
-		if unhooked := client.DeleteWebhook(true); unhooked.Ok {
+		if unhooked := client.DeleteWebhook(ctx, true); unhooked.Ok {
 			// generate certificate and private key for testing
 			if err := bot.GenCertAndKey(
 				webhookHost,
@@ -156,8 +177,12 @@ func main() {
 				keyFilepath,
 				10*365,
 			); err == nil {
+				ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+				defer cancel()
+
 				// set webhook
 				if hooked := client.SetWebhook(
+					ctx,
 					webhookHost,
 					webhookPort,
 					bot.OptionsSetWebhook{}.

@@ -168,6 +168,7 @@ type (
 	ErrMessageCantBeEdited       struct{ baseError } // for error: 'Bad Request: message can't be edited'
 	ErrTooManyRequests           struct{ baseError } // for error: 'Too many requests'
 	ErrJSONParseFailed           struct{ baseError } // for error: 'failed to parse json'
+	ErrContextTimeout            struct{ baseError } // for error: 'context deadline exceeded'
 	ErrUnclassified              struct{ baseError } // for unclassified errors
 )
 
@@ -324,13 +325,14 @@ type User struct {
 //
 // https://core.telegram.org/bots/api#chat
 type Chat struct {
-	ID        int64    `json:"id"`
-	Type      ChatType `json:"type"`
-	Title     *string  `json:"title,omitempty"`
-	Username  *string  `json:"username,omitempty"`
-	FirstName *string  `json:"first_name,omitempty"`
-	LastName  *string  `json:"last_name,omitempty"`
-	IsForum   *bool    `json:"is_forum,omitempty"`
+	ID               int64    `json:"id"`
+	Type             ChatType `json:"type"`
+	Title            *string  `json:"title,omitempty"`
+	Username         *string  `json:"username,omitempty"`
+	FirstName        *string  `json:"first_name,omitempty"`
+	LastName         *string  `json:"last_name,omitempty"`
+	IsForum          *bool    `json:"is_forum,omitempty"`
+	IsDirectMessages *bool    `json:"is_direct_messages,omitempty"`
 }
 
 // ChatFullInfo is a struct for a full info of chat
@@ -344,6 +346,7 @@ type ChatFullInfo struct {
 	FirstName                          *string               `json:"first_name,omitempty"`
 	LastName                           *string               `json:"last_name,omitempty"`
 	IsForum                            *bool                 `json:"is_forum,omitempty"`
+	IsDirectMessages                   *bool                 `json:"is_direct_messages,omitempty"`
 	AccentColorID                      int                   `json:"accent_color_id"`
 	MaxReactionCount                   int                   `json:"max_reaction_count"`
 	Photo                              *ChatPhoto            `json:"photo,omitempty"`
@@ -353,6 +356,7 @@ type ChatFullInfo struct {
 	BusinessLocation                   *BusinessLocation     `json:"business_location,omitempty"`
 	BusinessOpeningHours               *BusinessOpeningHours `json:"business_opening_hours,omitempty"`
 	PersonalChat                       *Chat                 `json:"personal_chat,omitempty"`
+	ParentChat                         *Chat                 `json:"parent_chat,omitempty"`
 	AvailableReactions                 []ReactionType        `json:"available_reactions,omitempty"`
 	BackgroundCustomEmojiID            *string               `json:"background_custom_emoji_id,omitempty"`
 	ProfileAccentColorID               *int                  `json:"profile_accent_color_id,omitempty"`
@@ -625,6 +629,7 @@ type ReplyParameters struct {
 	QuoteParseMode           *ParseMode      `json:"quote_parse_mode,omitempty"`
 	QuoteEntities            []MessageEntity `json:"quote_entities,omitempty"`
 	QuotePosition            *int            `json:"quote_position,omitempty"`
+	ChecklistTaskID          *int64          `json:"checklist_task_id,omitempty"`
 }
 
 // MessageOrigin struct for describing the origin of a message
@@ -1191,6 +1196,49 @@ type DirectMessagePriceChanged struct {
 	DirectMessageStarCount   *int `json:"direct_message_star_count,omitempty"`
 }
 
+// SuggestedPostApproved is a struct for a service message about the approval of a suggested post.
+//
+// https://core.telegram.org/bots/api#suggestedpostapproved
+type SuggestedPostApproved struct {
+	SuggestedPostMessage *Message            `json:"suggested_post_message,omitempty"`
+	Price                *SuggestedPostPrice `json:"price,omitempty"`
+	SendDate             int                 `json:"send_date"`
+}
+
+// SuggestedPostApprovalFailed is a struct for a service message about the failed approval of a suggested post.
+//
+// https://core.telegram.org/bots/api#suggestedpostapprovalfailed
+type SuggestedPostApprovalFailed struct {
+	SuggestedPostMessage *Message           `json:"suggested_post_message,omitempty"`
+	Price                SuggestedPostPrice `json:"price"`
+}
+
+// SuggestedPostDeclined is a struct for a service message about the rejection of a suggested post.
+//
+// https://core.telegram.org/bots/api#suggestedpostdeclined
+type SuggestedPostDeclined struct {
+	SuggestedPostMessage *Message `json:"suggested_post_message,omitempty"`
+	Comment              *string  `json:"comment,omitempty"`
+}
+
+// SuggestedPostPaid is a struct for a service message about a successful payment for a suggested post.
+//
+// https://core.telegram.org/bots/api#suggestedpostpaid
+type SuggestedPostPaid struct {
+	SuggestedPostMessage *Message    `json:"suggested_post_message,omitempty"`
+	Currency             string      `jso:"currency"`
+	Amount               int         `json:"amount,omitempty"`
+	StarAmount           *StarAmount `json:"star_amount,omitempty"`
+}
+
+// SuggestedPostRefunded is a struct for a service message about a payment refund for a suggested post.
+//
+// https://core.telegram.org/bots/api#suggestedpostrefunded
+type SuggestedPostRefunded struct {
+	SuggestedPostMessage *Message `json:"suggested_post_message,omitempty"`
+	Reason               string   `json:"reason"`
+}
+
 // Giveaway struct for giveaways
 //
 // https://core.telegram.org/bots/api#giveaway
@@ -1252,6 +1300,48 @@ type LinkPreviewOptions struct {
 	PreferSmallMedia *bool   `json:"prefer_small_media,omitempty"`
 	PreferLargeMedia *bool   `json:"prefer_large_media,omitempty"`
 	ShowAboveText    *bool   `json:"show_above_text,omitempty"`
+}
+
+// SuggestedPostPrice is a struct for suggested post price
+//
+// https://core.telegram.org/bots/api#suggestedpostprice
+type SuggestedPostPrice struct {
+	Currency string `json:"currency"`
+	Amount   int64  `json:"amount"`
+}
+
+// SuggestedPostStateType is a type of suggested post info's state
+type SuggestedPostStateType string
+
+const (
+	SuggestedPostStatePending  SuggestedPostStateType = "pending"
+	SuggestedPostStateApproved SuggestedPostStateType = "approved"
+	SuggestedPostStateDeclined SuggestedPostStateType = "declined"
+)
+
+// SuggestedPostInfo is a struct for suggested post info
+//
+// https://core.telegram.org/bots/api#suggestedpostinfo
+type SuggestedPostInfo struct {
+	State    SuggestedPostStateType `json:"state"`
+	Price    *SuggestedPostPrice    `json:"price,omitempty"`
+	SendDate *int                   `json:"send_date,omitempty"`
+}
+
+// SuggestedPostParameters is a struct for suggested post parameters
+//
+// https://core.telegram.org/bots/api#suggestedpostparameters
+type SuggestedPostParameters struct {
+	Price    *SuggestedPostPrice `json:"price,omitempty"`
+	SendDate *int                `json:"send_date,omitempty"`
+}
+
+// DirectMessagesTopic is a struct for direct messages topic
+//
+// https://core.telegram.org/bots/api#directmessagestopic
+type DirectMessagesTopic struct {
+	TopicID int64 `json:"topic_id"`
+	User    *User `json:"user,omitempty"`
 }
 
 // UserProfilePhotos is a struct for user profile photos
@@ -1622,21 +1712,22 @@ type ChatInviteLink struct {
 //
 // https://core.telegram.org/bots/api#chatadministratorrights
 type ChatAdministratorRights struct {
-	IsAnonymous         bool  `json:"is_anonymous"`
-	CanManageChat       bool  `json:"can_manage_chat"`
-	CanDeleteMessages   bool  `json:"can_delete_messages"`
-	CanManageVideoChats bool  `json:"can_manage_video_chats"`
-	CanRestrictMembers  bool  `json:"can_restrict_members"`
-	CanPromoteMembers   bool  `json:"can_promote_members"`
-	CanChangeInfo       bool  `json:"can_change_info"`
-	CanInviteUsers      bool  `json:"can_invite_users"`
-	CanPostStories      bool  `json:"can_post_stories"`
-	CanEditStories      bool  `json:"can_edit_stories"`
-	CanDeleteStories    bool  `json:"can_delete_stories"`
-	CanPostMessages     *bool `json:"can_post_messages,omitempty"`
-	CanEditMessages     *bool `json:"can_edit_messages,omitempty"`
-	CanPinMessages      *bool `json:"can_pin_messages,omitempty"`
-	CanManageTopics     *bool `json:"can_manage_topics,omitempty"`
+	IsAnonymous             bool  `json:"is_anonymous"`
+	CanManageChat           bool  `json:"can_manage_chat"`
+	CanDeleteMessages       bool  `json:"can_delete_messages"`
+	CanManageVideoChats     bool  `json:"can_manage_video_chats"`
+	CanRestrictMembers      bool  `json:"can_restrict_members"`
+	CanPromoteMembers       bool  `json:"can_promote_members"`
+	CanChangeInfo           bool  `json:"can_change_info"`
+	CanInviteUsers          bool  `json:"can_invite_users"`
+	CanPostStories          bool  `json:"can_post_stories"`
+	CanEditStories          bool  `json:"can_edit_stories"`
+	CanDeleteStories        bool  `json:"can_delete_stories"`
+	CanPostMessages         *bool `json:"can_post_messages,omitempty"`
+	CanEditMessages         *bool `json:"can_edit_messages,omitempty"`
+	CanPinMessages          *bool `json:"can_pin_messages,omitempty"`
+	CanManageTopics         *bool `json:"can_manage_topics,omitempty"`
+	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
 }
 
 // ChatMember is a struct of a chat member
@@ -1852,25 +1943,26 @@ type ChatMemberOwner struct {
 //
 // https://core.telegram.org/bots/api#chatmemberadministrator
 type ChatMemberAdministrator struct {
-	Status              string  `json:"status"` // = "administrator"
-	User                User    `json:"user"`
-	CanBeEdited         bool    `json:"can_be_edited"`
-	IsAnonymous         bool    `json:"is_anonymous"`
-	CanManageChat       bool    `json:"can_manage_chat"`
-	CanDeleteMessages   bool    `json:"can_delete_messages"`
-	CanManageVideoChats bool    `json:"can_manage_video_chats"`
-	CanRestrictMembers  bool    `json:"can_restrict_members"`
-	CanPromoteMembers   bool    `json:"can_promote_members"`
-	CanChangeInfo       bool    `json:"can_change_info"`
-	CanInviteUsers      bool    `json:"can_invite_users"`
-	CanPostStories      bool    `json:"can_post_stories"`
-	CanEditStories      bool    `json:"can_edit_stories"`
-	CanDeleteStories    bool    `json:"can_delete_stories"`
-	CanPostMessages     *bool   `json:"can_post_messages,omitempty"`
-	CanEditMessages     *bool   `json:"can_edit_messages,omitempty"`
-	CanPinMessages      *bool   `json:"can_pin_messages,omitempty"`
-	CanManageTopics     *bool   `json:"can_manage_topics,omitempty"`
-	CustomTitle         *string `json:"custom_title,omitempty"`
+	Status                  string  `json:"status"` // = "administrator"
+	User                    User    `json:"user"`
+	CanBeEdited             bool    `json:"can_be_edited"`
+	IsAnonymous             bool    `json:"is_anonymous"`
+	CanManageChat           bool    `json:"can_manage_chat"`
+	CanDeleteMessages       bool    `json:"can_delete_messages"`
+	CanManageVideoChats     bool    `json:"can_manage_video_chats"`
+	CanRestrictMembers      bool    `json:"can_restrict_members"`
+	CanPromoteMembers       bool    `json:"can_promote_members"`
+	CanChangeInfo           bool    `json:"can_change_info"`
+	CanInviteUsers          bool    `json:"can_invite_users"`
+	CanPostStories          bool    `json:"can_post_stories"`
+	CanEditStories          bool    `json:"can_edit_stories"`
+	CanDeleteStories        bool    `json:"can_delete_stories"`
+	CanPostMessages         *bool   `json:"can_post_messages,omitempty"`
+	CanEditMessages         *bool   `json:"can_edit_messages,omitempty"`
+	CanPinMessages          *bool   `json:"can_pin_messages,omitempty"`
+	CanManageTopics         *bool   `json:"can_manage_topics,omitempty"`
+	CanManageDirectMessages *bool   `json:"can_manage_direct_messages,omitempty"`
+	CustomTitle             *string `json:"custom_title,omitempty"`
 }
 
 // ChatMemberMember is a struct of a chat member.
@@ -2041,6 +2133,7 @@ type BotCommandScopeChatMember struct {
 type Message struct {
 	MessageID                     int64                          `json:"message_id"`
 	MessageThreadID               *int64                         `json:"message_thread_id,omitempty"`
+	DirectMessagesTopic           *DirectMessagesTopic           `json:"direct_messages_topic,omitempty"`
 	From                          *User                          `json:"from,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	SenderBoostCount              *int                           `json:"sender_boost_count,omitempty"`
@@ -2055,16 +2148,19 @@ type Message struct {
 	ExternalReply                 *ExternalReplyInfo             `json:"external_reply,omitempty"`
 	Quote                         *TextQuote                     `json:"quote,omitempty"`
 	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`
+	ReplyToChecklistTaskID        *int64                         `json:"reply_to_checklist_task_id,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
 	EditDate                      *int                           `json:"edit_date,omitempty"`
 	HasProtectedContent           *bool                          `json:"has_protected_content,omitempty"`
 	IsFromOffline                 *bool                          `json:"is_from_offline,omitempty"`
+	IsPaidPost                    *bool                          `json:"is_paid_post,omitempty"`
 	MediaGroupID                  *string                        `json:"media_group_id,omitempty"`
 	AuthorSignature               *string                        `json:"author_signature,omitempty"`
 	PaidStarCount                 *int                           `json:"paid_star_count,omitempty"`
 	Text                          *string                        `json:"text,omitempty"`
 	Entities                      []MessageEntity                `json:"entities,omitempty"`
 	LinkPreviewOptions            *LinkPreviewOptions            `json:"link_preview_options,omitempty"`
+	SuggestedPostInfo             *SuggestedPostInfo             `json:"suggested_post_info,omitempty"`
 	EffectID                      *string                        `json:"effect_id,omitempty"`
 	Animation                     *Animation                     `json:"animation,omitempty"`
 	Audio                         *Audio                         `json:"audio,omitempty"`
@@ -2126,6 +2222,11 @@ type Message struct {
 	GiveawayWinners              *GiveawayWinners              `json:"giveaway_winners,omitempty"`
 	GiveawayCompleted            *GiveawayCompleted            `json:"giveaway_completed,omitempty"`
 	PaidMessagePriceChanged      *PaidMessagePriceChanged      `json:"paid_message_price_changed,omitempty"`
+	SuggestedPostApproved        *SuggestedPostApproved        `json:"suggested_post_approved,omitempty"`
+	SuggestedPostApprovalFailed  *SuggestedPostApprovalFailed  `json:"suggested_post_approval_failed,omitempty"`
+	SuggestedPostDeclined        *SuggestedPostDeclined        `json:"suggested_post_declined,omitempty"`
+	SuggestedPostPaid            *SuggestedPostPaid            `json:"suggested_post_paid,omitempty"`
+	SuggestedPostRefunded        *SuggestedPostRefunded        `json:"suggested_post_refunded,omitempty"`
 	VideoChatScheduled           *VideoChatScheduled           `json:"video_chat_scheduled,omitempty"`
 	VideoChatStarted             *VideoChatStarted             `json:"video_chat_started,omitempty"`
 	VideoChatEnded               *VideoChatEnded               `json:"video_chat_ended,omitempty"`
@@ -2895,6 +2996,7 @@ type Gift struct {
 	UpgradeStarCount *int    `json:"upgrade_star_count,omitempty"`
 	TotalCount       *int    `json:"total_count,omitempty"`
 	RemainingCount   *int    `json:"remaining_count,omitempty"`
+	PublisherChat    *Chat   `json:"publisher_chat,omitempty"`
 }
 
 // Gifts represents a list of gifts.
@@ -2945,12 +3047,13 @@ type UniqueGiftBackdrop struct {
 //
 // https://core.telegram.org/bots/api#uniquegift
 type UniqueGift struct {
-	BaseName string             `json:"base_name"`
-	Name     string             `json:"name"`
-	Number   int                `json:"number"`
-	Model    UniqueGiftModel    `json:"model"`
-	Symbol   UniqueGiftSymbol   `json:"symbol"`
-	Backdrop UniqueGiftBackdrop `json:"backdrop"`
+	BaseName      string             `json:"base_name"`
+	Name          string             `json:"name"`
+	Number        int                `json:"number"`
+	Model         UniqueGiftModel    `json:"model"`
+	Symbol        UniqueGiftSymbol   `json:"symbol"`
+	Backdrop      UniqueGiftBackdrop `json:"backdrop"`
+	PublisherChat *Chat              `json:"publisher_chat,omitempty"`
 }
 
 // GiftInfo describes a service message about a regular gift that was sent or received.
