@@ -173,6 +173,7 @@ func TestMethods(t *testing.T) {
 					t.Errorf("failed to forward message: %s", *forwarded.Description)
 				}
 			}
+			// TODO: SendMessageDraft
 			// TODO: CopyMessages
 			// TODO: ForwardMessages
 			// SendPhoto
@@ -375,10 +376,13 @@ func TestMethods(t *testing.T) {
 			// TODO: GetBusinessAccountStarBalance
 			// TODO: TransferBusinessAccountStars
 			// TODO: GetBusinessAccountGifts
+			// TODO: GetUserGifts
+			// TODO: GetChatGifts
 			// TODO: ConvertGiftToStars
 			// TODO: UpgradeGift
 			// TODO: TransferGift
 			// TODO: PostStory
+			// TODO: RepostStory
 			// TODO: EditStory
 			// TODO: DeleteStory
 
