@@ -170,7 +170,7 @@ func (o OptionsSendMessage) SetReplyMarkup(replyMarkup any) OptionsSendMessage {
 
 // OptionsForwardMessage struct for ForwardMessage().
 //
-// options include: `message_thread_id`, `direct_messages_topic_id`, `video_start_timestamp`, `disable_notification`, `protect_content`, and `suggested_post_parameters`.
+// options include: `message_thread_id`, `direct_messages_topic_id`, `video_start_timestamp`, `disable_notification`, `protect_content`, `message_effect_id`, and `suggested_post_parameters`.
 //
 // https://core.telegram.org/bots/api#forwardmessage
 type OptionsForwardMessage MethodOptions
@@ -202,6 +202,12 @@ func (o OptionsForwardMessage) SetDisableNotification(disable bool) OptionsForwa
 // SetProtectContent sets the `protect_content` value of OptionsForwardMessage.
 func (o OptionsForwardMessage) SetProtectContent(protect bool) OptionsForwardMessage {
 	o["protect_content"] = protect
+	return o
+}
+
+// SetMessageEffectID sets the `message_effect_id` value of OptionsForwardMessage.
+func (o OptionsForwardMessage) SetMessageEffectID(messageEffectID string) OptionsForwardMessage {
+	o["message_effect_id"] = messageEffectID
 	return o
 }
 
@@ -244,7 +250,7 @@ func (o OptionsForwardMessages) SetProtectContent(protect bool) OptionsForwardMe
 
 // OptionsCopyMessage struct for CopyMessage().
 //
-// options include: `message_thread_id`, `direct_messages_topic_id`, `video_start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`
+// options include: `message_thread_id`, `direct_messages_topic_id`, `video_start_timestamp`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#copymessage
 type OptionsCopyMessage MethodOptions
@@ -306,6 +312,12 @@ func (o OptionsCopyMessage) SetProtectContent(protect bool) OptionsCopyMessage {
 // SetAllowPaidBroadcast sets the `allow_paid_broadcast` value of OptionsCopyMessage.
 func (o OptionsCopyMessage) SetAllowPaidBroadcast(allow bool) OptionsCopyMessage {
 	o["allow_paid_broadcast"] = allow
+	return o
+}
+
+// SetMessageEffectID sets the `message_effect_id` value of OptionsCopyMessage.
+func (o OptionsCopyMessage) SetMessageEffectID(messageEffectID string) OptionsCopyMessage {
+	o["message_effect_id"] = messageEffectID
 	return o
 }
 
@@ -1969,6 +1981,31 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup any) OptionsSendDice {
 	return o
 }
 
+// OptionsSendMessageDraft struct for SendMessageDraft().
+//
+// options include: `message_thread_id`, `parse_mode`, and `entities`.
+//
+// https://core.telegram.org/bots/api#sendmessagedraft
+type OptionsSendMessageDraft MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendMessageDraft.
+func (o OptionsSendMessageDraft) SetMessageThreadID(messageThreadID int64) OptionsSendMessageDraft {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetParseMode sets the `parse_mode` value of OptionsSendMessageDraft.
+func (o OptionsSendMessageDraft) SetParseMode(parseMode ParseMode) OptionsSendMessageDraft {
+	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetEntities sets the `entities` value of OptionsSendMessageDraft.
+func (o OptionsSendMessageDraft) SetEntities(entities []MessageEntity) OptionsSendMessageDraft {
+	o["entities"] = entities
+	return o
+}
+
 // OptionsSendChatAction struct for SendChatAction().
 //
 // options include: `business_connection_id`, and `message_thread_id`.
@@ -3486,7 +3523,8 @@ func (o OptionsRemoveBusinessAccountProfilePhoto) SetIsPublic(isPublic bool) Opt
 
 // OptionsGetBusinessAccountGifts struct for GetBusinessAccountGifts().
 //
-// options include: `exclude_unsaved`, `exclude_saved`, `exclude_unlimited`, `exclude_limited`, `exclude_unique`, `sort_by_price`, `offset`, and `limit`.
+// options include: `exclude_unsaved`, `exclude_saved`, `exclude_unlimited`, `exclude_limited_upgradable`,
+// `exclude_limited_non_upgradable`, `exclude_unique`, `exclude_from_blockchain`, `sort_by_price`, `offset`, and `limit`.
 //
 // https://core.telegram.org/bots/api#getbusinessaccountgifts
 type OptionsGetBusinessAccountGifts MethodOptions
@@ -3509,15 +3547,27 @@ func (o OptionsGetBusinessAccountGifts) SetExcludeUnlimited(excludeUnlimited boo
 	return o
 }
 
-// SetExcludeLimited sets the `exclude_limited` value of OptionsGetBusinessAccountGifts.
-func (o OptionsGetBusinessAccountGifts) SetExcludeLimited(excludeLimited bool) OptionsGetBusinessAccountGifts {
-	o["exclude_limited"] = excludeLimited
+// SetExcludeLimitedUpgradable sets the `exclude_limited_upgradable` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeLimitedUpgradable(excludeLimitedUpgradable bool) OptionsGetBusinessAccountGifts {
+	o["exclude_limited_upgradable"] = excludeLimitedUpgradable
+	return o
+}
+
+// SetExcludeLimitedNonUpgradable sets the `exclude_limited_non_upgradable` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeLimitedNonUpgradable(excludeLimitedNonUpgradable bool) OptionsGetBusinessAccountGifts {
+	o["exclude_limited_non_upgradable"] = excludeLimitedNonUpgradable
 	return o
 }
 
 // SetExcludeUnique sets the `exclude_unique` value of OptionsGetBusinessAccountGifts.
 func (o OptionsGetBusinessAccountGifts) SetExcludeUnique(excludeUnique bool) OptionsGetBusinessAccountGifts {
 	o["exclude_unique"] = excludeUnique
+	return o
+}
+
+// SetExcludeFromBlockchain sets the `exclude_from_blockchain` value of OptionsGetBusinessAccountGifts.
+func (o OptionsGetBusinessAccountGifts) SetExcludeFromBlockchain(excludeFromBlockchain bool) OptionsGetBusinessAccountGifts {
+	o["exclude_from_blockchain"] = excludeFromBlockchain
 	return o
 }
 
@@ -3535,6 +3585,129 @@ func (o OptionsGetBusinessAccountGifts) SetOffset(offset string) OptionsGetBusin
 
 // SetLimit sets the `limit` value of OptionsGetBusinessAccountGifts.
 func (o OptionsGetBusinessAccountGifts) SetLimit(limit int) OptionsGetBusinessAccountGifts {
+	o["limit"] = limit
+	return o
+}
+
+// OptionsGetUserGifts struct for GetUserGifts().
+//
+// options include: `exclude_unlimited`, `exclude_limited_upgradable`, `exclude_limited_non_upgradable`, `exclude_from_blockchain`, `exclude_unique`, `sort_by_price`, `offset`, and `limit`.
+//
+// https://core.telegram.org/bots/api#getusergifts
+type OptionsGetUserGifts MethodOptions
+
+// SetExcludeUnlimited sets the `exclude_unlimited` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetExcludeUnlimited(excludeUnlimited bool) OptionsGetUserGifts {
+	o["exclude_unlimited"] = excludeUnlimited
+	return o
+}
+
+// SetExcludeLimitedUpgradable sets the `exclude_limited_upgradable` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetExcludeLimitedUpgradable(excludeLimitedUpgradable bool) OptionsGetUserGifts {
+	o["exclude_limited_upgradable"] = excludeLimitedUpgradable
+	return o
+}
+
+// SetExcludeLimitedNonUpgradable sets the `exclude_limited_non_upgradable` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetExcludeLimitedNonUpgradable(excludeLimitedNonUpgradable bool) OptionsGetUserGifts {
+	o["exclude_limited_non_upgradable"] = excludeLimitedNonUpgradable
+	return o
+}
+
+// SetExcludeFromBlockchain sets the `exclude_from_blockchain` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetExcludeFromBlockchain(excludeFromBlockchain bool) OptionsGetUserGifts {
+	o["exclude_from_blockchain"] = excludeFromBlockchain
+	return o
+}
+
+// SetExcludeUnique sets the `exclude_unique` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetExcludeUnique(excludeUnique bool) OptionsGetUserGifts {
+	o["exclude_unique"] = excludeUnique
+	return o
+}
+
+// SetSortByPrice sets the `sort_by_price` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetSortByPrice(sortByPrice bool) OptionsGetUserGifts {
+	o["sort_by_price"] = sortByPrice
+	return o
+}
+
+// SetOffset sets the `offset` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetOffset(offset string) OptionsGetUserGifts {
+	o["offset"] = offset
+	return o
+}
+
+// SetLimit sets the `limit` value of OptionsGetUserGifts.
+func (o OptionsGetUserGifts) SetLimit(limit int) OptionsGetUserGifts {
+	o["limit"] = limit
+	return o
+}
+
+// OptionsGetChatGifts struct for GetChatGifts().
+//
+// options include: `exclude_unsaved`, `exclude_saved`, `exclude_unlimited`, `exclude_limited_upgradable`, `exclude_limited_non_upgradable`, `exclude_from_blockchain`, `exclude_unique`, `sort_by_price`, `offset`, and `limit`.
+//
+// https://core.telegram.org/bots/api#getchatgifts
+
+type OptionsGetChatGifts MethodOptions
+
+// SetExcludeUnsaved sets the `exclude_unsaved` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetExcludeUnsaved(excludeUnsaved bool) OptionsGetChatGifts {
+	o["exclude_unsaved"] = excludeUnsaved
+	return o
+}
+
+// SetExcludeSaved sets the `exclude_saved` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetExcludeSaved(excludeSaved bool) OptionsGetChatGifts {
+	o["exclude_saved"] = excludeSaved
+	return o
+}
+
+// SetExcludeUnlimited sets the `exclude_unlimited` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetExcludeUnlimited(excludeUnlimited bool) OptionsGetChatGifts {
+	o["exclude_unlimited"] = excludeUnlimited
+	return o
+}
+
+// SetExcludeLimitedUpgradable sets the `exclude_limited_upgradable` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetExcludeLimitedUpgradable(excludeLimitedUpgradable bool) OptionsGetChatGifts {
+	o["exclude_limited_upgradable"] = excludeLimitedUpgradable
+	return o
+}
+
+// SetExcludeLimitedNonUpgradable sets the `exclude_limited_non_upgradable` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetExcludeLimitedNonUpgradable(excludeLimitedNonUpgradable bool) OptionsGetChatGifts {
+	o["exclude_limited_non_upgradable"] = excludeLimitedNonUpgradable
+	return o
+}
+
+// SetExcludeFromBlockchain sets the `exclude_from_blockchain` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetExcludeFromBlockchain(excludeFromBlockchain bool) OptionsGetChatGifts {
+	o["exclude_from_blockchain"] = excludeFromBlockchain
+	return o
+}
+
+// SetExcludeUnique sets the `exclude_unique` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetExcludeUnique(excludeUnique bool) OptionsGetChatGifts {
+	o["exclude_unique"] = excludeUnique
+	return o
+}
+
+// SetSortByPrice sets the `sort_by_price` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetSortByPrice(sortByPrice bool) OptionsGetChatGifts {
+	o["sort_by_price"] = sortByPrice
+	return o
+}
+
+// SetOffset sets the `offset` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetOffset(offset string) OptionsGetChatGifts {
+	o["offset"] = offset
+	return o
+}
+
+// SetLimit sets the `limit` value of OptionsGetChatGifts.
+func (o OptionsGetChatGifts) SetLimit(limit int) OptionsGetChatGifts {
 	o["limit"] = limit
 	return o
 }
@@ -3610,6 +3783,25 @@ func (o OptionsPostStory) SetPostToChatPage(postToChatPage bool) OptionsPostStor
 
 // SetProtectContent sets the `protect_content` value of OptionsPostStory.
 func (o OptionsPostStory) SetProtectContent(protectContent bool) OptionsPostStory {
+	o["protect_content"] = protectContent
+	return o
+}
+
+// OptionsRepostStory struct for RepostStory().
+//
+// options include: `post_to_chat_page`, and `protect_content`.
+//
+// https://core.telegram.org/bots/api#repoststory
+type OptionsRepostStory MethodOptions
+
+// SetPostToChatPage sets the `post_to_chat_page` value of OptionsRepostStory.
+func (o OptionsRepostStory) SetPostToChatPage(postToChatPage bool) OptionsRepostStory {
+	o["post_to_chat_page"] = postToChatPage
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsRepostStory.
+func (o OptionsRepostStory) SetProtectContent(protectContent bool) OptionsRepostStory {
 	o["protect_content"] = protectContent
 	return o
 }

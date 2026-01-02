@@ -319,6 +319,7 @@ type User struct {
 	SupportsInlineQueries   *bool   `json:"supports_inline_queries,omitempty"`     // returned only in GetMe()
 	CanConnectToBusiness    *bool   `json:"can_connect_to_business,omitempty"`     // returned only in GetMe()
 	HasMainWebApp           *bool   `json:"has_main_web_app,omitempty"`            // returned only in GetMe()
+	HasTopicsEnabled        *bool   `json:"has_topics_enabled,omitempty"`          // returned only in GetMe()
 }
 
 // Chat is a struct of a chat
@@ -386,6 +387,9 @@ type ChatFullInfo struct {
 	CustomEmojiStickerSetName          *string               `json:"custom_emoji_sticker_set_name,omitempty"`
 	LinkedChatID                       *int64                `json:"linked_chat_id,omitempty"`
 	Location                           *ChatLocation         `json:"location,omitempty"`
+	Rating                             *UserRating           `json:"rating,omitempty"`
+	UniqueGiftColors                   *UniqueGiftColors     `json:"unique_gift_colors,omitempty"`
+	PaidMessageStarCount               *int                  `json:"paid_message_star_count,omitempty"`
 }
 
 // InputMediaType is a type of InputMedia
@@ -938,6 +942,7 @@ type ChecklistTask struct {
 	Text            string          `json:"text"`
 	TextEntities    []MessageEntity `json:"text_entities,omitempty"`
 	CompletedByUser *User           `json:"completed_by_user,omitempty"`
+	CompletedByChat *Chat           `json:"completed_by_chat,omitempty"`
 	CompletionDate  *int64          `json:"completion_date,omitempty"`
 }
 
@@ -1086,6 +1091,7 @@ type ForumTopicCreated struct {
 	Name              string  `json:"name"`
 	IconColor         int     `json:"icon_color"`
 	IconCustomEmojiID *string `json:"icon_custom_emoji_id,omitempty"`
+	IsNameImplicit    *bool   `json:"is_name_implicit,omitempty"`
 }
 
 // ForumTopicClosed is a struct for a closed forum topic in the chat.
@@ -1837,6 +1843,16 @@ type BusinessOpeningHours struct {
 	OpeningHours []BusinessOpeningHoursInterval `json:"opening_hours"`
 }
 
+// UserRating is a struct which describes the rating of a user based on their Telegram Star spendings.
+//
+// https://core.telegram.org/bots/api#userrating
+type UserRating struct {
+	Level              int  `json:"level"`
+	Rating             int  `json:"rating"`
+	CurrentLevelRating int  `json:"current_level_rating"`
+	NextLevelRating    *int `json:"next_level_rating,omitempty"`
+}
+
 // StoryAreaPosition describes the position of a clickable area within a story.
 //
 // https://core.telegram.org/bots/api#storyareaposition
@@ -2202,6 +2218,7 @@ type Message struct {
 	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`
 	Gift                          *GiftInfo                      `json:"gift,omitempty"`
 	UniqueGift                    *UniqueGiftInfo                `json:"unique_gift,omitempty"`
+	GiftUpgradeSent               *GiftInfo                      `json:"gift_upgrade_sent,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`
 	// PassportData          *PassportData         `json:"passport_data,omitempty"` // NOT IMPLEMENTED: https://core.telegram.org/bots/api#passportdata
@@ -2851,6 +2868,7 @@ type ForumTopic struct {
 	Name              string  `json:"name"`
 	IconColor         int     `json:"icon_color"`
 	IconCustomEmojiID *string `json:"icon_custom_emoji_id,omitempty"`
+	IsNameImplicit    *bool   `json:"is_name_implicit,omitempty"`
 }
 
 // ReactionType is a struct for a reaction
@@ -2986,17 +3004,32 @@ type BusinessMessagesDeleted struct {
 	MessageIDs           []int64 `json:"message_ids"`
 }
 
+// GiftBackground is a struct for a gift background.
+//
+// https://core.telegram.org/bots/api#giftbackground
+type GiftBackground struct {
+	CenterColor int `json:"center_color"`
+	EdgeColor   int `json:"edge_color"`
+	TextColor   int `json:"text_color"`
+}
+
 // Gift represents a gift that can be sent by the bot.
 //
 // https://core.telegram.org/bots/api#gift
 type Gift struct {
-	ID               string  `json:"id"`
-	Sticker          Sticker `json:"sticker"`
-	StarCount        int     `json:"star_count"`
-	UpgradeStarCount *int    `json:"upgrade_star_count,omitempty"`
-	TotalCount       *int    `json:"total_count,omitempty"`
-	RemainingCount   *int    `json:"remaining_count,omitempty"`
-	PublisherChat    *Chat   `json:"publisher_chat,omitempty"`
+	ID                     string          `json:"id"`
+	Sticker                Sticker         `json:"sticker"`
+	StarCount              int             `json:"star_count"`
+	UpgradeStarCount       *int            `json:"upgrade_star_count,omitempty"`
+	IsPremium              *bool           `json:"is_premium,omitempty"`
+	HasColors              *bool           `json:"has_colors,omitempty"`
+	TotalCount             *int            `json:"total_count,omitempty"`
+	RemainingCount         *int            `json:"remaining_count,omitempty"`
+	PersonalTotalCount     *int            `json:"personal_total_count,omitempty"`
+	PersonalRemainingCount *int            `json:"personal_remaining_count,omitempty"`
+	Background             *GiftBackground `json:"background,omitempty"`
+	UniqueGiftVariantCount *int            `json:"unique_gift_variant_count,omitempty"`
+	PublisherChat          *Chat           `json:"publisher_chat,omitempty"`
 }
 
 // Gifts represents a list of gifts.
@@ -3043,17 +3076,33 @@ type UniqueGiftBackdrop struct {
 	RarityPerMille int                      `json:"rarity_per_mille"`
 }
 
+// UniqueGiftColors contains information about the color scheme for a user's name, message replies and link previews based on a unique gift.
+//
+// https://core.telegram.org/bots/api#uniquegiftcolors
+type UniqueGiftColors struct {
+	ModelCustomEmojiID    string `json:"model_custom_emoji_id"`
+	SymbolCustomEmojiID   string `json:"symbol_custom_emoji_id"`
+	LightThemeMainColor   int    `json:"light_theme_main_color"`
+	LightThemeOtherColors []int  `json:"light_theme_other_colors"`
+	DarkThemeMainColor    int    `json:"dark_theme_main_color"`
+	DarkThemeOtherColors  []int  `json:"dark_theme_other_colors"`
+}
+
 // UniqueGift describes a unique gift that was upgraded from a regular gift.
 //
 // https://core.telegram.org/bots/api#uniquegift
 type UniqueGift struct {
-	BaseName      string             `json:"base_name"`
-	Name          string             `json:"name"`
-	Number        int                `json:"number"`
-	Model         UniqueGiftModel    `json:"model"`
-	Symbol        UniqueGiftSymbol   `json:"symbol"`
-	Backdrop      UniqueGiftBackdrop `json:"backdrop"`
-	PublisherChat *Chat              `json:"publisher_chat,omitempty"`
+	GiftID           string             `json:"gift_id"`
+	BaseName         string             `json:"base_name"`
+	Name             string             `json:"name"`
+	Number           int                `json:"number"`
+	Model            UniqueGiftModel    `json:"model"`
+	Symbol           UniqueGiftSymbol   `json:"symbol"`
+	Backdrop         UniqueGiftBackdrop `json:"backdrop"`
+	IsPremium        *bool              `json:"is_premium,omitempty"`
+	IsFromBlockchain *bool              `json:"is_from_blockchain,omitempty"`
+	Colors           *UniqueGiftColors  `json:"colors,omitempty"`
+	PublisherChat    *Chat              `json:"publisher_chat,omitempty"`
 }
 
 // GiftInfo describes a service message about a regular gift that was sent or received.
@@ -3064,22 +3113,25 @@ type GiftInfo struct {
 	OwnedGiftID             *string         `json:"owned_gift_id,omitempty"`
 	ConvertStarCount        *int            `json:"convert_star_count,omitempty"`
 	PrepaidUpgradeStarCount *int            `json:"prepaid_upgrade_star_count,omitempty"`
+	IsUpgradeSeparate       *bool           `json:"is_upgrade_separate,omitempty"`
 	CanBeUpgraded           *bool           `json:"can_be_upgraded,omitempty"`
 	Text                    *string         `json:"text,omitempty"`
 	Entities                []MessageEntity `json:"entities,omitempty"`
 	IsPrivate               *bool           `json:"is_private,omitempty"`
+	UniqueGiftNumber        *int            `json:"unique_gift_number,omitempty"`
 }
 
 // UniqueGiftInfo describes a service message about a unique gift that was sent or received.
 //
 // https://core.telegram.org/bots/api#uniquegiftinfo
 type UniqueGiftInfo struct {
-	Gift                UniqueGift           `json:"gift"`
-	Origin              UniqueGiftInfoOrigin `json:"origin"`
-	LastResaleStarCount *int                 `json:"last_resale_star_count,omitempty"`
-	OwnedGiftID         *string              `json:"owned_gift_id,omitempty"`
-	TransferStarCount   *int                 `json:"transfer_star_count,omitempty"`
-	NextTransferDate    *int                 `json:"next_transfer_date,omitempty"`
+	Gift               UniqueGift           `json:"gift"`
+	Origin             UniqueGiftInfoOrigin `json:"origin"`
+	LastResaleCurrency *string              `json:"last_resale_currency,omitempty"`
+	LastResaleAmount   *int                 `json:"last_resale_amount,omitempty"`
+	OwnedGiftID        *string              `json:"owned_gift_id,omitempty"`
+	TransferStarCount  *int                 `json:"transfer_star_count,omitempty"`
+	NextTransferDate   *int                 `json:"next_transfer_date,omitempty"`
 }
 
 // UniqueGiftInfoOrigin is the origin of a unique gift info.
@@ -3087,9 +3139,11 @@ type UniqueGiftInfoOrigin string
 
 // UniqueGiftInfoOrigin constants
 const (
-	UniqueGiftInfoOriginUpgrade  UniqueGiftInfoOrigin = "upgrade"
-	UniqueGiftInfoOriginTransfer UniqueGiftInfoOrigin = "transfer"
-	UniqueGiftInfoOriginResale   UniqueGiftInfoOrigin = "resale"
+	UniqueGiftInfoOriginUpgrade       UniqueGiftInfoOrigin = "upgrade"
+	UniqueGiftInfoOriginTransfer      UniqueGiftInfoOrigin = "transfer"
+	UniqueGiftInfoOriginResale        UniqueGiftInfoOrigin = "resale"
+	UniqueGiftInfoOriginGiftedUpgrade UniqueGiftInfoOrigin = "gifted_upgrade"
+	UniqueGiftInfoOriginOffer         UniqueGiftInfoOrigin = "offer"
 )
 
 // InputProfilePhoto describes a profile photo to set.
@@ -3117,6 +3171,7 @@ type AcceptedGiftTypes struct {
 	LimitedGifts        bool `json:"limited_gifts"`
 	UniqueGifts         bool `json:"unique_gifts"`
 	PremiumSubscription bool `json:"premium_subscription"`
+	GiftsFromChannels   bool `json:"gifts_from_channels"`
 }
 
 // StarAmount describes an amount of Telegram Stars.
@@ -3155,6 +3210,8 @@ type OwnedGift struct {
 	WasRefunded             *bool           `json:"was_refunded,omitempty"`
 	ConvertStarCount        *int            `json:"convert_star_count,omitempty"`
 	PrepaidUpgradeStarCount *int            `json:"prepaid_upgrade_star_count,omitempty"`
+	IsUpgradeSeparate       *bool           `json:"is_upgrade_separate,omitempty"`
+	UniqueGiftNumber        *int            `json:"unique_gift_number,omitempty"`
 
 	// Type == "unique"
 	CanBeTransferred  *bool `json:"can_be_transferred,omitempty"`

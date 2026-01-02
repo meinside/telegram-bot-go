@@ -865,6 +865,42 @@ func (b *Bot) GetBusinessAccountGifts(
 	return requestGeneric[OwnedGifts](ctx, b, "getBusinessAccountGifts", options)
 }
 
+// GetUserGifts returns the gifts owned and hosted by a user.
+//
+// https://core.telegram.org/bots/api#getusergifts
+func (b *Bot) GetUserGifts(
+	ctx context.Context,
+	userID int64,
+	options OptionsGetUserGifts,
+) (result APIResponse[OwnedGifts]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+
+	return requestGeneric[OwnedGifts](ctx, b, "getUserGifts", options)
+}
+
+// GetChatGifts returns the gifts owned by a chat.
+//
+// https://core.telegram.org/bots/api#getchatgifts
+func (b *Bot) GetChatGifts(
+	ctx context.Context,
+	chatID ChatID,
+	options OptionsGetChatGifts,
+) (result APIResponse[OwnedGifts]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+
+	return requestGeneric[OwnedGifts](ctx, b, "getChatGifts", options)
+}
+
 // ConvertGiftToStars converts a given regular gift to Telegram Stars.
 //
 // https://core.telegram.org/bots/api#convertgifttostars
@@ -938,6 +974,30 @@ func (b *Bot) PostStory(
 	options["active_period"] = activePeriod
 
 	return requestGeneric[Story](ctx, b, "postStory", options)
+}
+
+// RepostStory reposts a story on behalf of a business account from another business account.
+//
+// https://core.telegram.org/bots/api#repoststory
+func (b *Bot) RepostStory(
+	ctx context.Context,
+	businessConnectionID string,
+	fromChatID int64,
+	fromStoryID int64,
+	activePeriod int,
+	options OptionsRepostStory,
+) (result APIResponse[Story]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["business_connection_id"] = businessConnectionID
+	options["from_chat_id"] = fromChatID
+	options["from_story_id"] = fromStoryID
+	options["active_period"] = activePeriod
+
+	return requestGeneric[Story](ctx, b, "repostStory", options)
 }
 
 // EditStory edits a story previously posted by the bot on behalf of a managed business account.
@@ -1286,6 +1346,30 @@ func (b *Bot) SendDice(
 	options["chat_id"] = chatID
 
 	return requestGeneric[Message](ctx, b, "sendDice", options)
+}
+
+// SendMessageDraft sends a message draft.
+//
+// NOTE: supported only for bots with forum topic mode enabled
+//
+// https://core.telegram.org/bots/api#sendmessagedraft
+func (b *Bot) SendMessageDraft(
+	ctx context.Context,
+	chatID ChatID,
+	draftID int64,
+	text string,
+	options OptionsSendMessageDraft,
+) (result APIResponse[bool]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["draft_id"] = draftID
+	options["text"] = text
+
+	return requestGeneric[bool](ctx, b, "sendMessageDraft", options)
 }
 
 // SendChatAction sends chat actions.
