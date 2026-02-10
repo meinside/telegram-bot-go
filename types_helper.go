@@ -1018,31 +1018,56 @@ func NewPaidReaction() ReactionType {
 ////////////////////////////////
 // Helper functions for InputFile
 
-// NewInputFileFromFilepath generates an InputFile from given filepath
+// NewInputFileFromFilepath generates an InputFile from given filepath.
 func NewInputFileFromFilepath(filepath string) InputFile {
 	return InputFile{
 		Filepath: &filepath,
 	}
 }
 
-// NewInputFileFromURL generates an InputFile from given url
+// NewInputFileFromURL generates an InputFile from given url.
 func NewInputFileFromURL(url string) InputFile {
 	return InputFile{
 		URL: &url,
 	}
 }
 
-// NewInputFileFromBytes generates an InputFile from given bytes array
+// NewInputFileFromBytes generates an InputFile from given bytes array.
 func NewInputFileFromBytes(bytes []byte) InputFile {
 	return InputFile{
 		Bytes: bytes,
 	}
 }
 
-// NewInputFileFromFileID generates an InputFile from given file id
+// NewInputFileFromFileID generates an InputFile from given file id.
 func NewInputFileFromFileID(fileID string) InputFile {
 	return InputFile{
 		FileID: &fileID,
+	}
+}
+
+////////////////////////////////
+// Helper functions for InputProfilePhoto
+
+// NewInputProfilePhotoFromFilepath generates an InputProfilePhoto from given filepath.
+func NewInputProfilePhotoFromFilepath(
+	photoType InputProfilePhotoType,
+	filepath string,
+) InputProfilePhoto {
+	return InputProfilePhoto{
+		Type:     photoType,
+		Filepath: &filepath,
+	}
+}
+
+// NewInputProfilePhotoFromBytes generates an InputProfilePhoto from given bytes array.
+func NewInputProfilePhotoFromBytes(
+	photoType InputProfilePhotoType,
+	bytes []byte,
+) InputProfilePhoto {
+	return InputProfilePhoto{
+		Type:  photoType,
+		Bytes: bytes,
 	}
 }
 
@@ -1268,6 +1293,18 @@ func NewKeyboardButton(text string) KeyboardButton {
 	}
 }
 
+// SetIconCustomEmojiID sets the `icon_custom_emoji_id` value of KeyboardButton.
+func (b KeyboardButton) SetIconCustomEmojiID(iconCustomEmojiID string) KeyboardButton {
+	b.IconCustomEmojiID = &iconCustomEmojiID
+	return b
+}
+
+// SetStyle sets the `style` value of KeyboardButton.
+func (b KeyboardButton) SetStyle(style KeyboardStyle) KeyboardButton {
+	b.Style = &style
+	return b
+}
+
 // SetRequestUsers sets the `request_users` value of KeyboardButton.
 func (b KeyboardButton) SetRequestUsers(requestUsers KeyboardButtonRequestUsers) KeyboardButton {
 	b.RequestUsers = &requestUsers
@@ -1462,6 +1499,18 @@ func NewInlineKeyboardButton(text string) InlineKeyboardButton {
 	return InlineKeyboardButton{
 		Text: text,
 	}
+}
+
+// SetIconCustomEmojiID sets the `icon_custom_emoji_id` value of InlineKeyboardButton.
+func (b InlineKeyboardButton) SetIconCustomEmojiID(iconCustomEmojiID string) InlineKeyboardButton {
+	b.IconCustomEmojiID = &iconCustomEmojiID
+	return b
+}
+
+// SetStyle sets the `style` value of InlineKeyboardButton.
+func (b InlineKeyboardButton) SetStyle(style KeyboardStyle) InlineKeyboardButton {
+	b.Style = &style
+	return b
 }
 
 // SetURL sets the `url` value of InlineKeyboardButton.

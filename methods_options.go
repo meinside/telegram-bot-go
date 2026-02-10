@@ -2144,6 +2144,25 @@ func (o OptionsGetUserProfilePhotos) SetLimit(limit int) OptionsGetUserProfilePh
 	return o
 }
 
+// OptionsGetUserProfileAudios struct for GetUserProfileAudios().
+//
+// options include: `offset` and `limit`.
+//
+// https://core.telegram.org/bots/api#getuserprofileaudios
+type OptionsGetUserProfileAudios MethodOptions
+
+// SetOffset sets the `offset` value of OptionsGetUserProfileAudios.
+func (o OptionsGetUserProfileAudios) SetOffset(offset int) OptionsGetUserProfileAudios {
+	o["offset"] = offset
+	return o
+}
+
+// SetLimit sets the `limit` value of OptionsGetUserProfileAudios.
+func (o OptionsGetUserProfileAudios) SetLimit(limit int) OptionsGetUserProfileAudios {
+	o["limit"] = limit
+	return o
+}
+
 // OptionsSetUserEmojiStatus struct for SetUserEmojiStatus().
 //
 // options include: `emoji_status_custom_emoji_id`, and `emoji_status_expiration_date`.

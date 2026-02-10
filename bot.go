@@ -73,7 +73,8 @@ type Bot struct {
 	commandHandlers          map[string](func(b *Bot, update Update, args string)) // command handler functions
 	noMatchingCommandHandler func(b *Bot, update Update, cmd, args string)         // handler function for no matching command
 
-	Verbose bool // print verbose log messages or not
+	Verbose  bool // print verbose log messages or not
+	DumpHTTP bool // dump HTTP request and response or not
 }
 
 // NewClient gets a new bot API client with given token string.

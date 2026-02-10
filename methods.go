@@ -8,10 +8,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"mime/multipart"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -1430,6 +1433,22 @@ func (b *Bot) GetUserProfilePhotos(
 	return requestGeneric[UserProfilePhotos](ctx, b, "getUserProfilePhotos", options)
 }
 
+// https://core.telegram.org/bots/api#getuserprofileaudios
+func (b *Bot) GetUserProfileAudios(
+	ctx context.Context,
+	userID int64,
+	options OptionsGetUserProfileAudios,
+) (result APIResponse[UserProfileAudios]) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+
+	return requestGeneric[UserProfileAudios](ctx, b, "getUserProfileAudios", options)
+}
+
 // SetUserEmojiStatus changes the emoji status for a given user that previously allowed the bot to manage their emoji status via the Mini App.
 //
 // https://core.telegram.org/bots/api#setuseremojistatus
@@ -2139,6 +2158,27 @@ func (b *Bot) DeleteMyCommands(
 	return requestGeneric[bool](ctx, b, "deleteMyCommands", options)
 }
 
+// SetMyProfilePhoto sets the bot's profile photo.
+//
+// https://core.telegram.org/bots/api#setmyprofilephoto
+func (b *Bot) SetMyProfilePhoto(
+	ctx context.Context,
+	photo InputProfilePhoto,
+) (result APIResponse[bool]) {
+	options := map[string]any{
+		"photo": photo,
+	}
+
+	return requestGeneric[bool](ctx, b, "setMyProfilePhoto", options)
+}
+
+// RemoveMyProfilePhoto deletes the bot's profile photo.
+//
+// https://core.telegram.org/bots/api#removemyprofilephoto
+func (b *Bot) RemoveMyProfilePhoto(ctx context.Context) (result APIResponse[bool]) {
+	return requestGeneric[bool](ctx, b, "removeMyProfilePhoto", nil)
+}
+
 // SetChatMenuButton sets chat menu button.
 //
 // https://core.telegram.org/bots/api#setchatmenubutton
@@ -2608,7 +2648,7 @@ func (b *Bot) SavePreparedInlineMessage(
 	return requestGeneric[PreparedInlineMessage](ctx, b, "savePreparedInlineMessage", options)
 }
 
-// CreateForumTopic creates a topic in a forum supergroup chat.
+// CreateForumTopic creates a topic in a forum supergroup chat or a private chat with a user.
 //
 // https://core.telegram.org/bots/api#createforumtopic
 func (b *Bot) CreateForumTopic(
@@ -2628,7 +2668,7 @@ func (b *Bot) CreateForumTopic(
 	return requestGeneric[ForumTopic](ctx, b, "createForumTopic", options)
 }
 
-// EditForumTopic edits a forum topic.
+// EditForumTopic edits a topic in a forum supergroup chat or a private chat with a user.
 //
 // https://core.telegram.org/bots/api#editforumtopic
 func (b *Bot) EditForumTopic(
@@ -2648,7 +2688,7 @@ func (b *Bot) EditForumTopic(
 	return requestGeneric[bool](ctx, b, "editForumTopic", options)
 }
 
-// CloseForumTopic closes a forum topic.
+// CloseForumTopic closes an open topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#closeforumtopic
 func (b *Bot) CloseForumTopic(
@@ -2664,7 +2704,7 @@ func (b *Bot) CloseForumTopic(
 	return requestGeneric[bool](ctx, b, "closeForumTopic", options)
 }
 
-// ReopenForumTopic reopens a forum topic.
+// ReopenForumTopic reopens a closed topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#reopenforumtopic
 func (b *Bot) ReopenForumTopic(
@@ -2680,7 +2720,7 @@ func (b *Bot) ReopenForumTopic(
 	return requestGeneric[bool](ctx, b, "reopenForumTopic", options)
 }
 
-// DeleteForumTopic deletes a forum topic.
+// DeleteForumTopic deletes a forum topic along with all its messages in a forum supergroup chat or a private chat with a user.
 //
 // https://core.telegram.org/bots/api#deleteforumtopic
 func (b *Bot) DeleteForumTopic(
@@ -2696,7 +2736,7 @@ func (b *Bot) DeleteForumTopic(
 	return requestGeneric[bool](ctx, b, "deleteForumTopic", options)
 }
 
-// UnpinAllForumTopicMessages unpins all forum topic messages.
+// UnpinAllForumTopicMessages clears the list of pinned messages in a forum topic in a forum supergroup chat or a private chat with a user.
 //
 // https://core.telegram.org/bots/api#unpinallforumtopicmessages
 func (b *Bot) UnpinAllForumTopicMessages(
@@ -2712,7 +2752,7 @@ func (b *Bot) UnpinAllForumTopicMessages(
 	return requestGeneric[bool](ctx, b, "unpinAllForumTopicMessages", options)
 }
 
-// EditGeneralForumTopic edites general forum topic.
+// EditGeneralForumTopic edits the name of the 'General' topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#editgeneralforumtopic
 func (b *Bot) EditGeneralForumTopic(
@@ -2728,7 +2768,7 @@ func (b *Bot) EditGeneralForumTopic(
 	return requestGeneric[bool](ctx, b, "editGeneralForumTopic", options)
 }
 
-// CloseGeneralForumTopic closes general forum topic.
+// CloseGeneralForumTopic closes an open 'General' topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#closegeneralforumtopic
 func (b *Bot) CloseGeneralForumTopic(
@@ -2742,7 +2782,7 @@ func (b *Bot) CloseGeneralForumTopic(
 	return requestGeneric[bool](ctx, b, "closeGeneralForumTopic", options)
 }
 
-// ReopenGeneralForumTopic reopens general forum topic.
+// ReopenGeneralForumTopic reopens a closed 'General' topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#reopengeneralforumtopic
 func (b *Bot) ReopenGeneralForumTopic(
@@ -2756,7 +2796,7 @@ func (b *Bot) ReopenGeneralForumTopic(
 	return requestGeneric[bool](ctx, b, "reopenGeneralForumTopic", options)
 }
 
-// HideGeneralForumTopic hides general forum topic.
+// HideGeneralForumTopic hides the 'General' topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#hidegeneralforumtopic
 func (b *Bot) HideGeneralForumTopic(
@@ -2770,7 +2810,7 @@ func (b *Bot) HideGeneralForumTopic(
 	return requestGeneric[bool](ctx, b, "hideGeneralForumTopic", options)
 }
 
-// UnhideGeneralForumTopic unhides general forum topic.
+// UnhideGeneralForumTopic unhides the 'General' topic in a forum supergroup chat.
 //
 // https://core.telegram.org/bots/api#unhidegeneralforumtopic
 func (b *Bot) UnhideGeneralForumTopic(
@@ -2784,7 +2824,7 @@ func (b *Bot) UnhideGeneralForumTopic(
 	return requestGeneric[bool](ctx, b, "unhideGeneralForumTopic", options)
 }
 
-// UnpinAllGeneralForumTopicMessages unpins all general forum topic messages.
+// UnpinAllGeneralForumTopicMessages clears the list of pinned messages in a General forum topic.
 //
 // https://core.telegram.org/bots/api#unpinallgeneralforumtopicmessages
 func (b *Bot) UnpinAllGeneralForumTopicMessages(
@@ -2798,7 +2838,7 @@ func (b *Bot) UnpinAllGeneralForumTopicMessages(
 	return requestGeneric[bool](ctx, b, "unpinAllGeneralForumTopicMessages", options)
 }
 
-// GetForumTopicIconStickers fetches forum topic icon stickers.
+// GetForumTopicIconStickers fetches custom emoji stickers which can be used as a forum topic icon by any user.
 //
 // https://core.telegram.org/bots/api#getforumtopiciconstickers
 func (b *Bot) GetForumTopicIconStickers(ctx context.Context) (result APIResponse[[]Sticker]) {
@@ -2812,6 +2852,10 @@ func checkIfFileParamExists(params map[string]any) bool {
 		case *os.File, []byte:
 			return true
 		case InputFile:
+			if len(val.Bytes) > 0 || val.Filepath != nil {
+				return true
+			}
+		case InputProfilePhoto:
 			if len(val.Bytes) > 0 || val.Filepath != nil {
 				return true
 			}
@@ -2845,13 +2889,20 @@ func (b *Bot) paramToString(param any) (result string, success bool) {
 		if val.FileID != nil {
 			return *val.FileID, true
 		}
-		b.error("parameter '%+v' could not be cast to string value", param)
+		b.error("parameter %[1]T (%+[1]v) could not be cast to string value", param)
+	case InputProfilePhoto:
+		if val.Photo != nil || val.Animation != nil {
+			if marshalled, err := json.Marshal(val); err == nil {
+				return string(marshalled), true
+			}
+		}
+		b.error("parameter %[1]T (%+[1]v) could not be cast to string value", param)
 	default: // fallback: encode to JSON string
 		json, err := json.Marshal(param)
 		if err == nil {
 			return string(json), true
 		}
-		b.error("parameter '%+v' could not be encoded as json: %s", param, err)
+		b.error("parameter %[1]T (%+[1]v) could not be encoded as json: %s", param, err)
 	}
 
 	return "", false
@@ -2893,81 +2944,143 @@ func (b *Bot) requestMultipartFormData(
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
-	for key, value := range params {
-		switch val := value.(type) {
+	for k, v := range params {
+		switch val := v.(type) {
 		case *os.File:
 			defer func() { _ = val.Close() }()
 
 			var part io.Writer
-			part, err = writer.CreateFormFile(key, val.Name())
+			part, err = writer.CreateFormFile(k, val.Name())
 			if err == nil {
 				if _, err = io.Copy(part, val); err != nil {
-					b.error("could not write to multipart: %s", key)
+					b.error("could not write to multipart: '%[1]s'", k)
 				}
 			} else {
-				b.error("could not create form file for parameter '%s' (%v)", key, value)
+				b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
 			}
 		case []byte:
-			if fbytes, ok := value.([]byte); ok {
-				filename := fmt.Sprintf("%s.%s", key, getExtension(fbytes))
-				var part io.Writer
-				part, err = writer.CreateFormFile(key, filename)
-				if err == nil {
-					if _, err = io.Copy(part, bytes.NewReader(fbytes)); err != nil {
-						b.error("could not write to multipart: %s", key)
-					}
-				} else {
-					b.error("could not create form file for parameter '%s' ([]byte)", key)
+			filename := fmt.Sprintf("%s.%s", k, getExtension(val))
+
+			var part io.Writer
+			part, err = writer.CreateFormFile(k, filename)
+			if err == nil {
+				if _, err = io.Copy(part, bytes.NewReader(val)); err != nil {
+					b.error("could not write to multipart: '%[1]s'", k)
 				}
 			} else {
-				b.error("parameter '%s' could not be cast to []byte", key)
+				b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
 			}
 		case InputFile:
-			if inputFile, ok := value.(InputFile); ok {
-				if inputFile.Filepath != nil {
-					var file *os.File
-					if file, err = os.Open(*inputFile.Filepath); err == nil {
-						defer func() { _ = file.Close() }()
+			if val.Filepath != nil {
+				var file *os.File
+				if file, err = os.Open(*val.Filepath); err == nil {
+					defer func() { _ = file.Close() }()
 
-						var part io.Writer
-						part, err = writer.CreateFormFile(key, file.Name())
-						if err == nil {
-							if _, err = io.Copy(part, file); err != nil {
-								b.error("could not write to multipart: %s", key)
-							}
-						} else {
-							b.error("could not create form file for parameter '%s' (%v)", key, value)
-						}
-					} else {
-						b.error("parameter '%s' (%v) could not be read from file: %s", key, value, err.Error())
-					}
-				} else if len(inputFile.Bytes) > 0 {
-					filename := fmt.Sprintf("%s.%s", key, getExtension(inputFile.Bytes))
 					var part io.Writer
-					part, err = writer.CreateFormFile(key, filename)
+					part, err = writer.CreateFormFile(k, file.Name())
 					if err == nil {
-						if _, err = io.Copy(part, bytes.NewReader(inputFile.Bytes)); err != nil {
-							b.error("could not write InputFile to multipart: %s", key)
+						if _, err = io.Copy(part, file); err != nil {
+							b.error("could not write to multipart: '%[1]s'", k)
 						}
 					} else {
-						b.error("could not create form file for parameter '%s' (InputFile)", key)
+						b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
 					}
 				} else {
-					if strValue, ok := b.paramToString(value); ok {
-						if err := writer.WriteField(key, strValue); err != nil {
-							b.error("failed to write field with key: %s, value: %s (%s)", key, strValue, err)
-						}
-					} else {
-						b.error("invalid InputFile parameter '%s'", key)
+					b.error("parameter '%[1]s' (%[2]T) could not be read from file: %[3]s", k, val, err.Error())
+				}
+			} else if len(val.Bytes) > 0 {
+				filename := fmt.Sprintf("%s.%s", k, getExtension(val.Bytes))
+				var part io.Writer
+				part, err = writer.CreateFormFile(k, filename)
+				if err == nil {
+					if _, err = io.Copy(part, bytes.NewReader(val.Bytes)); err != nil {
+						b.error("could not write %[2]T to multipart: '%[1]s'", k, val)
 					}
+				} else {
+					b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
 				}
 			} else {
-				b.error("parameter '%s' could not be cast to InputFile", key)
+				b.error("ignoring invalid %[2]T parameter '%[1]s' without filepath nor bytes", k, val)
+			}
+		case InputProfilePhoto: // https://core.telegram.org/bots/api#inputprofilephoto
+			if val.Filepath != nil {
+				var file *os.File
+				if file, err = os.Open(*val.Filepath); err == nil {
+					defer func() { _ = file.Close() }()
+
+					filename := filepath.Base(file.Name())
+
+					var part io.Writer
+					part, err = writer.CreateFormFile(filename, filename)
+					if err == nil {
+						if _, err = io.Copy(part, file); err == nil {
+							attachedFilename := "attach://" + filename
+
+							switch val.Type {
+							case InputProfilePhotoStatic:
+								val.Photo = &attachedFilename
+							case InputProfilePhotoAnimated:
+								val.Animation = &attachedFilename
+							default:
+								b.error("invalid %[1]T type: %[2]s", val, val.Type)
+							}
+
+							// write InputProfilePhoto 'value' to body
+							if strValue, ok := b.paramToString(val); ok {
+								if err := writer.WriteField(k, strValue); err != nil {
+									b.error("failed to write field with key: '%[1]s', value: %[2]s (%[3]s)", k, strValue, err)
+								}
+							} else {
+								b.error("invalid %[2]T parameter '%[1]s'", k, val)
+							}
+						} else {
+							b.error("could not write to multipart: '%[1]s'", k)
+						}
+					} else {
+						b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
+					}
+				} else {
+					b.error("parameter '%[1]s' (%[2]T) could not be read from file: %[3]s", k, val, err.Error())
+				}
+			} else if len(val.Bytes) > 0 {
+				filename := fmt.Sprintf("%s.%s", k, getExtension(val.Bytes))
+
+				var part io.Writer
+				part, err = writer.CreateFormFile(filename, filename)
+				if err == nil {
+					if _, err = io.Copy(part, bytes.NewReader(val.Bytes)); err == nil {
+						// set attached filename
+						attachedFilename := "attach://" + filename
+						switch val.Type {
+						case InputProfilePhotoStatic:
+							val.Photo = &attachedFilename
+						case InputProfilePhotoAnimated:
+							val.Animation = &attachedFilename
+						default:
+							b.error("invalid %[1]T type: %[2]s", val, val.Type)
+						}
+
+						// write InputProfilePhoto 'value' to body
+						if strValue, ok := b.paramToString(val); ok {
+							if err := writer.WriteField(k, strValue); err != nil {
+								b.error("failed to write field with key: '%[1]s', value: %[2]s (%[3]s)", k, strValue, err)
+							}
+						} else {
+							b.error("invalid %[2]T parameter '%[1]s'", k, val)
+						}
+					} else {
+						b.error("could not write %[2]T to multipart: '%[1]s'", k, val)
+					}
+				} else {
+					b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
+				}
+			} else {
+				b.error("ignoring invalid %[2]T parameter '%[1]s' without filepath nor bytes", k, val)
 			}
 		default:
-			if strValue, ok := b.paramToString(value); ok {
-				if err := writer.WriteField(key, strValue); err != nil {
-					b.error("failed to write filed with key: %s, value: %s (%s)", key, strValue, err)
+			if strValue, ok := b.paramToString(val); ok {
+				if err := writer.WriteField(k, strValue); err != nil {
+					b.error("failed to write filed with key: '%s', value: %s (%s)", k, strValue, err)
 				}
 			}
 		}
@@ -2983,6 +3096,17 @@ func (b *Bot) requestMultipartFormData(
 		req.Header.Add("Content-Type", writer.FormDataContentType()) // due to file parameter
 		req.Close = true
 
+		// dump request
+		if b.DumpHTTP {
+			// NOTE: include `body` only when verbose mode
+			if dumped, err := httputil.DumpRequest(req, b.Verbose); err == nil {
+				slog.Debug(">>> dumping HTTP request",
+					"with_body", b.Verbose,
+					"dumped", b.redact(string(dumped)),
+				)
+			}
+		}
+
 		var resp *http.Response
 		resp, err = b.httpClient.Do(req)
 
@@ -2991,6 +3115,17 @@ func (b *Bot) requestMultipartFormData(
 		}
 
 		if err == nil {
+			// dump response
+			if b.DumpHTTP {
+				// NOTE: include `body` only when verbose mode
+				if dumped, err := httputil.DumpResponse(resp, b.Verbose); err == nil {
+					slog.Debug(">>> dumping HTTP response",
+						"with_body", b.Verbose,
+						"dumped", b.redact(string(dumped)),
+					)
+				}
+			}
+
 			// FIXXX: check http status code here
 			var bytes []byte
 			bytes, err = io.ReadAll(resp.Body)

@@ -32,7 +32,7 @@ run tests with:
 $ go test
 ```
 
-## Not implemented (yet)
+## Not Implemented (Yet, or Forever?)
 
 - [ ] [Telegram Passport](https://core.telegram.org/bots/api#telegram-passport)
 - [ ] [Seamless Telegram Login](https://telegram.org/blog/privacy-discussions-web-bots#meet-seamless-web-bots)
