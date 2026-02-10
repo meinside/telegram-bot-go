@@ -6,6 +6,7 @@ package telegrambot
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -78,7 +79,7 @@ func TestPollingUpdates(t *testing.T) {
 // test API method functions
 func TestMethods(t *testing.T) {
 	_token := os.Getenv("TOKEN")
-	_chatID := os.Getenv("CHAT_ID") // NOTE: `chat_id` of a group chat
+	_chatID := os.Getenv("CHAT_ID") // NOTE: `chat_id` of a group chat with topics
 	_verbose := os.Getenv("VERBOSE")
 
 	client := NewClient(_token)
@@ -97,6 +98,22 @@ func TestMethods(t *testing.T) {
 	if me := client.GetMe(context.TODO()); !me.Ok {
 		t.Errorf("failed to get me: %s", *me.Description)
 	} else {
+		if client.Verbose {
+			marshalled, _ := json.Marshal(me.Result)
+			slog.Info("fetched bot info", "user", marshalled)
+		}
+
+		// show warnings on missing permissions
+		if me.Result.SupportsInlineQueries != nil && !*me.Result.SupportsInlineQueries {
+			slog.Warn("bot does not support inline queries")
+		}
+		if me.Result.HasTopicsEnabled != nil && !*me.Result.HasTopicsEnabled {
+			slog.Warn("bot does not have topics enabled")
+		}
+		if me.Result.AllowsUsersToCreateTopics != nil && !*me.Result.AllowsUsersToCreateTopics {
+			slog.Warn("bot does not allow users to create topics")
+		}
+
 		////////////////////////////////
 		// (webhook)
 		//
@@ -348,7 +365,24 @@ func TestMethods(t *testing.T) {
 			); !desc.Ok {
 				t.Errorf("failed to get my short description: %s", *desc.Description)
 			}
+			// TODO: GetUserProfileAudios
 			// TODO: GetUserChatBoosts
+			// RemoveMyProfilePhoto
+			if removed := client.RemoveMyProfilePhoto(
+				context.TODO(),
+			); !removed.Ok {
+				t.Errorf("failed to remove my profile photo: %s", *removed.Description)
+			}
+			// SetMyProfilePhoto
+			if photo := client.SetMyProfilePhoto(
+				context.TODO(),
+				NewInputProfilePhotoFromFilepath(
+					InputProfilePhotoStatic,
+					"./samples/_files/gopher.jpg",
+				),
+			); !photo.Ok {
+				t.Errorf("failed to set my profile photo: %s", *photo.Description)
+			}
 			// TODO: SetMyCommands
 			// TODO: DeleteMyCommands
 			// TODO: SetChatMenuButton
@@ -495,11 +529,45 @@ func TestMethods(t *testing.T) {
 			////////////////////////////////
 			// (forum)
 			//
-			// TODO: CreateForumTopic
-			// TODO: EditForumTopic
+			// CreateForumTopic
+			if created := client.CreateForumTopic(
+				context.TODO(),
+				_chatID,
+				fmt.Sprintf("forum topic with chat_id: %s", _chatID),
+				OptionsCreateForumTopic{},
+			); created.Ok {
+				_messageThreadID := created.Result.MessageThreadID
+
+				// EditForumTopic
+				if edited := client.EditForumTopic(
+					context.TODO(),
+					_chatID,
+					_messageThreadID,
+					OptionsEditForumTopic{}.
+						SetName(
+							fmt.Sprintf(
+								"updated forum topic with chat_id: %s, message_thread_id: %d",
+								_chatID,
+								_messageThreadID,
+							),
+						),
+				); !edited.Ok {
+					t.Errorf("failed to edit forum topic: %s", *edited.Description)
+				}
+
+				// DeleteForumTopic
+				if deleted := client.DeleteForumTopic(
+					context.TODO(),
+					_chatID,
+					_messageThreadID,
+				); !deleted.Ok {
+					t.Errorf("failed to delete forum topic: %s", *deleted.Description)
+				}
+			} else {
+				t.Errorf("failed to create forum topic: %s", *created.Description)
+			}
 			// TODO: CloseForumTopic
 			// TODO: ReopenForumTopic
-			// TODO: DeleteForumTopic
 			// TODO: UnpinAllForumTopicMessages
 			// TODO: EditGeneralForumTopic
 			// TODO: CloseGeneralForumTopic

@@ -306,20 +306,21 @@ const (
 //
 // https://core.telegram.org/bots/api#user
 type User struct {
-	ID                      int64   `json:"id"`
-	IsBot                   bool    `json:"is_bot"`
-	FirstName               string  `json:"first_name"`
-	LastName                *string `json:"last_name,omitempty"`
-	Username                *string `json:"username,omitempty"`
-	LanguageCode            *string `json:"language_code,omitempty"` // https://en.wikipedia.org/wiki/IETF_language_tag
-	IsPremium               *bool   `json:"is_premium,omitempty"`
-	AddedToAttachmentMenu   *bool   `json:"added_to_attachment_menu,omitempty"`
-	CanJoinGroups           *bool   `json:"can_join_groups,omitempty"`             // returned only in GetMe()
-	CanReadAllGroupMessages *bool   `json:"can_read_all_group_messages,omitempty"` // returned only in GetMe()
-	SupportsInlineQueries   *bool   `json:"supports_inline_queries,omitempty"`     // returned only in GetMe()
-	CanConnectToBusiness    *bool   `json:"can_connect_to_business,omitempty"`     // returned only in GetMe()
-	HasMainWebApp           *bool   `json:"has_main_web_app,omitempty"`            // returned only in GetMe()
-	HasTopicsEnabled        *bool   `json:"has_topics_enabled,omitempty"`          // returned only in GetMe()
+	ID                        int64   `json:"id"`
+	IsBot                     bool    `json:"is_bot"`
+	FirstName                 string  `json:"first_name"`
+	LastName                  *string `json:"last_name,omitempty"`
+	Username                  *string `json:"username,omitempty"`
+	LanguageCode              *string `json:"language_code,omitempty"` // https://en.wikipedia.org/wiki/IETF_language_tag
+	IsPremium                 *bool   `json:"is_premium,omitempty"`
+	AddedToAttachmentMenu     *bool   `json:"added_to_attachment_menu,omitempty"`
+	CanJoinGroups             *bool   `json:"can_join_groups,omitempty"`               // returned only in GetMe()
+	CanReadAllGroupMessages   *bool   `json:"can_read_all_group_messages,omitempty"`   // returned only in GetMe()
+	SupportsInlineQueries     *bool   `json:"supports_inline_queries,omitempty"`       // returned only in GetMe()
+	CanConnectToBusiness      *bool   `json:"can_connect_to_business,omitempty"`       // returned only in GetMe()
+	HasMainWebApp             *bool   `json:"has_main_web_app,omitempty"`              // returned only in GetMe()
+	HasTopicsEnabled          *bool   `json:"has_topics_enabled,omitempty"`            // returned only in GetMe()
+	AllowsUsersToCreateTopics *bool   `json:"allows_users_to_create_topics,omitempty"` // returned only in GetMe()
 }
 
 // Chat is a struct of a chat
@@ -388,6 +389,7 @@ type ChatFullInfo struct {
 	LinkedChatID                       *int64                `json:"linked_chat_id,omitempty"`
 	Location                           *ChatLocation         `json:"location,omitempty"`
 	Rating                             *UserRating           `json:"rating,omitempty"`
+	FirstProfileAudio                  *Audio                `json:"first_profile_audio,omitempty"`
 	UniqueGiftColors                   *UniqueGiftColors     `json:"unique_gift_colors,omitempty"`
 	PaidMessageStarCount               *int                  `json:"paid_message_star_count,omitempty"`
 }
@@ -747,21 +749,34 @@ type Story struct {
 	ID   int64 `json:"id"`
 }
 
+// VideoQuality is a struct for a video quality
+//
+// https://core.telegram.org/bots/api#videoquality
+type VideoQuality struct {
+	FileID       string `json:"file_id"`
+	FileUniqueID string `json:"file_unique_id"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
+	Codec        string `json:"codec"` // eg. "h264", "h265", or "av01"
+	FileSize     *int64 `json:"file_size,omitempty"`
+}
+
 // Video is a struct for a video file
 //
 // https://core.telegram.org/bots/api#video
 type Video struct {
-	FileID         string      `json:"file_id"`
-	FileUniqueID   string      `json:"file_unique_id"`
-	Width          int         `json:"width"`
-	Height         int         `json:"height"`
-	Duration       int         `json:"duration"`
-	Thumbnail      *PhotoSize  `json:"thumbnail,omitempty"`
-	Cover          []PhotoSize `json:"cover,omitempty"`
-	StartTimestamp *int        `json:"start_timestamp,omitempty"`
-	FileName       *string     `json:"file_name,omitempty"`
-	MimeType       *string     `json:"mime_type,omitempty"`
-	FileSize       *int        `json:"file_size,omitempty"`
+	FileID         string         `json:"file_id"`
+	FileUniqueID   string         `json:"file_unique_id"`
+	Width          int            `json:"width"`
+	Height         int            `json:"height"`
+	Duration       int            `json:"duration"`
+	Thumbnail      *PhotoSize     `json:"thumbnail,omitempty"`
+	Cover          []PhotoSize    `json:"cover,omitempty"`
+	StartTimestamp *int           `json:"start_timestamp,omitempty"`
+	Qualities      []VideoQuality `json:"qualities,omitempty"`
+	FileName       *string        `json:"file_name,omitempty"`
+	MimeType       *string        `json:"mime_type,omitempty"`
+	FileSize       *int           `json:"file_size,omitempty"`
 }
 
 // PaidMediaInfo struct
@@ -1358,6 +1373,14 @@ type UserProfilePhotos struct {
 	Photos     [][]PhotoSize `json:"photos"`
 }
 
+// UserProfileAudios is a struct for user profile audios
+//
+// https://core.telegram.org/bots/api#userprofileaudios
+type UserProfileAudios struct {
+	TotalCount int     `json:"total_count"`
+	Audios     []Audio `json:"audios"`
+}
+
 // File is a struct for a file
 //
 // https://core.telegram.org/bots/api#file
@@ -1388,14 +1411,24 @@ type ReplyKeyboardMarkup struct {
 //
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
-	Text            string                      `json:"text"`
-	RequestUsers    *KeyboardButtonRequestUsers `json:"request_users,omitempty"`
-	RequestChat     *KeyboardButtonRequestChat  `json:"request_chat,omitempty"`
-	RequestContact  *bool                       `json:"request_contact,omitempty"`
-	RequestLocation *bool                       `json:"request_location,omitempty"`
-	RequestPoll     *KeyboardButtonPollType     `json:"request_poll,omitempty"`
-	WebApp          *WebAppInfo                 `json:"web_app,omitempty"`
+	Text              string                      `json:"text"`
+	IconCustomEmojiID *string                     `json:"icon_custom_emoji_id,omitempty"`
+	Style             *KeyboardStyle              `json:"style,omitempty"`
+	RequestUsers      *KeyboardButtonRequestUsers `json:"request_users,omitempty"`
+	RequestChat       *KeyboardButtonRequestChat  `json:"request_chat,omitempty"`
+	RequestContact    *bool                       `json:"request_contact,omitempty"`
+	RequestLocation   *bool                       `json:"request_location,omitempty"`
+	RequestPoll       *KeyboardButtonPollType     `json:"request_poll,omitempty"`
+	WebApp            *WebAppInfo                 `json:"web_app,omitempty"`
 }
+
+type KeyboardStyle string
+
+const (
+	KeyboardStyleDanger  KeyboardStyle = "danger"  // red
+	KeyboardStyleSuccess KeyboardStyle = "success" // green
+	KeyboardStylePrimary KeyboardStyle = "primary" // blue
+)
 
 // KeyboardButtonRequestUsers is a struct for `request_users` in KeyboardButton
 //
@@ -1466,10 +1499,12 @@ type InlineKeyboardMarkup struct {
 // https://core.telegram.org/bots/api#inlinekeyboardbutton
 type InlineKeyboardButton struct {
 	Text                         string                       `json:"text"`
+	IconCustomEmojiID            *string                      `json:"icon_custom_emoji_id,omitempty"`
+	Style                        *KeyboardStyle               `json:"style,omitempty"`
 	URL                          *string                      `json:"url,omitempty"`
-	LoginURL                     *LoginURL                    `json:"login_url,omitempty"`
 	CallbackData                 *string                      `json:"callback_data,omitempty"`
 	WebApp                       *WebAppInfo                  `json:"web_app,omitempty"`
+	LoginURL                     *LoginURL                    `json:"login_url,omitempty"`
 	SwitchInlineQuery            *string                      `json:"switch_inline_query,omitempty"`
 	SwitchInlineQueryCurrentChat *string                      `json:"switch_inline_query_current_chat,omitempty"`
 	SwitchInlineQueryChosenChat  *SwitchInlineQueryChosenChat `json:"switch_inline_query_chosen_chat,omitempty"`
@@ -2201,6 +2236,8 @@ type Message struct {
 	Location                      *Location                      `json:"location,omitempty"`
 	NewChatMembers                []User                         `json:"new_chat_members,omitempty"`
 	LeftChatMember                *User                          `json:"left_chat_member,omitempty"`
+	ChatOwnerLeft                 *ChatOwnerLeft                 `json:"chat_owner_left,omitempty"`
+	ChatOwnerChanged              *ChatOwnerChanged              `json:"chat_owner_changed,omitempty"`
 	NewChatTitle                  *string                        `json:"new_chat_title,omitempty"`
 	NewChatPhoto                  []PhotoSize                    `json:"new_chat_photo,omitempty"`
 	DeleteChatPhoto               *bool                          `json:"delete_chat_photo,omitempty"`
@@ -2955,6 +2992,20 @@ type ChatBoostRemoved struct {
 	Source     ChatBoostSource `json:"source"`
 }
 
+// ChatOwnerLeft is a struct for a left chat owner.
+//
+// https://core.telegram.org/bots/api#chatownerleft
+type ChatOwnerLeft struct {
+	NewOwner *User `json:"new_owner,omitempty"`
+}
+
+// ChatOwnerChanged is a struct for a changed chat owner.
+//
+// https://core.telegram.org/bots/api#chatownerchanged
+type ChatOwnerChanged struct {
+	NewOwner User `json:"new_owner"`
+}
+
 // UserChatBoosts is a struct for a user's chat boosts
 //
 // https://core.telegram.org/bots/api#userchatboosts
@@ -3039,6 +3090,15 @@ type Gifts struct {
 	Gifts []Gift `json:"gifts"`
 }
 
+type Rarity string
+
+const (
+	RarityUncommon  Rarity = "uncommon"
+	RarityRare      Rarity = "rare"
+	RarityEpic      Rarity = "epic"
+	RarityLegendary Rarity = "legendary"
+)
+
 // UniqueGiftModel describes the model of a unique gift.
 //
 // https://core.telegram.org/bots/api#uniquegiftmodel
@@ -3046,6 +3106,7 @@ type UniqueGiftModel struct {
 	Name           string  `json:"name"`
 	Sticker        Sticker `json:"sticker"`
 	RarityPerMille int     `json:"rarity_per_mille"`
+	Rarity         *Rarity `json:"rarity,omitempty"`
 }
 
 // UniqueGiftSymbol describes the symbol shown on the pattern of a unique gift.
@@ -3100,6 +3161,7 @@ type UniqueGift struct {
 	Symbol           UniqueGiftSymbol   `json:"symbol"`
 	Backdrop         UniqueGiftBackdrop `json:"backdrop"`
 	IsPremium        *bool              `json:"is_premium,omitempty"`
+	IsBurned         *bool              `json:"is_burned,omitempty"`
 	IsFromBlockchain *bool              `json:"is_from_blockchain,omitempty"`
 	Colors           *UniqueGiftColors  `json:"colors,omitempty"`
 	PublisherChat    *Chat              `json:"publisher_chat,omitempty"`
@@ -3146,21 +3208,33 @@ const (
 	UniqueGiftInfoOriginOffer         UniqueGiftInfoOrigin = "offer"
 )
 
+type InputProfilePhotoType string
+
+const (
+	InputProfilePhotoStatic   InputProfilePhotoType = "static"
+	InputProfilePhotoAnimated InputProfilePhotoType = "animated"
+)
+
 // InputProfilePhoto describes a profile photo to set.
 //
 // https://core.telegram.org/bots/api#inputprofilephoto
 type InputProfilePhoto struct {
-	Type string `json:"type"`
+	Type InputProfilePhotoType `json:"type"`
 
-	// when Type == "static"
+	// when Type == InputProfilePhotoStatic
 	//
 	// https://core.telegram.org/bots/api#inputprofilephotostatic
 	Photo *string `json:"photo,omitempty"`
 
-	// when Type == "animated"
+	// when Type == InputProfilePhotoAnimated
+	//
 	// https://core.telegram.org/bots/api#inputprofilephotoanimated
 	Animation          *string  `json:"animation,omitempty"`
 	MainFrameTimestamp *float32 `json:"main_frame_timestamp,omitempty"`
+
+	// actual data for file upload
+	Filepath *string `json:"-"`
+	Bytes    []byte  `json:"-"`
 }
 
 // AcceptedGiftTypes describes the types of gifts that can be gifted to a user or a chat.
