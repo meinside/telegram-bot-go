@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (get updates),
 //
-// last update: 2024.04.03.
+// last update: 2026.02.11.
 
 package main
 
@@ -31,7 +31,7 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 			defer cancel()
 
 			// 'is typing...'
-			b.SendChatAction(
+			_, _ = b.SendChatAction(
 				ctx,
 				update.Message.Chat.ID,
 				bot.ChatActionTyping,
@@ -73,7 +73,7 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 			defer cancel2()
 
 			// send message
-			if sent := b.SendMessage(
+			if sent, _ := b.SendMessage(
 				ctx2,
 				update.Message.Chat.ID,
 				message,
@@ -95,7 +95,7 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 							},
 						},
 					)),
-			); !sent.Ok {
+			); !sent.OK {
 				log.Printf(
 					"*** failed to send message: %s",
 					*sent.Description,
@@ -121,12 +121,12 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 			defer cancel()
 
 			// answer inline query
-			if sent := b.AnswerInlineQuery(
+			if sent, _ := b.AnswerInlineQuery(
 				ctx,
 				update.InlineQuery.ID,
 				results,
 				nil,
-			); !sent.Ok {
+			); !sent.OK {
 				log.Printf(
 					"*** failed to answer inline query: %s",
 					*sent.Description,
@@ -162,14 +162,14 @@ func main() {
 	defer cancel()
 
 	// get info about this bot
-	if me := client.GetMe(ctx); me.Ok {
+	if me, _ := client.GetMe(ctx); me.OK {
 		log.Printf("Bot information: %s", botName(me.Result))
 
 		ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 		defer cancel()
 
 		// delete webhook (getting updates will not work when wehbook is set up)
-		if unhooked := client.DeleteWebhook(ctx, true); unhooked.Ok {
+		if unhooked, _ := client.DeleteWebhook(ctx, true); unhooked.OK {
 			// wait for new updates
 			client.StartPollingUpdates(
 				0,

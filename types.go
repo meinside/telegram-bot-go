@@ -174,27 +174,23 @@ type (
 
 // APIResponse is a base of API responses
 type APIResponse[T any] struct {
-	Ok          bool    `json:"ok"`
+	OK          bool    `json:"ok"`
 	Description *string `json:"description,omitempty"`
 
 	Parameters *APIResponseParameters `json:"parameters,omitempty"`
 
 	Result *T `json:"result,omitempty"`
-
-	Error error `json:"-"` // baseError which was converted from error string
 }
 
 // APIResponseMessageOrBool type for ambiguous type of `result`
 type APIResponseMessageOrBool struct {
-	Ok          bool    `json:"ok"`
+	OK          bool    `json:"ok"`
 	Description *string `json:"description,omitempty"`
 
 	Parameters *APIResponseParameters `json:"parameters,omitempty"`
 
 	ResultMessage *Message `json:"result_message,omitempty"`
 	ResultBool    *bool    `json:"result_bool,omitempty"`
-
-	Error error `json:"-"`
 }
 
 // APIResponseParameters is parameters in API responses

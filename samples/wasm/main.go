@@ -4,7 +4,7 @@
 //
 // Wasm version
 //
-// created on: 2024.04.03.
+// created on: 2026.02.11.
 
 // NOTE: open related files with GOOS and GOARCH environment variables like:
 //    `$ GOOS=js GOARCH=wasm vi __FILENAME__`
@@ -51,7 +51,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			// 'is typing...'
 			ctxAction, cancelAction := context.WithTimeout(context.TODO(), ignorableRequestTimeoutSeconds*time.Second)
 			defer cancelAction()
-			_ = b.SendChatAction(ctxAction, update.Message.Chat.ID, bot.ChatActionTyping, nil)
+			_, _ = b.SendChatAction(ctxAction, update.Message.Chat.ID, bot.ChatActionTyping, nil)
 
 			// sleep for a while,
 			time.Sleep(typingDelaySeconds * time.Second)
@@ -84,7 +84,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 				// get file info
 				ctxFileInfo, cancelFileInfo := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 				defer cancelFileInfo()
-				if fileRes := b.GetFile(ctxFileInfo, photo.FileID); fileRes.Ok {
+				if fileRes, _ := b.GetFile(ctxFileInfo, photo.FileID); fileRes.OK {
 					fileURL = b.GetFileURL(*fileRes.Result)
 				}
 
@@ -107,7 +107,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 				// get file info
 				ctxFileInfo, cancelFileInfo := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 				defer cancelFileInfo()
-				if fileRes := b.GetFile(ctxFileInfo, animation.FileID); fileRes.Ok {
+				if fileRes, _ := b.GetFile(ctxFileInfo, animation.FileID); fileRes.OK {
 					fileURL = b.GetFileURL(*fileRes.Result)
 				}
 
@@ -142,7 +142,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 			// and reply to the message
 			ctxSend, cancelSend := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 			defer cancelSend()
-			if sent := b.SendMessage(
+			if sent, _ := b.SendMessage(
 				ctxSend,
 				update.Message.Chat.ID,
 				message,
@@ -157,7 +157,7 @@ func handleUpdate(b *bot.Bot, update bot.Update, err error) {
 						},
 					}).
 						SetResizeKeyboard(true)),
-			); !sent.Ok {
+			); !sent.OK {
 				log.Printf(
 					"*** failed to send message: %s",
 					*sent.Description,
@@ -199,7 +199,7 @@ func runBot(this js.Value, args []js.Value) any {
 		// get info about this bot
 		ctxBotInfo, cancelBotInfo := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 		defer cancelBotInfo()
-		if me := client.GetMe(ctxBotInfo); me.Ok {
+		if me, _ := client.GetMe(ctxBotInfo); me.OK {
 			botID := *me.Result.Username
 			botName := me.Result.FirstName
 
@@ -220,7 +220,7 @@ func runBot(this js.Value, args []js.Value) any {
 			// delete webhook (getting updates will not work when wehbook is set up)
 			ctxDeleteWebhook, cancelDeleteWebhook := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 			defer cancelDeleteWebhook()
-			if unhooked := client.DeleteWebhook(ctxDeleteWebhook, true); unhooked.Ok {
+			if unhooked, _ := client.DeleteWebhook(ctxDeleteWebhook, true); unhooked.OK {
 				// wait for new updates
 				client.StartPollingUpdates(
 					0,

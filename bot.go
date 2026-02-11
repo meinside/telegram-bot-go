@@ -317,6 +317,7 @@ func (b *Bot) StartPollingUpdates(
 	b.updateHandler = updateHandler
 
 	var updates APIResponse[[]Update]
+	var err error
 loop:
 	for {
 		select {
@@ -326,7 +327,7 @@ loop:
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(pollMessagesTimeoutSeconds)*time.Second)
 			defer cancel()
 
-			if updates = b.GetUpdates(ctx, options); updates.Ok {
+			if updates, err = b.GetUpdates(ctx, options); err == nil && updates.OK {
 				// update offset (max + 1)
 				for _, update := range *updates.Result {
 					if options["offset"].(int64) <= update.UpdateID {
