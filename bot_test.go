@@ -367,7 +367,7 @@ func TestMethods(t *testing.T) {
 			}
 			// TODO: GetUserProfileAudios
 			// TODO: GetUserChatBoosts
-			// RemoveMyProfilePhoto
+			// RemoveMyProfilePhoto - FIXME: Bad Request: BOT_FALLBACK_UNSUPPORTED
 			if removed := client.RemoveMyProfilePhoto(
 				context.TODO(),
 			); !removed.Ok {
@@ -555,6 +555,15 @@ func TestMethods(t *testing.T) {
 					t.Errorf("failed to edit forum topic: %s", *edited.Description)
 				}
 
+				// UnpinAllForumTopicMessages
+				if unpinned := client.UnpinAllForumTopicMessages(
+					context.TODO(),
+					_chatID,
+					_messageThreadID,
+				); !unpinned.Ok {
+					t.Errorf("failed to unpin all forum topic messages: %s", *unpinned.Description)
+				}
+
 				// DeleteForumTopic
 				if deleted := client.DeleteForumTopic(
 					context.TODO(),
@@ -568,7 +577,6 @@ func TestMethods(t *testing.T) {
 			}
 			// TODO: CloseForumTopic
 			// TODO: ReopenForumTopic
-			// TODO: UnpinAllForumTopicMessages
 			// TODO: EditGeneralForumTopic
 			// TODO: CloseGeneralForumTopic
 			// TODO: ReopenGeneralForumTopic
