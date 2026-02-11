@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (handle commands),
 //
-// last update: 2024.04.03.
+// last update: 2026.02.11.
 
 package main
 
@@ -83,7 +83,7 @@ func updateHandler(
 			defer cancel()
 
 			// 'is typing...'
-			b.SendChatAction(
+			_, _ = b.SendChatAction(
 				ctx,
 				update.Message.Chat.ID,
 				bot.ChatActionTyping,
@@ -125,13 +125,13 @@ func send(
 	ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 	defer cancel()
 
-	if sent := b.SendMessage(
+	if sent, _ := b.SendMessage(
 		ctx,
 		chatID,
 		message,
 		bot.OptionsSendMessage{}.
 			SetReplyParameters(bot.NewReplyParameters(messageID)), // show original message
-	); !sent.Ok {
+	); !sent.OK {
 		log.Printf(
 			"*** failed to send a message: %s",
 			*sent.Description,
@@ -149,12 +149,12 @@ func react(
 	ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 	defer cancel()
 
-	if reacted := b.SetMessageReaction(
+	if reacted, _ := b.SetMessageReaction(
 		ctx,
 		chatID,
 		messageID,
 		bot.NewMessageReactionWithEmoji(emoji),
-	); !reacted.Ok {
+	); !reacted.OK {
 		log.Printf(
 			"*** failed to leave a reaction on a message: %s",
 			*reacted.Description,
@@ -183,14 +183,14 @@ func main() {
 	defer cancel()
 
 	// get info about this bot
-	if me := client.GetMe(ctx); me.Ok {
+	if me, _ := client.GetMe(ctx); me.OK {
 		log.Printf("Bot information: %s", botName(me.Result))
 
 		ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 		defer cancel()
 
 		// delete webhook (getting updates will not work when wehbook is set up)
-		if unhooked := client.DeleteWebhook(ctx, true); unhooked.Ok {
+		if unhooked, _ := client.DeleteWebhook(ctx, true); unhooked.OK {
 			// add command handlers
 			client.AddCommandHandler("/start", startCommandHandler)
 			client.AddCommandHandler("/help", helpCommandHandler)

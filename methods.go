@@ -25,7 +25,7 @@ import (
 func (b *Bot) GetUpdates(
 	ctx context.Context,
 	options OptionsGetUpdates,
-) (result APIResponse[[]Update]) {
+) (result APIResponse[[]Update], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -43,7 +43,7 @@ func (b *Bot) SetWebhook(
 	host string,
 	port int,
 	options OptionsSetWebhook,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	b.webhookHost = host
 	b.webhookPort = port
 	b.webhookURL = b.getWebhookURL()
@@ -53,24 +53,24 @@ func (b *Bot) SetWebhook(
 	}
 
 	if cert, exists := options["certificate"]; exists {
-		var errStr string
-
 		if filepath, ok := cert.(string); ok {
-			if file, err := os.Open(filepath); err == nil {
+			var file *os.File
+			if file, err = os.Open(filepath); err == nil {
 				params["certificate"] = file
 			} else {
-				errStr = fmt.Sprintf("failed to open certificate: %s", err)
+				err = fmt.Errorf("failed to open certificate: %w", err)
 			}
 		} else {
-			errStr = "given filepath of certificate is not a string"
+			err = fmt.Errorf("given filepath of certificate is not a string")
 		}
 
-		if errStr != "" {
+		if err != nil {
+			errStr := err.Error()
+
 			return APIResponse[bool]{
-				Ok:          false,
+				OK:          false,
 				Description: &errStr,
-				Error:       strToErr(errStr),
-			}
+			}, err
 		}
 	}
 
@@ -102,7 +102,7 @@ func (b *Bot) SetWebhook(
 func (b *Bot) DeleteWebhook(
 	ctx context.Context,
 	dropPendingUpdates bool,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	b.webhookHost = ""
 	b.webhookPort = 0
 	b.webhookURL = ""
@@ -117,28 +117,36 @@ func (b *Bot) DeleteWebhook(
 // GetWebhookInfo gets webhook info for this bot.
 //
 // https://core.telegram.org/bots/api#getwebhookinfo
-func (b *Bot) GetWebhookInfo(ctx context.Context) (result APIResponse[WebhookInfo]) {
+func (b *Bot) GetWebhookInfo(
+	ctx context.Context,
+) (result APIResponse[WebhookInfo], err error) {
 	return requestGeneric[WebhookInfo](ctx, b, "getWebhookInfo", map[string]any{})
 }
 
 // GetMe gets info of this bot.
 //
 // https://core.telegram.org/bots/api#getme
-func (b *Bot) GetMe(ctx context.Context) (result APIResponse[User]) {
+func (b *Bot) GetMe(
+	ctx context.Context,
+) (result APIResponse[User], err error) {
 	return requestGeneric[User](ctx, b, "getMe", map[string]any{}) // no params
 }
 
 // LogOut logs this bot from cloud Bot API server.
 //
 // https://core.telegram.org/bots/api#logout
-func (b *Bot) LogOut(ctx context.Context) (result APIResponse[bool]) {
+func (b *Bot) LogOut(
+	ctx context.Context,
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "logOut", map[string]any{}) // no params
 }
 
 // Close closes this bot from local Bot API server.
 //
 // https://core.telegram.org/bots/api#close
-func (b *Bot) Close(ctx context.Context) (result APIResponse[bool]) {
+func (b *Bot) Close(
+	ctx context.Context,
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "close", map[string]any{}) // no params
 }
 
@@ -150,7 +158,7 @@ func (b *Bot) SendMessage(
 	chatID ChatID,
 	text string,
 	options OptionsSendMessage,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -170,7 +178,7 @@ func (b *Bot) ForwardMessage(
 	chatID, fromChatID ChatID,
 	messageID int64,
 	options OptionsForwardMessage,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -191,7 +199,7 @@ func (b *Bot) ForwardMessages(
 	chatID, fromChatID ChatID,
 	messageIDs []int64,
 	options OptionsForwardMessages,
-) (result APIResponse[[]MessageID]) {
+) (result APIResponse[[]MessageID], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -212,7 +220,7 @@ func (b *Bot) CopyMessage(
 	chatID, fromChatID ChatID,
 	messageID int64,
 	options OptionsCopyMessage,
-) (result APIResponse[MessageID]) {
+) (result APIResponse[MessageID], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -233,7 +241,7 @@ func (b *Bot) CopyMessages(
 	chatID, fromChatID ChatID,
 	messageIDs []int64,
 	options OptionsCopyMessages,
-) (result APIResponse[[]MessageID]) {
+) (result APIResponse[[]MessageID], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -254,7 +262,7 @@ func (b *Bot) SendPhoto(
 	chatID ChatID,
 	photo InputFile,
 	options OptionsSendPhoto,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -274,7 +282,7 @@ func (b *Bot) SendAudio(
 	chatID ChatID,
 	audio InputFile,
 	options OptionsSendAudio,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -294,7 +302,7 @@ func (b *Bot) SendDocument(
 	chatID ChatID,
 	document InputFile,
 	options OptionsSendDocument,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -314,7 +322,7 @@ func (b *Bot) SendSticker(
 	chatID ChatID,
 	sticker InputFile,
 	options OptionsSendSticker,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -332,7 +340,7 @@ func (b *Bot) SendSticker(
 func (b *Bot) GetStickerSet(
 	ctx context.Context,
 	name string,
-) (result APIResponse[StickerSet]) {
+) (result APIResponse[StickerSet], err error) {
 	// essential params
 	options := map[string]any{
 		"name": name,
@@ -347,7 +355,7 @@ func (b *Bot) GetStickerSet(
 func (b *Bot) GetCustomEmojiStickers(
 	ctx context.Context,
 	customEmojiIDs []string,
-) (result APIResponse[[]Sticker]) {
+) (result APIResponse[[]Sticker], err error) {
 	// essential options
 	options := map[string]any{
 		"custom_emoji_ids": customEmojiIDs,
@@ -364,7 +372,7 @@ func (b *Bot) UploadStickerFile(
 	userID int64,
 	sticker InputFile,
 	stickerFormat StickerFormat,
-) (result APIResponse[File]) {
+) (result APIResponse[File], err error) {
 	// essential options
 	options := map[string]any{
 		"user_id":        userID,
@@ -384,7 +392,7 @@ func (b *Bot) CreateNewStickerSet(
 	name, title string,
 	stickers []InputSticker,
 	options OptionsCreateNewStickerSet,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -407,7 +415,7 @@ func (b *Bot) AddStickerToSet(
 	name string,
 	sticker InputSticker,
 	options OptionsAddStickerToSet,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -427,7 +435,7 @@ func (b *Bot) SetStickerPositionInSet(
 	ctx context.Context,
 	sticker string,
 	position int,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"sticker":  sticker,
@@ -443,7 +451,7 @@ func (b *Bot) SetStickerPositionInSet(
 func (b *Bot) DeleteStickerFromSet(
 	ctx context.Context,
 	sticker string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"sticker": sticker,
@@ -461,7 +469,7 @@ func (b *Bot) SetStickerSetThumbnail(
 	userID int64,
 	format StickerFormat,
 	options OptionsSetStickerSetThumbnail,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -481,7 +489,7 @@ func (b *Bot) SetCustomEmojiStickerSetThumbnail(
 	ctx context.Context,
 	name string,
 	options OptionsSetCustomEmojiStickerSetThumbnail,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -498,7 +506,7 @@ func (b *Bot) SetCustomEmojiStickerSetThumbnail(
 func (b *Bot) SetStickerSetTitle(
 	ctx context.Context,
 	name, title string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setStickerSetTitle", map[string]any{
 		"name":  name,
 		"title": title,
@@ -511,7 +519,7 @@ func (b *Bot) SetStickerSetTitle(
 func (b *Bot) DeleteStickerSet(
 	ctx context.Context,
 	name string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "deleteStickerSet", map[string]any{
 		"name": name,
 	})
@@ -524,7 +532,7 @@ func (b *Bot) ReplaceStickerInSet(
 	ctx context.Context,
 	userID, name, oldSticker string,
 	sticker InputSticker,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "replaceStickerInSet", map[string]any{
 		"user_id":     userID,
 		"name":        name,
@@ -540,7 +548,7 @@ func (b *Bot) SetStickerEmojiList(
 	ctx context.Context,
 	sticker string,
 	emojiList []string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setStickerEmojiList", map[string]any{
 		"sticker":    sticker,
 		"emoji_list": emojiList,
@@ -554,7 +562,7 @@ func (b *Bot) SetStickerKeywords(
 	ctx context.Context,
 	sticker string,
 	keywords []string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setStickerKeywords", map[string]any{
 		"sticker":  sticker,
 		"keywords": keywords,
@@ -568,7 +576,7 @@ func (b *Bot) SetStickerMaskPosition(
 	ctx context.Context,
 	sticker string,
 	options OptionsSetStickerMaskPosition,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -582,7 +590,9 @@ func (b *Bot) SetStickerMaskPosition(
 // GetAvailableGifts returns the list of gifts that can be sent by the bot to users.
 //
 // https://core.telegram.org/bots/api#getavailablegifts
-func (b *Bot) GetAvailableGifts(ctx context.Context) (result APIResponse[Gifts]) {
+func (b *Bot) GetAvailableGifts(
+	ctx context.Context,
+) (result APIResponse[Gifts], err error) {
 	return requestGeneric[Gifts](ctx, b, "getAvailableGifts", nil)
 }
 
@@ -593,7 +603,7 @@ func (b *Bot) SendGift(
 	ctx context.Context,
 	giftID string,
 	options OptionsSendGift,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -612,7 +622,7 @@ func (b *Bot) GiftPremiumSubscription(
 	userID int64,
 	monthCount, starCount int,
 	options OptionsGiftPremiumSubscription,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -632,7 +642,7 @@ func (b *Bot) VerifyUser(
 	ctx context.Context,
 	userID int64,
 	options OptionsVerifyUser,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -650,7 +660,7 @@ func (b *Bot) VerifyChat(
 	ctx context.Context,
 	chatID ChatID,
 	options OptionsVerifyChat,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -667,7 +677,7 @@ func (b *Bot) VerifyChat(
 func (b *Bot) RemoveUserVerification(
 	ctx context.Context,
 	userID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "removeUserVerification", map[string]any{
 		"user_id": userID,
 	})
@@ -679,7 +689,7 @@ func (b *Bot) RemoveUserVerification(
 func (b *Bot) RemoveChatVerification(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "removeChatVerification", map[string]any{
 		"chat_id": chatID,
 	})
@@ -692,7 +702,7 @@ func (b *Bot) ReadBusinessMessage(
 	ctx context.Context,
 	businessConnectionID string,
 	chatID, messageID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "readBusinessMessage", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"chat_id":                chatID,
@@ -707,7 +717,7 @@ func (b *Bot) DeleteBusinessMessages(
 	ctx context.Context,
 	businessConnectionID string,
 	messageIDs []int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "deleteBusinessMessages", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"message_ids":            messageIDs,
@@ -722,7 +732,7 @@ func (b *Bot) SetBusinessAccountName(
 	businessConnectionID string,
 	firstName string,
 	options OptionsSetBusinessAccountName,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -741,7 +751,7 @@ func (b *Bot) SetBusinessAccountUsername(
 	ctx context.Context,
 	businessConnectionID string,
 	options OptionsSetBusinessAccountUsername,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -759,7 +769,7 @@ func (b *Bot) SetBusinessAccountBio(
 	ctx context.Context,
 	businessConnectionID string,
 	options OptionsSetBusinessAccountBio,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -778,7 +788,7 @@ func (b *Bot) SetBusinessAccountProfilePhoto(
 	businessConnectionID string,
 	photo InputProfilePhoto,
 	options OptionsSetBusinessAccountProfilePhoto,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -797,7 +807,7 @@ func (b *Bot) RemoveBusinessAccountProfilePhoto(
 	ctx context.Context,
 	businessConnectionID string,
 	options OptionsRemoveBusinessAccountProfilePhoto,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -816,7 +826,7 @@ func (b *Bot) SetBusinessAccountGiftSettings(
 	businessConnectionID string,
 	showGiftButton bool,
 	acceptedGiftTypes AcceptedGiftTypes,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setBusinessAccountGiftSettings", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"show_gift_button":       showGiftButton,
@@ -830,7 +840,7 @@ func (b *Bot) SetBusinessAccountGiftSettings(
 func (b *Bot) GetBusinessAccountStarBalance(
 	ctx context.Context,
 	businessConnectionID string,
-) (result APIResponse[StarAmount]) {
+) (result APIResponse[StarAmount], err error) {
 	return requestGeneric[StarAmount](ctx, b, "getBusinessAccountStarBalance", map[string]any{
 		"business_connection_id": businessConnectionID,
 	})
@@ -843,7 +853,7 @@ func (b *Bot) TransferBusinessAccountStars(
 	ctx context.Context,
 	businessConnectionID string,
 	starCount int,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "transferBusinessAccountStars", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"star_count":             starCount,
@@ -857,7 +867,7 @@ func (b *Bot) GetBusinessAccountGifts(
 	ctx context.Context,
 	businessConnectionID string,
 	options OptionsGetBusinessAccountGifts,
-) (result APIResponse[OwnedGifts]) {
+) (result APIResponse[OwnedGifts], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -875,7 +885,7 @@ func (b *Bot) GetUserGifts(
 	ctx context.Context,
 	userID int64,
 	options OptionsGetUserGifts,
-) (result APIResponse[OwnedGifts]) {
+) (result APIResponse[OwnedGifts], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -893,7 +903,7 @@ func (b *Bot) GetChatGifts(
 	ctx context.Context,
 	chatID ChatID,
 	options OptionsGetChatGifts,
-) (result APIResponse[OwnedGifts]) {
+) (result APIResponse[OwnedGifts], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -910,7 +920,7 @@ func (b *Bot) GetChatGifts(
 func (b *Bot) ConvertGiftToStars(
 	ctx context.Context,
 	businessConnectionID, ownedGiftID string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "convertGiftToStars", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"owned_gift_id":          ownedGiftID,
@@ -924,7 +934,7 @@ func (b *Bot) UpgradeGift(
 	ctx context.Context,
 	businessConnectionID, ownedGiftID string,
 	options OptionsUpgradeGift,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -944,7 +954,7 @@ func (b *Bot) TransferGift(
 	businessConnectionID, ownedGiftID string,
 	newOwnerChatID int64,
 	options OptionsTransferGift,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -966,7 +976,7 @@ func (b *Bot) PostStory(
 	content InputStoryContent,
 	activePeriod int,
 	options OptionsPostStory,
-) (result APIResponse[Story]) {
+) (result APIResponse[Story], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -989,7 +999,7 @@ func (b *Bot) RepostStory(
 	fromStoryID int64,
 	activePeriod int,
 	options OptionsRepostStory,
-) (result APIResponse[Story]) {
+) (result APIResponse[Story], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1012,7 +1022,7 @@ func (b *Bot) EditStory(
 	storyID int64,
 	content InputStoryContent,
 	options OptionsEditStory,
-) (result APIResponse[Story]) {
+) (result APIResponse[Story], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1032,7 +1042,7 @@ func (b *Bot) DeleteStory(
 	ctx context.Context,
 	businessConnectionID string,
 	storyID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "deleteStory", map[string]any{
 		"business_connection_id": businessConnectionID,
 		"story_id":               storyID,
@@ -1047,7 +1057,7 @@ func (b *Bot) SendVideo(
 	chatID ChatID,
 	video InputFile,
 	options OptionsSendVideo,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1067,7 +1077,7 @@ func (b *Bot) SendAnimation(
 	chatID ChatID,
 	animation InputFile,
 	options OptionsSendAnimation,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1087,7 +1097,7 @@ func (b *Bot) SendVoice(
 	chatID ChatID,
 	voice InputFile,
 	options OptionsSendVoice,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1109,7 +1119,7 @@ func (b *Bot) SendVideoNote(
 	chatID ChatID,
 	videoNote InputFile,
 	options OptionsSendVideoNote,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1130,7 +1140,7 @@ func (b *Bot) SendPaidMedia(
 	starCount int,
 	media []InputPaidMedia,
 	options OptionsSendPaidMedia,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1151,7 +1161,7 @@ func (b *Bot) SendMediaGroup(
 	chatID ChatID,
 	media []InputMedia,
 	options OptionsSendMediaGroup,
-) (result APIResponse[[]Message]) {
+) (result APIResponse[[]Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1171,7 +1181,7 @@ func (b *Bot) SendLocation(
 	chatID ChatID,
 	latitude, longitude float32,
 	options OptionsSendLocation,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1193,7 +1203,7 @@ func (b *Bot) SendVenue(
 	latitude, longitude float32,
 	title, address string,
 	options OptionsSendVenue,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1216,7 +1226,7 @@ func (b *Bot) SendContact(
 	chatID ChatID,
 	phoneNumber, firstName string,
 	options OptionsSendContact,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1238,7 +1248,7 @@ func (b *Bot) SendPoll(
 	question string,
 	pollOptions []InputPollOption,
 	options OptionsSendPoll,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1259,7 +1269,7 @@ func (b *Bot) StopPoll(
 	chatID ChatID,
 	messageID int64,
 	options OptionsStopPoll,
-) (result APIResponse[Poll]) {
+) (result APIResponse[Poll], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1279,7 +1289,7 @@ func (b *Bot) ApproveSuggestedPost(
 	chatID int64,
 	messageID int64,
 	options OptionsApproveSuggestedPost,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1299,7 +1309,7 @@ func (b *Bot) DeclineSuggestedPost(
 	chatID int64,
 	messageID int64,
 	options OptionsDeclineSuggestedPost,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1320,7 +1330,7 @@ func (b *Bot) SendChecklist(
 	chatID ChatID,
 	checklist InputChecklist,
 	options OptionsSendChecklist,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1340,7 +1350,7 @@ func (b *Bot) SendDice(
 	ctx context.Context,
 	chatID ChatID,
 	options OptionsSendDice,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1362,7 +1372,7 @@ func (b *Bot) SendMessageDraft(
 	draftID int64,
 	text string,
 	options OptionsSendMessageDraft,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1383,7 +1393,7 @@ func (b *Bot) SendChatAction(
 	chatID ChatID,
 	action ChatAction,
 	options OptionsSendChatAction,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1403,7 +1413,7 @@ func (b *Bot) SetMessageReaction(
 	chatID ChatID,
 	messageID int64,
 	options OptionsSetMessageReaction,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1422,7 +1432,7 @@ func (b *Bot) GetUserProfilePhotos(
 	ctx context.Context,
 	userID int64,
 	options OptionsGetUserProfilePhotos,
-) (result APIResponse[UserProfilePhotos]) {
+) (result APIResponse[UserProfilePhotos], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1438,7 +1448,7 @@ func (b *Bot) GetUserProfileAudios(
 	ctx context.Context,
 	userID int64,
 	options OptionsGetUserProfileAudios,
-) (result APIResponse[UserProfileAudios]) {
+) (result APIResponse[UserProfileAudios], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1456,7 +1466,7 @@ func (b *Bot) SetUserEmojiStatus(
 	ctx context.Context,
 	userID int64,
 	options OptionsSetUserEmojiStatus,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1473,7 +1483,7 @@ func (b *Bot) SetUserEmojiStatus(
 func (b *Bot) GetFile(
 	ctx context.Context,
 	fileID string,
-) (result APIResponse[File]) {
+) (result APIResponse[File], err error) {
 	// essential options
 	options := map[string]any{
 		"file_id": fileID,
@@ -1495,7 +1505,7 @@ func (b *Bot) BanChatMember(
 	chatID ChatID,
 	userID int64,
 	options OptionsBanChatMember,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1513,7 +1523,7 @@ func (b *Bot) BanChatMember(
 func (b *Bot) LeaveChat(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1530,7 +1540,7 @@ func (b *Bot) UnbanChatMember(
 	chatID ChatID,
 	userID int64,
 	onlyIfBanned bool,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id":        chatID,
@@ -1550,7 +1560,7 @@ func (b *Bot) RestrictChatMember(
 	userID int64,
 	permissions ChatPermissions,
 	options OptionsRestrictChatMember,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1571,7 +1581,7 @@ func (b *Bot) PromoteChatMember(
 	chatID ChatID,
 	userID int64,
 	options OptionsPromoteChatMember,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1591,7 +1601,7 @@ func (b *Bot) SetChatAdministratorCustomTitle(
 	chatID ChatID,
 	userID int64,
 	customTitle string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setChatAdministratorCustomTitle", map[string]any{
 		"chat_id":      chatID,
 		"user_id":      userID,
@@ -1606,7 +1616,7 @@ func (b *Bot) BanChatSenderChat(
 	ctx context.Context,
 	chatID ChatID,
 	senderChatID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "banChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
@@ -1620,7 +1630,7 @@ func (b *Bot) UnbanChatSenderChat(
 	ctx context.Context,
 	chatID ChatID,
 	senderChatID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "unbanChatSenderChat", map[string]any{
 		"chat_id":        chatID,
 		"sender_chat_id": senderChatID,
@@ -1635,7 +1645,7 @@ func (b *Bot) SetChatPermissions(
 	chatID ChatID,
 	permissions ChatPermissions,
 	options OptionsSetChatPermissions,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1653,7 +1663,7 @@ func (b *Bot) SetChatPermissions(
 func (b *Bot) ExportChatInviteLink(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[string]) {
+) (result APIResponse[string], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1669,7 +1679,7 @@ func (b *Bot) CreateChatInviteLink(
 	ctx context.Context,
 	chatID ChatID,
 	options OptionsCreateChatInviteLink,
-) (result APIResponse[ChatInviteLink]) {
+) (result APIResponse[ChatInviteLink], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1688,7 +1698,7 @@ func (b *Bot) EditChatInviteLink(
 	chatID ChatID,
 	inviteLink string,
 	options OptionsCreateChatInviteLink,
-) (result APIResponse[ChatInviteLink]) {
+) (result APIResponse[ChatInviteLink], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1708,7 +1718,7 @@ func (b *Bot) CreateChatSubscriptionInviteLink(
 	chatID ChatID,
 	subscriptionPeriod, subscriptionPrice int,
 	options OptionsCreateChatSubscriptionInviteLink,
-) (result APIResponse[ChatInviteLink]) {
+) (result APIResponse[ChatInviteLink], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1729,7 +1739,7 @@ func (b *Bot) EditChatSubscriptionInviteLink(
 	chatID ChatID,
 	inviteLink string,
 	options OptionsEditChatSubscriptionInviteLink,
-) (result APIResponse[ChatInviteLink]) {
+) (result APIResponse[ChatInviteLink], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1748,7 +1758,7 @@ func (b *Bot) RevokeChatInviteLink(
 	ctx context.Context,
 	chatID ChatID,
 	inviteLink string,
-) (result APIResponse[ChatInviteLink]) {
+) (result APIResponse[ChatInviteLink], err error) {
 	return requestGeneric[ChatInviteLink](ctx, b, "revokeChatInviteLink", map[string]any{
 		"chat_id":     chatID,
 		"invite_link": inviteLink,
@@ -1762,7 +1772,7 @@ func (b *Bot) ApproveChatJoinRequest(
 	ctx context.Context,
 	chatID ChatID,
 	userID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1779,7 +1789,7 @@ func (b *Bot) DeclineChatJoinRequest(
 	ctx context.Context,
 	chatID ChatID,
 	userID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1796,7 +1806,7 @@ func (b *Bot) SetChatPhoto(
 	ctx context.Context,
 	chatID ChatID,
 	photo InputFile,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1812,7 +1822,7 @@ func (b *Bot) SetChatPhoto(
 func (b *Bot) DeleteChatPhoto(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1828,7 +1838,7 @@ func (b *Bot) SetChatTitle(
 	ctx context.Context,
 	chatID ChatID,
 	title string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1845,7 +1855,7 @@ func (b *Bot) SetChatDescription(
 	ctx context.Context,
 	chatID ChatID,
 	description string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id":     chatID,
@@ -1863,7 +1873,7 @@ func (b *Bot) PinChatMessage(
 	chatID ChatID,
 	messageID int64,
 	options OptionsPinChatMessage,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1882,7 +1892,7 @@ func (b *Bot) UnpinChatMessage(
 	ctx context.Context,
 	chatID ChatID,
 	options OptionsUnpinChatMessage,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -1899,7 +1909,7 @@ func (b *Bot) UnpinChatMessage(
 func (b *Bot) UnpinAllChatMessages(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1914,7 +1924,7 @@ func (b *Bot) UnpinAllChatMessages(
 func (b *Bot) GetChat(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[ChatFullInfo]) {
+) (result APIResponse[ChatFullInfo], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1929,7 +1939,7 @@ func (b *Bot) GetChat(
 func (b *Bot) GetChatAdministrators(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[[]ChatMember]) {
+) (result APIResponse[[]ChatMember], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1944,7 +1954,7 @@ func (b *Bot) GetChatAdministrators(
 func (b *Bot) GetChatMemberCount(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[int]) {
+) (result APIResponse[int], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1960,7 +1970,7 @@ func (b *Bot) GetChatMember(
 	ctx context.Context,
 	chatID ChatID,
 	userID int64,
-) (result APIResponse[ChatMember]) {
+) (result APIResponse[ChatMember], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -1977,7 +1987,7 @@ func (b *Bot) SetChatStickerSet(
 	ctx context.Context,
 	chatID ChatID,
 	stickerSetName string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id":          chatID,
@@ -1993,7 +2003,7 @@ func (b *Bot) SetChatStickerSet(
 func (b *Bot) DeleteChatStickerSet(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_id": chatID,
@@ -2009,7 +2019,7 @@ func (b *Bot) AnswerCallbackQuery(
 	ctx context.Context,
 	callbackQueryID string,
 	options OptionsAnswerCallbackQuery,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2026,7 +2036,7 @@ func (b *Bot) AnswerCallbackQuery(
 func (b *Bot) GetMyCommands(
 	ctx context.Context,
 	options OptionsGetMyCommands,
-) (result APIResponse[[]BotCommand]) {
+) (result APIResponse[[]BotCommand], err error) {
 	return requestGeneric[[]BotCommand](ctx, b, "getMyCommands", options)
 }
 
@@ -2037,7 +2047,7 @@ func (b *Bot) SetMyName(
 	ctx context.Context,
 	name string,
 	options OptionsSetMyName,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2054,7 +2064,7 @@ func (b *Bot) SetMyName(
 func (b *Bot) GetMyName(
 	ctx context.Context,
 	options OptionsGetMyName,
-) (result APIResponse[BotName]) {
+) (result APIResponse[BotName], err error) {
 	return requestGeneric[BotName](ctx, b, "getMyName", options)
 }
 
@@ -2064,7 +2074,7 @@ func (b *Bot) GetMyName(
 func (b *Bot) SetMyDescription(
 	ctx context.Context,
 	options OptionsSetMyDescription,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setMyDescription", options)
 }
 
@@ -2074,7 +2084,7 @@ func (b *Bot) SetMyDescription(
 func (b *Bot) GetMyDescription(
 	ctx context.Context,
 	options OptionsGetMyDescription,
-) (result APIResponse[BotDescription]) {
+) (result APIResponse[BotDescription], err error) {
 	return requestGeneric[BotDescription](ctx, b, "getMyDescription", options)
 }
 
@@ -2084,7 +2094,7 @@ func (b *Bot) GetMyDescription(
 func (b *Bot) SetMyShortDescription(
 	ctx context.Context,
 	options OptionsSetMyShortDescription,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setMyShortDescription", options)
 }
 
@@ -2094,7 +2104,7 @@ func (b *Bot) SetMyShortDescription(
 func (b *Bot) GetMyShortDescription(
 	ctx context.Context,
 	options OptionsGetMyShortDescription,
-) (result APIResponse[BotShortDescription]) {
+) (result APIResponse[BotShortDescription], err error) {
 	return requestGeneric[BotShortDescription](ctx, b, "getMyShortDescription", options)
 }
 
@@ -2105,7 +2115,7 @@ func (b *Bot) GetUserChatBoosts(
 	ctx context.Context,
 	chatID ChatID,
 	userID int64,
-) (result APIResponse[UserChatBoosts]) {
+) (result APIResponse[UserChatBoosts], err error) {
 	// essential params
 	options := map[string]any{
 		"chat_id": chatID,
@@ -2121,7 +2131,7 @@ func (b *Bot) GetUserChatBoosts(
 func (b *Bot) GetBusinessConnection(
 	ctx context.Context,
 	businessConnectionID string,
-) (result APIResponse[BusinessConnection]) {
+) (result APIResponse[BusinessConnection], err error) {
 	// essential params
 	options := map[string]any{
 		"business_connection_id": businessConnectionID,
@@ -2137,7 +2147,7 @@ func (b *Bot) SetMyCommands(
 	ctx context.Context,
 	commands []BotCommand,
 	options OptionsSetMyCommands,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2154,7 +2164,7 @@ func (b *Bot) SetMyCommands(
 func (b *Bot) DeleteMyCommands(
 	ctx context.Context,
 	options OptionsDeleteMyCommands,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "deleteMyCommands", options)
 }
 
@@ -2164,7 +2174,7 @@ func (b *Bot) DeleteMyCommands(
 func (b *Bot) SetMyProfilePhoto(
 	ctx context.Context,
 	photo InputProfilePhoto,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"photo": photo,
 	}
@@ -2175,7 +2185,9 @@ func (b *Bot) SetMyProfilePhoto(
 // RemoveMyProfilePhoto deletes the bot's profile photo.
 //
 // https://core.telegram.org/bots/api#removemyprofilephoto
-func (b *Bot) RemoveMyProfilePhoto(ctx context.Context) (result APIResponse[bool]) {
+func (b *Bot) RemoveMyProfilePhoto(
+	ctx context.Context,
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "removeMyProfilePhoto", nil)
 }
 
@@ -2185,7 +2197,7 @@ func (b *Bot) RemoveMyProfilePhoto(ctx context.Context) (result APIResponse[bool
 func (b *Bot) SetChatMenuButton(
 	ctx context.Context,
 	options OptionsSetChatMenuButton,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setChatMenuButton", options)
 }
 
@@ -2195,7 +2207,7 @@ func (b *Bot) SetChatMenuButton(
 func (b *Bot) GetChatMenuButton(
 	ctx context.Context,
 	options OptionsGetChatMenuButton,
-) (result APIResponse[MenuButton]) {
+) (result APIResponse[MenuButton], err error) {
 	return requestGeneric[MenuButton](ctx, b, "getChatMenuButton", options)
 }
 
@@ -2205,7 +2217,7 @@ func (b *Bot) GetChatMenuButton(
 func (b *Bot) SetMyDefaultAdministratorRights(
 	ctx context.Context,
 	options OptionsSetMyDefaultAdministratorRights,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "setMyDefaultAdministratorRights", options)
 }
 
@@ -2215,7 +2227,7 @@ func (b *Bot) SetMyDefaultAdministratorRights(
 func (b *Bot) GetMyDefaultAdministratorRights(
 	ctx context.Context,
 	options OptionsGetMyDefaultAdministratorRights,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "getMyDefaultAdministratorRights", options)
 }
 
@@ -2230,7 +2242,7 @@ func (b *Bot) EditMessageText(
 	ctx context.Context,
 	text string,
 	options OptionsEditMessageText,
-) (result APIResponseMessageOrBool) {
+) (result APIResponseMessageOrBool, err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2247,7 +2259,7 @@ func (b *Bot) EditMessageText(
 func (b *Bot) EditMessageCaption(
 	ctx context.Context,
 	options OptionsEditMessageCaption,
-) (result APIResponseMessageOrBool) {
+) (result APIResponseMessageOrBool, err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2262,7 +2274,7 @@ func (b *Bot) EditMessageMedia(
 	ctx context.Context,
 	media InputMedia,
 	options OptionsEditMessageMedia,
-) (result APIResponseMessageOrBool) {
+) (result APIResponseMessageOrBool, err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2280,7 +2292,7 @@ func (b *Bot) EditMessageLiveLocation(
 	ctx context.Context,
 	latitude, longitude float32,
 	options OptionsEditMessageLiveLocation,
-) (result APIResponseMessageOrBool) {
+) (result APIResponseMessageOrBool, err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2298,7 +2310,7 @@ func (b *Bot) EditMessageLiveLocation(
 func (b *Bot) StopMessageLiveLocation(
 	ctx context.Context,
 	options OptionsStopMessageLiveLocation,
-) (result APIResponseMessageOrBool) {
+) (result APIResponseMessageOrBool, err error) {
 	return b.requestMessageOrBool(ctx, "stopMessageLiveLocation", options)
 }
 
@@ -2312,7 +2324,7 @@ func (b *Bot) EditMessageChecklist(
 	messageID int64,
 	checklist InputChecklist,
 	options OptionsEditMessageChecklist,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2332,7 +2344,7 @@ func (b *Bot) EditMessageChecklist(
 func (b *Bot) EditMessageReplyMarkup(
 	ctx context.Context,
 	options OptionsEditMessageReplyMarkup,
-) (result APIResponseMessageOrBool) {
+) (result APIResponseMessageOrBool, err error) {
 	return b.requestMessageOrBool(ctx, "editMessageReplyMarkup", options)
 }
 
@@ -2343,7 +2355,7 @@ func (b *Bot) DeleteMessage(
 	ctx context.Context,
 	chatID ChatID,
 	messageID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "deleteMessage", map[string]any{
 		"chat_id":    chatID,
 		"message_id": messageID,
@@ -2357,7 +2369,7 @@ func (b *Bot) DeleteMessages(
 	ctx context.Context,
 	chatID ChatID,
 	messageIDs []int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	return requestGeneric[bool](ctx, b, "deleteMessages", map[string]any{
 		"chat_id":     chatID,
 		"message_ids": messageIDs,
@@ -2374,7 +2386,7 @@ func (b *Bot) AnswerInlineQuery(
 	inlineQueryID string,
 	results []any,
 	options OptionsAnswerInlineQuery,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2399,7 +2411,7 @@ func (b *Bot) SendInvoice(
 	title, description, payload, providerToken, currency string,
 	prices []LabeledPrice,
 	options OptionsSendInvoice,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2428,7 +2440,7 @@ func (b *Bot) CreateInvoiceLink(
 	title, description, payload, currency string,
 	prices []LabeledPrice,
 	options OptionsCreateInvoiceLink,
-) (result APIResponse[string]) {
+) (result APIResponse[string], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2455,7 +2467,7 @@ func (b *Bot) AnswerShippingQuery(
 	ok bool,
 	shippingOptions []ShippingOption,
 	errorMessage *string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"shipping_query_id": shippingQueryID,
@@ -2484,7 +2496,7 @@ func (b *Bot) AnswerPreCheckoutQuery(
 	preCheckoutQueryID string,
 	ok bool,
 	errorMessage *string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"pre_checkout_query_id": preCheckoutQueryID,
@@ -2504,7 +2516,9 @@ func (b *Bot) AnswerPreCheckoutQuery(
 // GetMyStarBalance fetches the current balance of Telegram Stars.
 //
 // https://core.telegram.org/bots/api#getmystarbalance
-func (b *Bot) GetMyStarBalance(ctx context.Context) (result APIResponse[StarAmount]) {
+func (b *Bot) GetMyStarBalance(
+	ctx context.Context,
+) (result APIResponse[StarAmount], err error) {
 	return requestGeneric[StarAmount](ctx, b, "getMyStarBalance", nil)
 }
 
@@ -2514,7 +2528,7 @@ func (b *Bot) GetMyStarBalance(ctx context.Context) (result APIResponse[StarAmou
 func (b *Bot) GetStarTransactions(
 	ctx context.Context,
 	options OptionsGetStarTransactions,
-) (result APIResponse[StarTransactions]) {
+) (result APIResponse[StarTransactions], err error) {
 	return requestGeneric[StarTransactions](ctx, b, "getStarTransactions", options)
 }
 
@@ -2525,7 +2539,7 @@ func (b *Bot) RefundStarPayment(
 	ctx context.Context,
 	userID int64,
 	telegramPaymentChargeID string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"user_id":                    userID,
@@ -2543,7 +2557,7 @@ func (b *Bot) EditUserStarSubscription(
 	userID int64,
 	telegramPaymentChargeID string,
 	isCanceled bool,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"user_id":                    userID,
@@ -2562,7 +2576,7 @@ func (b *Bot) SendGame(
 	chatID ChatID,
 	gameShortName string,
 	options OptionsSendGame,
-) (result APIResponse[Message]) {
+) (result APIResponse[Message], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2582,7 +2596,7 @@ func (b *Bot) SetGameScore(
 	userID int64,
 	score int,
 	options OptionsSetGameScore,
-) (result APIResponseMessageOrBool) {
+) (result APIResponseMessageOrBool, err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2601,7 +2615,7 @@ func (b *Bot) GetGameHighScores(
 	ctx context.Context,
 	userID int64,
 	options OptionsGetGameHighScores,
-) (result APIResponse[[]GameHighScore]) {
+) (result APIResponse[[]GameHighScore], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2619,7 +2633,7 @@ func (b *Bot) AnswerWebAppQuery(
 	ctx context.Context,
 	webAppQueryID string,
 	res InlineQueryResult,
-) (result APIResponse[SentWebAppMessage]) {
+) (result APIResponse[SentWebAppMessage], err error) {
 	options := map[string]any{
 		"web_app_query_id": webAppQueryID,
 		"result":           res,
@@ -2636,7 +2650,7 @@ func (b *Bot) SavePreparedInlineMessage(
 	userID int64,
 	result InlineQueryResult,
 	options OptionsSavePreparedInlineMessage,
-) (res APIResponse[PreparedInlineMessage]) {
+) (res APIResponse[PreparedInlineMessage], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2656,7 +2670,7 @@ func (b *Bot) CreateForumTopic(
 	chatID ChatID,
 	name string,
 	options OptionsCreateForumTopic,
-) (result APIResponse[ForumTopic]) {
+) (result APIResponse[ForumTopic], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2676,7 +2690,7 @@ func (b *Bot) EditForumTopic(
 	chatID ChatID,
 	messageThreadID int64,
 	options OptionsEditForumTopic,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}
 	}
@@ -2695,7 +2709,7 @@ func (b *Bot) CloseForumTopic(
 	ctx context.Context,
 	chatID ChatID,
 	messageThreadID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -2711,7 +2725,7 @@ func (b *Bot) ReopenForumTopic(
 	ctx context.Context,
 	chatID ChatID,
 	messageThreadID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -2727,7 +2741,7 @@ func (b *Bot) DeleteForumTopic(
 	ctx context.Context,
 	chatID ChatID,
 	messageThreadID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -2743,7 +2757,7 @@ func (b *Bot) UnpinAllForumTopicMessages(
 	ctx context.Context,
 	chatID ChatID,
 	messageThreadID int64,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id":           chatID,
 		"message_thread_id": messageThreadID,
@@ -2759,7 +2773,7 @@ func (b *Bot) EditGeneralForumTopic(
 	ctx context.Context,
 	chatID ChatID,
 	name string,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id": chatID,
 		"name":    name,
@@ -2774,7 +2788,7 @@ func (b *Bot) EditGeneralForumTopic(
 func (b *Bot) CloseGeneralForumTopic(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id": chatID,
 	}
@@ -2788,7 +2802,7 @@ func (b *Bot) CloseGeneralForumTopic(
 func (b *Bot) ReopenGeneralForumTopic(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id": chatID,
 	}
@@ -2802,7 +2816,7 @@ func (b *Bot) ReopenGeneralForumTopic(
 func (b *Bot) HideGeneralForumTopic(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id": chatID,
 	}
@@ -2816,7 +2830,7 @@ func (b *Bot) HideGeneralForumTopic(
 func (b *Bot) UnhideGeneralForumTopic(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id": chatID,
 	}
@@ -2830,7 +2844,7 @@ func (b *Bot) UnhideGeneralForumTopic(
 func (b *Bot) UnpinAllGeneralForumTopicMessages(
 	ctx context.Context,
 	chatID ChatID,
-) (result APIResponse[bool]) {
+) (result APIResponse[bool], err error) {
 	options := map[string]any{
 		"chat_id": chatID,
 	}
@@ -2841,7 +2855,9 @@ func (b *Bot) UnpinAllGeneralForumTopicMessages(
 // GetForumTopicIconStickers fetches custom emoji stickers which can be used as a forum topic icon by any user.
 //
 // https://core.telegram.org/bots/api#getforumtopiciconstickers
-func (b *Bot) GetForumTopicIconStickers(ctx context.Context) (result APIResponse[[]Sticker]) {
+func (b *Bot) GetForumTopicIconStickers(
+	ctx context.Context,
+) (result APIResponse[[]Sticker], err error) {
 	return requestGeneric[[]Sticker](ctx, b, "getForumTopicIconStickers", nil)
 }
 
@@ -3196,23 +3212,22 @@ func (b *Bot) requestMessageOrBool(
 	ctx context.Context,
 	method string,
 	params map[string]any,
-) (result APIResponseMessageOrBool) {
-	var errStr string
-
-	if bytes, err := b.request(ctx, method, params); err == nil {
+) (result APIResponseMessageOrBool, err error) {
+	var bytes []byte
+	if bytes, err = b.request(ctx, method, params); err == nil {
 		// try APIResponseMessage type,
 		var resMessage APIResponse[Message]
 		err = json.Unmarshal(bytes, &resMessage)
 		if err == nil {
 			res := APIResponseMessageOrBool{
-				Ok:            resMessage.Ok,
+				OK:            resMessage.OK,
 				Description:   resMessage.Description,
 				ResultMessage: resMessage.Result,
 			}
-			if !res.Ok && res.Description != nil {
-				res.Error = strToErr(*res.Description)
+			if !res.OK && res.Description != nil {
+				err = strToErr(*res.Description)
 			}
-			return res
+			return res, err
 		}
 
 		// then try APIResponseBool type,
@@ -3220,26 +3235,27 @@ func (b *Bot) requestMessageOrBool(
 		err = json.Unmarshal(bytes, &resBool)
 		if err == nil {
 			res := APIResponseMessageOrBool{
-				Ok:          resBool.Ok,
+				OK:          resBool.OK,
 				Description: resBool.Description,
 				ResultBool:  resBool.Result,
 			}
-			if !res.Ok && res.Description != nil {
-				res.Error = strToErr(*res.Description)
+			if !res.OK && res.Description != nil {
+				err = strToErr(*res.Description)
 			}
-			return res
+			return res, err
 		}
 
-		errStr = fmt.Sprintf("%s failed to parse json: not in Message nor bool type (%s)", method, string(bytes))
+		err = fmt.Errorf("%s failed to parse json: not in Message nor bool type (%s)", method, string(bytes))
 	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+		err = fmt.Errorf("%s failed with error: %w", method, err)
 	}
 
+	errStr := err.Error()
+
 	return APIResponseMessageOrBool{
-		Ok:          false,
+		OK:          false,
 		Description: &errStr,
-		Error:       strToErr(errStr),
-	}
+	}, err
 }
 
 // Send request for APIResponse[T] and fetch its result.
@@ -3248,29 +3264,28 @@ func requestGeneric[T any](
 	b *Bot,
 	method string,
 	params map[string]any,
-) (result APIResponse[T]) {
-	var errStr string
-
-	if bytes, err := b.request(ctx, method, params); err == nil {
+) (result APIResponse[T], err error) {
+	var bytes []byte
+	if bytes, err = b.request(ctx, method, params); err == nil {
 		var res APIResponse[T]
 		err = json.Unmarshal(bytes, &res)
 		if err == nil {
-			if !res.Ok && res.Description != nil {
-				res.Error = strToErr(*res.Description)
+			if !res.OK && res.Description != nil {
+				err = strToErr(*res.Description)
 			}
-			return res
+			return res, err
 		}
-
-		errStr = fmt.Sprintf("%s failed to parse json: %s (%s)", method, err, string(bytes))
+		err = fmt.Errorf("%s failed to parse json: %w (%s)", method, err, string(bytes))
 	} else {
-		errStr = fmt.Sprintf("%s failed with error: %s", method, err)
+		err = fmt.Errorf("%s failed with error: %w", method, strToErr(err.Error()))
 	}
+
+	errStr := err.Error()
 
 	return APIResponse[T]{
-		Ok:          false,
+		OK:          false,
 		Description: &errStr,
-		Error:       strToErr(errStr),
-	}
+	}, err
 }
 
 // Handle Webhook request.
