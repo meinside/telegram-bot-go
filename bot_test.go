@@ -496,6 +496,7 @@ func TestMethods(t *testing.T) {
 			// TODO: RestrictChatMember
 			// TODO: PromoteChatMember
 			// TODO: SetChatAdministratorCustomTitle
+			// TODO: SetChatMemberTag
 			// TODO: BanChatSenderChat
 			// TODO: UnbanChatSenderChat
 			// TODO: SetChatPermissions
