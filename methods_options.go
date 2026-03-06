@@ -2220,7 +2220,7 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `is_anonymous`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_restrict_members`, `can_promote_members`, `can_change_info`, `can_invite_users`, `can_pin_messages`, `can_manage_topics`, and `can_manage_direct_messages`.
+// options include: `is_anonymous`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_restrict_members`, `can_promote_members`, `can_change_info`, `can_invite_users`, `can_pin_messages`, `can_manage_topics`, `can_manage_direct_messages`, and `can_manage_tags`.
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -2318,6 +2318,27 @@ func (o OptionsPromoteChatMember) SetCanManageTopics(can bool) OptionsPromoteCha
 // SetCanManageDirectMessages sets the `can_manage_direct_messages` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanManageDirectMessages(can bool) OptionsPromoteChatMember {
 	o["can_manage_direct_messages"] = can
+	return o
+}
+
+// SetCanManageTags sets the `can_manage_tags` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanManageTags(can bool) OptionsPromoteChatMember {
+	o["can_manage_tags"] = can
+	return o
+}
+
+// OptionsSetChatMemberTag struct for SetChatMemberTag
+//
+// options include: `tag`.
+//
+// https://core.telegram.org/bots/api#setchatmembertag
+type OptionsSetChatMemberTag MethodOptions
+
+// SetTag sets the `tag` value of OptionsSetChatMemberTag.
+//
+// `tag` is 0-16 characters long, and emoji not allowed.
+func (o OptionsSetChatMemberTag) SetTag(tag string) OptionsSetChatMemberTag {
+	o["tag"] = tag
 	return o
 }
 

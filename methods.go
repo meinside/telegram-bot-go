@@ -1363,8 +1363,6 @@ func (b *Bot) SendDice(
 
 // SendMessageDraft sends a message draft.
 //
-// NOTE: supported only for bots with forum topic mode enabled
-//
 // https://core.telegram.org/bots/api#sendmessagedraft
 func (b *Bot) SendMessageDraft(
 	ctx context.Context,
@@ -1607,6 +1605,26 @@ func (b *Bot) SetChatAdministratorCustomTitle(
 		"user_id":      userID,
 		"custom_title": customTitle,
 	})
+}
+
+// SetChatMemberTag sets a tag for a regular member in a group or a supergroup.
+//
+// https://core.telegram.org/bots/api#setchatmembertag
+func (b *Bot) SetChatMemberTag(
+	ctx context.Context,
+	chatID ChatID,
+	userID int64,
+	options OptionsSetChatMemberTag,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["user_id"] = userID
+
+	return requestGeneric[bool](ctx, b, "setChatMemberTag", options)
 }
 
 // BanChatSenderChat bans a channel chat in a supergroup or a channel.

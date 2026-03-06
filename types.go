@@ -106,6 +106,7 @@ const (
 	MessageEntityTypeTextLink      MessageEntityType = "text_link"
 	MessageEntityTypeTextMention   MessageEntityType = "text_mention"
 	MessageEntityTypeCustomEmoji   MessageEntityType = "custom_emoji"
+	MessageEntityTypeDateTime      MessageEntityType = "date_time"
 )
 
 // ChatMemberStatus is a status of chat member
@@ -568,13 +569,15 @@ type Audio struct {
 //
 // https://core.telegram.org/bots/api#messageentity
 type MessageEntity struct {
-	Type          MessageEntityType `json:"type"`
-	Offset        int               `json:"offset"`
-	Length        int               `json:"length"`
-	URL           *string           `json:"url,omitempty"`             // when Type == MessageEntityTypeTextLink
-	User          *User             `json:"user,omitempty"`            // when Type == MessageEntityTypeTextMention
-	Language      *string           `json:"language,omitempty"`        // when Type == MessageEntityTypePre
-	CustomEmojiID *string           `json:"custom_emoji_id,omitempty"` // when Type == MessageEntityTypeCustomEmoji
+	Type           MessageEntityType `json:"type"`
+	Offset         int               `json:"offset"`
+	Length         int               `json:"length"`
+	URL            *string           `json:"url,omitempty"`              // when Type == MessageEntityTypeTextLink
+	User           *User             `json:"user,omitempty"`             // when Type == MessageEntityTypeTextMention
+	Language       *string           `json:"language,omitempty"`         // when Type == MessageEntityTypePre
+	CustomEmojiID  *string           `json:"custom_emoji_id,omitempty"`  // when Type == MessageEntityTypeCustomEmoji
+	UnixTime       *int              `json:"unix_time,omitempty"`        // when Type == MessageEntityTypeDateTime
+	DateTimeFormat *string           `json:"date_time_format,omitempty"` // when Type == MessageEntityTypeDateTime
 }
 
 // TextQuote is a struct of a text quote
@@ -1765,6 +1768,7 @@ type ChatAdministratorRights struct {
 	CanPinMessages          *bool `json:"can_pin_messages,omitempty"`
 	CanManageTopics         *bool `json:"can_manage_topics,omitempty"`
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
+	CanManageTags           *bool `json:"can_manage_tags,omitempty"`
 }
 
 // ChatMember is a struct of a chat member
@@ -1826,6 +1830,7 @@ type ChatPermissions struct {
 	CanSendPolls          *bool `json:"can_send_polls,omitempty"`
 	CanSendOtherMessages  *bool `json:"can_send_other_messages,omitempty"`
 	CanAddWebPagePreviews *bool `json:"can_add_web_page_previews,omitempty"`
+	CanEditTag            *bool `json:"can_edit_tag,omitempty"`
 	CanChangeInfo         *bool `json:"can_change_info,omitempty"`
 	CanInviteUsers        *bool `json:"can_invite_users,omitempty"`
 	CanPinMessages        *bool `json:"can_pin_messages,omitempty"`
@@ -2009,6 +2014,7 @@ type ChatMemberAdministrator struct {
 	CanPinMessages          *bool   `json:"can_pin_messages,omitempty"`
 	CanManageTopics         *bool   `json:"can_manage_topics,omitempty"`
 	CanManageDirectMessages *bool   `json:"can_manage_direct_messages,omitempty"`
+	CanManageTags           *bool   `json:"can_manage_tags,omitempty"`
 	CustomTitle             *string `json:"custom_title,omitempty"`
 }
 
@@ -2016,33 +2022,36 @@ type ChatMemberAdministrator struct {
 //
 // https://core.telegram.org/bots/api#chatmembermember
 type ChatMemberMember struct {
-	Status    string `json:"status"` // = "member"
-	User      User   `json:"user"`
-	UntilDate int    `json:"until_date"`
+	Status    string  `json:"status"` // = "member"
+	Tag       *string `json:"tag,omitempty"`
+	User      User    `json:"user"`
+	UntilDate int     `json:"until_date"`
 }
 
 // ChatMemberRestricted is a struct of chat member who is restricted
 //
 // https://core.telegram.org/bots/api#chatmemberrestricted
 type ChatMemberRestricted struct {
-	Status                 string `json:"status"` // = "restricted"
-	User                   User   `json:"user"`
-	IsMember               bool   `json:"is_member"`
-	CanChangeInfo          bool   `json:"can_change_info"`
-	CanInviteUsers         bool   `json:"can_invite_users"`
-	CanPinMessages         bool   `json:"can_pin_messages"`
-	CanManageTopics        bool   `json:"can_manage_topics"`
-	CanSendMessages        bool   `json:"can_send_messages"`
-	CanSendAudios          bool   `json:"can_send_audios"`
-	CanSendDocuments       bool   `json:"can_send_documents"`
-	CanSendPhotos          bool   `json:"can_send_photos"`
-	CanSendVideos          bool   `json:"can_send_videos"`
-	CanSendVideoNotes      bool   `json:"can_send_video_notes"`
-	CanSendVoiceNotes      bool   `json:"can_send_voice_notes"`
-	CanSendPolls           bool   `json:"can_send_polls"`
-	CanSendOtherMessages   bool   `json:"can_send_other_messages"`
-	CanSendWebPagePreviews bool   `json:"can_add_web_page_previews"`
-	UntilDate              int    `json:"until_date"`
+	Status                string  `json:"status"` // = "restricted"
+	Tag                   *string `json:"tag,omitempty"`
+	User                  User    `json:"user"`
+	IsMember              bool    `json:"is_member"`
+	CanSendMessages       bool    `json:"can_send_messages"`
+	CanSendAudios         bool    `json:"can_send_audios"`
+	CanSendDocuments      bool    `json:"can_send_documents"`
+	CanSendPhotos         bool    `json:"can_send_photos"`
+	CanSendVideos         bool    `json:"can_send_videos"`
+	CanSendVideoNotes     bool    `json:"can_send_video_notes"`
+	CanSendVoiceNotes     bool    `json:"can_send_voice_notes"`
+	CanSendPolls          bool    `json:"can_send_polls"`
+	CanSendOtherMessages  bool    `json:"can_send_other_messages"`
+	CanAddWebPagePreviews bool    `json:"can_add_web_page_previews"`
+	CanEditTag            bool    `json:"can_edit_tag"`
+	CanChangeInfo         bool    `json:"can_change_info"`
+	CanInviteUsers        bool    `json:"can_invite_users"`
+	CanPinMessages        bool    `json:"can_pin_messages"`
+	CanManageTopics       bool    `json:"can_manage_topics"`
+	UntilDate             int     `json:"until_date"`
 }
 
 // ChatMemberLeft is a struct of a chat member who left.
@@ -2185,6 +2194,7 @@ type Message struct {
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	SenderBoostCount              *int                           `json:"sender_boost_count,omitempty"`
 	SenderBusinessBot             *User                          `json:"sender_business_bot,omitempty"`
+	SenderTag                     *string                        `json:"sender_tag,omitempty"`
 	Date                          int                            `json:"date"`
 	BusinessConnectionID          *string                        `json:"business_connection_id,omitempty"`
 	Chat                          Chat                           `json:"chat"`

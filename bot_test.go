@@ -191,7 +191,6 @@ func TestMethods(t *testing.T) {
 				}
 			}
 			// TODO: SendMessageDraft
-			// TODO: CopyMessages
 			// TODO: ForwardMessages
 			// SendPhoto
 			if photo, _ := client.SendPhoto(
@@ -302,6 +301,7 @@ func TestMethods(t *testing.T) {
 			); !dice.OK {
 				t.Errorf("failed to send dice: %s", *dice.Description)
 			}
+			// TODO: CopyMessages
 			// SendChatAction
 			if action, _ := client.SendChatAction(
 				context.TODO(),
@@ -496,6 +496,7 @@ func TestMethods(t *testing.T) {
 			// TODO: RestrictChatMember
 			// TODO: PromoteChatMember
 			// TODO: SetChatAdministratorCustomTitle
+			// TODO: SetChatMemberTag
 			// TODO: BanChatSenderChat
 			// TODO: UnbanChatSenderChat
 			// TODO: SetChatPermissions
