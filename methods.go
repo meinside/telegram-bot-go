@@ -2963,8 +2963,6 @@ func (b *Bot) requestMultipartFormData(
 	for k, v := range params {
 		switch val := v.(type) {
 		case *os.File:
-			defer func() { _ = val.Close() }()
-
 			var part io.Writer
 			part, err = writer.CreateFormFile(k, val.Name())
 			if err == nil {
@@ -2974,6 +2972,7 @@ func (b *Bot) requestMultipartFormData(
 			} else {
 				b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
 			}
+			_ = val.Close()
 		case []byte:
 			filename := fmt.Sprintf("%s.%s", k, getExtension(val))
 
@@ -2990,8 +2989,6 @@ func (b *Bot) requestMultipartFormData(
 			if val.Filepath != nil {
 				var file *os.File
 				if file, err = os.Open(*val.Filepath); err == nil {
-					defer func() { _ = file.Close() }()
-
 					var part io.Writer
 					part, err = writer.CreateFormFile(k, file.Name())
 					if err == nil {
@@ -3001,6 +2998,7 @@ func (b *Bot) requestMultipartFormData(
 					} else {
 						b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
 					}
+					_ = file.Close()
 				} else {
 					b.error("parameter '%[1]s' (%[2]T) could not be read from file: %[3]s", k, val, err.Error())
 				}
@@ -3022,8 +3020,6 @@ func (b *Bot) requestMultipartFormData(
 			if val.Filepath != nil {
 				var file *os.File
 				if file, err = os.Open(*val.Filepath); err == nil {
-					defer func() { _ = file.Close() }()
-
 					filename := filepath.Base(file.Name())
 
 					var part io.Writer
@@ -3055,6 +3051,7 @@ func (b *Bot) requestMultipartFormData(
 					} else {
 						b.error("could not create form file for parameter '%[1]s' (%[2]T)", k, val)
 					}
+					_ = file.Close()
 				} else {
 					b.error("parameter '%[1]s' (%[2]T) could not be read from file: %[3]s", k, val, err.Error())
 				}
@@ -3306,14 +3303,14 @@ func (b *Bot) handleWebhook(writer http.ResponseWriter, req *http.Request) {
 				// if there is a matching handler by type, handle with it
 				if !handleUpdateByType(b, webhook) {
 					// otherwise, handle it manually
-					go b.updateHandler(b, webhook, nil)
+					b.runHandler(func() { b.updateHandler(b, webhook, nil) })
 				}
 			}
 		}
 	} else {
 		b.error("error while reading webhook request (%s)", err)
 
-		go b.updateHandler(b, Update{}, err)
+		b.runHandler(func() { b.updateHandler(b, Update{}, err) })
 	}
 }
 

@@ -31,6 +31,8 @@ const (
 	redactedString = "<REDACTED>" // confidential info will be displayed as this
 
 	pollMessagesTimeoutSeconds = 10
+
+	defaultMaxWorkers = 100 // default maximum number of concurrent handler goroutines
 )
 
 // loggers
@@ -50,7 +52,8 @@ type Bot struct {
 
 	httpClient *http.Client // http client
 
-	quitLoop chan struct{} // quit channel of polling loop
+	quitLoop  chan struct{}    // quit channel of polling loop
+	workerSem chan struct{} // semaphore for limiting concurrent handler goroutines
 
 	// manual update handler - must be set
 	updateHandler func(b *Bot, update Update, err error)
@@ -85,7 +88,8 @@ func NewClient(token string) *Bot {
 
 		httpClient: nil,
 
-		quitLoop: make(chan struct{}, 1),
+		quitLoop:  make(chan struct{}, 1),
+		workerSem: make(chan struct{}, defaultMaxWorkers),
 	}
 
 	// FIXME: (wasm) with DialContext, HTTP requests fail with "dial tcp: lookup api.telegram.org: Protocol not available"
@@ -130,6 +134,23 @@ func GenCertAndKey(
 	}
 
 	return nil
+}
+
+// SetMaxWorkers sets the maximum number of concurrent handler goroutines.
+//
+// Default is 100. When all worker slots are occupied, new updates will block
+// until a slot becomes available, providing natural backpressure.
+func (b *Bot) SetMaxWorkers(n int) {
+	b.workerSem = make(chan struct{}, n)
+}
+
+// runHandler executes fn in a goroutine, bounded by the worker semaphore.
+func (b *Bot) runHandler(fn func()) {
+	b.workerSem <- struct{}{}
+	go func() {
+		defer func() { <-b.workerSem }()
+		fn()
+	}()
 }
 
 // AddCommandHandler adds a handler function for given command.
@@ -325,7 +346,6 @@ loop:
 			break loop
 		default:
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(pollMessagesTimeoutSeconds)*time.Second)
-			defer cancel()
 
 			if updates, err = b.GetUpdates(ctx, options); err == nil && updates.OK {
 				// update offset (max + 1)
@@ -348,12 +368,12 @@ loop:
 									// if it was not handled as a command, handle it by type:
 									if !handleUpdateByType(b, update) {
 										// otherwise, handle it manually
-										go b.updateHandler(b, update, nil)
+										b.runHandler(func() { b.updateHandler(b, update, nil) })
 									}
 								}
 							}
 						} else { // with group id
-							go b.mediaGroupHandler(b, groupedUpdates, groupID)
+							b.runHandler(func() { b.mediaGroupHandler(b, groupedUpdates, groupID) })
 						}
 					}
 				} else {
@@ -364,14 +384,16 @@ loop:
 							// if it was not handled as a command, handle it by type:
 							if !handleUpdateByType(b, update) {
 								// otherwise, handle it manually
-								go b.updateHandler(b, update, nil)
+								b.runHandler(func() { b.updateHandler(b, update, nil) })
 							}
 						}
 					}
 				}
 			} else {
-				go b.updateHandler(b, Update{}, fmt.Errorf("%s", *updates.Description))
+				b.runHandler(func() { b.updateHandler(b, Update{}, fmt.Errorf("%s", *updates.Description)) })
 			}
+
+			cancel()
 
 			time.Sleep(time.Duration(interval) * time.Second)
 		}
@@ -433,7 +455,7 @@ func handleUpdateAsCommand(b *Bot, update Update) bool {
 
 	for cmd, cmdHandler := range b.commandHandlers {
 		if command == cmd {
-			go cmdHandler(b, update, params)
+			b.runHandler(func() { cmdHandler(b, update, params) })
 
 			return true
 		}
@@ -441,7 +463,7 @@ func handleUpdateAsCommand(b *Bot, update Update) bool {
 
 	// if no-matching-command-handler is set, handle with it
 	if b.noMatchingCommandHandler != nil {
-		go b.noMatchingCommandHandler(b, update, command, params)
+		b.runHandler(func() { b.noMatchingCommandHandler(b, update, command, params) })
 
 		return true
 	}
@@ -460,7 +482,7 @@ func handleUpdateByType(b *Bot, update Update) bool {
 			message = *update.EditedMessage
 		}
 
-		go b.messageHandler(b, update, message, update.HasEditedMessage())
+		b.runHandler(func() { b.messageHandler(b, update, message, update.HasEditedMessage()) })
 
 		return true
 	} else if b.channelPostHandler != nil && (update.HasChannelPost() || update.HasEditedChannelPost()) {
@@ -471,35 +493,35 @@ func handleUpdateByType(b *Bot, update Update) bool {
 			channelPost = *update.EditedChannelPost
 		}
 
-		go b.channelPostHandler(b, update, channelPost, update.HasEditedChannelPost())
+		b.runHandler(func() { b.channelPostHandler(b, update, channelPost, update.HasEditedChannelPost()) })
 
 		return true
 	} else if b.inlineQueryHandler != nil && update.HasInlineQuery() {
-		go b.inlineQueryHandler(b, update, *update.InlineQuery)
+		b.runHandler(func() { b.inlineQueryHandler(b, update, *update.InlineQuery) })
 
 		return true
 	} else if b.chosenInlineResultHandler != nil && update.HasChosenInlineResult() {
-		go b.chosenInlineResultHandler(b, update, *update.ChosenInlineResult)
+		b.runHandler(func() { b.chosenInlineResultHandler(b, update, *update.ChosenInlineResult) })
 
 		return true
 	} else if b.callbackQueryHandler != nil && update.HasCallbackQuery() {
-		go b.callbackQueryHandler(b, update, *update.CallbackQuery)
+		b.runHandler(func() { b.callbackQueryHandler(b, update, *update.CallbackQuery) })
 
 		return true
 	} else if b.shippingQueryHandler != nil && update.HasShippingQuery() {
-		go b.shippingQueryHandler(b, update, *update.ShippingQuery)
+		b.runHandler(func() { b.shippingQueryHandler(b, update, *update.ShippingQuery) })
 
 		return true
 	} else if b.preCheckoutQueryHandler != nil && update.HasPreCheckoutQuery() {
-		go b.preCheckoutQueryHandler(b, update, *update.PreCheckoutQuery)
+		b.runHandler(func() { b.preCheckoutQueryHandler(b, update, *update.PreCheckoutQuery) })
 
 		return true
 	} else if b.pollHandler != nil && update.HasPoll() {
-		go b.pollHandler(b, update, *update.Poll)
+		b.runHandler(func() { b.pollHandler(b, update, *update.Poll) })
 
 		return true
 	} else if b.pollAnswerHandler != nil && update.HasPollAnswer() {
-		go b.pollAnswerHandler(b, update, *update.PollAnswer)
+		b.runHandler(func() { b.pollAnswerHandler(b, update, *update.PollAnswer) })
 
 		return true
 	} else if b.chatMemberUpdateHandler != nil && (update.HasMyChatMember() || update.HasChatMember()) {
@@ -510,11 +532,11 @@ func handleUpdateByType(b *Bot, update Update) bool {
 			chatMemberUpdated = *update.ChatMember
 		}
 
-		go b.chatMemberUpdateHandler(b, update, chatMemberUpdated, update.HasMyChatMember())
+		b.runHandler(func() { b.chatMemberUpdateHandler(b, update, chatMemberUpdated, update.HasMyChatMember()) })
 
 		return true
 	} else if b.chatJoinRequestHandler != nil && update.HasChatJoinRequest() {
-		go b.chatJoinRequestHandler(b, update, *update.ChatJoinRequest)
+		b.runHandler(func() { b.chatJoinRequestHandler(b, update, *update.ChatJoinRequest) })
 
 		return true
 	}
