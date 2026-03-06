@@ -1,6 +1,6 @@
 module github.com/meinside/telegram-bot-go/samples/wasm
 
-go 1.25.7
+go 1.26.0
 
 require (
 	github.com/meinside/telegram-bot-go v0.0.0
