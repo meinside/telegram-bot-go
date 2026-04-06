@@ -614,11 +614,18 @@ func TestMethods(t *testing.T) {
 			// TODO: RemoveChatVerification
 
 			////////////////////////////////
+			// (managed bot)
+			//
+			// TODO: GetManagedBotToken
+			// TODO: ReplaceManagedBotToken
+
+			////////////////////////////////
 			// (webapp)
 			//
 			// TODO: AnswerWebAppQuery
 			// TODO: SetUserEmojiStatus
 			// TODO: SavePreparedInlineMessage
+			// TODO: SavePreparedKeyboardButton
 		}
 	}
 }

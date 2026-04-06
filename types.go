@@ -265,6 +265,7 @@ type Update struct {
 	ChatJoinRequest         *ChatJoinRequest             `json:"chat_join_request,omitempty"`
 	ChatBoost               *ChatBoostUpdated            `json:"chat_boost,omitempty"`
 	RemovedChatBoost        *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`
+	ManagedBot              *ManagedBotUpdated           `json:"managed_bot,omitempty"`
 }
 
 // AllowedUpdate is a type for 'allowed_updates'
@@ -318,6 +319,7 @@ type User struct {
 	HasMainWebApp             *bool   `json:"has_main_web_app,omitempty"`              // returned only in GetMe()
 	HasTopicsEnabled          *bool   `json:"has_topics_enabled,omitempty"`            // returned only in GetMe()
 	AllowsUsersToCreateTopics *bool   `json:"allows_users_to_create_topics,omitempty"` // returned only in GetMe()
+	CanManageBots             *bool   `json:"can_manage_bots,omitempty"`               // returned only in GetMe()
 }
 
 // Chat is a struct of a chat
@@ -635,6 +637,7 @@ type ReplyParameters struct {
 	QuoteEntities            []MessageEntity `json:"quote_entities,omitempty"`
 	QuotePosition            *int            `json:"quote_position,omitempty"`
 	ChecklistTaskID          *int64          `json:"checklist_task_id,omitempty"`
+	PollOptionID             *string         `json:"poll_option_id,omitempty"`
 }
 
 // MessageOrigin struct for describing the origin of a message
@@ -913,20 +916,27 @@ type Poll struct {
 	IsAnonymous           bool            `json:"is_anonymous"`
 	Type                  string          `json:"type"` // "quiz" or "regular"
 	AllowsMultipleAnswers bool            `json:"allows_multiple_answers"`
-	CorrectOptionID       *int            `json:"correct_option_id,omitempty"`
+	AllowsRevoting        bool            `json:"allows_revoting"`
+	CorrectOptionIDs      []int           `json:"correct_option_ids,omitempty"`
 	Explanation           *string         `json:"explanation,omitempty"`
 	ExplanationEntities   []MessageEntity `json:"explanation_entities,omitempty"`
 	OpenPeriod            *int            `json:"open_period,omitempty"`
 	CloseDate             *int            `json:"close_date,omitempty"`
+	Description           *string         `json:"description,omitempty"`
+	DescriptionEntities   []MessageEntity `json:"description_entities,omitempty"`
 }
 
 // PollOption is a struct of a poll option
 //
 // https://core.telegram.org/bots/api#polloption
 type PollOption struct {
-	Text         string          `json:"text"` // 1~100 chars
+	PersistentID string          `json:"persistent_id"`
+	Text         *string         `json:"text,omitempty"` // 1~100 chars
 	TextEntities []MessageEntity `json:"text_entities,omitempty"`
 	VoterCount   int             `json:"voter_count"`
+	AddedByUser  *User           `json:"added_by_user,omitempty"`
+	AddedByChat  *Chat           `json:"added_by_chat,omitempty"`
+	AdditionDate *int64          `json:"addition_date,omitempty"`
 }
 
 // InputPollOption is a struct of an input poll option
@@ -942,10 +952,11 @@ type InputPollOption struct {
 //
 // https://core.telegram.org/bots/api#pollanswer
 type PollAnswer struct {
-	PollID    string `json:"poll_id"`
-	VoterChat *Chat  `json:"voter_chat,omitempty"`
-	User      *User  `json:"user,omitempty"`
-	OptionIDs []int  `json:"option_ids"`
+	PollID              string   `json:"poll_id"`
+	VoterChat           *Chat    `json:"voter_chat,omitempty"`
+	User                *User    `json:"user,omitempty"`
+	OptionIDs           []int    `json:"option_ids"`
+	OptionPersistentIDs []string `json:"option_persistent_ids"`
 }
 
 // ChecklistTask is a struct of a checklist task
@@ -1023,6 +1034,41 @@ type Dice struct {
 // https://core.telegram.org/bots/api#messageautodeletetimerchanged
 type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"`
+}
+
+// ManagedBotCreated contains information about the bot that was created to be managed by the current bot.
+//
+// https://core.telegram.org/bots/api#managedbotcreated
+type ManagedBotCreated struct {
+	Bot User `json:"bot"`
+}
+
+// ManagedBotUpdated contains information about the creation or token update of a bot that is managed by the current bot.
+//
+// https://core.telegram.org/bots/api#managedbotupdated
+type ManagedBotUpdated struct {
+	User User `json:"user"`
+	Bot  User `json:"bot"`
+}
+
+// PollOptionAdded describes a service message about an option added to a poll.
+//
+// https://core.telegram.org/bots/api#polloptionadded
+type PollOptionAdded struct {
+	PollMessage        *MaybeInaccessibleMessage `json:"poll_message,omitempty"`
+	OptionPersistentID string                    `json:"option_persistent_id"`
+	OptionText         string                    `json:"option_text"`
+	OptionTextEntities []MessageEntity           `json:"option_text_entities,omitempty"`
+}
+
+// PollOptionDeleted describes a service message about an option deleted from a poll.
+//
+// https://core.telegram.org/bots/api#polloptiondeleted
+type PollOptionDeleted struct {
+	PollMessage        *MaybeInaccessibleMessage `json:"poll_message,omitempty"`
+	OptionPersistentID string                    `json:"option_persistent_id"`
+	OptionText         string                    `json:"option_text"`
+	OptionTextEntities []MessageEntity           `json:"option_text_entities,omitempty"`
 }
 
 // ChatBackground is a struct for chat background
@@ -1410,15 +1456,16 @@ type ReplyKeyboardMarkup struct {
 //
 // https://core.telegram.org/bots/api#keyboardbutton
 type KeyboardButton struct {
-	Text              string                      `json:"text"`
-	IconCustomEmojiID *string                     `json:"icon_custom_emoji_id,omitempty"`
-	Style             *KeyboardStyle              `json:"style,omitempty"`
-	RequestUsers      *KeyboardButtonRequestUsers `json:"request_users,omitempty"`
-	RequestChat       *KeyboardButtonRequestChat  `json:"request_chat,omitempty"`
-	RequestContact    *bool                       `json:"request_contact,omitempty"`
-	RequestLocation   *bool                       `json:"request_location,omitempty"`
-	RequestPoll       *KeyboardButtonPollType     `json:"request_poll,omitempty"`
-	WebApp            *WebAppInfo                 `json:"web_app,omitempty"`
+	Text              string                           `json:"text"`
+	IconCustomEmojiID *string                          `json:"icon_custom_emoji_id,omitempty"`
+	Style             *KeyboardStyle                   `json:"style,omitempty"`
+	RequestUsers      *KeyboardButtonRequestUsers      `json:"request_users,omitempty"`
+	RequestChat       *KeyboardButtonRequestChat       `json:"request_chat,omitempty"`
+	RequestManagedBot *KeyboardButtonRequestManagedBot `json:"request_managed_bot,omitempty"`
+	RequestContact    *bool                            `json:"request_contact,omitempty"`
+	RequestLocation   *bool                            `json:"request_location,omitempty"`
+	RequestPoll       *KeyboardButtonPollType          `json:"request_poll,omitempty"`
+	WebApp            *WebAppInfo                      `json:"web_app,omitempty"`
 }
 
 type KeyboardStyle string
@@ -1461,6 +1508,15 @@ type KeyboardButtonRequestChat struct {
 	RequestTitle            *bool                    `json:"request_title,omitempty"`
 	RequestUsername         *bool                    `json:"request_username,omitempty"`
 	RequestPhoto            *bool                    `json:"request_photo,omitempty"`
+}
+
+// KeyboardButtonRequestManagedBot is a struct for `request_managed_bot` in KeyboardButton
+//
+// https://core.telegram.org/bots/api#keyboardbuttonrequestmanagedbot
+type KeyboardButtonRequestManagedBot struct {
+	RequestID         int64   `json:"request_id"`
+	SuggestedName     *string `json:"suggested_name,omitempty"`
+	SuggestedUsername *string `json:"suggested_username,omitempty"`
 }
 
 // KeyboardButtonPollType is a struct for KeyboardButtonPollType
@@ -2206,6 +2262,7 @@ type Message struct {
 	Quote                         *TextQuote                     `json:"quote,omitempty"`
 	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`
 	ReplyToChecklistTaskID        *int64                         `json:"reply_to_checklist_task_id,omitempty"`
+	ReplyToPollOptionID           *string                        `json:"reply_to_poll_option_id,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
 	EditDate                      *int                           `json:"edit_date,omitempty"`
 	HasProtectedContent           *bool                          `json:"has_protected_content,omitempty"`
@@ -2281,7 +2338,10 @@ type Message struct {
 	Giveaway                     *Giveaway                     `json:"giveaway,omitempty"`
 	GiveawayWinners              *GiveawayWinners              `json:"giveaway_winners,omitempty"`
 	GiveawayCompleted            *GiveawayCompleted            `json:"giveaway_completed,omitempty"`
+	ManagedBotCreated            *ManagedBotCreated            `json:"managed_bot_created,omitempty"`
 	PaidMessagePriceChanged      *PaidMessagePriceChanged      `json:"paid_message_price_changed,omitempty"`
+	PollOptionAdded              *PollOptionAdded              `json:"poll_option_added,omitempty"`
+	PollOptionDeleted            *PollOptionDeleted            `json:"poll_option_deleted,omitempty"`
 	SuggestedPostApproved        *SuggestedPostApproved        `json:"suggested_post_approved,omitempty"`
 	SuggestedPostApprovalFailed  *SuggestedPostApprovalFailed  `json:"suggested_post_approval_failed,omitempty"`
 	SuggestedPostDeclined        *SuggestedPostDeclined        `json:"suggested_post_declined,omitempty"`
@@ -3059,6 +3119,13 @@ type BusinessMessagesDeleted struct {
 	BusinessConnectionID string  `json:"business_connection_id"`
 	Chat                 Chat    `json:"chat"`
 	MessageIDs           []int64 `json:"message_ids"`
+}
+
+// PreparedKeyboardButton is a struct for a keyboard button to be used by a user of a Mini App.
+//
+// https://core.telegram.org/bots/api#preparedkeyboardbutton
+type PreparedKeyboardButton struct {
+	ID string `json:"id"`
 }
 
 // GiftBackground is a struct for a gift background.
