@@ -1695,7 +1695,7 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup any) OptionsSendVenue {
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: `business_connection_id`, `message_thread_id`, `question_parse_mode`, `question_entities`, `is_anonymous`, `type`, `allows_multiple_answers`, `correct_option_id`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include: `business_connection_id`, `message_thread_id`, `question_parse_mode`, `question_entities`, `is_anonymous`, `type`, `allows_multiple_answers`, `allows_revoting`, `shuffle_options`, `allow_adding_options`, `hide_results_until_closes`, `correct_option_ids`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `description`, `description_parse_mode`, `description_entities`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
@@ -1742,9 +1742,33 @@ func (o OptionsSendPoll) SetAllowsMultipleAnswers(allowsMultipleAnswers bool) Op
 	return o
 }
 
-// SetCorrectOptionID sets the `correct_option_id` value of OptionsSendPoll.
-func (o OptionsSendPoll) SetCorrectOptionID(correctOptionID int) OptionsSendPoll {
-	o["correct_option_id"] = correctOptionID
+// SetAllowsRevoting sets the `allows_revoting` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetAllowsRevoting(allowsRevoting bool) OptionsSendPoll {
+	o["allows_revoting"] = allowsRevoting
+	return o
+}
+
+// SetShuffleOptions sets the `shuffle_options` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetShuffleOptions(shuffleOptions bool) OptionsSendPoll {
+	o["shuffle_options"] = shuffleOptions
+	return o
+}
+
+// SetAllowAddingOptions sets the `allow_adding_options` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetAllowAddingOptions(allowAddingOptions bool) OptionsSendPoll {
+	o["allow_adding_options"] = allowAddingOptions
+	return o
+}
+
+// SetHideResultsUntilCloses sets the `hide_results_until_closes` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetHideResultsUntilCloses(hideResultsUntilCloses bool) OptionsSendPoll {
+	o["hide_results_until_closes"] = hideResultsUntilCloses
+	return o
+}
+
+// SetCorrectOptionIDs sets the `correct_option_ids` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetCorrectOptionIDs(correctOptionIDs []int) OptionsSendPoll {
+	o["correct_option_ids"] = correctOptionIDs
 	return o
 }
 
@@ -1781,6 +1805,24 @@ func (o OptionsSendPoll) SetCloseDate(closeDate int) OptionsSendPoll {
 // SetIsClosed sets the `is_closed` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetIsClosed(isClosed bool) OptionsSendPoll {
 	o["is_closed"] = isClosed
+	return o
+}
+
+// SetDescription sets the `description` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetDescription(description string) OptionsSendPoll {
+	o["description"] = description
+	return o
+}
+
+// SetDescriptionParseMode sets the `description_parse_mode` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetDescriptionParseMode(descriptionParseMode ParseMode) OptionsSendPoll {
+	o["description_parse_mode"] = descriptionParseMode
+	return o
+}
+
+// SetDescriptionEntities sets the `description_entities` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetDescriptionEntities(descriptionEntities []MessageEntity) OptionsSendPoll {
+	o["description_entities"] = descriptionEntities
 	return o
 }
 

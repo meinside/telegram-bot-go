@@ -1441,6 +1441,8 @@ func (b *Bot) GetUserProfilePhotos(
 	return requestGeneric[UserProfilePhotos](ctx, b, "getUserProfilePhotos", options)
 }
 
+// GetUserProfileAudios gets a list of profile audios for a user.
+//
 // https://core.telegram.org/bots/api#getuserprofileaudios
 func (b *Bot) GetUserProfileAudios(
 	ctx context.Context,
@@ -2158,6 +2160,30 @@ func (b *Bot) GetBusinessConnection(
 	return requestGeneric[BusinessConnection](ctx, b, "getBusinessConnection", options)
 }
 
+// GetManagedBotToken gets the token of a managed bot.
+//
+// https://core.telegram.org/bots/api#getmanagedbottoken
+func (b *Bot) GetManagedBotToken(
+	ctx context.Context,
+	userID int64,
+) (result APIResponse[string], err error) {
+	return requestGeneric[string](ctx, b, "getManagedBotToken", map[string]any{
+		"user_id": userID,
+	})
+}
+
+// ReplaceManagedBotToken revokes the current token of a managed bot and generates a new one.
+//
+// https://core.telegram.org/bots/api#replacemanagedbottoken
+func (b *Bot) ReplaceManagedBotToken(
+	ctx context.Context,
+	userID int64,
+) (result APIResponse[string], err error) {
+	return requestGeneric[string](ctx, b, "replaceManagedBotToken", map[string]any{
+		"user_id": userID,
+	})
+}
+
 // SetMyCommands sets commands of this bot.
 //
 // https://core.telegram.org/bots/api#setmycommands
@@ -2678,6 +2704,20 @@ func (b *Bot) SavePreparedInlineMessage(
 	options["result"] = result
 
 	return requestGeneric[PreparedInlineMessage](ctx, b, "savePreparedInlineMessage", options)
+}
+
+// SavePreparedKeyboardButton stores a keyboard button that can be used by a user within a Mini App.
+//
+// https://core.telegram.org/bots/api#savepreparedkeyboardbutton
+func (b *Bot) SavePreparedKeyboardButton(
+	ctx context.Context,
+	userID int64,
+	button KeyboardButton,
+) (res APIResponse[PreparedKeyboardButton], err error) {
+	return requestGeneric[PreparedKeyboardButton](ctx, b, "savePreparedKeyboardButton", map[string]any{
+		"user_id": userID,
+		"button":  button,
+	})
 }
 
 // CreateForumTopic creates a topic in a forum supergroup chat or a private chat with a user.

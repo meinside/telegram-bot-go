@@ -1456,6 +1456,30 @@ func (c KeyboardButtonRequestChat) SetRequestPhoto(requestPhoto bool) KeyboardBu
 }
 
 ////////////////////////////////
+// Helper functions for KeyboardButtonRequestManagedBot
+
+// NewKeyboardButtonRequestManagedBot returns a new KeyboardButtonRequestManagedBot.
+func NewKeyboardButtonRequestManagedBot(
+	requestID int64,
+) KeyboardButtonRequestManagedBot {
+	return KeyboardButtonRequestManagedBot{
+		RequestID: requestID,
+	}
+}
+
+// SetSuggestedName sets the `suggested_name` value of KeyboardButtonRequestManagedBot.
+func (m KeyboardButtonRequestManagedBot) SetSuggestedName(suggestedName string) KeyboardButtonRequestManagedBot {
+	m.SuggestedName = &suggestedName
+	return m
+}
+
+// SetSuggestedUsername sets the `suggested_username` value of KeyboardButtonRequestManagedBot.
+func (m KeyboardButtonRequestManagedBot) SetSuggestedUsername(suggestedUsername string) KeyboardButtonRequestManagedBot {
+	m.SuggestedUsername = &suggestedUsername
+	return m
+}
+
+////////////////////////////////
 // Helper functions for KeyboardButtonPollType
 
 // NewKeyboardButtonPollType returns a new KeyboardButtonPollType.
