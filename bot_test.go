@@ -211,6 +211,17 @@ func TestMethods(t *testing.T) {
 					t.Errorf("failed to edit message caption: %s", *caption.Description)
 				}
 			}
+			// SendLivePhoto
+			if livePhoto, _ := client.SendLivePhoto(
+				context.TODO(),
+				_chatID,
+				NewInputFileFromFilepath("./samples/_files/video.mp4"),
+				NewInputFileFromFilepath("./samples/_files/gopher.png"),
+				OptionsSendLivePhoto{},
+			); !livePhoto.OK {
+				t.Errorf("failed to send live photo: %s", *livePhoto.Description)
+			}
+
 			// TODO: SendAudio
 			// TODO: SendDocument
 			if doc, _ := client.SendDocument(
@@ -426,6 +437,11 @@ func TestMethods(t *testing.T) {
 			// TODO: AnswerCallbackQuery
 
 			////////////////////////////////
+			// (guest query)
+			//
+			// TODO: AnswerGuestQuery
+
+			////////////////////////////////
 			// (inline query)
 			//
 			// TODO: AnswerInlineQuery
@@ -466,6 +482,8 @@ func TestMethods(t *testing.T) {
 			if admins, _ := client.GetChatAdministrators(
 				context.TODO(),
 				_chatID,
+				OptionsGetChatAdministrators{}.
+					SetReturnBots(true),
 			); !admins.OK {
 				t.Errorf("failed to get chat administrators: %s", *admins.Description)
 			}
@@ -477,13 +495,15 @@ func TestMethods(t *testing.T) {
 				t.Errorf("failed to get chat member count: %s", *count.Description)
 			}
 			// TODO: GetChatMember
+			// TODO: GetUserPersonalChatMessages
 			// TODO: CreateChat
 			// TODO: SetChatTitle
 			// SetChatDescription
 			if desc, _ := client.SetChatDescription(
 				context.TODO(),
 				_chatID,
-				fmt.Sprintf("[telegram-bot-go] chat_id: %s (last update: %d)",
+				fmt.Sprintf(
+					"[telegram-bot-go] chat_id: %s (last update: %d)",
 					_chatID,
 					time.Now().Unix(),
 				),
@@ -597,6 +617,8 @@ func TestMethods(t *testing.T) {
 			// (reaction)
 			//
 			// TODO: SetMessageReaction
+			// TODO: DeleteMessageReaction
+			// TODO: DeleteAllMessageReactions
 
 			////////////////////////////////
 			// (gift)
@@ -618,6 +640,8 @@ func TestMethods(t *testing.T) {
 			//
 			// TODO: GetManagedBotToken
 			// TODO: ReplaceManagedBotToken
+			// TODO: GetManagedBotAccessSettings
+			// TODO: SetManagedBotAccessSettings
 
 			////////////////////////////////
 			// (webapp)

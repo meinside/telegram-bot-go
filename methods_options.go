@@ -477,6 +477,107 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 	return o
 }
 
+// OptionsSendLivePhoto struct for SendLivePhoto().
+//
+// options include:
+// `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
+// `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`,
+// `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
+// `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
+//
+// https://core.telegram.org/bots/api#sendlivephoto
+type OptionsSendLivePhoto MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetBusinessConnectionID(businessConnectionID string) OptionsSendLivePhoto {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetMessageThreadID(messageThreadID int64) OptionsSendLivePhoto {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendLivePhoto {
+	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetCaption sets the `caption` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetCaption(caption string) OptionsSendLivePhoto {
+	o["caption"] = caption
+	return o
+}
+
+// SetParseMode sets the `parse_mode` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetParseMode(parseMode ParseMode) OptionsSendLivePhoto {
+	o["parse_mode"] = parseMode
+	return o
+}
+
+// SetCaptionEntities sets the `caption_entities` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetCaptionEntities(entities []MessageEntity) OptionsSendLivePhoto {
+	o["caption_entities"] = entities
+	return o
+}
+
+// SetShowCaptionAboveMedia sets the `show_caption_above_media` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetShowCaptionAboveMedia(showCaptionAboveMedia bool) OptionsSendLivePhoto {
+	o["show_caption_above_media"] = showCaptionAboveMedia
+	return o
+}
+
+// SetHasSpoiler sets the `has_spoiler` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetHasSpoiler(hasSpoiler bool) OptionsSendLivePhoto {
+	o["has_spoiler"] = hasSpoiler
+	return o
+}
+
+// SetDisableNotification sets the `disable_notification` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetDisableNotification(disable bool) OptionsSendLivePhoto {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetProtectContent(protect bool) OptionsSendLivePhoto {
+	o["protect_content"] = protect
+	return o
+}
+
+// SetAllowPaidBroadcast sets the `allow_paid_broadcast` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetAllowPaidBroadcast(allow bool) OptionsSendLivePhoto {
+	o["allow_paid_broadcast"] = allow
+	return o
+}
+
+// SetMessageEffectID sets the `message_effect_id` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetMessageEffectID(messageEffectID string) OptionsSendLivePhoto {
+	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendLivePhoto {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
+// SetReplyParameters sets the `reply_parameters` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetReplyParameters(replyParameters ReplyParameters) OptionsSendLivePhoto {
+	o["reply_parameters"] = replyParameters
+	return o
+}
+
+// SetReplyMarkup sets the `reply_markup` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetReplyMarkup(replyMarkup any) OptionsSendLivePhoto {
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
 // OptionsSendAudio struct for SendAudio().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`, `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
@@ -1695,7 +1796,15 @@ func (o OptionsSendVenue) SetReplyMarkup(replyMarkup any) OptionsSendVenue {
 
 // OptionsSendPoll struct for SendPoll().
 //
-// options include: `business_connection_id`, `message_thread_id`, `question_parse_mode`, `question_entities`, `is_anonymous`, `type`, `allows_multiple_answers`, `allows_revoting`, `shuffle_options`, `allow_adding_options`, `hide_results_until_closes`, `correct_option_ids`, `explanation`, `explanation_parse_mode`, `explanation_entities`, `open_period`, `close_date`, `is_closed`, `description`, `description_parse_mode`, `description_entities`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `reply_parameters`, and `reply_markup`.
+// options include:
+// `business_connection_id`, `message_thread_id`, `question_parse_mode`,
+// `question_entities`, `is_anonymous`, `type`, `allows_multiple_answers`,
+// `allows_revoting`, `shuffle_options`, `allow_adding_options`, `hide_results_until_closes`,
+// `members_only`, `country_codes`, `correct_option_ids`, `explanation`, `explanation_parse_mode`,
+// `explanation_entities`, `explanation_media`, `open_period`, `close_date`, `is_closed`,
+// `description`, `description_parse_mode`, `description_entities`, `media`,
+// `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
+// `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendpoll
 type OptionsSendPoll MethodOptions
@@ -1766,6 +1875,18 @@ func (o OptionsSendPoll) SetHideResultsUntilCloses(hideResultsUntilCloses bool) 
 	return o
 }
 
+// SetMembersOnly sets the `members_only` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetMembersOnly(membersOnly bool) OptionsSendPoll {
+	o["members_only"] = membersOnly
+	return o
+}
+
+// SetCountryCodes sets the `country_codes` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetCountryCodes(countryCodes []string) OptionsSendPoll {
+	o["country_codes"] = countryCodes
+	return o
+}
+
 // SetCorrectOptionIDs sets the `correct_option_ids` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetCorrectOptionIDs(correctOptionIDs []int) OptionsSendPoll {
 	o["correct_option_ids"] = correctOptionIDs
@@ -1787,6 +1908,12 @@ func (o OptionsSendPoll) SetExplanationParseMode(explanationParseMode ParseMode)
 // SetExplanationEntities sets the `explanation_entities` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetExplanationEntities(entities []MessageEntity) OptionsSendPoll {
 	o["explanation_entities"] = entities
+	return o
+}
+
+// SetExplanationMedia sets the `explanation_media` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetExplanationMedia(media InputPollMedia) OptionsSendPoll {
+	o["explanation_media"] = media
 	return o
 }
 
@@ -1823,6 +1950,12 @@ func (o OptionsSendPoll) SetDescriptionParseMode(descriptionParseMode ParseMode)
 // SetDescriptionEntities sets the `description_entities` value of OptionsSendPoll.
 func (o OptionsSendPoll) SetDescriptionEntities(descriptionEntities []MessageEntity) OptionsSendPoll {
 	o["description_entities"] = descriptionEntities
+	return o
+}
+
+// SetMedia sets the `media` value of OptionsSendPoll.
+func (o OptionsSendPoll) SetMedia(media InputPollMedia) OptionsSendPoll {
+	o["media"] = media
 	return o
 }
 
@@ -2490,6 +2623,19 @@ func (o OptionsUnpinChatMessage) SetMessageID(messageID int64) OptionsUnpinChatM
 	return o
 }
 
+// OptionsGetChatAdministrators struct for GetChatAdministrators
+//
+// options include: `return_bots`.
+//
+// https://core.telegram.org/bots/api#getchatadministrators
+type OptionsGetChatAdministrators MethodOptions
+
+// SetReturnBots sets the `return_bots` value of OptionsGetChatAdministrators.
+func (o OptionsGetChatAdministrators) SetReturnBots(returnBots bool) OptionsGetChatAdministrators {
+	o["return_bots"] = returnBots
+	return o
+}
+
 // OptionsAnswerCallbackQuery struct for AnswerCallbackQuery().
 //
 // options include: `text`, `show_alert`, `url`, and `cache_time`.
@@ -2540,6 +2686,19 @@ func (o OptionsGetMyCommands) SetScope(scope any) OptionsGetMyCommands {
 // `language_code` is a two-letter ISO 639-1 language code and can be empty.
 func (o OptionsGetMyCommands) SetLanguageCode(languageCode string) OptionsGetMyCommands {
 	o["language_code"] = languageCode
+	return o
+}
+
+// OptionsSetManagedBotAccessSettings struct for SetManagedBotAccessSettings().
+//
+// options include: `added_user_ids`.
+//
+// https://core.telegram.org/bots/api#setmanagedbotaccesssettings
+type OptionsSetManagedBotAccessSettings MethodOptions
+
+// SetAddedUserIDs sets the `added_user_ids` value of OptionsSetManagedBotAccessSettings.
+func (o OptionsSetManagedBotAccessSettings) SetAddedUserIDs(addedUserIDs []int64) OptionsSetManagedBotAccessSettings {
+	o["added_user_ids"] = addedUserIDs
 	return o
 }
 
@@ -2938,6 +3097,44 @@ func (o OptionsEditMessageReplyMarkup) SetInlineMessageID(inlineMessageID string
 // SetReplyMarkup sets the `reply_markup` value of OptionsEditMessageReplyMarkup.
 func (o OptionsEditMessageReplyMarkup) SetReplyMarkup(replyMarkup InlineKeyboardMarkup) OptionsEditMessageReplyMarkup {
 	o["reply_markup"] = replyMarkup
+	return o
+}
+
+// OptionsDeleteMessageReaction struct for DeleteMessageReaction()
+//
+// options include: `user_id`, or `actor_chat_id`.
+//
+// https://core.telegram.org/bots/api#deletemessagereaction
+type OptionsDeleteMessageReaction MethodOptions
+
+// SetUserID sets the `user_id` value of OptionsDeleteMessageReaction.
+func (o OptionsDeleteMessageReaction) SetUserID(userID int64) OptionsDeleteMessageReaction {
+	o["user_id"] = userID
+	return o
+}
+
+// SetActorChatID sets the `actor_chat_id` value of OptionsDeleteMessageReaction.
+func (o OptionsDeleteMessageReaction) SetActorChatID(actorChatID int64) OptionsDeleteMessageReaction {
+	o["actor_chat_id"] = actorChatID
+	return o
+}
+
+// OptionsDeleteAllMessageReactions struct for DeleteAllMessageReactions()
+//
+// options include: `user_id`, or `actor_chat_id`.
+//
+// https://core.telegram.org/bots/api#deleteallmessagereactions
+type OptionsDeleteAllMessageReactions MethodOptions
+
+// SetUserID sets the `user_id` value of OptionsDeleteAllMessageReactions.
+func (o OptionsDeleteAllMessageReactions) SetUserID(userID int64) OptionsDeleteAllMessageReactions {
+	o["user_id"] = userID
+	return o
+}
+
+// SetActorChatID sets the `actor_chat_id` value of OptionsDeleteAllMessageReactions.
+func (o OptionsDeleteAllMessageReactions) SetActorChatID(actorChatID int64) OptionsDeleteAllMessageReactions {
+	o["actor_chat_id"] = actorChatID
 	return o
 }
 
