@@ -250,6 +250,7 @@ type Update struct {
 	BusinessMessage         *Message                     `json:"business_message,omitempty"`
 	EditedBusinessMessage   *Message                     `json:"edited_business_message,omitempty"`
 	DeletedBusinessMessages *BusinessMessagesDeleted     `json:"deleted_business_messages,omitempty"`
+	GuestMessage            *Message                     `json:"guest_message,omitempty"`
 	MessageReaction         *MessageReactionUpdated      `json:"message_reaction,omitempty"`
 	MessageReactionCount    *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
 	InlineQuery             *InlineQuery                 `json:"inline_query,omitempty"`
@@ -314,6 +315,7 @@ type User struct {
 	AddedToAttachmentMenu     *bool   `json:"added_to_attachment_menu,omitempty"`
 	CanJoinGroups             *bool   `json:"can_join_groups,omitempty"`               // returned only in GetMe()
 	CanReadAllGroupMessages   *bool   `json:"can_read_all_group_messages,omitempty"`   // returned only in GetMe()
+	SupportsGuestQueries      *bool   `json:"supports_guest_queries,omitempty"`        // returned only in GetMe()
 	SupportsInlineQueries     *bool   `json:"supports_inline_queries,omitempty"`       // returned only in GetMe()
 	CanConnectToBusiness      *bool   `json:"can_connect_to_business,omitempty"`       // returned only in GetMe()
 	HasMainWebApp             *bool   `json:"has_main_web_app,omitempty"`              // returned only in GetMe()
@@ -401,16 +403,41 @@ const (
 	InputMediaTypeAnimation InputMediaType = "animation"
 	InputMediaTypeDocument  InputMediaType = "document"
 	InputMediaTypeAudio     InputMediaType = "audio"
+	InputMediaTypeLivePhoto InputMediaType = "live_photo"
+	InputMediaTypeLocation  InputMediaType = "location"
 	InputMediaTypePhoto     InputMediaType = "photo"
+	InputMediaTypeSticker   InputMediaType = "sticker"
+	InputMediaTypeVenue     InputMediaType = "venue"
 	InputMediaTypeVideo     InputMediaType = "video"
 )
 
 // InputMedia represents the content of a media message to be sent.
 //
-// NOTE: Can be one of InputMediaAnimation, InputMediaDocument, InputMediaAudio, InputMediaPhoto, or InputMediaVideo.
+// NOTE: Should be one of:
+// InputMediaAnimation, InputMediaAudio, InputMediaDocument,
+// InputMediaLivePhoto, InputMediaPhoto, or InputMediaVideo.
 //
 // https://core.telegram.org/bots/api#inputmedia
 type InputMedia any
+
+// InputPollMedia represents the content of a poll description or a quiz explanation to be sent.
+//
+// NOTE: Should be one of:
+// InputMediaAnimation, InputMediaAudio, InputMediaDocument,
+// InputMediaLivePhoto, InputMediaLocation, InputMediaPhoto,
+// InputMediaVenue, or InputMediaVideo.
+//
+// https://core.telegram.org/bots/api#inputpollmedia
+type InputPollMedia any
+
+// InputPollOptionMedia represents the content of a poll option to be sent.
+//
+// NOTE: Should be one of:
+// InputMediaAnimation, InputMediaLivePhoto, InputMediaLocation,
+// InputMediaPhoto, InputMediaSticker, InputMediaVenue, or InputMediaVideo.
+//
+// https://core.telegram.org/bots/api#inputpolloptionmedia
+type InputPollOptionMedia any
 
 // InputMediaAnimation is a struct of an animation
 //
@@ -457,6 +484,30 @@ type InputMediaAudio struct {
 	Title           *string         `json:"title,omitempty"`
 }
 
+// InputMediaLivePhoto is a struct of a live photo
+//
+// https://core.telegram.org/bots/api#inputmedialivephoto
+type InputMediaLivePhoto struct {
+	Type                  InputMediaType  `json:"type"` // == InputMeidaTypeLivePhoto
+	Media                 string          `json:"media"`
+	Photo                 string          `json:"photo"`
+	Caption               *string         `json:"caption,omitempty"`
+	ParseMode             *ParseMode      `json:"parse_mode,omitempty"`
+	CaptionEntities       []MessageEntity `json:"caption_entities,omitempty"`
+	ShowCaptionAboveMedia *bool           `json:"show_caption_above_media,omitempty"`
+	HasSpoiler            *bool           `json:"has_spoiler,omitempty"`
+}
+
+// InputMediaLocation is a struct of a location
+//
+// https://core.telegram.org/bots/api#inputmedialocation
+type InputMediaLocation struct {
+	Type               InputMediaType `json:"type"` // == InputMediaTypeLocation
+	Latitude           float64        `json:"latitude"`
+	Longitude          float64        `json:"longitude"`
+	HorizontalAccuracy *float64       `json:"horizontal_accuracy,omitempty"`
+}
+
 // InputMediaPhoto is a struct of a photo
 //
 // https://core.telegram.org/bots/api#inputmediaphoto
@@ -468,6 +519,30 @@ type InputMediaPhoto struct {
 	CaptionEntities       []MessageEntity `json:"caption_entities,omitempty"`
 	ShowCaptionAboveMedia *bool           `json:"show_caption_above_media,omitempty"`
 	HasSpoiler            *bool           `json:"has_spoiler,omitempty"`
+}
+
+// InputMediaSticker is a struct of a sticker
+//
+// https://core.telegram.org/bots/api#inputmediasticker
+type InputMediaSticker struct {
+	Type  InputMediaType `json:"type"` // == InputMediaTypeSticker
+	Media string         `json:"media"`
+	Emoji *string        `json:"emoji,omitempty"`
+}
+
+// InputMediaVenue is a struct of a venue
+//
+// https://core.telegram.org/bots/api#inputmediavenue
+type InputMediaVenue struct {
+	Type            InputMediaType `json:"type"` // == InputMediaTypeVenue
+	Latitude        float64        `json:"latitude"`
+	Longitude       float64        `json:"longitude"`
+	Title           string         `json:"title"`
+	Address         string         `json:"address"`
+	FoursquareID    *string        `json:"foursquare_id,omitempty"`
+	FoursquareType  *string        `json:"foursquare_type,omitempty"`
+	GooglePlaceID   *string        `json:"google_place_id,omitempty"`
+	GooglePlaceType *string        `json:"google_place_type,omitempty"`
 }
 
 // InputMediaVideo is a struct of a video
@@ -513,6 +588,15 @@ type InputPaidMedia any
 type InputPaidMediaPhoto struct {
 	Type  string `json:"type"` // == "photo"
 	Media string `json:"media"`
+}
+
+// InputPaidMediaLivePhoto struct
+//
+// https://core.telegram.org/bots/api#inputpaidmedialivephoto
+type InputPaidMediaLivePhoto struct {
+	Type  string `json:"type"` // == "live_photo"
+	Media string `json:"media"`
+	Photo string `json:"photo"`
 }
 
 // InputPaidMediaVideo struct
@@ -603,6 +687,7 @@ type ExternalReplyInfo struct {
 	Animation          *Animation          `json:"animation,omitempty"`
 	Audio              *Audio              `json:"audio,omitempty"`
 	Document           *Document           `json:"document,omitempty"`
+	LivePhoto          *LivePhoto          `json:"live_photo,omitempty"`
 	PaidMedia          *PaidMediaInfo      `json:"paid_media,omitempty"`
 	Photo              []PhotoSize         `json:"photo,omitempty"`
 	Sticker            *Sticker            `json:"sticker,omitempty"`
@@ -743,6 +828,20 @@ type InputSticker struct {
 	Keywords     []string      `json:"keywords,omitempty"`
 }
 
+// LivePhoto is a struct for a live photo
+//
+// https://core.telegram.org/bots/api#livephoto
+type LivePhoto struct {
+	Photo        []PhotoSize `json:"photo,omitempty"`
+	FileID       string      `json:"file_id"`
+	FileUniqueID string      `json:"file_unique_id"`
+	Width        int         `json:"width"`
+	Height       int         `json:"height"`
+	Duration     int         `json:"duration"`
+	MimeType     *string     `json:"mime_type,omitempty"`
+	FileSize     *int64      `json:"file_size,omitempty"`
+}
+
 // Story is a struct for a forwarded story of a message
 //
 // https://core.telegram.org/bots/api#story
@@ -810,6 +909,14 @@ type PaidMediaPreview struct {
 type PaidMediaPhoto struct {
 	Type  string      `json:"type"` // == "photo"
 	Photo []PhotoSize `json:"photo"`
+}
+
+// PaidMediaLivePhoto struct
+//
+// https://core.telegram.org/bots/api#paidmedialivephoto
+type PaidMediaLivePhoto struct {
+	Type      string    `json:"type"` // == "live_photo"
+	LivePhoto LivePhoto `json:"live_photo"`
 }
 
 // PaidMediaVideo struct
@@ -917,13 +1024,17 @@ type Poll struct {
 	Type                  string          `json:"type"` // "quiz" or "regular"
 	AllowsMultipleAnswers bool            `json:"allows_multiple_answers"`
 	AllowsRevoting        bool            `json:"allows_revoting"`
+	MembersOnly           bool            `json:"members_only"`
+	CountryCodes          []string        `json:"country_codes,omitempty"`
 	CorrectOptionIDs      []int           `json:"correct_option_ids,omitempty"`
 	Explanation           *string         `json:"explanation,omitempty"`
 	ExplanationEntities   []MessageEntity `json:"explanation_entities,omitempty"`
+	ExplanationMedia      *PollMedia      `json:"explalation_media,omitempty"`
 	OpenPeriod            *int            `json:"open_period,omitempty"`
 	CloseDate             *int            `json:"close_date,omitempty"`
 	Description           *string         `json:"description,omitempty"`
 	DescriptionEntities   []MessageEntity `json:"description_entities,omitempty"`
+	Media                 *PollMedia      `json:"media,omitempty"`
 }
 
 // PollOption is a struct of a poll option
@@ -933,6 +1044,7 @@ type PollOption struct {
 	PersistentID string          `json:"persistent_id"`
 	Text         *string         `json:"text,omitempty"` // 1~100 chars
 	TextEntities []MessageEntity `json:"text_entities,omitempty"`
+	Media        *PollMedia      `json:"media,omitempty"`
 	VoterCount   int             `json:"voter_count"`
 	AddedByUser  *User           `json:"added_by_user,omitempty"`
 	AddedByChat  *Chat           `json:"added_by_chat,omitempty"`
@@ -943,9 +1055,10 @@ type PollOption struct {
 //
 // https://core.telegram.org/bots/api#inputpolloption
 type InputPollOption struct {
-	Text          string          `json:"text"` // 1~100 chars
-	TextParseMode ParseMode       `json:"text_parse_mode,omitempty"`
-	TextEntities  []MessageEntity `json:"text_entities,omitempty"`
+	Text          string               `json:"text"` // 1~100 chars
+	TextParseMode ParseMode            `json:"text_parse_mode,omitempty"`
+	TextEntities  []MessageEntity      `json:"text_entities,omitempty"`
+	Media         InputPollOptionMedia `json:"media,omitempty"`
 }
 
 // PollAnswer is a struct of a poll answer
@@ -1027,6 +1140,21 @@ type ChecklistTasksAdded struct {
 type Dice struct {
 	Emoji string `json:"emoji"`
 	Value int    `json:"value"` // 1-6 for dice, dart, and bowling; 1-5 for basketball and football; 1-64 for slotmachine;
+}
+
+// PollMedia is a struct of a poll media
+//
+// https://core.telegram.org/bots/api#pollmedia
+type PollMedia struct {
+	Animation *Animation  `json:"animation,omitempty"`
+	Audio     *Audio      `json:"audio,omitempty"`
+	Document  *Document   `json:"document,omitempty"`
+	LivePhoto *LivePhoto  `json:"live_photo,omitempty"`
+	Location  *Location   `json:"location,omitempty"`
+	Photo     []PhotoSize `json:"photo,omitempty"`
+	Sticker   *Sticker    `json:"sticker,omitempty"`
+	Venue     *Venue      `json:"venue,omitempty"`
+	Video     *Video      `json:"video,omitempty"`
 }
 
 // MessageAutoDeleteTimerChanged is service message: message auto delete timer changed
@@ -1886,6 +2014,7 @@ type ChatPermissions struct {
 	CanSendPolls          *bool `json:"can_send_polls,omitempty"`
 	CanSendOtherMessages  *bool `json:"can_send_other_messages,omitempty"`
 	CanAddWebPagePreviews *bool `json:"can_add_web_page_previews,omitempty"`
+	CanReactToMessages    *bool `json:"can_react_to_messages,omitempty"`
 	CanEditTag            *bool `json:"can_edit_tag,omitempty"`
 	CanChangeInfo         *bool `json:"can_change_info,omitempty"`
 	CanInviteUsers        *bool `json:"can_invite_users,omitempty"`
@@ -2102,6 +2231,7 @@ type ChatMemberRestricted struct {
 	CanSendPolls          bool    `json:"can_send_polls"`
 	CanSendOtherMessages  bool    `json:"can_send_other_messages"`
 	CanAddWebPagePreviews bool    `json:"can_add_web_page_previews"`
+	CanReactToMessages    bool    `json:"can_react_to_messages"`
 	CanEditTag            bool    `json:"can_edit_tag"`
 	CanChangeInfo         bool    `json:"can_change_info"`
 	CanInviteUsers        bool    `json:"can_invite_users"`
@@ -2252,6 +2382,7 @@ type Message struct {
 	SenderBusinessBot             *User                          `json:"sender_business_bot,omitempty"`
 	SenderTag                     *string                        `json:"sender_tag,omitempty"`
 	Date                          int                            `json:"date"`
+	GuestQueryID                  *string                        `json:"guest_query_id,omitempty"`
 	BusinessConnectionID          *string                        `json:"business_connection_id,omitempty"`
 	Chat                          Chat                           `json:"chat"`
 	ForwardOrigin                 *MessageOrigin                 `json:"forward_origin,omitempty"`
@@ -2264,6 +2395,8 @@ type Message struct {
 	ReplyToChecklistTaskID        *int64                         `json:"reply_to_checklist_task_id,omitempty"`
 	ReplyToPollOptionID           *string                        `json:"reply_to_poll_option_id,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
+	GuestBotCallerUser            *User                          `json:"guest_bot_caller_user,omitempty"`
+	GuestBotCallerChat            *Chat                          `json:"guest_bot_caller_chat,omitempty"`
 	EditDate                      *int                           `json:"edit_date,omitempty"`
 	HasProtectedContent           *bool                          `json:"has_protected_content,omitempty"`
 	IsFromOffline                 *bool                          `json:"is_from_offline,omitempty"`
@@ -2279,6 +2412,7 @@ type Message struct {
 	Animation                     *Animation                     `json:"animation,omitempty"`
 	Audio                         *Audio                         `json:"audio,omitempty"`
 	Document                      *Document                      `json:"document,omitempty"`
+	LivePhoto                     *LivePhoto                     `json:"live_photo,omitempty"`
 	PaidMedia                     *PaidMediaInfo                 `json:"paid_media,omitempty"`
 	Photo                         []PhotoSize                    `json:"photo,omitempty"`
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
@@ -2927,6 +3061,13 @@ type SentWebAppMessage struct {
 	InlineMessageID *string `json:"inline_message_id,omitempty"`
 }
 
+// SentGuestMessage is a struct for an inline message sent by a guest bot.
+//
+// https://core.telegram.org/bots/api#sentguestmessage
+type SentGuestMessage struct {
+	InlineMessageID string `json:"inline_message_id"`
+}
+
 // PreparedInlineMessage is a struct for a prepared inline message
 //
 // https://core.telegram.org/bots/api#preparedinlinemessage
@@ -3364,4 +3505,12 @@ type OwnedGift struct {
 	CanBeTransferred  *bool `json:"can_be_transferred,omitempty"`
 	TransferStarCount *int  `json:"transfer_star_count,omitempty"`
 	NextTransferDate  *int  `json:"next_transfer_date,omitempty"`
+}
+
+// BotAccessSettings is a struct which describes the access settings of a bot.
+//
+// https://core.telegram.org/bots/api#botaccesssettings
+type BotAccessSettings struct {
+	IsAccessRestricted bool   `json:"is_access_restricted"`
+	AddedUsers         []User `json:"added_users,omitempty"`
 }

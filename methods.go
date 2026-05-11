@@ -274,6 +274,28 @@ func (b *Bot) SendPhoto(
 	return requestGeneric[Message](ctx, b, "sendPhoto", options)
 }
 
+// SendLivePhoto sends a live photo.
+//
+// https://core.telegram.org/bots/api#sendlivephoto
+func (b *Bot) SendLivePhoto(
+	ctx context.Context,
+	chatID ChatID,
+	livePhoto InputFile,
+	photo InputFile,
+	options OptionsSendLivePhoto,
+) (result APIResponse[Message], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["live_photo"] = livePhoto
+	options["photo"] = photo
+
+	return requestGeneric[Message](ctx, b, "sendLivePhoto", options)
+}
+
 // SendAudio sends an audio file. (.mp3 or .m4a format, will be played with external players)
 //
 // https://core.telegram.org/bots/api#sendaudio
@@ -1959,11 +1981,14 @@ func (b *Bot) GetChat(
 func (b *Bot) GetChatAdministrators(
 	ctx context.Context,
 	chatID ChatID,
+	options OptionsGetChatAdministrators,
 ) (result APIResponse[[]ChatMember], err error) {
-	// essential options
-	options := map[string]any{
-		"chat_id": chatID,
+	if options == nil {
+		options = map[string]any{}
 	}
+
+	// essential params
+	options["chat_id"] = chatID
 
 	return requestGeneric[[]ChatMember](ctx, b, "getChatAdministrators", options)
 }
@@ -1998,6 +2023,16 @@ func (b *Bot) GetChatMember(
 	}
 
 	return requestGeneric[ChatMember](ctx, b, "getChatMember", options)
+}
+
+// GetUserPersonalChatMessages gets the last messages from the personal chat of a given user.
+//
+// https://core.telegram.org/bots/api#getuserpersonalchatmessages
+func (b *Bot) GetUserPersonalChatMessages(ctx context.Context, userID int64, limit int) (result APIResponse[[]Message], err error) {
+	return requestGeneric[[]Message](ctx, b, "getUserPersonalChatMessages", map[string]any{
+		"user_id": userID,
+		"limit":   limit,
+	})
 }
 
 // SetChatStickerSet sets a chat sticker set.
@@ -2128,6 +2163,23 @@ func (b *Bot) GetMyShortDescription(
 	return requestGeneric[BotShortDescription](ctx, b, "getMyShortDescription", options)
 }
 
+// AnswerGuestQuery answers a received guest message.
+//
+// https://core.telegram.org/bots/api#answerguestquery
+func (b *Bot) AnswerGuestQuery(
+	ctx context.Context,
+	guestQueryID string,
+	queryResult InlineQueryResult,
+) (result APIResponse[SentGuestMessage], err error) {
+	// essential params
+	options := map[string]any{
+		"guest_query_id": guestQueryID,
+		"result":         queryResult,
+	}
+
+	return requestGeneric[SentGuestMessage](ctx, b, "answerGuestQuery", options)
+}
+
 // GetUserChatBoosts gets boosts of a user.
 //
 // https://core.telegram.org/bots/api#getuserchatboosts
@@ -2182,6 +2234,36 @@ func (b *Bot) ReplaceManagedBotToken(
 	return requestGeneric[string](ctx, b, "replaceManagedBotToken", map[string]any{
 		"user_id": userID,
 	})
+}
+
+// GetManagedBotAccessSettings gets access settings of a managed bot.
+//
+// https://core.telegram.org/bots/api#getmanagedbotaccesssettings
+func (b *Bot) GetManagedBotAccessSettings(
+	ctx context.Context,
+	userID int64,
+) (result APIResponse[BotAccessSettings], err error) {
+	return requestGeneric[BotAccessSettings](ctx, b, "getManagedBotAccessSettings", map[string]any{
+		"user_id": userID,
+	})
+}
+
+// https://core.telegram.org/bots/api#setmanagedbotaccesssettings
+func (b *Bot) SetManagedBotAccessSettings(
+	ctx context.Context,
+	userID int64,
+	isAccessRestricted bool,
+	options OptionsSetManagedBotAccessSettings,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["user_id"] = userID
+	options["is_access_restricted"] = isAccessRestricted
+
+	return requestGeneric[bool](ctx, b, "setManagedBotAccessSettings", options)
 }
 
 // SetMyCommands sets commands of this bot.
@@ -2418,6 +2500,47 @@ func (b *Bot) DeleteMessages(
 		"chat_id":     chatID,
 		"message_ids": messageIDs,
 	})
+}
+
+// DeleteMessageReaction removes a reaction from a message in a group or a supergroup chat.
+// The bot must have the 'can_delete_messages' administrator right in the chat.
+//
+// https://core.telegram.org/bots/api#deletemessagereaction
+func (b *Bot) DeleteMessageReaction(
+	ctx context.Context,
+	chatID ChatID,
+	messageID int64,
+	options OptionsDeleteMessageReaction,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["message_id"] = messageID
+
+	return requestGeneric[bool](ctx, b, "deleteMessageReaction", options)
+}
+
+// DeleteAllMessageReactions deletes up to 10,000 recent reactions in a group or
+// supergroup chat added by a given user or chat.
+// The bot must have the 'can_delete_messages' administrator right in the chat.
+//
+// https://core.telegram.org/bots/api#deleteallmessagereactions
+func (b *Bot) DeleteAllMessageReactions(
+	ctx context.Context,
+	chatID ChatID,
+	options OptionsDeleteAllMessageReactions,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+
+	return requestGeneric[bool](ctx, b, "deleteAllMessageReactions", options)
 }
 
 // AnswerInlineQuery sends answers to an inline query.
@@ -3171,7 +3294,8 @@ func (b *Bot) requestMultipartFormData(
 		if b.DumpHTTP {
 			// NOTE: include `body` only when verbose mode
 			if dumped, err := httputil.DumpRequest(req, b.Verbose); err == nil {
-				slog.Debug(">>> dumping HTTP request",
+				slog.Debug(
+					">>> dumping HTTP request",
 					"with_body", b.Verbose,
 					"dumped", b.redact(string(dumped)),
 				)
@@ -3190,7 +3314,8 @@ func (b *Bot) requestMultipartFormData(
 			if b.DumpHTTP {
 				// NOTE: include `body` only when verbose mode
 				if dumped, err := httputil.DumpResponse(resp, b.Verbose); err == nil {
-					slog.Debug(">>> dumping HTTP response",
+					slog.Debug(
+						">>> dumping HTTP response",
 						"with_body", b.Verbose,
 						"dumped", b.redact(string(dumped)),
 					)
