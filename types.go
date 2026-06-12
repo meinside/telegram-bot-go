@@ -1,6 +1,9 @@
 package telegrambot
 
-import "encoding/json"
+import (
+	"bytes"
+	"encoding/json"
+)
 
 // https://core.telegram.org/bots/api#available-types
 
@@ -110,6 +113,10 @@ const (
 )
 
 // ChatMemberStatus is a status of chat member
+//
+// NOTE: When the API adds a new chat member status, add its string to the
+// const block below, add any new fields to the flat ChatMember struct, and
+// add a corresponding ChatMemberXXX variant struct.
 //
 // https://core.telegram.org/bots/api#chatmember
 type ChatMemberStatus string
@@ -738,6 +745,10 @@ type ReplyParameters struct {
 
 // MessageOrigin struct for describing the origin of a message
 //
+// NOTE: This is a flat union discriminated by `Type`. When the API adds a new
+// message origin type, add any new fields to this struct (grouped by `type` in
+// the field comments below).
+//
 // https://core.telegram.org/bots/api#messageorigin
 type MessageOrigin struct {
 	Type string `json:"type"`
@@ -1226,6 +1237,9 @@ type ChatBackground struct {
 }
 
 // BackgroundTypeType for types of BackgroundType
+//
+// NOTE: When the API adds a new background type, add its string to the const
+// block below and add any new fields to the flat BackgroundType struct.
 type BackgroundTypeType string
 
 // BackgroundTypeType constants
@@ -3151,6 +3165,10 @@ type ForumTopic struct {
 //
 // NOTE: Can be generated with New*Reaction*() functions in types_helper.go
 //
+// NOTE: This is a flat union discriminated by `Type`. When the API adds a new
+// reaction type, add any new fields to this struct and add a matching
+// New*Reaction*() helper in types_helper.go.
+//
 // https://core.telegram.org/bots/api#reactiontype
 type ReactionType struct {
 	Type          string  `json:"type"`
@@ -3569,19 +3587,143 @@ type InputRichMessage struct {
 ////////////////
 // RichText things
 
-// RichText is a base struct for a rich formatted text.
+// RichText is a base type for a rich formatted text.
+//
+// It can be a plain string, an array of RichTexts, or a single typed
+// RichText object (eg. RichTextBold) discriminated by its `type` field.
+// After unmarshalling, the concrete value is held in `Value` and can be
+// type-switched: string, []RichText, *RichTextBold, *RichTextURL, ...
+// (an unknown `type` falls back to map[string]any).
 //
 // NOTE: Can be generated with NewRichTextWithXXX() in types_helper.go
 //
+// NOTE: When adding a new RichText variant (eg. RichTextXXX), also register
+// its `type` string in newRichTextOfType() below; otherwise it will silently
+// fall back to map[string]any on unmarshal instead of erroring.
+//
 // https://core.telegram.org/bots/api#richtext
-type RichText any
+type RichText struct {
+	Value any
+}
+
+// UnmarshalJSON decodes a RichText from its plain-string, array, or typed-object form.
+func (t *RichText) UnmarshalJSON(data []byte) error {
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 || string(trimmed) == "null" {
+		t.Value = nil
+		return nil
+	}
+
+	switch trimmed[0] {
+	case '"': // plain string
+		var s string
+		if err := json.Unmarshal(data, &s); err != nil {
+			return err
+		}
+		t.Value = s
+	case '[': // array of RichTexts
+		var arr []RichText
+		if err := json.Unmarshal(data, &arr); err != nil {
+			return err
+		}
+		t.Value = arr
+	default: // typed object, discriminated by `type`
+		var head struct {
+			Type string `json:"type"`
+		}
+		if err := json.Unmarshal(data, &head); err != nil {
+			return err
+		}
+
+		v := newRichTextOfType(head.Type)
+		if v == nil {
+			// fall back to a generic map for unknown/future types
+			var m map[string]any
+			if err := json.Unmarshal(data, &m); err != nil {
+				return err
+			}
+			t.Value = m
+			return nil
+		}
+		if err := json.Unmarshal(data, v); err != nil {
+			return err
+		}
+		t.Value = v
+	}
+
+	return nil
+}
+
+// MarshalJSON encodes a RichText as its underlying value.
+func (t RichText) MarshalJSON() ([]byte, error) {
+	return json.Marshal(t.Value)
+}
+
+// newRichTextOfType returns a pointer to an empty concrete RichText struct
+// for the given `type`, or nil if the type is unknown.
+//
+// NOTE: Keep this switch in sync with the RichTextXXX struct declarations
+// below — every variant's `type` string must have a case here.
+func newRichTextOfType(typ string) any {
+	switch typ {
+	case "bold":
+		return &RichTextBold{}
+	case "italic":
+		return &RichTextItalic{}
+	case "underline":
+		return &RichTextUnderline{}
+	case "strikethrough":
+		return &RichTextStrikethrough{}
+	case "spoiler":
+		return &RichTextSpoiler{}
+	case "date_time":
+		return &RichTextDateTime{}
+	case "text_mention":
+		return &RichTextTextMention{}
+	case "subscript":
+		return &RichTextSubscript{}
+	case "superscript":
+		return &RichTextSuperscript{}
+	case "marked":
+		return &RichTextMarked{}
+	case "code":
+		return &RichTextCode{}
+	case "custom_emoji":
+		return &RichTextCustomEmoji{}
+	case "mathematical_expression":
+		return &RichTextMathematicalExpression{}
+	case "url":
+		return &RichTextURL{}
+	case "email_address":
+		return &RichTextEmailAddress{}
+	case "phone_number":
+		return &RichTextPhoneNumber{}
+	case "bank_card_number":
+		return &RichTextBankCardNumber{}
+	case "mention":
+		return &RichTextMention{}
+	case "hashtag":
+		return &RichTextHashtag{}
+	case "cashtag":
+		return &RichTextCashtag{}
+	case "bot_command":
+		return &RichTextBotCommand{}
+	case "anchor":
+		return &RichTextAnchor{}
+	case "anchor_link":
+		return &RichTextAnchorLink{}
+	case "reference":
+		return &RichTextReference{}
+	case "reference_link":
+		return &RichTextReferenceLink{}
+	}
+	return nil
+}
 
 // RichTextBold is a struct for a bold text.
 //
 // https://core.telegram.org/bots/api#richtextbold
 type RichTextBold struct {
-	RichText
-
 	Type string   `json:"type"` // type == "bold"
 	Text RichText `json:"text"`
 }
@@ -3590,8 +3732,6 @@ type RichTextBold struct {
 //
 // https://core.telegram.org/bots/api#richtextitalic
 type RichTextItalic struct {
-	RichText
-
 	Type string   `json:"type"` // type == "italic"
 	Text RichText `json:"text"`
 }
@@ -3600,8 +3740,6 @@ type RichTextItalic struct {
 //
 // https://core.telegram.org/bots/api#richtextunderline
 type RichTextUnderline struct {
-	RichText
-
 	Type string   `json:"type"` // type == "underline"
 	Text RichText `json:"text"`
 }
@@ -3610,8 +3748,6 @@ type RichTextUnderline struct {
 //
 // https://core.telegram.org/bots/api#richtextstrikethrough
 type RichTextStrikethrough struct {
-	RichText
-
 	Type string   `json:"type"` // type == "strikethrough"
 	Text RichText `json:"text"`
 }
@@ -3620,8 +3756,6 @@ type RichTextStrikethrough struct {
 //
 // https://core.telegram.org/bots/api#richtextspoiler
 type RichTextSpoiler struct {
-	RichText
-
 	Type string   `json:"type"` // type == "spoiler"
 	Text RichText `json:"text"`
 }
@@ -3630,8 +3764,6 @@ type RichTextSpoiler struct {
 //
 // https://core.telegram.org/bots/api#richtextdatetime
 type RichTextDateTime struct {
-	RichText
-
 	Type           string   `json:"type"` // type == "date_time"
 	Text           RichText `json:"text"`
 	UnixTime       int      `json:"unix_time"`
@@ -3642,8 +3774,6 @@ type RichTextDateTime struct {
 //
 // https://core.telegram.org/bots/api#richtexttextmention
 type RichTextTextMention struct {
-	RichText
-
 	Type string   `json:"type"` // type == "text_mention"
 	Text RichText `json:"text"`
 	User User     `json:"user"`
@@ -3653,8 +3783,6 @@ type RichTextTextMention struct {
 //
 // https://core.telegram.org/bots/api#richtextsubscript
 type RichTextSubscript struct {
-	RichText
-
 	Type string   `json:"type"` // type == "subscript"
 	Text RichText `json:"text"`
 }
@@ -3663,8 +3791,6 @@ type RichTextSubscript struct {
 //
 // https://core.telegram.org/bots/api#richtextsuperscript
 type RichTextSuperscript struct {
-	RichText
-
 	Type string   `json:"type"` // type == "superscript"
 	Text RichText `json:"text"`
 }
@@ -3673,8 +3799,6 @@ type RichTextSuperscript struct {
 //
 // https://core.telegram.org/bots/api#richtextmarked
 type RichTextMarked struct {
-	RichText
-
 	Type string   `json:"type"` // type == "marked"
 	Text RichText `json:"text"`
 }
@@ -3683,8 +3807,6 @@ type RichTextMarked struct {
 //
 // https://core.telegram.org/bots/api#richtextcode
 type RichTextCode struct {
-	RichText
-
 	Type string   `json:"type"` // type == "code"
 	Text RichText `json:"text"`
 }
@@ -3693,8 +3815,6 @@ type RichTextCode struct {
 //
 // https://core.telegram.org/bots/api#richtextcustomemoji
 type RichTextCustomEmoji struct {
-	RichText
-
 	Type            string `json:"type"` // type == "custom_emoji"
 	CustomEmojiID   string `json:"custom_emoji_id"`
 	AlternativeText string `json:"alternative_text"`
@@ -3704,8 +3824,6 @@ type RichTextCustomEmoji struct {
 //
 // https://core.telegram.org/bots/api#richtextmathematicalexpression
 type RichTextMathematicalExpression struct {
-	RichText
-
 	Type       string `json:"type"` // type == "mathematical_expression"
 	Expression string `json:"expression"`
 }
@@ -3714,8 +3832,6 @@ type RichTextMathematicalExpression struct {
 //
 // https://core.telegram.org/bots/api#richtexturl
 type RichTextURL struct {
-	RichText
-
 	Type string   `json:"type"` // type == "url"
 	Text RichText `json:"text"`
 	URL  string   `json:"url"`
@@ -3725,8 +3841,6 @@ type RichTextURL struct {
 //
 // https://core.telegram.org/bots/api#richtextemailaddress
 type RichTextEmailAddress struct {
-	RichText
-
 	Type         string   `json:"type"` // type == "email_address"
 	Text         RichText `json:"text"`
 	EmailAddress string   `json:"email_address"`
@@ -3736,8 +3850,6 @@ type RichTextEmailAddress struct {
 //
 // https://core.telegram.org/bots/api#richtextphonenumber
 type RichTextPhoneNumber struct {
-	RichText
-
 	Type        string   `json:"type"` // type == "phone_number"
 	Text        RichText `json:"text"`
 	PhoneNumber string   `json:"phone_number"`
@@ -3747,8 +3859,6 @@ type RichTextPhoneNumber struct {
 //
 // https://core.telegram.org/bots/api#richtextbankcardnumber
 type RichTextBankCardNumber struct {
-	RichText
-
 	Type           string   `json:"type"` // type == "bank_card_number"
 	Text           RichText `json:"text"`
 	BankCardNumber string   `json:"bank_card_number"`
@@ -3758,8 +3868,6 @@ type RichTextBankCardNumber struct {
 //
 // https://core.telegram.org/bots/api#richtextmention
 type RichTextMention struct {
-	RichText
-
 	Type     string   `json:"type"` // type == "mention"
 	Text     RichText `json:"text"`
 	Username string   `json:"username"`
@@ -3769,8 +3877,6 @@ type RichTextMention struct {
 //
 // https://core.telegram.org/bots/api#richtexthashtag
 type RichTextHashtag struct {
-	RichText
-
 	Type    string   `json:"type"` // type == "hashtag"
 	Text    RichText `json:"text"`
 	Hashtag string   `json:"hashtag"`
@@ -3780,8 +3886,6 @@ type RichTextHashtag struct {
 //
 // https://core.telegram.org/bots/api#richtextcashtag
 type RichTextCashtag struct {
-	RichText
-
 	Type    string   `json:"type"` // type == "cashtag"
 	Text    RichText `json:"text"`
 	Cashtag string   `json:"cashtag"`
@@ -3791,8 +3895,6 @@ type RichTextCashtag struct {
 //
 // https://core.telegram.org/bots/api#richtextbotcommand
 type RichTextBotCommand struct {
-	RichText
-
 	Type       string   `json:"type"` // type == "bot_command"
 	Text       RichText `json:"text"`
 	BotCommand string   `json:"bot_command"`
@@ -3802,8 +3904,6 @@ type RichTextBotCommand struct {
 //
 // https://core.telegram.org/bots/api#richtextanchor
 type RichTextAnchor struct {
-	RichText
-
 	Type string `json:"type"` // type == "anchor"
 	Name string `json:"name"`
 }
@@ -3812,8 +3912,6 @@ type RichTextAnchor struct {
 //
 // https://core.telegram.org/bots/api#richtextanchorlink
 type RichTextAnchorLink struct {
-	RichText
-
 	Type       string   `json:"type"` // type == "anchor_link"
 	Text       RichText `json:"text"`
 	AnchorName string   `json:"anchor_name"`
@@ -3823,8 +3921,6 @@ type RichTextAnchorLink struct {
 //
 // https://core.telegram.org/bots/api#richtextreference
 type RichTextReference struct {
-	RichText
-
 	Type string   `json:"type"` // type == "reference"
 	Text RichText `json:"text"`
 	Name string   `json:"name"`
@@ -3834,8 +3930,6 @@ type RichTextReference struct {
 //
 // https://core.telegram.org/bots/api#richtextreferencelink
 type RichTextReferenceLink struct {
-	RichText
-
 	Type          string   `json:"type"` // type == "reference_link"
 	Text          RichText `json:"text"`
 	ReferenceName string   `json:"reference_name"`
@@ -3843,21 +3937,57 @@ type RichTextReferenceLink struct {
 
 // RichBlockCaption is a struct for a caption of a rich formatted block.
 //
+// When received as a part of RichBlockTable, the caption may be a bare
+// RichText rather than an object; in that case it is decoded into `Text`.
+//
 // https://core.telegram.org/bots/api#richblockcaption
 type RichBlockCaption struct {
-	RichText
-
 	Text   RichText `json:"text"`
 	Credit RichText `json:"credit"`
+}
+
+// UnmarshalJSON decodes a RichBlockCaption from either its object form
+// ({"text":..., "credit":...}) or a bare RichText (string/array/typed object).
+func (c *RichBlockCaption) UnmarshalJSON(data []byte) error {
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 || string(trimmed) == "null" {
+		return nil
+	}
+
+	// a bare string or array is a RichText caption without a credit
+	if trimmed[0] == '"' || trimmed[0] == '[' {
+		return c.Text.UnmarshalJSON(data)
+	}
+
+	// an object may be either a {text, credit} caption or a typed RichText
+	var probe struct {
+		Type   *string         `json:"type"`
+		Text   json.RawMessage `json:"text"`
+		Credit json.RawMessage `json:"credit"`
+	}
+	if err := json.Unmarshal(data, &probe); err != nil {
+		return err
+	}
+	if probe.Type != nil && probe.Text == nil && probe.Credit == nil {
+		// a typed RichText object (eg. {"type":"bold","text":...})
+		return c.Text.UnmarshalJSON(data)
+	}
+
+	// a regular caption object
+	type richBlockCaption RichBlockCaption // avoid recursion
+	var alias richBlockCaption
+	if err := json.Unmarshal(data, &alias); err != nil {
+		return err
+	}
+	*c = RichBlockCaption(alias)
+	return nil
 }
 
 // RichBlockTableCell is a struct for a cell in a table.
 //
 // https://core.telegram.org/bots/api#richblocktablecell
 type RichBlockTableCell struct {
-	RichText
-
-	Text     RichText `json:"text,omitempty"`
+	Text     RichText `json:"text,omitzero"`
 	IsHeader *bool    `json:"is_header,omitempty"`
 	Colspan  *int     `json:"colspan,omitempty"`
 	Rowspan  *int     `json:"rowspan,omitempty"`
@@ -3869,8 +3999,6 @@ type RichBlockTableCell struct {
 //
 // https://core.telegram.org/bots/api#richblocklistitem
 type RichBlockListItem struct {
-	RichText
-
 	Label       string      `json:"label"`
 	Blocks      []RichBlock `json:"blocks"`
 	HasCheckbox *bool       `json:"has_checkbox,omitempty"`
@@ -3882,258 +4010,80 @@ type RichBlockListItem struct {
 ////////////////
 // RichBlock things
 
-// RichBlock is a base struct for a block in a rich formatted message.
+// RichBlock is a block in a rich formatted message.
 //
-// https://core.telegram.org/bots/api#richblock
-type RichBlock any
-
-// RichBlockParagraph is a struct for a text paragraph, corresponding to the HTML tag.
+// It is a flat union of all block variants, discriminated by `Type`.
+// Only the fields relevant to a given `Type` are populated; see the
+// per-type field notes below and https://core.telegram.org/bots/api#richblock
 //
-// https://core.telegram.org/bots/api#richblockparagraph
-type RichBlockParagraph struct {
-	RichBlock
-
-	Type string   `json:"type"` // type == "paragraph"
-	Text RichText `json:"text"`
-}
-
-// RichBlockSectionHeading is a struct for a section heading,
-// corresponding to the HTML tags <h1>, <h2>, <h3>, <h4>, <h5>, or <h6>.
+// type == "paragraph", "heading", "pre", "footer", "divider",
+// "mathematical_expression", "anchor", "list", "blockquote", "pullquote",
+// "collage", "slideshow", "table", "details", "map", "animation", "audio",
+// "photo", "video", "voice_note", or "thinking"
 //
-// https://core.telegram.org/bots/api#richblocksectionheading
-type RichBlockSectionHeading struct {
-	RichBlock
+// NOTE: When the API adds a new block variant, add its `type` to the list
+// above and add any new fields to this flat struct (grouped by `type` in the
+// field comments below).
+type RichBlock struct {
+	Type string `json:"type"`
 
-	Type string   `json:"type"` // type == "heading"
-	Text RichText `json:"text"`
-	Size int      `json:"size"` // 1(largest)-6(smallest)
-}
+	// text-bearing blocks: paragraph, heading, pre, footer, pullquote, thinking
+	Text RichText `json:"text,omitzero"`
 
-// RichBlockPreformatted is a struct for a preformatted text,
-// corresponding to the nested HTML tags <pre> and <code>.
-//
-// https://core.telegram.org/bots/api#richblockpreformatted
-type RichBlockPreformatted struct {
-	RichBlock
+	// heading
+	Size *int `json:"size,omitempty"` // 1(largest)-6(smallest)
 
-	Type     string   `json:"type"` // type == "pre"
-	Text     RichText `json:"text"`
-	Language *string  `json:"language,omitempty"`
-}
+	// pre
+	Language *string `json:"language,omitempty"`
 
-// RichBlockFooter is a struct for a footer, corresponding to the HTML tag <footer>.
-//
-// https://core.telegram.org/bots/api#richblockfooter
-type RichBlockFooter struct {
-	RichBlock
+	// mathematical_expression
+	Expression *string `json:"expression,omitempty"`
 
-	Type string   `json:"type"` // type == "footer"
-	Text RichText `json:"text"`
-}
+	// anchor
+	Name *string `json:"name,omitempty"`
 
-// RichBlockDivider is a struct for a divider, corresponding to the HTML tag <hr/>.
-//
-// https://core.telegram.org/bots/api#richblockdivider
-type RichBlockDivider struct {
-	RichBlock
+	// list
+	Items []RichBlockListItem `json:"items,omitempty"`
 
-	Type string `json:"type"` // type == "divider"
-}
+	// blockquote, collage, slideshow, details
+	Blocks []RichBlock `json:"blocks,omitempty"`
 
-// RichBlockMathematicalExpression is a struct for a block with a mathematical expression
-// in LaTex format, corresponding to the custom HTML tag <tg-math-block>.
-//
-// https://core.telegram.org/bots/api#richblockmathematicalexpression
-type RichBlockMathematicalExpression struct {
-	RichBlock
+	// blockquote, pullquote
+	Credit RichText `json:"credit,omitzero"`
 
-	Type       string `json:"type"` // type == "mathematical_expression"
-	Expression string `json:"expression"`
-}
+	// details
+	Summary RichText `json:"summary,omitzero"`
+	IsOpen  *bool    `json:"is_open,omitempty"`
 
-// RichBlockAnchor is a struct for a block with an anchor,
-// corresponding to the HTML tag <a> with the attribute `name`.
-//
-// https://core.telegram.org/bots/api#richblockanchor
-type RichBlockAnchor struct {
-	RichBlock
-
-	Type string `json:"type"` // type == "anchor"
-	Name string `json:"name"`
-}
-
-// RichBlockList is a struct for a list of blocks,
-// corresponding to the HTML tag <ul> or <ol>
-// with multiple nested tags <li>.
-//
-// https://core.telegram.org/bots/api#richblocklist
-type RichBlockList struct {
-	RichBlock
-
-	Type  string              `json:"type"` // type == "list"
-	Items []RichBlockListItem `json:"items"`
-}
-
-// RichBlockBlockQuotation is a struct for a block quotation,
-// corresponding to the HTML tag <blockquote>.
-//
-// https://core.telegram.org/bots/api#richblockblockquotation
-type RichBlockBlockQuotation struct {
-	RichBlock
-
-	Type   string      `json:"type"` // type == "blockquote"
-	Blocks []RichBlock `json:"blocks"`
-	Credit RichText    `json:"credit,omitempty"`
-}
-
-// RichBlockPullQuotation is a struct for a quotation with centered text,
-// loosely corresponding to the HTML tag <aside>.
-//
-// https://core.telegram.org/bots/api#richblockpullquotation
-type RichBlockPullQuotation struct {
-	RichBlock
-
-	Type   string   `json:"type"` // type == "pullquote"
-	Text   RichText `json:"text"`
-	Credit RichText `json:"credit,omitempty"`
-}
-
-// RichBlockCollage is a struct for a collage,
-// corresponding to the custom HTML tag <tg-collage>.
-//
-// https://core.telegram.org/bots/api#richblockcollage
-type RichBlockCollage struct {
-	RichBlock
-
-	Type    string            `json:"type"` // type == "collage"
-	Blocks  []RichBlock       `json:"blocks"`
-	Caption *RichBlockCaption `json:"caption,omitempty"`
-}
-
-// RichBlockSlideshow is a struct for a slideshow,
-// corresponding to the custom HTML tag <tg-slideshow>.
-//
-// https://core.telegram.org/bots/api#richblockslideshow
-type RichBlockSlideshow struct {
-	RichBlock
-
-	Type    string            `json:"type"` // type == "slideshow"
-	Blocks  []RichBlock       `json:"blocks"`
-	Caption *RichBlockCaption `json:"caption,omitempty"`
-}
-
-// RichBlockTable is a struct for a table,
-// corresponding to the HTML tag <table>.
-//
-// https://core.telegram.org/bots/api#richblocktable
-type RichBlockTable struct {
-	RichBlock
-
-	Type       string                 `json:"type"` // type == "table"
-	Cells      [][]RichBlockTableCell `json:"cells"`
+	// table
+	Cells      [][]RichBlockTableCell `json:"cells,omitempty"`
 	IsBordered *bool                  `json:"is_bordered,omitempty"`
 	IsStriped  *bool                  `json:"is_striped,omitempty"`
-	Caption    RichText               `json:"caption,omitempty"`
-}
 
-// RichBlockDetails is a struct for an expandable block for details disclosure,
-// corresponding to the HTML tag <details>.
-//
-// https://core.telegram.org/bots/api#richblockdetails
-type RichBlockDetails struct {
-	RichBlock
-
-	Type    string      `json:"type"` // type == "details"
-	Summary RichText    `json:"summary"`
-	Blocks  []RichBlock `json:"blocks"`
-	IsOpen  *bool       `json:"is_open,omitempty"`
-}
-
-// RichBlockMap is a struct for a block with a map,
-// corresponding to the custom HTML tag <tg-map>.
-//
-// https://core.telegram.org/bots/api#richblockmap
-type RichBlockMap struct {
-	RichBlock
-
-	Type     string            `json:"type"` // type == "map"
-	Location Location          `json:"location"`
-	Zoom     int               `json:"zoom"` // 13-20
-	Width    int               `json:"width"`
-	Height   int               `json:"height"`
-	Caption  *RichBlockCaption `json:"caption,omitempty"`
-}
-
-// RichBlockAnimation is a struct for a block with an animation,
-// corresponding to the HTML tag <video>.
-//
-// https://core.telegram.org/bots/api#richblockanimation
-type RichBlockAnimation struct {
-	RichBlock
-
-	Type       string            `json:"type"` // type == "animation"
-	Animation  Animation         `json:"animation"`
-	HasSpoiler *bool             `json:"has_spoiler,omitempty"`
-	Caption    *RichBlockCaption `json:"caption,omitempty"`
-}
-
-// RichBlockAudio is a block with a music file,
-// corresponding to the HTML tag <audio>.
-//
-// https://core.telegram.org/bots/api#richblockaudio
-type RichBlockAudio struct {
-	RichBlock
-
-	Type    string            `json:"type"` // type == "audio"
-	Audio   Audio             `json:"audio"`
+	// collage, slideshow, table, map, animation, audio, photo, video, voice_note
 	Caption *RichBlockCaption `json:"caption,omitempty"`
-}
 
-// RichBlockPhoto is a struct for a block with a photo,
-// corresponding to the HTML tag <photo>.
-//
-// https://core.telegram.org/bots/api#richblockphoto
-type RichBlockPhoto struct {
-	RichBlock
+	// map
+	Location *Location `json:"location,omitempty"`
+	Zoom     *int      `json:"zoom,omitempty"` // 13-20
+	Width    *int      `json:"width,omitempty"`
+	Height   *int      `json:"height,omitempty"`
 
-	Type       string            `json:"type"` // type == "photo"
-	Photo      []PhotoSize       `json:"photo"`
-	HasSpoiler *bool             `json:"has_spoiler,omitempty"`
-	Caption    *RichBlockCaption `json:"caption,omitempty"`
-}
+	// animation
+	Animation *Animation `json:"animation,omitempty"`
 
-// RichBlockVideo is a struct for a block with a video,
-// corresponding to the HTML tag <video>.
-//
-// https://core.telegram.org/bots/api#richblockvideo
-type RichBlockVideo struct {
-	RichBlock
+	// audio
+	Audio *Audio `json:"audio,omitempty"`
 
-	Type       string            `json:"type"` // type == "video"
-	Video      Video             `json:"video"`
-	HasSpoiler *bool             `json:"has_spoiler,omitempty"`
-	Caption    *RichBlockCaption `json:"caption,omitempty"`
-}
+	// photo
+	Photo []PhotoSize `json:"photo,omitempty"`
 
-// RichBlockVoiceNote is a struct for a block with a voice note,
-// corresponding to the HTML tag <audio>.
-//
-// https://core.telegram.org/bots/api#richblockvoicenote
-type RichBlockVoiceNote struct {
-	RichBlock
+	// video
+	Video *Video `json:"video,omitempty"`
 
-	Type      string            `json:"type"` // type == "voice_note"
-	VoiceNote Voice             `json:"voice_note"`
-	Caption   *RichBlockCaption `json:"caption,omitempty"`
-}
+	// voice_note
+	VoiceNote *Voice `json:"voice_note,omitempty"`
 
-// RichBlockThinking is a struct for a block with 'thinking...' placeholder,
-// corresponding to the custom HTML tag <tg-thinking>.
-//
-// https://core.telegram.org/bots/api#richblockthinking
-type RichBlockThinking struct {
-	RichBlock
-
-	Type string   `json:"type"` // type == "thinking"
-	Text RichText `json:"text"`
+	// animation, photo, video
+	HasSpoiler *bool `json:"has_spoiler,omitempty"`
 }

@@ -3148,15 +3148,15 @@ func (g OwnedGift) GiftAsUniqueGift() (result *UniqueGift, err error) {
 
 // NewRichTextWithText returns a plain-text as a RichText.
 func NewRichTextWithText(text string) RichText {
-	return text
+	return RichText{Value: text}
 }
 
 // NewRichTextWithRichTexts returns an array of RichText as a RichText.
 func NewRichTextWithRichTexts(richTexts ...RichText) RichText {
-	return richTexts
+	return RichText{Value: richTexts}
 }
 
 // NewRichTextWithRichText returns a single RichText as a RichText.
 func NewRichTextWithRichText(richText RichText) RichText {
-	return richText
+	return RichText{Value: richText.Value}
 }
