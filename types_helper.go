@@ -3141,3 +3141,22 @@ func (g OwnedGift) GiftAsUniqueGift() (result *UniqueGift, err error) {
 	}
 	return nil, fmt.Errorf("gift is not in unique type")
 }
+
+////////////////////////////////
+// Helper functions for RichText
+//
+
+// NewRichTextWithText returns a plain-text as a RichText.
+func NewRichTextWithText(text string) RichText {
+	return text
+}
+
+// NewRichTextWithRichTexts returns an array of RichText as a RichText.
+func NewRichTextWithRichTexts(richTexts ...RichText) RichText {
+	return richTexts
+}
+
+// NewRichTextWithRichText returns a single RichText as a RichText.
+func NewRichTextWithRichText(richText RichText) RichText {
+	return richText
+}

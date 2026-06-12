@@ -867,6 +867,90 @@ func (o OptionsSendSticker) SetReplyMarkup(replyMarkup any) OptionsSendSticker {
 	return o
 }
 
+// OptionsSendRichMessage struct for SendRichMessage().
+//
+// options include: `business_connection_id`, `message_thread_id`,
+// `direct_messages_topic_id`, `disable_notification`, `protect_content`,
+// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters,`
+// `reply_parameters`, and `reply_markup`.
+//
+// https://core.telegram.org/bots/api#sendrichmessage
+type OptionsSendRichMessage MethodOptions
+
+// SetBusinessConnectionID sets the `business_connection_id` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetBusinessConnectionID(businessConnectionID string) OptionsSendRichMessage {
+	o["business_connection_id"] = businessConnectionID
+	return o
+}
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetMessageThreadID(messageThreadID int64) OptionsSendRichMessage {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendRichMessage {
+	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetDisableNotification sets the `disable_notification` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetDisableNotification(disable bool) OptionsSendRichMessage {
+	o["disable_notification"] = disable
+	return o
+}
+
+// SetProtectContent sets the `protect_content` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetProtectContent(protect bool) OptionsSendRichMessage {
+	o["protect_content"] = protect
+	return o
+}
+
+// SetAllowPaidBroadcast sets the `allow_paid_broadcast` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetAllowPaidBroadcast(allow bool) OptionsSendRichMessage {
+	o["allow_paid_broadcast"] = allow
+	return o
+}
+
+// SetMessageEffectID sets the `message_effect_id` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetMessageEffectID(messageEffectID string) OptionsSendRichMessage {
+	o["message_effect_id"] = messageEffectID
+	return o
+}
+
+// SetSuggestedPostParameters sets the `suggested_post_parameters` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetSuggestedPostParameters(suggestedPostParameters SuggestedPostParameters) OptionsSendRichMessage {
+	o["suggested_post_parameters"] = suggestedPostParameters
+	return o
+}
+
+// SetReplyParameters sets the `reply_parameters` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetReplyParameters(replyParameters ReplyParameters) OptionsSendRichMessage {
+	o["reply_parameters"] = replyParameters
+	return o
+}
+
+// SetReplyMarkup sets the `reply_markup` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetReplyMarkup(replyMarkup any) OptionsSendRichMessage {
+	// `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
+	o["reply_markup"] = replyMarkup
+	return o
+}
+
+// OptionsSendRichMessageDraft struct for SendRichMessageDraft().
+//
+// options include: `message_thread_id`.
+//
+// https://core.telegram.org/bots/api#sendrichmessagedraft
+type OptionsSendRichMessageDraft MethodOptions
+
+// SetMessageThreadID sets the `message_thread_id` value of OptionsSendRichMessageDraft.
+func (o OptionsSendRichMessageDraft) SetMessageThreadID(messageThreadID int64) OptionsSendRichMessageDraft {
+	o["message_thread_id"] = messageThreadID
+	return o
+}
+
 // OptionsCreateNewStickerSet struct for CreateNewStickerSet().
 //
 // options include: `sticker_type`, and `needs_repainting`.
@@ -2920,7 +3004,8 @@ func (o OptionsGetMyDefaultAdministratorRights) SetForChannels(forChannels bool)
 //
 //	or `inline_message_id` (when `chat_id` & `message_id` is not given)
 //
-// other options: `business_connection_id`, `parse_mode`, `entities`, `link_preview_options`, and `reply_markup`
+// other options: `business_connection_id`, `parse_mode`, `entities`,
+// `link_preview_options`, `rich_message`, and `reply_markup`
 //
 // https://core.telegram.org/bots/api#editmessagetext
 type OptionsEditMessageText MethodOptions
@@ -2959,6 +3044,12 @@ func (o OptionsEditMessageText) SetEntities(entities []MessageEntity) OptionsEdi
 // SetLinkPreviewOptions sets the `link_preview_options` value of OptionsEditMessageText.
 func (o OptionsEditMessageText) SetLinkPreviewOptions(linkPreviewOptions LinkPreviewOptions) OptionsEditMessageText {
 	o["link_preview_options"] = linkPreviewOptions
+	return o
+}
+
+// SetRichMessage sets the `rich_message` value of OptionsEditMessageText.
+func (o OptionsEditMessageText) SetRichMessage(richMessage InputRichMessage) OptionsEditMessageText {
+	o["rich_message"] = richMessage
 	return o
 }
 
