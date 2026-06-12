@@ -356,6 +356,49 @@ func (b *Bot) SendSticker(
 	return requestGeneric[Message](ctx, b, "sendSticker", options)
 }
 
+// SendRichMessage sends a rich message.
+//
+// https://core.telegram.org/bots/api#sendrichmessage
+func (b *Bot) SendRichMessage(
+	ctx context.Context,
+	chatID ChatID,
+	richMessage InputRichMessage,
+	options OptionsSendRichMessage,
+) (result APIResponse[Message], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["rich_message"] = richMessage
+
+	return requestGeneric[Message](ctx, b, "sendRichMessage", options)
+}
+
+// SendRichMessageDraft streams a partial rich message to a user
+// while the message is being generated.
+//
+// https://core.telegram.org/bots/api#sendrichmessagedraft
+func (b *Bot) SendRichMessageDraft(
+	ctx context.Context,
+	chatID ChatID,
+	draftID int64,
+	richMessage InputRichMessage,
+	options OptionsSendRichMessageDraft,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["draft_id"] = draftID
+	options["rich_message"] = richMessage
+
+	return requestGeneric[bool](ctx, b, "sendRichMessageDraft", options)
+}
+
 // GetStickerSet gets a sticker set.
 //
 // https://core.telegram.org/bots/api#getstickerset
@@ -1839,6 +1882,41 @@ func (b *Bot) DeclineChatJoinRequest(
 	}
 
 	return requestGeneric[bool](ctx, b, "declineChatJoinRequest", options)
+}
+
+// AnswerChatJoinRequestQuery processes a received chat join request query.
+//
+// https://core.telegram.org/bots/api#answerchatjoinrequestquery
+func (b *Bot) AnswerChatJoinRequestQuery(
+	ctx context.Context,
+	chatJoinRequestQueryID string,
+	res string,
+) (result APIResponse[bool], err error) {
+	// essential options
+	options := map[string]any{
+		"chat_join_request_query_id": chatJoinRequestQueryID,
+		"result":                     res,
+	}
+
+	return requestGeneric[bool](ctx, b, "answerChatJoinRequestQuery", options)
+}
+
+// SendChatJoinRequestWebApp processes a received chat join request query
+// by showing a Mini App to the user before deciding the outcome.
+//
+// https://core.telegram.org/bots/api#sendchatjoinrequestwebapp
+func (b *Bot) SendChatJoinRequestWebApp(
+	ctx context.Context,
+	chatJoinRequestQueryID string,
+	res string,
+) (result APIResponse[bool], err error) {
+	// essential options
+	options := map[string]any{
+		"chat_join_request_query_id": chatJoinRequestQueryID,
+		"result":                     res,
+	}
+
+	return requestGeneric[bool](ctx, b, "sendChatJoinRequestWebApp", options)
 }
 
 // SetChatPhoto sets a chat photo.

@@ -322,9 +322,29 @@ func TestMethods(t *testing.T) {
 			); !action.OK {
 				t.Errorf("failed to send chat action: %s", *action.Description)
 			}
+
+			// SendRichMessage
+			if sent, _ := client.SendRichMessage(
+				context.TODO(),
+				_chatID,
+				InputRichMessage{
+					Markdown: new(`# rich text
+## test
+- is it working?
+- is it ok?
+`),
+				},
+				OptionsSendRichMessage{},
+			); !sent.OK {
+				t.Errorf("failed to send rich message: %s", *sent.Description)
+			}
+			// TODO: SendRichMessageDraft
+
 			// TODO: GetUserProfilePhotos
 			// TODO: ApproveChatJoinRequest
 			// TODO: DeclineChatJoinRequest
+			// TODO: AnswerChatJoinRequestQuery
+			// TODO: SendChatJoinRequestWebApp
 			// TODO: GetMyCommands
 			// GetMyName
 			if name, _ := client.GetMyName(
