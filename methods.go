@@ -1908,12 +1908,12 @@ func (b *Bot) AnswerChatJoinRequestQuery(
 func (b *Bot) SendChatJoinRequestWebApp(
 	ctx context.Context,
 	chatJoinRequestQueryID string,
-	res string,
+	webAppURL string,
 ) (result APIResponse[bool], err error) {
 	// essential options
 	options := map[string]any{
 		"chat_join_request_query_id": chatJoinRequestQueryID,
-		"result":                     res,
+		"web_app_url":                webAppURL,
 	}
 
 	return requestGeneric[bool](ctx, b, "sendChatJoinRequestWebApp", options)
