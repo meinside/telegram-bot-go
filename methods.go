@@ -2326,6 +2326,8 @@ func (b *Bot) GetManagedBotAccessSettings(
 	})
 }
 
+// SetManagedBotAccessSettings changes the access settings of a managed bot.
+//
 // https://core.telegram.org/bots/api#setmanagedbotaccesssettings
 func (b *Bot) SetManagedBotAccessSettings(
 	ctx context.Context,
