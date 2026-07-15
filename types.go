@@ -3625,7 +3625,7 @@ type RichMessage struct {
 //
 // https://core.telegram.org/bots/api#inputrichmessage
 type InputRichMessage struct {
-	Blocks              []InputRichBlock        `json:"blocks"`
+	Blocks              []InputRichBlock        `json:"blocks,omitempty"`
 	HTML                *string                 `json:"html,omitempty"`
 	Markdown            *string                 `json:"markdown,omitempty"`
 	Media               []InputRichMessageMedia `json:"media,omitempty"`
@@ -4228,7 +4228,7 @@ type InputRichBlock struct {
 	Audio *InputMediaAudio `json:"audio,omitempty"`
 
 	// photo
-	Photo []InputMediaPhoto `json:"photo,omitempty"`
+	Photo *InputMediaPhoto `json:"photo,omitempty"`
 
 	// video
 	Video *InputMediaVideo `json:"video,omitempty"`

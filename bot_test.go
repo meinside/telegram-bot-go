@@ -322,7 +322,50 @@ func TestMethods(t *testing.T) {
 				t.Errorf("failed to send chat action: %s", *action.Description)
 			}
 
-			// SendRichMessage
+			// SendRichMessage (blocks)
+			if sent, _ := client.SendRichMessage(
+				context.TODO(),
+				_chatID,
+				InputRichMessage{
+					Blocks: []InputRichBlock{
+						NewInputRichBlockSectionHeading(NewRichTextWithText("block text"), 3),
+						NewInputRichBlockSectionHeading(NewRichTextWithText("test"), 4),
+						NewInputRichBlockList([]InputRichBlockListItem{
+							{
+								Blocks: []InputRichBlock{
+									NewInputRichBlockParagraph(NewRichTextWithText("is it working?")),
+								},
+							},
+							{
+								Blocks: []InputRichBlock{
+									NewInputRichBlockParagraph(NewRichTextWithText("is it ok?")),
+								},
+							},
+						}),
+					},
+				},
+				OptionsSendRichMessage{},
+			); !sent.OK {
+				t.Errorf("failed to send rich message (blocks): %s", *sent.Description)
+			}
+			// SendRichMessage (html)
+			if sent, _ := client.SendRichMessage(
+				context.TODO(),
+				_chatID,
+				InputRichMessage{
+					HTML: new(`<h3>html text</h3>
+<h4>test</h4>
+<ul>
+	<li>is it working?</li>
+	<li>is it ok?</li>
+</ul>
+`),
+				},
+				OptionsSendRichMessage{},
+			); !sent.OK {
+				t.Errorf("failed to send rich message (html): %s", *sent.Description)
+			}
+			// SendRichMessage (markdown)
 			if sent, _ := client.SendRichMessage(
 				context.TODO(),
 				_chatID,
@@ -335,7 +378,7 @@ func TestMethods(t *testing.T) {
 				},
 				OptionsSendRichMessage{},
 			); !sent.OK {
-				t.Errorf("failed to send rich message: %s", *sent.Description)
+				t.Errorf("failed to send rich message (markdown): %s", *sent.Description)
 			}
 			// TODO: SendRichMessageDraft
 

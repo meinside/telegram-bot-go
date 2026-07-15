@@ -3160,3 +3160,320 @@ func NewRichTextWithRichTexts(richTexts ...RichText) RichText {
 func NewRichTextWithRichText(richText RichText) RichText {
 	return RichText{Value: richText.Value}
 }
+
+////////////////////////////////
+// Helper functions for InputRichBlock
+//
+
+// NewInputRichBlockParagraph returns a new InputRichBlock for <p>.
+//
+// https://core.telegram.org/bots/api#inputrichblockparagraph
+func NewInputRichBlockParagraph(text RichText) InputRichBlock {
+	return InputRichBlock{
+		Type: "paragraph",
+		Text: text,
+	}
+}
+
+// NewInputRichBlockSectionHeading returns a new InputRichBlock for <h1>-<h6>.
+//
+// https://core.telegram.org/bots/api#inputrichblocksectionheading
+func NewInputRichBlockSectionHeading(text RichText, size int) InputRichBlock {
+	return InputRichBlock{
+		Type: "heading",
+		Text: text,
+		Size: &size,
+	}
+}
+
+// NewInputRichBlockPreformatted returns a new InputRichBlock for <pre> and <code>.
+//
+// https://core.telegram.org/bots/api#inputrichblockpreformatted
+func NewInputRichBlockPreformatted(text RichText, language string) InputRichBlock {
+	return InputRichBlock{
+		Type:     "pre",
+		Text:     text,
+		Language: &language,
+	}
+}
+
+// NewInputRichBlockFooter returns a new InputRichBlock for <footer>.
+//
+// https://core.telegram.org/bots/api#inputrichblockfooter
+func NewInputRichBlockFooter(text RichText) InputRichBlock {
+	return InputRichBlock{
+		Type: "footer",
+		Text: text,
+	}
+}
+
+// NewInputRichBlockDivider returns a new InputRichBlock for <hr/>.
+//
+// https://core.telegram.org/bots/api#inputrichblockdivider
+func NewInputRichBlockDivider() InputRichBlock {
+	return InputRichBlock{
+		Type: "divider",
+	}
+}
+
+// NewInputRichBlockMathematicalExpression returns a new InputRichBlock for <tg-math-block> with the given LaTeX expression.
+//
+// https://core.telegram.org/bots/api#inputrichblockmathematicalexpression
+func NewInputRichBlockMathematicalExpression(expression string) InputRichBlock {
+	return InputRichBlock{
+		Type:       "mathematical_expression",
+		Expression: &expression,
+	}
+}
+
+// NewInputRichBlockAnchor returns a new InputRichBlock for <a> with the attribute `name`.
+//
+// https://core.telegram.org/bots/api#inputrichblockanchor
+func NewInputRichBlockAnchor(name string) InputRichBlock {
+	return InputRichBlock{
+		Type: "anchor",
+		Name: &name,
+	}
+}
+
+// NewInputRichBlockList returns a new InputRichBlock for <ul> and <ol> with multiple nested tags <li>.
+//
+// https://core.telegram.org/bots/api#inputrichblocklist
+func NewInputRichBlockList(items []InputRichBlockListItem) InputRichBlock {
+	return InputRichBlock{
+		Type:  "list",
+		Items: items,
+	}
+}
+
+// NewInputRichBlockQuotation returns a new InputRichBlock for <blockquote>.
+//
+// https://core.telegram.org/bots/api#inputrichblockblockquotation
+func NewInputRichBlockQuotation(blocks []InputRichBlock, credit *RichText) InputRichBlock {
+	block := InputRichBlock{
+		Type:   "blockquote",
+		Blocks: blocks,
+	}
+	if credit != nil {
+		block.Credit = *credit
+	}
+
+	return block
+}
+
+// NewInputRichBlockPullQuotation returns a new InputRichBlock for <aside>.
+//
+// https://core.telegram.org/bots/api#inputrichblockpullquotation
+func NewInputRichBlockPullQuotation(text RichText, credit *RichText) InputRichBlock {
+	block := InputRichBlock{
+		Type: "pullquote",
+		Text: text,
+	}
+	if credit != nil {
+		block.Credit = *credit
+	}
+
+	return block
+}
+
+// NewInputRichBlockCollage returns a new InputRichBlock for <tg-collage>.
+//
+// https://core.telegram.org/bots/api#inputrichblockcollage
+func NewInputRichBlockCollage(blocks []InputRichBlock, caption *RichBlockCaption) InputRichBlock {
+	block := InputRichBlock{
+		Type:   "collage",
+		Blocks: blocks,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockSlideshow returns a new InputRichBlock for <tg-slideshow>.
+//
+// https://core.telegram.org/bots/api#inputrichblockslideshow
+func NewInputRichBlockSlideshow(blocks []InputRichBlock, caption *RichBlockCaption) InputRichBlock {
+	block := InputRichBlock{
+		Type:   "slideshow",
+		Blocks: blocks,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockTable returns a new InputRichBlock for <table>.
+//
+// https://core.telegram.org/bots/api#inputrichblocktable
+func NewInputRichBlockTable(
+	cells [][]RichBlockTableCell,
+	isBordered *bool,
+	isStriped *bool,
+	caption *RichText,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:  "table",
+		Cells: cells,
+	}
+	if isBordered != nil {
+		block.IsBordered = isBordered
+	}
+	if isStriped != nil {
+		block.IsStriped = isStriped
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockDetails returns a new InputRichBlock for <details>.
+//
+// https://core.telegram.org/bots/api#inputrichblockdetails
+func NewInputRichBlockDetails(
+	summary RichText,
+	blocks []InputRichBlock,
+	isOpen *bool,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:    "details",
+		Summary: summary,
+		Blocks:  blocks,
+	}
+	if isOpen != nil {
+		block.IsOpen = isOpen
+	}
+
+	return block
+}
+
+// NewInputRichBlockMap returns a new InputRichBlock for <tg-map>.
+//
+// https://core.telegram.org/bots/api#inputrichblockmap
+func NewInputRichBlockMap(
+	location Location,
+	zoom int,
+	width int,
+	height int,
+	caption *RichBlockCaption,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:     "map",
+		Location: &location,
+		Zoom:     &zoom,
+		Width:    &width,
+		Height:   &height,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockAnimation returns a new InputRichBlock for <video>.
+//
+// https://core.telegram.org/bots/api#inputrichblockanimation
+func NewInputRichBlockAnimation(
+	animation InputMediaAnimation,
+	caption *RichBlockCaption,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:      "animation",
+		Animation: &animation,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockAudio returns a new InputRichBlock for <audio>.
+//
+// https://core.telegram.org/bots/api#inputrichblockaudio
+func NewInputRichBlockAudio(
+	audio InputMediaAudio,
+	caption *RichBlockCaption,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:  "audio",
+		Audio: &audio,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockPhoto returns a new InputRichBlock for <img>.
+//
+// https://core.telegram.org/bots/api#inputrichblockphoto
+func NewInputRichBlockPhoto(
+	photo InputMediaPhoto,
+	caption *RichBlockCaption,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:  "photo",
+		Photo: &photo,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockVideo returns a new InputRichBlock for <video>.
+//
+// https://core.telegram.org/bots/api#inputrichblockvideo
+func NewInputRichBlockVideo(
+	video InputMediaVideo,
+	caption *RichBlockCaption,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:  "video",
+		Video: &video,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockVoiceNote returns a new InputRichBlock for <audio>.
+//
+// https://core.telegram.org/bots/api#inputrichblockvoicenote
+func NewInputRichBlockVoiceNote(
+	voiceNote InputMediaVoiceNote,
+	caption *RichBlockCaption,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:      "voice_note",
+		VoiceNote: &voiceNote,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockThinking returns a new InputRichBlock for <thinking>.
+//
+// NOTE: Returned blocks may be used only with `SendRichMessageDraft()`.
+//
+// https://core.telegram.org/bots/api#inputrichblockthinking
+func NewInputRichBlockThinking(text RichText) InputRichBlock {
+	return InputRichBlock{
+		Type: "thinking",
+		Text: text,
+	}
+}
