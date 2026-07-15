@@ -84,9 +84,9 @@ func (o OptionsGetUpdates) SetAllowedUpdates(allowedUpdates []AllowedUpdate) Opt
 // OptionsSendMessage struct for SendMessage().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `parse_mode`, `entities`, `link_preview_options`, `disable_notification`, `protect_content`,
-// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
-// `reply_markup`, `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `parse_mode`, `entities`, `link_preview_options`,
+// `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
+// `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendmessage
 type OptionsSendMessage MethodOptions
@@ -106,6 +106,18 @@ func (o OptionsSendMessage) SetMessageThreadID(messageThreadID int64) OptionsSen
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendMessage.
 func (o OptionsSendMessage) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendMessage {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetReceiverUserID(receiverUserID int64) OptionsSendMessage {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetCallbackQueryID(callbackQueryID string) OptionsSendMessage {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -168,18 +180,6 @@ func (o OptionsSendMessage) SetReplyParameters(replyParameters ReplyParameters) 
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
 func (o OptionsSendMessage) SetReplyMarkup(replyMarkup any) OptionsSendMessage {
 	o["reply_markup"] = replyMarkup
-	return o
-}
-
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendMessage.
-func (o OptionsSendMessage) SetReceiverUserID(receiverUserID int64) OptionsSendMessage {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendMessage.
-func (o OptionsSendMessage) SetCallbackQueryID(callbackQueryID string) OptionsSendMessage {
-	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -396,10 +396,10 @@ func (o OptionsCopyMessages) SetRemoveCaption(removeCaption bool) OptionsCopyMes
 // OptionsSendPhoto struct for SendPhoto().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`,
-// `disable_notification`, `protect_content`, `allow_paid_broadcast`,  `message_effect_id`,
-// `suggested_post_parameters`, `reply_parameters`, `reply_markup`, `receiver_user_id`, and
-// `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `caption`, `parse_mode`, `caption_entities`,
+// `show_caption_above_media`, `has_spoiler`, `disable_notification`, `protect_content`,
+// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
+// and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendphoto
 type OptionsSendPhoto MethodOptions
@@ -419,6 +419,18 @@ func (o OptionsSendPhoto) SetMessageThreadID(messageThreadID int64) OptionsSendP
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendPhoto.
 func (o OptionsSendPhoto) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendPhoto {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetReceiverUserID(receiverUserID int64) OptionsSendPhoto {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetCallbackQueryID(callbackQueryID string) OptionsSendPhoto {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -493,18 +505,6 @@ func (o OptionsSendPhoto) SetReplyParameters(replyParameters ReplyParameters) Op
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
 func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 	o["reply_markup"] = replyMarkup
-	return o
-}
-
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendPhoto.
-func (o OptionsSendPhoto) SetReceiverUserID(receiverUserID int64) OptionsSendPhoto {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendPhoto.
-func (o OptionsSendPhoto) SetCallbackQueryID(callbackQueryID string) OptionsSendPhoto {
-	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -612,10 +612,10 @@ func (o OptionsSendLivePhoto) SetReplyMarkup(replyMarkup any) OptionsSendLivePho
 // OptionsSendAudio struct for SendAudio().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `caption`, `parse_mode`, `caption_entities`, `duration`, `performer`, `title`, `thumbnail`,
-// `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
-// `suggested_post_parameters`, `reply_parameters`, `reply_markup`, `receiver_user_id`, and
-// `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `caption`, `parse_mode`, `caption_entities`,
+// `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`,
+// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
+// and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendaudio
 type OptionsSendAudio MethodOptions
@@ -635,6 +635,18 @@ func (o OptionsSendAudio) SetMessageThreadID(messageThreadID int64) OptionsSendA
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendAudio.
 func (o OptionsSendAudio) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendAudio {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetReceiverUserID(receiverUserID int64) OptionsSendAudio {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetCallbackQueryID(callbackQueryID string) OptionsSendAudio {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -726,25 +738,13 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup any) OptionsSendAudio {
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendAudio.
-func (o OptionsSendAudio) SetReceiverUserID(receiverUserID int64) OptionsSendAudio {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendAudio.
-func (o OptionsSendAudio) SetCallbackQueryID(callbackQueryID string) OptionsSendAudio {
-	o["callback_query_id"] = callbackQueryID
-	return o
-}
-
 // OptionsSendDocument struct for SendDocument().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `disable_content_type_detection`,
-// `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
-// `suggested_post_parameters`, `reply_parameters`, `reply_markup`, `receiver_user_id`, and
-// `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `thumbnail`, `caption`, `parse_mode`,
+// `caption_entities`, `disable_content_type_detection`, `disable_notification`,
+// `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
+// `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#senddocument
 type OptionsSendDocument MethodOptions
@@ -764,6 +764,18 @@ func (o OptionsSendDocument) SetMessageThreadID(messageThreadID int64) OptionsSe
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendDocument.
 func (o OptionsSendDocument) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendDocument {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetReceiverUserID(receiverUserID int64) OptionsSendDocument {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetCallbackQueryID(callbackQueryID string) OptionsSendDocument {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -843,24 +855,12 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup any) OptionsSendDocument
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendDocument.
-func (o OptionsSendDocument) SetReceiverUserID(receiverUserID int64) OptionsSendDocument {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendDocument.
-func (o OptionsSendDocument) SetCallbackQueryID(callbackQueryID string) OptionsSendDocument {
-	o["callback_query_id"] = callbackQueryID
-	return o
-}
-
 // OptionsSendSticker struct for SendSticker().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `emoji`, `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
-// `suggested_post_parameters`, `reply_parameters`, `reply_markup`, `receiver_user_id`, and
-// `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `emoji`, `disable_notification`, `protect_content`,
+// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
+// and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendsticker
 type OptionsSendSticker MethodOptions
@@ -880,6 +880,18 @@ func (o OptionsSendSticker) SetMessageThreadID(messageThreadID int64) OptionsSen
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendSticker.
 func (o OptionsSendSticker) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendSticker {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetReceiverUserID(receiverUserID int64) OptionsSendSticker {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetCallbackQueryID(callbackQueryID string) OptionsSendSticker {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -930,18 +942,6 @@ func (o OptionsSendSticker) SetReplyParameters(replyParameters ReplyParameters) 
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
 func (o OptionsSendSticker) SetReplyMarkup(replyMarkup any) OptionsSendSticker {
 	o["reply_markup"] = replyMarkup
-	return o
-}
-
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendSticker.
-func (o OptionsSendSticker) SetReceiverUserID(receiverUserID int64) OptionsSendSticker {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendSticker.
-func (o OptionsSendSticker) SetCallbackQueryID(callbackQueryID string) OptionsSendSticker {
-	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -1174,10 +1174,11 @@ func (o OptionsVerifyChat) SetCustomDescription(customDescription string) Option
 // OptionsSendVideo struct for SendVideo().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `duration`, `width`, `height`, `thumbnail`, `cover`, `start_timestamp`, `caption`,
-// `parse_mode`, `caption_entities`, `show_caption_above_media`, `has_spoiler`, `supports_streaming`,
-// `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
-// `suggested_post_parameters`, `reply_parameters`, `reply_markup`, `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `duration`, `width`, `height`, `thumbnail`,
+// `cover`, `start_timestamp`, `caption`, `parse_mode`, `caption_entities`,
+// `show_caption_above_media`, `has_spoiler`, `supports_streaming`, `disable_notification`,
+// `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
+// `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvideo
 type OptionsSendVideo MethodOptions
@@ -1197,6 +1198,18 @@ func (o OptionsSendVideo) SetMessageThreadID(messageThreadID int64) OptionsSendV
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVideo.
 func (o OptionsSendVideo) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVideo {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetReceiverUserID(receiverUserID int64) OptionsSendVideo {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetCallbackQueryID(callbackQueryID string) OptionsSendVideo {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -1320,25 +1333,13 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVideo.
-func (o OptionsSendVideo) SetReceiverUserID(receiverUserID int64) OptionsSendVideo {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVideo.
-func (o OptionsSendVideo) SetCallbackQueryID(callbackQueryID string) OptionsSendVideo {
-	o["callback_query_id"] = callbackQueryID
-	return o
-}
-
 // OptionsSendAnimation struct for SendAnimation().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `duration`, `width`, `height`, `thumbnail`, `caption`, `parse_mode`, `caption_entities`,
-// `show_caption_above_media`, `has_spoiler`, `disable_notification`, `protect_content`,
-// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
-// `reply_markup`, `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `duration`, `width`, `height`,
+// `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`,
+// `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
+// `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendanimation
 type OptionsSendAnimation MethodOptions
@@ -1358,6 +1359,18 @@ func (o OptionsSendAnimation) SetMessageThreadID(messageThreadID int64) OptionsS
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendAnimation.
 func (o OptionsSendAnimation) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendAnimation {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetReceiverUserID(receiverUserID int64) OptionsSendAnimation {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetCallbackQueryID(callbackQueryID string) OptionsSendAnimation {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -1461,24 +1474,12 @@ func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup any) OptionsSendAnimati
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendAnimation.
-func (o OptionsSendAnimation) SetReceiverUserID(receiverUserID int64) OptionsSendAnimation {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendAnimation.
-func (o OptionsSendAnimation) SetCallbackQueryID(callbackQueryID string) OptionsSendAnimation {
-	o["callback_query_id"] = callbackQueryID
-	return o
-}
-
 // OptionsSendVoice struct for SendVoice().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `caption`, `parse_mode`, `caption_entities`, `duration`, `disable_notification`, `protect_content`,
-// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
-// `reply_markup`, `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `caption`, `parse_mode`, `caption_entities`,
+// `duration`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
+// `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvoice
 type OptionsSendVoice MethodOptions
@@ -1498,6 +1499,18 @@ func (o OptionsSendVoice) SetMessageThreadID(messageThreadID int64) OptionsSendV
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVoice.
 func (o OptionsSendVoice) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVoice {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetReceiverUserID(receiverUserID int64) OptionsSendVoice {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetCallbackQueryID(callbackQueryID string) OptionsSendVoice {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -1569,24 +1582,12 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup any) OptionsSendVoice {
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVoice.
-func (o OptionsSendVoice) SetReceiverUserID(receiverUserID int64) OptionsSendVoice {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVoice.
-func (o OptionsSendVoice) SetCallbackQueryID(callbackQueryID string) OptionsSendVoice {
-	o["callback_query_id"] = callbackQueryID
-	return o
-}
-
 // OptionsSendVideoNote struct for SendVideoNote().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `duration`, `length`, `thumbnail`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
-// `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, `reply_markup`,
-// `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `duration`, `length`, `thumbnail`,
+// `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
+// `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
 // (XXX: API returns 'Bad Request: wrong video note length' when length is not given / 2017.05.19.)
 //
@@ -1608,6 +1609,18 @@ func (o OptionsSendVideoNote) SetMessageThreadID(messageThreadID int64) OptionsS
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVideoNote.
 func (o OptionsSendVideoNote) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVideoNote {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetReceiverUserID(receiverUserID int64) OptionsSendVideoNote {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetCallbackQueryID(callbackQueryID string) OptionsSendVideoNote {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -1672,18 +1685,6 @@ func (o OptionsSendVideoNote) SetReplyParameters(replyParameters ReplyParameters
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
 func (o OptionsSendVideoNote) SetReplyMarkup(replyMarkup any) OptionsSendVideoNote {
 	o["reply_markup"] = replyMarkup
-	return o
-}
-
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVideoNote.
-func (o OptionsSendVideoNote) SetReceiverUserID(receiverUserID int64) OptionsSendVideoNote {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVideoNote.
-func (o OptionsSendVideoNote) SetCallbackQueryID(callbackQueryID string) OptionsSendVideoNote {
-	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -1836,9 +1837,10 @@ func (o OptionsSendMediaGroup) SetReplyParameters(replyParameters ReplyParameter
 // OptionsSendLocation struct for SendLocation()
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `horizontal_accuracy`, `live_period`, `heading`, `proximity_alert_radius`, `disable_notification`,
-// `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
-// `reply_parameters`, `reply_markup`, `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `horizontal_accuracy`, `live_period`,
+// `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`,
+// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
+// `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendlocation
 type OptionsSendLocation MethodOptions
@@ -1858,6 +1860,18 @@ func (o OptionsSendLocation) SetMessageThreadID(messageThreadID int64) OptionsSe
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendLocation.
 func (o OptionsSendLocation) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendLocation {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetReceiverUserID(receiverUserID int64) OptionsSendLocation {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetCallbackQueryID(callbackQueryID string) OptionsSendLocation {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -1929,24 +1943,13 @@ func (o OptionsSendLocation) SetReplyMarkup(replyMarkup any) OptionsSendLocation
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendLocation.
-func (o OptionsSendLocation) SetReceiverUserID(receiverUserID int64) OptionsSendLocation {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendLocation.
-func (o OptionsSendLocation) SetCallbackQueryID(callbackQueryID string) OptionsSendLocation {
-	o["callback_query_id"] = callbackQueryID
-	return o
-}
-
 // OptionsSendVenue struct for SendVenue().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `foursquare_id`, `foursquare_type`, `google_place_id`, `google_place_type`, `disable_notification`,
-// `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
-// `reply_parameters`, `reply_markup`, `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `foursquare_id`, `foursquare_type`,
+// `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`,
+// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
+// `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendvenue
 type OptionsSendVenue MethodOptions
@@ -1966,6 +1969,18 @@ func (o OptionsSendVenue) SetMessageThreadID(messageThreadID int64) OptionsSendV
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendVenue.
 func (o OptionsSendVenue) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendVenue {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetReceiverUserID(receiverUserID int64) OptionsSendVenue {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetCallbackQueryID(callbackQueryID string) OptionsSendVenue {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -2034,18 +2049,6 @@ func (o OptionsSendVenue) SetReplyParameters(replyParameters ReplyParameters) Op
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
 func (o OptionsSendVenue) SetReplyMarkup(replyMarkup any) OptionsSendVenue {
 	o["reply_markup"] = replyMarkup
-	return o
-}
-
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVenue.
-func (o OptionsSendVenue) SetReceiverUserID(receiverUserID int64) OptionsSendVenue {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVenue.
-func (o OptionsSendVenue) SetCallbackQueryID(callbackQueryID string) OptionsSendVenue {
-	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -2477,9 +2480,9 @@ func (o OptionsSetMessageReaction) SetIsBig(isBig bool) OptionsSetMessageReactio
 // OptionsSendContact struct for SendContact().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `last_name`, `vcard`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
-// `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, `reply_markup`,
-// `receiver_user_id`, and `callback_query_id`.
+// `receiver_user_id`, `callback_query_id`, `last_name`, `vcard`, `disable_notification`,
+// `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
+// `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendcontact
 type OptionsSendContact MethodOptions
@@ -2499,6 +2502,18 @@ func (o OptionsSendContact) SetMessageThreadID(messageThreadID int64) OptionsSen
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendContact.
 func (o OptionsSendContact) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendContact {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendContact.
+func (o OptionsSendContact) SetReceiverUserID(receiverUserID int64) OptionsSendContact {
+	o["receiver_user_id"] = receiverUserID
+	return o
+}
+
+// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendContact.
+func (o OptionsSendContact) SetCallbackQueryID(callbackQueryID string) OptionsSendContact {
+	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
@@ -2555,18 +2570,6 @@ func (o OptionsSendContact) SetReplyParameters(replyParameters ReplyParameters) 
 // `replyMarkup` can be one of InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, or ForceReply.
 func (o OptionsSendContact) SetReplyMarkup(replyMarkup any) OptionsSendContact {
 	o["reply_markup"] = replyMarkup
-	return o
-}
-
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendContact.
-func (o OptionsSendContact) SetReceiverUserID(receiverUserID int64) OptionsSendContact {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendContact.
-func (o OptionsSendContact) SetCallbackQueryID(callbackQueryID string) OptionsSendContact {
-	o["callback_query_id"] = callbackQueryID
 	return o
 }
 
