@@ -25,7 +25,9 @@ func TestTimeout(t *testing.T) {
 	client.Verbose = _verbose == "true"
 
 	if len(_token) <= 0 {
-		t.Errorf("environment variable `TOKEN` is needed")
+		slog.Warn("skipping test: environment variable `TOKEN` is needed")
+
+		t.Skip("environment variable `TOKEN` is needed")
 	}
 
 	slog.Info("testing timeouts...")
@@ -50,7 +52,9 @@ func TestPollingUpdates(t *testing.T) {
 	client.Verbose = _verbose == "true"
 
 	if len(_token) <= 0 {
-		t.Errorf("environment variable `TOKEN` is needed")
+		slog.Warn("skipping test: environment variable `TOKEN` is needed")
+
+		t.Skip("environment variable `TOKEN` is needed")
 	}
 
 	slog.Info("testing polling updates...")
@@ -85,7 +89,9 @@ func TestMethods(t *testing.T) {
 	client.Verbose = _verbose == "true"
 
 	if len(_token) <= 0 || len(_chatID) <= 0 {
-		t.Errorf("environment variables `TOKEN` and `CHAT_ID` are needed")
+		slog.Warn("skipping test: environment variables `TOKEN` and `CHAT_ID` are needed")
+
+		t.Skip("environment variables `TOKEN` and `CHAT_ID` are needed")
 	}
 
 	slog.Info("testing API method functions...")
@@ -732,7 +738,9 @@ func TestErrors(t *testing.T) {
 	client.Verbose = _verbose == "true"
 
 	if len(_token) <= 0 || len(_chatID) <= 0 {
-		t.Errorf("environment variables `TOKEN` and `CHAT_ID` are needed")
+		slog.Warn("skipping test: environment variables `TOKEN` and `CHAT_ID` are needed")
+
+		t.Skip("environment variables `TOKEN` and `CHAT_ID` are needed")
 	}
 
 	slog.Info("testing classification of errors...")
