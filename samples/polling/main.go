@@ -80,7 +80,7 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 				// option
 				bot.OptionsSendMessage{}.
 					SetReplyParameters(bot.ReplyParameters{
-						MessageID: update.Message.MessageID,
+						MessageID: new(update.Message.MessageID),
 					}).                                        // show original message
 					SetReplyMarkup(bot.NewReplyKeyboardMarkup( // show keyboards
 						[][]bot.KeyboardButton{
@@ -106,11 +106,13 @@ func updateHandler(b *bot.Bot, update bot.Update, err error) {
 			article1, _ := bot.NewInlineQueryResultArticle(
 				"Star Wars quotes",
 				"I am your father.",
-				"Darth Vader")
+				"Darth Vader",
+			)
 			article2, _ := bot.NewInlineQueryResultArticle(
 				"Star Wars quotes",
 				"I know.",
-				"Han Solo")
+				"Han Solo",
+			)
 
 			results := []any{
 				article1,

@@ -1121,7 +1121,7 @@ func (m MessageEntity) SetCustomEmojiID(customEmojiID string) MessageEntity {
 // NewReplyParameters returns a new ReplyParameters.
 func NewReplyParameters(messageID int64) ReplyParameters {
 	return ReplyParameters{
-		MessageID: messageID,
+		MessageID: new(messageID),
 	}
 }
 

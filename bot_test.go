@@ -35,8 +35,7 @@ func TestTimeout(t *testing.T) {
 
 	// intentional timeout
 	if _, err := client.GetMe(ctx); err != nil {
-		var e ErrContextTimeout
-		if !errors.As(err, &e) {
+		if _, ok := errors.AsType[ErrContextTimeout](err); !ok {
 			t.Errorf("expected `ErrContextTimeout` but got: %[1]s (%[1]T)", err)
 		}
 	}
@@ -339,6 +338,12 @@ func TestMethods(t *testing.T) {
 				t.Errorf("failed to send rich message: %s", *sent.Description)
 			}
 			// TODO: SendRichMessageDraft
+
+			// TODO: EditEphemeralMessageText
+			// TODO: EditEphemeralMessageMedia
+			// TODO: EditEphemeralMessageCaption
+			// TODO: EditEphemeralMessageReplyMarkup
+			// TODO: DeleteEphemeralMessage
 
 			// TODO: GetUserProfilePhotos
 			// TODO: ApproveChatJoinRequest
@@ -698,8 +703,7 @@ func TestErrors(t *testing.T) {
 		"unauthorized",
 		OptionsSendMessage{},
 	); !sent.OK {
-		var e ErrUnauthorized
-		if !errors.As(err, &e) {
+		if _, ok := errors.AsType[ErrUnauthorized](err); !ok {
 			t.Errorf("should have failed with ErrUnauthorized, but got: %s", err)
 		}
 	} else {
@@ -713,8 +717,7 @@ func TestErrors(t *testing.T) {
 		"no-such-chat",
 		OptionsSendMessage{},
 	); !sent.OK {
-		var e ErrChatNotFound
-		if !errors.As(err, &e) {
+		if _, ok := errors.AsType[ErrChatNotFound](err); !ok {
 			t.Errorf("should have failed with ErrChatNotFound, but got: %s", err)
 		}
 	} else {
@@ -750,8 +753,7 @@ func TestErrors(t *testing.T) {
 		"",
 		OptionsSendMessage{},
 	); !sent.OK {
-		var e ErrMessageEmpty
-		if !errors.As(err, &e) {
+		if _, ok := errors.AsType[ErrMessageEmpty](err); !ok {
 			t.Errorf("should have failed with ErrMessageEmpty but got: %s", err)
 		}
 	} else {
@@ -766,8 +768,7 @@ func TestErrors(t *testing.T) {
 		longLongMessage,
 		OptionsSendMessage{},
 	); !sent.OK {
-		var e ErrMessageTooLong
-		if !errors.As(err, &e) {
+		if _, ok := errors.AsType[ErrMessageTooLong](err); !ok {
 			t.Errorf("should have failed with ErrMessageTooLong but got: %s", err)
 		}
 	} else {

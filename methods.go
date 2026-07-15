@@ -3122,6 +3122,114 @@ func (b *Bot) GetForumTopicIconStickers(
 	return requestGeneric[[]Sticker](ctx, b, "getForumTopicIconStickers", nil)
 }
 
+// EditEphemeralMessageText edits an ephemeral text message.
+//
+// https://core.telegram.org/bots/api#editephemeralmessagetext
+func (b *Bot) EditEphemeralMessageText(
+	ctx context.Context,
+	chatID ChatID,
+	receiverUserID int64,
+	ephemeralMessageID int64,
+	text string,
+	options OptionsEditEphemeralMessageText,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["receiver_user_id"] = receiverUserID
+	options["ephemeral_message_id"] = ephemeralMessageID
+	options["text"] = text
+
+	return requestGeneric[bool](ctx, b, "editEphemeralMessageText", options)
+}
+
+// EditEphemeralMessageMedia edits the media of an ephemeral message.
+//
+// https://core.telegram.org/bots/api#editephemeralmessagemedia
+func (b *Bot) EditEphemeralMessageMedia(
+	ctx context.Context,
+	chatID ChatID,
+	receiverUserID int64,
+	ephemeralMessageID int64,
+	options OptionsEditEphemeralMessageMedia,
+	media InputMedia,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["receiver_user_id"] = receiverUserID
+	options["ephemeral_message_id"] = ephemeralMessageID
+	options["media"] = media
+
+	return requestGeneric[bool](ctx, b, "editEphemeralMessageMedia", options)
+}
+
+// EditEphemeralMessageCaption edits the caption of an ephemeral message.
+//
+// https://core.telegram.org/bots/api#editephemeralmessagecaption
+func (b *Bot) EditEphemeralMessageCaption(
+	ctx context.Context,
+	chatID ChatID,
+	receiverUserID int64,
+	ephemeralMessageID int64,
+	options OptionsEditEphemeralMessageCaption,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["receiver_user_id"] = receiverUserID
+	options["ephemeral_message_id"] = ephemeralMessageID
+
+	return requestGeneric[bool](ctx, b, "editEphemeralMessageCaption", options)
+}
+
+// EditEphemeralMessageReplyMarkup edits the reply markup of an ephemeral message.
+//
+// https://core.telegram.org/bots/api#editephemeralmessagereplymarkup
+func (b *Bot) EditEphemeralMessageReplyMarkup(
+	ctx context.Context,
+	chatID ChatID,
+	receiverUserID int64,
+	ephemeralMessageID int64,
+	options OptionsEditEphemeralMessageReplyMarkup,
+) (result APIResponse[bool], err error) {
+	if options == nil {
+		options = map[string]any{}
+	}
+
+	// essential params
+	options["chat_id"] = chatID
+	options["receiver_user_id"] = receiverUserID
+	options["ephemeral_message_id"] = ephemeralMessageID
+
+	return requestGeneric[bool](ctx, b, "editEphemeralMessageReplyMarkup", options)
+}
+
+// DeleteEphemeralMessage deletes an ephemeral message.
+//
+// https://core.telegram.org/bots/api#deleteephemeralmessage
+func (b *Bot) DeleteEphemeralMessage(
+	ctx context.Context,
+	chatID ChatID,
+	receiverUserID int64,
+	ephemeralMessageID int64,
+) (result APIResponse[bool], err error) {
+	return requestGeneric[bool](ctx, b, "deleteEphemeralMessage", map[string]any{
+		"chat_id":              chatID,
+		"receiver_user_id":     receiverUserID,
+		"ephemeral_message_id": ephemeralMessageID,
+	})
+}
+
 // Check if given http params contain file or not.
 func checkIfFileParamExists(params map[string]any) bool {
 	for _, value := range params {
