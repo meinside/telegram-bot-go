@@ -3658,6 +3658,9 @@ type InputRichMessageMedia struct {
 // its `type` string in newRichTextOfType() below; otherwise it will silently
 // fall back to map[string]any on unmarshal instead of erroring.
 //
+// NOTE: Reference this from struct fields directly (RichText / *RichText), never
+// as `any` — wrapping it in `any` bypasses this custom UnmarshalJSON.
+//
 // https://core.telegram.org/bots/api#richtext
 type RichText struct {
 	Value any
@@ -3997,6 +4000,9 @@ type RichTextReferenceLink struct {
 // When received as a part of RichBlockTable, the caption may be a bare
 // RichText rather than an object; in that case it is decoded into `Text`.
 //
+// NOTE: Reference this from struct fields directly (*RichBlockCaption), never
+// as `any` — wrapping it in `any` bypasses this custom UnmarshalJSON.
+//
 // https://core.telegram.org/bots/api#richblockcaption
 type RichBlockCaption struct {
 	Text   RichText `json:"text"`
@@ -4016,17 +4022,16 @@ func (c *RichBlockCaption) UnmarshalJSON(data []byte) error {
 		return c.Text.UnmarshalJSON(data)
 	}
 
-	// an object may be either a {text, credit} caption or a typed RichText
+	// an object may be either a {text, credit} caption or a typed RichText.
+	// A RichBlockCaption never carries a `type`, so its presence identifies
+	// a typed RichText (eg. {"type":"bold","text":...}).
 	var probe struct {
-		Type   *string         `json:"type"`
-		Text   json.RawMessage `json:"text"`
-		Credit json.RawMessage `json:"credit"`
+		Type *string `json:"type"`
 	}
 	if err := json.Unmarshal(data, &probe); err != nil {
 		return err
 	}
-	if probe.Type != nil && probe.Text == nil && probe.Credit == nil {
-		// a typed RichText object (eg. {"type":"bold","text":...})
+	if probe.Type != nil {
 		return c.Text.UnmarshalJSON(data)
 	}
 
@@ -4119,9 +4124,9 @@ type RichBlock struct {
 	IsBordered *bool                  `json:"is_bordered,omitempty"`
 	IsStriped  *bool                  `json:"is_striped,omitempty"`
 
-	// RichBlockCaption: collage, slideshow, map, animation, audio, photo, video, voice_note
-	// RichText: table
-	Caption any `json:"caption,omitempty"`
+	// collage, slideshow, map, animation, audio, photo, video, voice_note (an object caption);
+	// table (a bare RichText, decoded into RichBlockCaption.Text)
+	Caption *RichBlockCaption `json:"caption,omitempty"`
 
 	// map
 	Location *Location `json:"location,omitempty"`

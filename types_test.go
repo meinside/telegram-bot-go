@@ -99,6 +99,57 @@ func TestRichBlockUnmarshalParagraph(t *testing.T) {
 	}
 }
 
+// A media RichBlock's caption is an object decoded into RichBlockCaption.
+func TestRichBlockUnmarshalMediaCaption(t *testing.T) {
+	slog.Info("testing unmarshalling of media RichBlock caption...")
+
+	var rb RichBlock
+	if err := json.Unmarshal([]byte(`{"type":"photo","caption":{"text":"hi","credit":"me"}}`), &rb); err != nil {
+		t.Fatalf("failed to unmarshal photo RichBlock: %s", err)
+	}
+	if rb.Caption == nil {
+		t.Fatalf("expected a non-nil caption")
+	}
+	if s, ok := rb.Caption.Text.Value.(string); !ok || s != "hi" {
+		t.Errorf("expected caption text %q, got %v", "hi", rb.Caption.Text.Value)
+	}
+	if s, ok := rb.Caption.Credit.Value.(string); !ok || s != "me" {
+		t.Errorf("expected caption credit %q, got %v", "me", rb.Caption.Credit.Value)
+	}
+}
+
+// A table RichBlock's caption is a bare RichText, decoded into RichBlockCaption.Text.
+func TestRichBlockUnmarshalTableCaption(t *testing.T) {
+	slog.Info("testing unmarshalling of table RichBlock caption...")
+
+	var rb RichBlock
+	if err := json.Unmarshal([]byte(`{"type":"table","caption":"a plain caption"}`), &rb); err != nil {
+		t.Fatalf("failed to unmarshal table RichBlock: %s", err)
+	}
+	if rb.Caption == nil {
+		t.Fatalf("expected a non-nil caption")
+	}
+	if s, ok := rb.Caption.Text.Value.(string); !ok || s != "a plain caption" {
+		t.Errorf("expected caption text %q, got %v", "a plain caption", rb.Caption.Text.Value)
+	}
+
+	// a table caption can also be a typed RichText object
+	var rb2 RichBlock
+	if err := json.Unmarshal([]byte(`{"type":"table","caption":{"type":"bold","text":"bold cap"}}`), &rb2); err != nil {
+		t.Fatalf("failed to unmarshal table RichBlock with typed caption: %s", err)
+	}
+	if rb2.Caption == nil {
+		t.Fatalf("expected a non-nil caption")
+	}
+	bold, ok := rb2.Caption.Text.Value.(*RichTextBold)
+	if !ok {
+		t.Fatalf("expected caption text to be *RichTextBold, got %T", rb2.Caption.Text.Value)
+	}
+	if s, ok := bold.Text.Value.(string); !ok || s != "bold cap" {
+		t.Errorf("expected nested bold text %q, got %v", "bold cap", bold.Text.Value)
+	}
+}
+
 // A RichMessage (received inside a Message) decodes its blocks recursively.
 func TestRichMessageUnmarshal(t *testing.T) {
 	slog.Info("testing recursive unmarshalling of RichMessage...")
