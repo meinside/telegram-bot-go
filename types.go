@@ -274,6 +274,7 @@ type Update struct {
 	ChatBoost               *ChatBoostUpdated            `json:"chat_boost,omitempty"`
 	RemovedChatBoost        *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`
 	ManagedBot              *ManagedBotUpdated           `json:"managed_bot,omitempty"`
+	Subscription            *BotSubscriptionUpdated      `json:"subscription,omitempty"`
 }
 
 // AllowedUpdate is a type for 'allowed_updates'
@@ -402,6 +403,7 @@ type ChatFullInfo struct {
 	UniqueGiftColors                   *UniqueGiftColors     `json:"unique_gift_colors,omitempty"`
 	PaidMessageStarCount               *int                  `json:"paid_message_star_count,omitempty"`
 	GuardBot                           *User                 `json:"guard_bot,omitempty"`
+	Community                          *Community            `json:"community,omitempty"`
 }
 
 // InputMediaType is a type of InputMedia
@@ -419,6 +421,7 @@ const (
 	InputMediaTypeSticker   InputMediaType = "sticker"
 	InputMediaTypeVenue     InputMediaType = "venue"
 	InputMediaTypeVideo     InputMediaType = "video"
+	InputMediaTypeVoiceNote InputMediaType = "voice_note"
 )
 
 // InputMedia represents the content of a media message to be sent.
@@ -583,6 +586,18 @@ type InputMediaVideo struct {
 	HasSpoiler            *bool           `json:"has_spoiler,omitempty"`
 }
 
+// InputMediaVoiceNote represents a voice message file to be sent.
+//
+// https://core.telegram.org/bots/api#inputmediavoicenote
+type InputMediaVoiceNote struct {
+	Type            InputMediaType  `json:"type"` // == "voice_note"
+	Media           string          `json:"media"`
+	Caption         *string         `json:"caption,omitempty"`
+	ParseMode       *ParseMode      `json:"parse_mode,omitempty"`
+	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
+	Duration        *int            `json:"duration,omitempty"`
+}
+
 // InputFile represents contents of a file to be uploaded.
 //
 // NOTE: Can be generated with NewInputFileFromXXX() functions in types_helper.go
@@ -732,8 +747,9 @@ type ExternalReplyInfo struct {
 //
 // https://core.telegram.org/bots/api#replyparameters
 type ReplyParameters struct {
-	MessageID                int64           `json:"message_id"`
+	MessageID                *int64          `json:"message_id,omitempty"`
 	ChatID                   *ChatID         `json:"chat_id,omitempty"`
+	EphemeralMessageID       *int64          `json:"ephemeral_message_id,omitempty"`
 	AllowSendingWithoutReply *bool           `json:"allow_sending_without_reply,omitempty"`
 	Quote                    *string         `json:"quote,omitempty"`
 	QuoteParseMode           *ParseMode      `json:"quote_parse_mode,omitempty"`
@@ -1156,6 +1172,18 @@ type ChecklistTasksAdded struct {
 	Tasks            []ChecklistTask `json:"tasks"`
 }
 
+// CommunityChatAdded is a struct for service message: chat added to a community
+//
+// https://core.telegram.org/bots/api#communitychatadded
+type CommunityChatAdded struct {
+	Community Community `json:"community"`
+}
+
+// CommunityChatRemoved is a struct for service message: chat removed from a community
+//
+// https://core.telegram.org/bots/api#communitychatremoved
+type CommunityChatRemoved struct{}
+
 // Dice is a struct for dice in message
 //
 // https://core.telegram.org/bots/api#dice
@@ -1207,6 +1235,14 @@ type ManagedBotCreated struct {
 type ManagedBotUpdated struct {
 	User User `json:"user"`
 	Bot  User `json:"bot"`
+}
+
+// BotSubscriptionUpdated contains information about the creation, token update, or owner update of a bot that is managed by the current bot.
+//
+// https://core.telegram.org/bots/api#botsubscriptionupdated
+type BotSubscriptionUpdated struct {
+	User User `json:"user"`
+	Bot  User `json:"bot"` // token of the bot can be retrieved with `GetManagedBotToken()`
 }
 
 // PollOptionAdded describes a service message about an option added to a poll.
@@ -1938,6 +1974,14 @@ type ForceReply struct {
 	Selective             *bool   `json:"selective,omitempty"`
 }
 
+// Community is a struct for a community(a group of chats).
+//
+// https://core.telegram.org/bots/api#community
+type Community struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+}
+
 // ChatPhoto is a struct for a chat photo
 //
 // https://core.telegram.org/bots/api#chatphoto
@@ -2317,6 +2361,7 @@ type ChatJoinRequest struct {
 type BotCommand struct {
 	Command     string `json:"command"`
 	Description string `json:"description"`
+	IsEphemeral *bool  `json:"is_ephemeral,omitempty"`
 }
 
 // BotName is a struct of a bot's name
@@ -2415,6 +2460,8 @@ type Message struct {
 	SenderBoostCount              *int                           `json:"sender_boost_count,omitempty"`
 	SenderBusinessBot             *User                          `json:"sender_business_bot,omitempty"`
 	SenderTag                     *string                        `json:"sender_tag,omitempty"`
+	ReceiverUser                  *User                          `json:"receiver_user,omitempty"`
+	EphemeralMessageID            *int64                         `json:"ephemeral_message_id,omitempty"`
 	Date                          int                            `json:"date"`
 	GuestQueryID                  *string                        `json:"guest_query_id,omitempty"`
 	BusinessConnectionID          *string                        `json:"business_connection_id,omitempty"`
@@ -3578,10 +3625,20 @@ type RichMessage struct {
 //
 // https://core.telegram.org/bots/api#inputrichmessage
 type InputRichMessage struct {
-	HTML                *string `json:"html,omitempty"`
-	Markdown            *string `json:"markdown,omitempty"`
-	IsRTL               *bool   `json:"is_rtl,omitempty"`
-	SkipEntityDetection *bool   `json:"skip_entity_detection,omitempty"`
+	Blocks              []InputRichBlock        `json:"blocks"`
+	HTML                *string                 `json:"html,omitempty"`
+	Markdown            *string                 `json:"markdown,omitempty"`
+	Media               []InputRichMessageMedia `json:"media,omitempty"`
+	IsRTL               *bool                   `json:"is_rtl,omitempty"`
+	SkipEntityDetection *bool                   `json:"skip_entity_detection,omitempty"`
+}
+
+// InputRichMessageMedia is a struct which describes a media element embedded in an outgoing rich message.
+//
+// https://core.telegram.org/bots/api#inputrichmessagemedia
+type InputRichMessageMedia struct {
+	ID    string     `json:"id"`
+	Media InputMedia `json:"media"`
 }
 
 ////////////////
@@ -4024,6 +4081,8 @@ type RichBlockListItem struct {
 // NOTE: When the API adds a new block variant, add its `type` to the list
 // above and add any new fields to this flat struct (grouped by `type` in the
 // field comments below).
+//
+// https://core.telegram.org/bots/api#richblock
 type RichBlock struct {
 	Type string `json:"type"`
 
@@ -4060,8 +4119,9 @@ type RichBlock struct {
 	IsBordered *bool                  `json:"is_bordered,omitempty"`
 	IsStriped  *bool                  `json:"is_striped,omitempty"`
 
-	// collage, slideshow, table, map, animation, audio, photo, video, voice_note
-	Caption *RichBlockCaption `json:"caption,omitempty"`
+	// RichBlockCaption: collage, slideshow, map, animation, audio, photo, video, voice_note
+	// RichText: table
+	Caption any `json:"caption,omitempty"`
 
 	// map
 	Location *Location `json:"location,omitempty"`
@@ -4083,6 +4143,98 @@ type RichBlock struct {
 
 	// voice_note
 	VoiceNote *Voice `json:"voice_note,omitempty"`
+
+	// animation, photo, video
+	HasSpoiler *bool `json:"has_spoiler,omitempty"`
+}
+
+// InputRichBlockListItem is an item of a list to be sent.
+//
+// https://core.telegram.org/bots/api#inputrichblocklistitem
+type InputRichBlockListItem struct {
+	Blocks      []InputRichBlock `json:"blocks"`
+	HasCheckbox *bool            `json:"has_checkbox,omitempty"`
+	IsChecked   *bool            `json:"is_checked,omitempty"`
+	Value       *int             `json:"value,omitempty"`
+	Type        *string          `json:"type,omitempty"` // must be one of 'a', 'A', 'i', 'I', or '1'
+}
+
+// InputRichBlock represents a block in a rich formatted message to be sent.
+//
+// It is a flat union of all block variants, discriminated by `Type`.
+// Only the fields relevant to a given `Type` are populated; see the
+// per-type field notes below and https://core.telegram.org/bots/api#inputrichblock
+//
+// type == "paragraph", "heading", "pre", "footer", "divider",
+// "mathematical_expression", "anchor", "list", "blockquote", "pullquote",
+// "collage", "slideshow", "table", "details", "map", "animation", "audio",
+// "photo", "video", "voice_note", or "thinking"
+//
+// NOTE: When the API adds a new block variant, add its `type` to the list
+// above and add any new fields to this flat struct (grouped by `type` in the
+// field comments below).
+//
+// https://core.telegram.org/bots/api#inputrichblock
+type InputRichBlock struct {
+	Type string `json:"type"`
+
+	// text-bearing blocks: paragraph, heading, pre, footer, pullquote, thinking
+	Text RichText `json:"text,omitzero"`
+
+	// heading
+	Size *int `json:"size,omitempty"` // 1(largest)-6(smallest)
+
+	// pre
+	Language *string `json:"language,omitempty"`
+
+	// mathematical_expression
+	Expression *string `json:"expression,omitempty"`
+
+	// anchor
+	Name *string `json:"name,omitempty"`
+
+	// list
+	Items []InputRichBlockListItem `json:"items,omitempty"`
+
+	// blockquote, collage, slideshow, details
+	Blocks []InputRichBlock `json:"blocks,omitempty"`
+
+	// blockquote, pullquote
+	Credit RichText `json:"credit,omitzero"`
+
+	// details
+	Summary RichText `json:"summary,omitzero"`
+	IsOpen  *bool    `json:"is_open,omitempty"`
+
+	// table
+	Cells      [][]RichBlockTableCell `json:"cells,omitempty"`
+	IsBordered *bool                  `json:"is_bordered,omitempty"`
+	IsStriped  *bool                  `json:"is_striped,omitempty"`
+
+	// RichBlockCaption: collage, slideshow, map, animation, audio, photo, video, voice_note
+	// RichText: table
+	Caption any `json:"caption,omitempty"`
+
+	// map
+	Location *Location `json:"location,omitempty"`
+	Zoom     *int      `json:"zoom,omitempty"` // 13-20
+	Width    *int      `json:"width,omitempty"`
+	Height   *int      `json:"height,omitempty"`
+
+	// animation
+	Animation *InputMediaAnimation `json:"animation,omitempty"`
+
+	// audio
+	Audio *InputMediaAudio `json:"audio,omitempty"`
+
+	// photo
+	Photo []InputMediaPhoto `json:"photo,omitempty"`
+
+	// video
+	Video *InputMediaVideo `json:"video,omitempty"`
+
+	// voice_note
+	VoiceNote *InputMediaVoiceNote `json:"voice_note,omitempty"`
 
 	// animation, photo, video
 	HasSpoiler *bool `json:"has_spoiler,omitempty"`
