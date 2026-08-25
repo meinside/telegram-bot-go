@@ -4404,11 +4404,17 @@ func (o OptionsGiftPremiumSubscription) SetTextEntities(textEntities []MessageEn
 
 // OptionsEditEphemeralMessageText struct for EditEphemeralMessageText().
 //
-// options include: `parse_mode`, `entities`, `rich_message`, `link_preview_options`,
-// and `reply_markup`.
+// options include: `text`, `parse_mode`, `entities`, `rich_message`,
+// `link_preview_options`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#editephemeralmessagetext
 type OptionsEditEphemeralMessageText MethodOptions
+
+// SetText sets the `text` value of OptionsEditEphemeralMessageText.
+func (o OptionsEditEphemeralMessageText) SetText(text string) OptionsEditEphemeralMessageText {
+	o["text"] = text
+	return o
+}
 
 // SetParseMode sets the `parse_mode` value of OptionsEditEphemeralMessageText.
 func (o OptionsEditEphemeralMessageText) SetParseMode(parseMode ParseMode) OptionsEditEphemeralMessageText {

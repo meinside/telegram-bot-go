@@ -3128,7 +3128,6 @@ func (b *Bot) EditEphemeralMessageText(
 	chatID ChatID,
 	receiverUserID int64,
 	ephemeralMessageID int64,
-	text string,
 	options OptionsEditEphemeralMessageText,
 ) (result APIResponse[bool], err error) {
 	if options == nil {
@@ -3139,7 +3138,6 @@ func (b *Bot) EditEphemeralMessageText(
 	options["chat_id"] = chatID
 	options["receiver_user_id"] = receiverUserID
 	options["ephemeral_message_id"] = ephemeralMessageID
-	options["text"] = text
 
 	return requestGeneric[bool](ctx, b, "editEphemeralMessageText", options)
 }
