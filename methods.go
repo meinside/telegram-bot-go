@@ -1433,7 +1433,6 @@ func (b *Bot) SendMessageDraft(
 	ctx context.Context,
 	chatID ChatID,
 	draftID int64,
-	text string,
 	options OptionsSendMessageDraft,
 ) (result APIResponse[bool], err error) {
 	if options == nil {
@@ -1443,7 +1442,6 @@ func (b *Bot) SendMessageDraft(
 	// essential params
 	options["chat_id"] = chatID
 	options["draft_id"] = draftID
-	options["text"] = text
 
 	return requestGeneric[bool](ctx, b, "sendMessageDraft", options)
 }
@@ -3154,8 +3152,8 @@ func (b *Bot) EditEphemeralMessageMedia(
 	chatID ChatID,
 	receiverUserID int64,
 	ephemeralMessageID int64,
-	options OptionsEditEphemeralMessageMedia,
 	media InputMedia,
+	options OptionsEditEphemeralMessageMedia,
 ) (result APIResponse[bool], err error) {
 	if options == nil {
 		options = map[string]any{}

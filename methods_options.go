@@ -84,7 +84,7 @@ func (o OptionsGetUpdates) SetAllowedUpdates(allowedUpdates []AllowedUpdate) Opt
 // OptionsSendMessage struct for SendMessage().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `parse_mode`, `entities`, `link_preview_options`,
+// `ephemeral_message_parameters, `parse_mode`, `entities`, `link_preview_options`,
 // `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
 // `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
@@ -109,15 +109,9 @@ func (o OptionsSendMessage) SetDirectMessagesTopicID(directMessagesTopicID int64
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendMessage.
-func (o OptionsSendMessage) SetReceiverUserID(receiverUserID int64) OptionsSendMessage {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendMessage.
-func (o OptionsSendMessage) SetCallbackQueryID(callbackQueryID string) OptionsSendMessage {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendMessage.
+func (o OptionsSendMessage) SetEphemeralMesssageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendMessage {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -396,7 +390,7 @@ func (o OptionsCopyMessages) SetRemoveCaption(removeCaption bool) OptionsCopyMes
 // OptionsSendPhoto struct for SendPhoto().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `caption`, `parse_mode`, `caption_entities`,
+// `ephemeral_message_parameters`, `caption`, `parse_mode`, `caption_entities`,
 // `show_caption_above_media`, `has_spoiler`, `disable_notification`, `protect_content`,
 // `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
 // and `reply_markup`.
@@ -422,15 +416,9 @@ func (o OptionsSendPhoto) SetDirectMessagesTopicID(directMessagesTopicID int64) 
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendPhoto.
-func (o OptionsSendPhoto) SetReceiverUserID(receiverUserID int64) OptionsSendPhoto {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendPhoto.
-func (o OptionsSendPhoto) SetCallbackQueryID(callbackQueryID string) OptionsSendPhoto {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendPhoto.
+func (o OptionsSendPhoto) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendPhoto {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -512,7 +500,7 @@ func (o OptionsSendPhoto) SetReplyMarkup(replyMarkup any) OptionsSendPhoto {
 //
 // options include:
 // `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`,
+// `ephemeral_message_parameters`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`,
 // `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
 // `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
@@ -534,6 +522,12 @@ func (o OptionsSendLivePhoto) SetMessageThreadID(messageThreadID int64) OptionsS
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendLivePhoto.
 func (o OptionsSendLivePhoto) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendLivePhoto {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendLivePhoto.
+func (o OptionsSendLivePhoto) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendLivePhoto {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -612,7 +606,7 @@ func (o OptionsSendLivePhoto) SetReplyMarkup(replyMarkup any) OptionsSendLivePho
 // OptionsSendAudio struct for SendAudio().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `caption`, `parse_mode`, `caption_entities`,
+// `ephemeral_message_parameters`, `caption`, `parse_mode`, `caption_entities`,
 // `duration`, `performer`, `title`, `thumbnail`, `disable_notification`, `protect_content`,
 // `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
 // and `reply_markup`.
@@ -638,15 +632,9 @@ func (o OptionsSendAudio) SetDirectMessagesTopicID(directMessagesTopicID int64) 
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendAudio.
-func (o OptionsSendAudio) SetReceiverUserID(receiverUserID int64) OptionsSendAudio {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendAudio.
-func (o OptionsSendAudio) SetCallbackQueryID(callbackQueryID string) OptionsSendAudio {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendAudio.
+func (o OptionsSendAudio) SetEphemeralMesssageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendAudio {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -741,7 +729,7 @@ func (o OptionsSendAudio) SetReplyMarkup(replyMarkup any) OptionsSendAudio {
 // OptionsSendDocument struct for SendDocument().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `thumbnail`, `caption`, `parse_mode`,
+// `ephemeral_message_parameters“, `thumbnail`, `caption`, `parse_mode`,
 // `caption_entities`, `disable_content_type_detection`, `disable_notification`,
 // `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
 // `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
@@ -767,15 +755,9 @@ func (o OptionsSendDocument) SetDirectMessagesTopicID(directMessagesTopicID int6
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendDocument.
-func (o OptionsSendDocument) SetReceiverUserID(receiverUserID int64) OptionsSendDocument {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendDocument.
-func (o OptionsSendDocument) SetCallbackQueryID(callbackQueryID string) OptionsSendDocument {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMesssageParameters sets the `ephemeral_message_parameters` value of OptionsSendDocument.
+func (o OptionsSendDocument) SetEphemeralMesssageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendDocument {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -858,7 +840,7 @@ func (o OptionsSendDocument) SetReplyMarkup(replyMarkup any) OptionsSendDocument
 // OptionsSendSticker struct for SendSticker().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `emoji`, `disable_notification`, `protect_content`,
+// `ephemeral_message_parameters`, `emoji`, `disable_notification`, `protect_content`,
 // `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`, `reply_parameters`,
 // and `reply_markup`.
 //
@@ -883,15 +865,9 @@ func (o OptionsSendSticker) SetDirectMessagesTopicID(directMessagesTopicID int64
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendSticker.
-func (o OptionsSendSticker) SetReceiverUserID(receiverUserID int64) OptionsSendSticker {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendSticker.
-func (o OptionsSendSticker) SetCallbackQueryID(callbackQueryID string) OptionsSendSticker {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendSticker.
+func (o OptionsSendSticker) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendSticker {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -948,8 +924,8 @@ func (o OptionsSendSticker) SetReplyMarkup(replyMarkup any) OptionsSendSticker {
 // OptionsSendRichMessage struct for SendRichMessage().
 //
 // options include: `business_connection_id`, `message_thread_id`,
-// `direct_messages_topic_id`, `disable_notification`, `protect_content`,
-// `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters,`
+// `direct_messages_topic_id`, `ephemeral_message_parameters`, `disable_notification`,
+// `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters,`
 // `reply_parameters`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#sendrichmessage
@@ -970,6 +946,12 @@ func (o OptionsSendRichMessage) SetMessageThreadID(messageThreadID int64) Option
 // SetDirectMessagesTopicID sets the `direct_messages_topic_id` value of OptionsSendRichMessage.
 func (o OptionsSendRichMessage) SetDirectMessagesTopicID(directMessagesTopicID int64) OptionsSendRichMessage {
 	o["direct_messages_topic_id"] = directMessagesTopicID
+	return o
+}
+
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendRichMessage.
+func (o OptionsSendRichMessage) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendRichMessage {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -1018,7 +1000,7 @@ func (o OptionsSendRichMessage) SetReplyMarkup(replyMarkup any) OptionsSendRichM
 
 // OptionsSendRichMessageDraft struct for SendRichMessageDraft().
 //
-// options include: `message_thread_id`.
+// options include: `message_thread_id`, `can_stop`, and `keep_on_stop`.
 //
 // https://core.telegram.org/bots/api#sendrichmessagedraft
 type OptionsSendRichMessageDraft MethodOptions
@@ -1026,6 +1008,18 @@ type OptionsSendRichMessageDraft MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendRichMessageDraft.
 func (o OptionsSendRichMessageDraft) SetMessageThreadID(messageThreadID int64) OptionsSendRichMessageDraft {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetCanStop sets the `can_stop` value of OptionsSendRichMessageDraft.
+func (o OptionsSendRichMessageDraft) SetCanStop(canStop bool) OptionsSendRichMessageDraft {
+	o["can_stop"] = canStop
+	return o
+}
+
+// SetKeepOnStop sets the `keep_on_stop` value of OptionsSendRichMessageDraft.
+func (o OptionsSendRichMessageDraft) SetKeepOnStop(keepOnStop bool) OptionsSendRichMessageDraft {
+	o["keep_on_stop"] = keepOnStop
 	return o
 }
 
@@ -1174,7 +1168,7 @@ func (o OptionsVerifyChat) SetCustomDescription(customDescription string) Option
 // OptionsSendVideo struct for SendVideo().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `duration`, `width`, `height`, `thumbnail`,
+// `ephemeral_message_parameters`, `duration`, `width`, `height`, `thumbnail`,
 // `cover`, `start_timestamp`, `caption`, `parse_mode`, `caption_entities`,
 // `show_caption_above_media`, `has_spoiler`, `supports_streaming`, `disable_notification`,
 // `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
@@ -1201,15 +1195,9 @@ func (o OptionsSendVideo) SetDirectMessagesTopicID(directMessagesTopicID int64) 
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVideo.
-func (o OptionsSendVideo) SetReceiverUserID(receiverUserID int64) OptionsSendVideo {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVideo.
-func (o OptionsSendVideo) SetCallbackQueryID(callbackQueryID string) OptionsSendVideo {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendVideo.
+func (o OptionsSendVideo) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendVideo {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -1336,7 +1324,7 @@ func (o OptionsSendVideo) SetReplyMarkup(replyMarkup any) OptionsSendVideo {
 // OptionsSendAnimation struct for SendAnimation().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `duration`, `width`, `height`,
+// `ephemeral_message_parameters`, `duration`, `width`, `height`,
 // `thumbnail`, `caption`, `parse_mode`, `caption_entities`, `show_caption_above_media`,
 // `has_spoiler`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
 // `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
@@ -1362,15 +1350,9 @@ func (o OptionsSendAnimation) SetDirectMessagesTopicID(directMessagesTopicID int
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendAnimation.
-func (o OptionsSendAnimation) SetReceiverUserID(receiverUserID int64) OptionsSendAnimation {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendAnimation.
-func (o OptionsSendAnimation) SetCallbackQueryID(callbackQueryID string) OptionsSendAnimation {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMesssageParameters sets the `ephemeral_message_parameters` value of OptionsSendAnimation.
+func (o OptionsSendAnimation) SetEphemeralMesssageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendAnimation {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -1477,7 +1459,7 @@ func (o OptionsSendAnimation) SetReplyMarkup(replyMarkup any) OptionsSendAnimati
 // OptionsSendVoice struct for SendVoice().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `caption`, `parse_mode`, `caption_entities`,
+// `ephemeral_message_parameters`, `caption`, `parse_mode`, `caption_entities`,
 // `duration`, `disable_notification`, `protect_content`, `allow_paid_broadcast`,
 // `message_effect_id`, `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
@@ -1502,15 +1484,9 @@ func (o OptionsSendVoice) SetDirectMessagesTopicID(directMessagesTopicID int64) 
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVoice.
-func (o OptionsSendVoice) SetReceiverUserID(receiverUserID int64) OptionsSendVoice {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVoice.
-func (o OptionsSendVoice) SetCallbackQueryID(callbackQueryID string) OptionsSendVoice {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendVoice.
+func (o OptionsSendVoice) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendVoice {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -1585,7 +1561,7 @@ func (o OptionsSendVoice) SetReplyMarkup(replyMarkup any) OptionsSendVoice {
 // OptionsSendVideoNote struct for SendVideoNote().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `duration`, `length`, `thumbnail`,
+// `ephemeral_message_parameters`, `duration`, `length`, `thumbnail`,
 // `disable_notification`, `protect_content`, `allow_paid_broadcast`, `message_effect_id`,
 // `suggested_post_parameters`, `reply_parameters`, and `reply_markup`.
 //
@@ -1612,15 +1588,9 @@ func (o OptionsSendVideoNote) SetDirectMessagesTopicID(directMessagesTopicID int
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVideoNote.
-func (o OptionsSendVideoNote) SetReceiverUserID(receiverUserID int64) OptionsSendVideoNote {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVideoNote.
-func (o OptionsSendVideoNote) SetCallbackQueryID(callbackQueryID string) OptionsSendVideoNote {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendVideoNote.
+func (o OptionsSendVideoNote) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendVideoNote {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -1837,7 +1807,7 @@ func (o OptionsSendMediaGroup) SetReplyParameters(replyParameters ReplyParameter
 // OptionsSendLocation struct for SendLocation()
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `horizontal_accuracy`, `live_period`,
+// `ephemeral_message_parameters`, `horizontal_accuracy`, `live_period`,
 // `heading`, `proximity_alert_radius`, `disable_notification`, `protect_content`,
 // `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
 // `reply_parameters`, and `reply_markup`.
@@ -1863,15 +1833,9 @@ func (o OptionsSendLocation) SetDirectMessagesTopicID(directMessagesTopicID int6
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendLocation.
-func (o OptionsSendLocation) SetReceiverUserID(receiverUserID int64) OptionsSendLocation {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendLocation.
-func (o OptionsSendLocation) SetCallbackQueryID(callbackQueryID string) OptionsSendLocation {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendLocation.
+func (o OptionsSendLocation) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendLocation {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -1946,7 +1910,7 @@ func (o OptionsSendLocation) SetReplyMarkup(replyMarkup any) OptionsSendLocation
 // OptionsSendVenue struct for SendVenue().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `foursquare_id`, `foursquare_type`,
+// `ephemeral_message_parameters`, `foursquare_id`, `foursquare_type`,
 // `google_place_id`, `google_place_type`, `disable_notification`, `protect_content`,
 // `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
 // `reply_parameters`, and `reply_markup`.
@@ -1972,15 +1936,9 @@ func (o OptionsSendVenue) SetDirectMessagesTopicID(directMessagesTopicID int64) 
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendVenue.
-func (o OptionsSendVenue) SetReceiverUserID(receiverUserID int64) OptionsSendVenue {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendVenue.
-func (o OptionsSendVenue) SetCallbackQueryID(callbackQueryID string) OptionsSendVenue {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendVenue.
+func (o OptionsSendVenue) SetEphemeralMessageParameters(ephemeralMessageParameters EphemeralMessageParameters) OptionsSendVenue {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -2416,7 +2374,8 @@ func (o OptionsSendDice) SetReplyMarkup(replyMarkup any) OptionsSendDice {
 
 // OptionsSendMessageDraft struct for SendMessageDraft().
 //
-// options include: `message_thread_id`, `parse_mode`, and `entities`.
+// options include: `message_thread_id`, `text`, `parse_mode`, `entities`,
+// `can_stop`, and `keep_on_stop`.
 //
 // https://core.telegram.org/bots/api#sendmessagedraft
 type OptionsSendMessageDraft MethodOptions
@@ -2424,6 +2383,12 @@ type OptionsSendMessageDraft MethodOptions
 // SetMessageThreadID sets the `message_thread_id` value of OptionsSendMessageDraft.
 func (o OptionsSendMessageDraft) SetMessageThreadID(messageThreadID int64) OptionsSendMessageDraft {
 	o["message_thread_id"] = messageThreadID
+	return o
+}
+
+// SetText sets the `text` value of OptionsSendMessageDraft.
+func (o OptionsSendMessageDraft) SetText(text string) OptionsSendMessageDraft {
+	o["text"] = text
 	return o
 }
 
@@ -2436,6 +2401,18 @@ func (o OptionsSendMessageDraft) SetParseMode(parseMode ParseMode) OptionsSendMe
 // SetEntities sets the `entities` value of OptionsSendMessageDraft.
 func (o OptionsSendMessageDraft) SetEntities(entities []MessageEntity) OptionsSendMessageDraft {
 	o["entities"] = entities
+	return o
+}
+
+// SetCanStop sets the `can_stop` value of OptionsSendMessageDraft.
+func (o OptionsSendMessageDraft) SetCanStop(canStop bool) OptionsSendMessageDraft {
+	o["can_stop"] = canStop
+	return o
+}
+
+// SetKeepOnStop sets the `keep_on_stop` value of OptionsSendMessageDraft.
+func (o OptionsSendMessageDraft) SetKeepOnStop(keepOnStop bool) OptionsSendMessageDraft {
+	o["keep_on_stop"] = keepOnStop
 	return o
 }
 
@@ -2480,7 +2457,7 @@ func (o OptionsSetMessageReaction) SetIsBig(isBig bool) OptionsSetMessageReactio
 // OptionsSendContact struct for SendContact().
 //
 // options include: `business_connection_id`, `message_thread_id`, `direct_messages_topic_id`,
-// `receiver_user_id`, `callback_query_id`, `last_name`, `vcard`, `disable_notification`,
+// `ephemeral_message_parameters`, `last_name`, `vcard`, `disable_notification`,
 // `protect_content`, `allow_paid_broadcast`, `message_effect_id`, `suggested_post_parameters`,
 // `reply_parameters`, and `reply_markup`.
 //
@@ -2505,15 +2482,9 @@ func (o OptionsSendContact) SetDirectMessagesTopicID(directMessagesTopicID int64
 	return o
 }
 
-// SetReceiverUserID sets the `receiver_user_id` value of OptionsSendContact.
-func (o OptionsSendContact) SetReceiverUserID(receiverUserID int64) OptionsSendContact {
-	o["receiver_user_id"] = receiverUserID
-	return o
-}
-
-// SetCallbackQueryID sets the `callback_query_id` value of OptionsSendContact.
-func (o OptionsSendContact) SetCallbackQueryID(callbackQueryID string) OptionsSendContact {
-	o["callback_query_id"] = callbackQueryID
+// SetEphemeralMessageParameters sets the `ephemeral_message_parameters` value of OptionsSendContact.
+func (o OptionsSendContact) SetEphemeralMessageParameters(ephemeralMessageParameters any) OptionsSendContact {
+	o["ephemeral_message_parameters"] = ephemeralMessageParameters
 	return o
 }
 
@@ -2668,7 +2639,11 @@ func (o OptionsRestrictChatMember) SetUntilDate(until int) OptionsRestrictChatMe
 
 // OptionsPromoteChatMember struct for PromoteChatMember().
 //
-// options include: `is_anonymous`, `can_manage_chat`, `can_post_messages`, `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`, `can_restrict_members`, `can_promote_members`, `can_change_info`, `can_invite_users`, `can_pin_messages`, `can_manage_topics`, `can_manage_direct_messages`, and `can_manage_tags`.
+// options include: `is_anonymous`, `can_manage_chat`, `can_post_messages`,
+// `can_edit_messages`, `can_delete_messages`, `can_manage_video_chats`,
+// `can_restrict_members`, `can_promote_members`, `can_change_info`,
+// `can_invite_users`, `can_pin_messages`, `can_manage_topics`,
+// `can_manage_direct_messages`, `can_manage_tags`, and `can_send_welcome_messages`.
 //
 // https://core.telegram.org/bots/api#promotechatmember
 type OptionsPromoteChatMember MethodOptions
@@ -2772,6 +2747,12 @@ func (o OptionsPromoteChatMember) SetCanManageDirectMessages(can bool) OptionsPr
 // SetCanManageTags sets the `can_manage_tags` value of OptionsPromoteChatMember.
 func (o OptionsPromoteChatMember) SetCanManageTags(can bool) OptionsPromoteChatMember {
 	o["can_manage_tags"] = can
+	return o
+}
+
+// SetCanSendWelcomeMessages sets the `can_send_welcome_messages` value of OptionsPromoteChatMember.
+func (o OptionsPromoteChatMember) SetCanSendWelcomeMessages(can bool) OptionsPromoteChatMember {
+	o["can_send_welcome_messages"] = can
 	return o
 }
 
@@ -4423,7 +4404,8 @@ func (o OptionsGiftPremiumSubscription) SetTextEntities(textEntities []MessageEn
 
 // OptionsEditEphemeralMessageText struct for EditEphemeralMessageText().
 //
-// options include: `parse_mode`, `entities`, `link_preview_options`, and `reply_markup`.
+// options include: `parse_mode`, `entities`, `rich_message`, `link_preview_options`,
+// and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#editephemeralmessagetext
 type OptionsEditEphemeralMessageText MethodOptions
@@ -4437,6 +4419,12 @@ func (o OptionsEditEphemeralMessageText) SetParseMode(parseMode ParseMode) Optio
 // SetEntities sets the `entities` value of OptionsEditEphemeralMessageText.
 func (o OptionsEditEphemeralMessageText) SetEntities(entities []MessageEntity) OptionsEditEphemeralMessageText {
 	o["entities"] = entities
+	return o
+}
+
+// SetRichMessage sets the `rich_message` value of OptionsEditEphemeralMessageText.
+func (o OptionsEditEphemeralMessageText) SetRichMessage(richMessage InputRichMessage) OptionsEditEphemeralMessageText {
+	o["rich_message"] = richMessage
 	return o
 }
 
@@ -4467,7 +4455,8 @@ func (o OptionsEditEphemeralMessageMedia) SetReplyMarkup(replyMarkup InlineKeybo
 
 // OptionsEditEphemeralMessageCaption struct for EditEphemeralMessageCaption().
 //
-// options include: `caption`, `parse_mode`, `caption_entities`, and `reply_markup`.
+// options include: `caption`, `parse_mode`, `caption_entities`,
+// `show_caption_above_media`, and `reply_markup`.
 //
 // https://core.telegram.org/bots/api#editephemeralmessagecaption
 type OptionsEditEphemeralMessageCaption MethodOptions
@@ -4487,6 +4476,12 @@ func (o OptionsEditEphemeralMessageCaption) SetParseMode(parseMode ParseMode) Op
 // SetCaptionEntities sets the `caption_entities` value of OptionsEditEphemeralMessageCaption.
 func (o OptionsEditEphemeralMessageCaption) SetCaptionEntities(captionEntities []MessageEntity) OptionsEditEphemeralMessageCaption {
 	o["caption_entities"] = captionEntities
+	return o
+}
+
+// SetShowCaptionAboveMedia sets the `show_caption_above_media` value of OptionsEditEphemeralMessageCaption.
+func (o OptionsEditEphemeralMessageCaption) SetShowCaptionAboveMedia(showCaptionAboveMedia bool) OptionsEditEphemeralMessageCaption {
+	o["show_caption_above_media"] = showCaptionAboveMedia
 	return o
 }
 

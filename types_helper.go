@@ -3246,13 +3246,26 @@ func NewInputRichBlockList(items []InputRichBlockListItem) InputRichBlock {
 	}
 }
 
-// NewInputRichBlockQuotation returns a new InputRichBlock for <blockquote>.
+// NewInputRichBlockBlockQuotation returns a new InputRichBlock for <blockquote>.
 //
 // https://core.telegram.org/bots/api#inputrichblockblockquotation
-func NewInputRichBlockQuotation(blocks []InputRichBlock, credit *RichText) InputRichBlock {
+func NewInputRichBlockBlockQuotation(blocks []InputRichBlock, credit *RichText) InputRichBlock {
 	block := InputRichBlock{
 		Type:   "blockquote",
 		Blocks: blocks,
+	}
+	if credit != nil {
+		block.Credit = *credit
+	}
+
+	return block
+}
+
+// https://core.telegram.org/bots/api#inputrichblockexpandableblockquotation
+func NewInputRichBlockExpandableBlockQuotation(text RichText, credit *RichText) InputRichBlock {
+	block := InputRichBlock{
+		Type: "expandable_blockquote",
+		Text: text,
 	}
 	if credit != nil {
 		block.Credit = *credit
@@ -3313,6 +3326,7 @@ func NewInputRichBlockTable(
 	cells [][]RichBlockTableCell,
 	isBordered *bool,
 	isStriped *bool,
+	isCompact *bool,
 	caption *RichText,
 ) InputRichBlock {
 	block := InputRichBlock{
@@ -3324,6 +3338,9 @@ func NewInputRichBlockTable(
 	}
 	if isStriped != nil {
 		block.IsStriped = isStriped
+	}
+	if isCompact != nil {
+		block.IsCompact = isCompact
 	}
 	if caption != nil {
 		block.Caption = *caption
@@ -3376,6 +3393,24 @@ func NewInputRichBlockMap(
 	return block
 }
 
+// NewInputRichBlockButtons returns a new InputRichBlock for <buttons>.
+//
+// https://core.telegram.org/bots/api#inputrichblockbuttons
+func NewInputRichBlockButtons(
+	buttons []RichMessageButton,
+	align *string,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:    "buttons",
+		Buttons: buttons,
+	}
+	if align != nil {
+		block.Align = align
+	}
+
+	return block
+}
+
 // NewInputRichBlockAnimation returns a new InputRichBlock for <video>.
 //
 // https://core.telegram.org/bots/api#inputrichblockanimation
@@ -3404,6 +3439,24 @@ func NewInputRichBlockAudio(
 	block := InputRichBlock{
 		Type:  "audio",
 		Audio: &audio,
+	}
+	if caption != nil {
+		block.Caption = *caption
+	}
+
+	return block
+}
+
+// NewInputRichBlockDocument returns a new InputRichBlock for <tg-document>.
+//
+// https://core.telegram.org/bots/api#inputrichblockdocument
+func NewInputRichBlockDocument(
+	document InputMediaDocument,
+	caption *RichBlockCaption,
+) InputRichBlock {
+	block := InputRichBlock{
+		Type:     "document",
+		Document: &document,
 	}
 	if caption != nil {
 		block.Caption = *caption

@@ -248,33 +248,34 @@ type WebhookInfo struct {
 //
 // https://core.telegram.org/bots/api#update
 type Update struct {
-	UpdateID                int64                        `json:"update_id"`
-	Message                 *Message                     `json:"message,omitempty"`
-	EditedMessage           *Message                     `json:"edited_message,omitempty"`
-	ChannelPost             *Message                     `json:"channel_post,omitempty"`
-	EditedChannelPost       *Message                     `json:"edited_channel_post,omitempty"`
-	BusinessConnection      *BusinessConnection          `json:"business_connection,omitempty"`
-	BusinessMessage         *Message                     `json:"business_message,omitempty"`
-	EditedBusinessMessage   *Message                     `json:"edited_business_message,omitempty"`
-	DeletedBusinessMessages *BusinessMessagesDeleted     `json:"deleted_business_messages,omitempty"`
-	GuestMessage            *Message                     `json:"guest_message,omitempty"`
-	MessageReaction         *MessageReactionUpdated      `json:"message_reaction,omitempty"`
-	MessageReactionCount    *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
-	InlineQuery             *InlineQuery                 `json:"inline_query,omitempty"`
-	ChosenInlineResult      *ChosenInlineResult          `json:"chosen_inline_result,omitempty"`
-	CallbackQuery           *CallbackQuery               `json:"callback_query,omitempty"`
-	ShippingQuery           *ShippingQuery               `json:"shipping_query,omitempty"`
-	PreCheckoutQuery        *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`
-	PurchasedPaidMedia      *PaidMediaPurchased          `json:"purchased_paid_media,omitempty"`
-	Poll                    *Poll                        `json:"poll,omitempty"`
-	PollAnswer              *PollAnswer                  `json:"poll_answer,omitempty"`
-	MyChatMember            *ChatMemberUpdated           `json:"my_chat_member,omitempty"`
-	ChatMember              *ChatMemberUpdated           `json:"chat_member,omitempty"`
-	ChatJoinRequest         *ChatJoinRequest             `json:"chat_join_request,omitempty"`
-	ChatBoost               *ChatBoostUpdated            `json:"chat_boost,omitempty"`
-	RemovedChatBoost        *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`
-	ManagedBot              *ManagedBotUpdated           `json:"managed_bot,omitempty"`
-	Subscription            *BotSubscriptionUpdated      `json:"subscription,omitempty"`
+	UpdateID                 int64                        `json:"update_id"`
+	Message                  *Message                     `json:"message,omitempty"`
+	EditedMessage            *Message                     `json:"edited_message,omitempty"`
+	ChannelPost              *Message                     `json:"channel_post,omitempty"`
+	EditedChannelPost        *Message                     `json:"edited_channel_post,omitempty"`
+	BusinessConnection       *BusinessConnection          `json:"business_connection,omitempty"`
+	BusinessMessage          *Message                     `json:"business_message,omitempty"`
+	EditedBusinessMessage    *Message                     `json:"edited_business_message,omitempty"`
+	DeletedBusinessMessages  *BusinessMessagesDeleted     `json:"deleted_business_messages,omitempty"`
+	GuestMessage             *Message                     `json:"guest_message,omitempty"`
+	MessageReaction          *MessageReactionUpdated      `json:"message_reaction,omitempty"`
+	MessageReactionCount     *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
+	InlineQuery              *InlineQuery                 `json:"inline_query,omitempty"`
+	ChosenInlineResult       *ChosenInlineResult          `json:"chosen_inline_result,omitempty"`
+	CallbackQuery            *CallbackQuery               `json:"callback_query,omitempty"`
+	ShippingQuery            *ShippingQuery               `json:"shipping_query,omitempty"`
+	PreCheckoutQuery         *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`
+	PurchasedPaidMedia       *PaidMediaPurchased          `json:"purchased_paid_media,omitempty"`
+	Poll                     *Poll                        `json:"poll,omitempty"`
+	PollAnswer               *PollAnswer                  `json:"poll_answer,omitempty"`
+	MyChatMember             *ChatMemberUpdated           `json:"my_chat_member,omitempty"`
+	ChatMember               *ChatMemberUpdated           `json:"chat_member,omitempty"`
+	ChatJoinRequest          *ChatJoinRequest             `json:"chat_join_request,omitempty"`
+	ChatBoost                *ChatBoostUpdated            `json:"chat_boost,omitempty"`
+	RemovedChatBoost         *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`
+	ManagedBot               *ManagedBotUpdated           `json:"managed_bot,omitempty"`
+	Subscription             *BotSubscriptionUpdated      `json:"subscription,omitempty"`
+	MessageGenerationStopped *MessageGenerationStopped    `json:"stopped_message_generation,omitempty"`
 }
 
 // AllowedUpdate is a type for 'allowed_updates'
@@ -759,6 +760,15 @@ type ReplyParameters struct {
 	PollOptionID             *string         `json:"poll_option_id,omitempty"`
 }
 
+// EphemeralMessageParameters is a struct for parameters for ephemeral messages
+//
+// https://core.telegram.org/bots/api#ephemeralmessageparameters
+type EphemeralMessageParameters struct {
+	ReceiverUserID              int64   `json:"receiver_user_id"`
+	CallbackQueryID             *string `json:"callback_query_id,omitempty"`
+	ReplaceCallbackQueryMessage *bool   `json:"replace_callback_query_message,omitempty"`
+}
+
 // MessageOrigin struct for describing the origin of a message
 //
 // NOTE: This is a flat union discriminated by `Type`. When the API adds a new
@@ -1179,6 +1189,13 @@ type CommunityChatAdded struct {
 	Community Community `json:"community"`
 }
 
+// CommunityChatJoined is a struct for service message: chat joined by a user from a community
+//
+// https://core.telegram.org/bots/api#communitychatjoined
+type CommunityChatJoined struct {
+	Community Community `json:"community"`
+}
+
 // CommunityChatRemoved is a struct for service message: chat removed from a community
 //
 // https://core.telegram.org/bots/api#communitychatremoved
@@ -1243,6 +1260,15 @@ type ManagedBotUpdated struct {
 type BotSubscriptionUpdated struct {
 	User User `json:"user"`
 	Bot  User `json:"bot"` // token of the bot can be retrieved with `GetManagedBotToken()`
+}
+
+// MessageGenerationStopped is a struct for service message: a user stopped message generation
+//
+// https://core.telegram.org/bots/api#messagegenerationstopped
+type MessageGenerationStopped struct {
+	Chat            Chat   `json:"chat"`
+	MessageThreadID *int64 `json:"message_thread_id,omitempty"`
+	DraftID         int64  `json:"draft_id"`
 }
 
 // PollOptionAdded describes a service message about an option added to a poll.
@@ -1645,6 +1671,7 @@ type ReplyKeyboardMarkup struct {
 	OneTimeKeyboard       *bool              `json:"one_time_keyboard,omitempty"`
 	InputFieldPlaceholder *string            `json:"input_field_placeholder,omitempty"` // 1-64 characters
 	Selective             *bool              `json:"selective,omitempty"`
+	ForceReply            *bool              `json:"force_reply,omitempty"`
 }
 
 // KeyboardButton is a struct of a keyboard button
@@ -1742,6 +1769,7 @@ type ReplyKeyboardRemove struct {
 // https://core.telegram.org/bots/api#inlinekeyboardmarkup
 type InlineKeyboardMarkup struct {
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+	ForceReply     *bool                    `json:"force_reply,omitempty"`
 }
 
 // InlineKeyboardButton is a struct for InlineKeyboardButtons
@@ -1763,6 +1791,7 @@ type InlineKeyboardButton struct {
 	CopyText                     *CopyTextButton              `json:"copy_text,omitempty"`
 	CallbackGame                 *CallbackGame                `json:"callback_game,omitempty"`
 	Pay                          *bool                        `json:"pay,omitempty"`
+	Disabled                     *DisabledButton              `json:"disabled,omitempty"`
 }
 
 // LoginURL is a struct for LoginURL
@@ -1796,6 +1825,11 @@ type SwitchInlineQueryChosenChat struct {
 type CopyTextButton struct {
 	Text string `json:"text"` // 1~256 characters
 }
+
+// DisabledButton is a struct for a disabled button
+//
+// https://core.telegram.org/bots/api#disabledbutton
+type DisabledButton struct{}
 
 // CallbackQuery is a struct for a callback query
 //
@@ -2030,6 +2064,7 @@ type ChatAdministratorRights struct {
 	CanManageTopics         *bool `json:"can_manage_topics,omitempty"`
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
 	CanManageTags           *bool `json:"can_manage_tags,omitempty"`
+	CanSendWelcomeMessages  *bool `json:"can_send_welcome_messages,omitempty"`
 }
 
 // ChatMember is a struct of a chat member
@@ -2277,6 +2312,7 @@ type ChatMemberAdministrator struct {
 	CanManageTopics         *bool   `json:"can_manage_topics,omitempty"`
 	CanManageDirectMessages *bool   `json:"can_manage_direct_messages,omitempty"`
 	CanManageTags           *bool   `json:"can_manage_tags,omitempty"`
+	CanSendWelcomeMessages  *bool   `json:"can_send_welcome_messages,omitempty"`
 	CustomTitle             *string `json:"custom_title,omitempty"`
 }
 
@@ -2543,6 +2579,9 @@ type Message struct {
 	ChatBackgroundSet            *ChatBackground               `json:"chat_background_set,omitempty"`
 	ChecklistTasksDone           *ChecklistTasksDone           `json:"checklist_tasks_done,omitempty"`
 	ChecklistTasksAdded          *ChecklistTasksAdded          `json:"checklist_tasks_added,omitempty"`
+	CommunityChatAdded           *CommunityChatAdded           `json:"community_chat_added,omitempty"`
+	CommunityChatJoined          *CommunityChatJoined          `json:"community_chat_joined,omitempty"`
+	CommunityChatRemoved         *CommunityChatRemoved         `json:"community_chat_removed,omitempty"`
 	DirectMessagePriceChanged    *DirectMessagePriceChanged    `json:"direct_message_price_changed,omitempty"`
 	ForumTopicCreated            *ForumTopicCreated            `json:"forum_topic_created,omitempty"`
 	ForumTopicEdited             *ForumTopicEdited             `json:"forum_topic_edited,omitempty"`
@@ -3500,6 +3539,9 @@ type GiftInfo struct {
 type UniqueGiftInfo struct {
 	Gift               UniqueGift           `json:"gift"`
 	Origin             UniqueGiftInfoOrigin `json:"origin"`
+	Text               *string              `json:"text,omitempty"`
+	Entities           []MessageEntity      `json:"entities,omitempty"`
+	IsPrivate          *bool                `json:"is_private,omitempty"`
 	LastResaleCurrency *string              `json:"last_resale_currency,omitempty"`
 	LastResaleAmount   *int                 `json:"last_resale_amount,omitempty"`
 	OwnedGiftID        *string              `json:"owned_gift_id,omitempty"`
@@ -3641,6 +3683,32 @@ type InputRichMessageMedia struct {
 	Media InputMedia `json:"media"`
 }
 
+type RichMessageButtonStyle string
+
+const (
+	RichMessageButtonStyleDanger  RichMessageButtonStyle = "danger"
+	RichMessageButtonStyleSuccess RichMessageButtonStyle = "success"
+	RichMessageButtonStylePrimary RichMessageButtonStyle = "primary"
+	RichMessageButtonStyleLink    RichMessageButtonStyle = "link" // allowed only for callback buttons
+)
+
+// RichMessageButton is a struct which represents a button in a RichMessage.
+//
+// https://core.telegram.org/bots/api#richmessagebutton
+type RichMessageButton struct {
+	Text                         RichText                     `json:"text"`
+	Style                        *RichMessageButtonStyle      `json:"style,omitempty"`
+	URL                          *string                      `json:"url,omitempty"`
+	CallbackData                 *string                      `json:"callback_data,omitempty"`
+	WebApp                       *WebAppInfo                  `json:"web_app,omitempty"`
+	LoginURL                     *LoginURL                    `json:"login_url,omitempty"`
+	SwitchInlineQuery            *string                      `json:"switch_inline_query,omitempty"`
+	SwitchInlineQueryCurrentChat *string                      `json:"switch_inline_query_current_chat,omitempty"`
+	SwitchInlineQueryChosenChat  *SwitchInlineQueryChosenChat `json:"switch_inline_query_chosen_chat,omitempty"`
+	CopyText                     *CopyTextButton              `json:"copy_text,omitempty"`
+	Disabled                     *DisabledButton              `json:"disabled,omitempty"`
+}
+
 ////////////////
 // RichText things
 
@@ -3768,6 +3836,8 @@ func newRichTextOfType(typ string) any {
 		return &RichTextCashtag{}
 	case "bot_command":
 		return &RichTextBotCommand{}
+	case "button":
+		return &RichTextButton{}
 	case "anchor":
 		return &RichTextAnchor{}
 	case "anchor_link":
@@ -3960,6 +4030,14 @@ type RichTextBotCommand struct {
 	BotCommand string   `json:"bot_command"`
 }
 
+// RichTextButton is a struct for a button.
+//
+// https://core.telegram.org/bots/api#richtextbutton
+type RichTextButton struct {
+	Type   string            `json:"type"` // type == "button"
+	Button RichMessageButton `json:"button"`
+}
+
 // RichTextAnchor is a struct for an anchor.
 //
 // https://core.telegram.org/bots/api#richtextanchor
@@ -4091,7 +4169,7 @@ type RichBlockListItem struct {
 type RichBlock struct {
 	Type string `json:"type"`
 
-	// text-bearing blocks: paragraph, heading, pre, footer, pullquote, thinking
+	// text-bearing blocks: paragraph, heading, pre, footer, expandable_blockquote, pullquote, thinking
 	Text RichText `json:"text,omitzero"`
 
 	// heading
@@ -4112,7 +4190,7 @@ type RichBlock struct {
 	// blockquote, collage, slideshow, details
 	Blocks []RichBlock `json:"blocks,omitempty"`
 
-	// blockquote, pullquote
+	// blockquote, expandable_blockquote, pullquote
 	Credit RichText `json:"credit,omitzero"`
 
 	// details
@@ -4123,8 +4201,9 @@ type RichBlock struct {
 	Cells      [][]RichBlockTableCell `json:"cells,omitempty"`
 	IsBordered *bool                  `json:"is_bordered,omitempty"`
 	IsStriped  *bool                  `json:"is_striped,omitempty"`
+	IsCompact  *bool                  `json:"is_compact,omitempty"`
 
-	// collage, slideshow, map, animation, audio, photo, video, voice_note (an object caption);
+	// collage, slideshow, map, animation, audio, document, photo, video, voice_note (an object caption);
 	// table (a bare RichText, decoded into RichBlockCaption.Text)
 	Caption *RichBlockCaption `json:"caption,omitempty"`
 
@@ -4134,11 +4213,18 @@ type RichBlock struct {
 	Width    *int      `json:"width,omitempty"`
 	Height   *int      `json:"height,omitempty"`
 
+	// buttons
+	Buttons []RichMessageButton `json:"buttons,omitempty"`
+	Align   *string             `json:"align,omitempty"`
+
 	// animation
 	Animation *Animation `json:"animation,omitempty"`
 
 	// audio
 	Audio *Audio `json:"audio,omitempty"`
+
+	// document
+	Document *Document `json:"document,omitempty"`
 
 	// photo
 	Photo []PhotoSize `json:"photo,omitempty"`
@@ -4183,7 +4269,7 @@ type InputRichBlockListItem struct {
 type InputRichBlock struct {
 	Type string `json:"type"`
 
-	// text-bearing blocks: paragraph, heading, pre, footer, pullquote, thinking
+	// text-bearing blocks: paragraph, heading, pre, footer, expandable_blockquote, pullquote, thinking
 	Text RichText `json:"text,omitzero"`
 
 	// heading
@@ -4204,7 +4290,7 @@ type InputRichBlock struct {
 	// blockquote, collage, slideshow, details
 	Blocks []InputRichBlock `json:"blocks,omitempty"`
 
-	// blockquote, pullquote
+	// blockquote, expandable_blockquote, pullquote
 	Credit RichText `json:"credit,omitzero"`
 
 	// details
@@ -4215,8 +4301,9 @@ type InputRichBlock struct {
 	Cells      [][]RichBlockTableCell `json:"cells,omitempty"`
 	IsBordered *bool                  `json:"is_bordered,omitempty"`
 	IsStriped  *bool                  `json:"is_striped,omitempty"`
+	IsCompact  *bool                  `json:"is_compact,omitempty"`
 
-	// RichBlockCaption: collage, slideshow, map, animation, audio, photo, video, voice_note
+	// RichBlockCaption: collage, slideshow, map, animation, audio, document, photo, video, voice_note
 	// RichText: table
 	Caption any `json:"caption,omitempty"`
 
@@ -4226,11 +4313,18 @@ type InputRichBlock struct {
 	Width    *int      `json:"width,omitempty"`
 	Height   *int      `json:"height,omitempty"`
 
+	// buttons
+	Buttons []RichMessageButton `json:"buttons,omitempty"`
+	Align   *string             `json:"align,omitempty"`
+
 	// animation
 	Animation *InputMediaAnimation `json:"animation,omitempty"`
 
 	// audio
 	Audio *InputMediaAudio `json:"audio,omitempty"`
+
+	// document
+	Document *InputMediaDocument `json:"document,omitempty"`
 
 	// photo
 	Photo *InputMediaPhoto `json:"photo,omitempty"`
