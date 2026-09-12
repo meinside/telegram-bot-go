@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (receive webhooks),
 //
-// last update: 2026.02.11.
+// last update: 2026.09.12.
 
 package main
 
@@ -8,13 +8,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	bot "github.com/meinside/telegram-bot-go"
 )
 
 const (
-	apiToken     = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
 	webhookHost  = "my.host.com"
 	webhookPort  = 8443
 	certFilepath = "./cert.pem"
@@ -22,8 +22,6 @@ const (
 
 	requestTimeoutSeconds = 10
 	typingDelaySeconds    = 1
-
-	verbose = true
 )
 
 // function for handling webhook updates
@@ -155,55 +153,64 @@ func botName(bot *bot.User) string {
 }
 
 func main() {
-	client := bot.NewClient(apiToken)
-	client.Verbose = verbose
+	if apiToken, exists := os.LookupEnv("TELEGRAM_BOT_API_TOKEN"); exists {
+		verbose := false
+		if v, exists := os.LookupEnv("VERBOSE"); exists {
+			verbose = v == "true"
+		}
 
-	ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
-	defer cancel()
-
-	// get info about this bot
-	if me, _ := client.GetMe(ctx); me.OK {
-		log.Printf("Bot information: %s", botName(me.Result))
+		client := bot.NewClient(apiToken)
+		client.Verbose = verbose
 
 		ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 		defer cancel()
 
-		// delete webhook
-		if unhooked, _ := client.DeleteWebhook(ctx, true); unhooked.OK {
-			// generate certificate and private key for testing
-			if err := bot.GenCertAndKey(
-				webhookHost,
-				certFilepath,
-				keyFilepath,
-				10*365,
-			); err == nil {
-				ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
-				defer cancel()
+		// get info about this bot
+		if me, _ := client.GetMe(ctx); me.OK {
+			log.Printf("Bot information: %s", botName(me.Result))
 
-				// set webhook
-				if hooked, _ := client.SetWebhook(
-					ctx,
+			ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+			defer cancel()
+
+			// delete webhook
+			if unhooked, _ := client.DeleteWebhook(ctx, true); unhooked.OK {
+				// generate certificate and private key for testing
+				if err := bot.GenCertAndKey(
 					webhookHost,
-					webhookPort,
-					bot.OptionsSetWebhook{}.
-						SetCertificate(certFilepath),
-				); hooked.OK {
-					// on success, start webhook server
-					client.StartWebhookServerAndWait(
-						certFilepath,
-						keyFilepath,
-						webhookHandler,
-					)
+					certFilepath,
+					keyFilepath,
+					10*365,
+				); err == nil {
+					ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+					defer cancel()
+
+					// set webhook
+					if hooked, _ := client.SetWebhook(
+						ctx,
+						webhookHost,
+						webhookPort,
+						bot.OptionsSetWebhook{}.
+							SetCertificate(certFilepath),
+					); hooked.OK {
+						// on success, start webhook server
+						client.StartWebhookServerAndWait(
+							certFilepath,
+							keyFilepath,
+							webhookHandler,
+						)
+					} else {
+						panic("failed to set webhook")
+					}
 				} else {
-					panic("failed to set webhook")
+					panic("failed to generate cert/key: " + err.Error())
 				}
 			} else {
-				panic("failed to generate cert/key: " + err.Error())
+				panic("failed to delete webhook")
 			}
 		} else {
-			panic("failed to delete webhook")
+			panic("failed to get info of the bot")
 		}
 	} else {
-		panic("failed to get info of the bot")
+		panic("environment variable 'TELEGRAM_BOT_API_TOKEN' is not set")
 	}
 }

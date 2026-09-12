@@ -4,7 +4,7 @@ Retrieve updates from webhook
 
 ## Generate a self-signed certificate for incoming webhook
 
-Generate self-signed certificate & private key with following script:
+Generate a self-signed certificate & private key with the following script:
 
 ```bash
 #!/bin/bash
@@ -39,16 +39,12 @@ Generated *cert.key* and *cert.pem* file will be used in **telegrambot.StartWebh
 
 Also, you can generate certificate and private key using **telegrambot.GenCertAndKey()** function.
 
-## How to build
+## How to run
 
-Edit **apiToken**, **webhookHost**, **webhookPort**, **certFilepath**, and **keyFilepath** values in `main.go` to yours, then build with following command:
-
-```bash
-$ go build -o telegram main.go
-```
-
-## Run
+Edit **webhookHost**, **webhookPort**, **certFilepath**, and **keyFilepath** values in `main.go` to yours, run with:
 
 ```bash
-$ ./telegram
+# with your telegram bot api token:
+TELEGRAM_BOT_API_TOKEN="01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST" go run main.go
 ```
+

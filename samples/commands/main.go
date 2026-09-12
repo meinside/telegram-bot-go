@@ -1,6 +1,6 @@
 // sample code for telegram-bot-go (handle commands),
 //
-// last update: 2026.02.11.
+// last update: 2026.09.12.
 
 package main
 
@@ -8,19 +8,16 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	bot "github.com/meinside/telegram-bot-go"
 )
 
 const (
-	apiToken = "01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST"
-
 	requestTimeoutSeconds  = 10
 	pollingIntervalSeconds = 1
 	typingDelaySeconds     = 1
-
-	verbose = true
 )
 
 // handle '/start' command
@@ -176,36 +173,45 @@ func botName(bot *bot.User) string {
 }
 
 func main() {
-	client := bot.NewClient(apiToken)
-	client.Verbose = verbose
+	if apiToken, exists := os.LookupEnv("TELEGRAM_BOT_API_TOKEN"); exists {
+		verbose := false
+		if v, exists := os.LookupEnv("VERBOSE"); exists {
+			verbose = v == "true"
+		}
 
-	ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
-	defer cancel()
-
-	// get info about this bot
-	if me, _ := client.GetMe(ctx); me.OK {
-		log.Printf("Bot information: %s", botName(me.Result))
+		client := bot.NewClient(apiToken)
+		client.Verbose = verbose
 
 		ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
 		defer cancel()
 
-		// delete webhook (getting updates will not work when wehbook is set up)
-		if unhooked, _ := client.DeleteWebhook(ctx, true); unhooked.OK {
-			// add command handlers
-			client.AddCommandHandler("/start", startCommandHandler)
-			client.AddCommandHandler("/help", helpCommandHandler)
-			client.SetNoMatchingCommandHandler(noSuchCommandHandler)
+		// get info about this bot
+		if me, _ := client.GetMe(ctx); me.OK {
+			log.Printf("Bot information: %s", botName(me.Result))
 
-			// wait for new updates
-			client.StartPollingUpdates(
-				0,
-				pollingIntervalSeconds,
-				updateHandler,
-			)
+			ctx, cancel := context.WithTimeout(context.TODO(), requestTimeoutSeconds*time.Second)
+			defer cancel()
+
+			// delete webhook (getting updates will not work when wehbook is set up)
+			if unhooked, _ := client.DeleteWebhook(ctx, true); unhooked.OK {
+				// add command handlers
+				client.AddCommandHandler("/start", startCommandHandler)
+				client.AddCommandHandler("/help", helpCommandHandler)
+				client.SetNoMatchingCommandHandler(noSuchCommandHandler)
+
+				// wait for new updates
+				client.StartPollingUpdates(
+					0,
+					pollingIntervalSeconds,
+					updateHandler,
+				)
+			} else {
+				panic("failed to delete webhook")
+			}
 		} else {
-			panic("failed to delete webhook")
+			panic("failed to get info of the bot")
 		}
 	} else {
-		panic("failed to get info of the bot")
+		panic("environment variable 'TELEGRAM_BOT_API_TOKEN' is not set")
 	}
 }
