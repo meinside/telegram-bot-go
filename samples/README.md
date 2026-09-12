@@ -2,7 +2,9 @@
 
 Samples codes for telegram-bot-go:
 
-* [webhook](https://github.com/meinside/telegram-bot-go/tree/master/samples/webhook): Sample application which retrieves updates through webhook (when you have a domain and at least one of port 80/88/443/8443 is available)
-* [polling](https://github.com/meinside/telegram-bot-go/tree/master/samples/polling): Sample application which polls updates without webhook
-* [wasm](https://github.com/meinside/telegram-bot-go/tree/master/samples/wasm): Sample application for showing experimental WebAssembly support (Go 1.11+)
+* [webhook](https://github.com/meinside/telegram-bot-go/tree/master/samples/webhook): retrieves updates through webhook (when you have a domain and at least one of port 80/88/443/8443 is available)
+* [polling](https://github.com/meinside/telegram-bot-go/tree/master/samples/polling): polls updates without webhook
+* [commands](https://github.com/meinside/telegram-bot-go/tree/master/samples/commands): handles commands
+* [raw](https://github.com/meinside/telegram-bot-go/tree/master/samples/raw): prints updates in JSON format
+* [wasm](https://github.com/meinside/telegram-bot-go/tree/master/samples/wasm): shows experimental WebAssembly support (Go 1.11+)
 

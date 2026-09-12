@@ -2,16 +2,10 @@
 
 Poll & handle commands (without webhook)
 
-## How to build
-
-Edit **apiToken** value in `main.go` to yours, and build with following command:
+## How to run
 
 ```bash
-$ go build -o telegram main.go
+# with your telegram bot api token:
+TELEGRAM_BOT_API_TOKEN="01234567:abcdefghijklmn_ABCDEFGHIJKLMNOPQRST" go run main.go
 ```
 
-## Run
-
-```bash
-$ ./telegram
-```
